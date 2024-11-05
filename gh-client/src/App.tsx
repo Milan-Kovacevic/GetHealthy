@@ -1,10 +1,16 @@
+import { RouterProvider } from "react-router-dom";
+import router from "@/router/Router";
+import { ThemeProvider } from "@/pages/shared/ThemeProvider";
+import { APP_THEME_STORAGE_KEY, LIGHT_THEME } from "@/utils/constants";
+
 function App() {
   return (
-    <>
-      <p className="text-8xl text-primary-800 text-center mt-10">
-        GetHealthy Client...
-      </p>
-    </>
+    <ThemeProvider
+      defaultTheme={LIGHT_THEME}
+      storageKey={APP_THEME_STORAGE_KEY}
+    >
+      <RouterProvider router={router}></RouterProvider>
+    </ThemeProvider>
   );
 }
 
