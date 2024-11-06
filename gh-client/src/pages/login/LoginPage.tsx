@@ -1,4 +1,4 @@
-import { Globe, UserRound } from "lucide-react";
+import { Globe } from "lucide-react";
 import appIcon from "@/assets/applogo.png";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,25 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import {
   CircleBackgroundBlob,
   TopBackgroundBlob,
 } from "../shared/BackgroundBlobs";
+import InputFormField from "@/components/primitives/InputFormField";
 
 const formSchema = z.object({
   username: z
@@ -81,7 +73,7 @@ const LoginPage = () => {
         variant="light"
         className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
       />
-      <div className="relative container mx-auto z-10 py-32 mt-10">
+      <div className="relative container mx-auto z-10 mt-28">
         <div className="flex flex-col gap-4">
           <Card className="mx-auto w-full max-w-md animate-fade-down shadow-md dark:shadow-white/5">
             <CardHeader className="items-center">
@@ -114,47 +106,21 @@ const LoginPage = () => {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-3"
                   >
-                    <FormField
+                    <InputFormField
                       control={form.control}
                       name="username"
-                      render={({ field }) => (
-                        <FormItem className="space-y-0.5">
-                          <FormLabel>Username *</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="ex. user1"
-                              type="text"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormDescription className="text-xs ml-0.5">
-                            Enter your username or email.
-                          </FormDescription>
-                          <FormMessage className="text-xs ml-0.5" />
-                        </FormItem>
-                      )}
+                      type="text"
+                      description="Enter your username or email."
+                      display="Username *"
+                      placeholder="ex. user1"
                     />
-
-                    <FormField
+                    <InputFormField
                       control={form.control}
                       name="password"
-                      render={({ field }) => (
-                        <FormItem className="space-y-0.5">
-                          <FormLabel>Password *</FormLabel>
-                          <FormControl>
-                            <Input
-                              type={"password"}
-                              className="h-9"
-                              placeholder="ex. 123"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormDescription className="text-xs ml-0.5">
-                            Enter your password.
-                          </FormDescription>
-                          <FormMessage className="text-xs ml-0.5" />
-                        </FormItem>
-                      )}
+                      type="password"
+                      description="Enter your password."
+                      display="Password *"
+                      placeholder="ex. 123"
                     />
 
                     <Button type="submit" className="w-full mt-10">
