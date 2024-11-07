@@ -6,6 +6,8 @@ import LandingPage from "@/pages/landing/LandingPage";
 import AboutUsPage from "@/pages/about/AboutUsPage";
 import LoginPage from "@/pages/login/LoginPage";
 import RegisterPage from "@/pages/register/RegisterPage";
+import MainLayout from "@/layouts/MainLayout";
+import TrainingProgramsPage from "@/pages/training-programs/TrainingProgramsPage";
 
 const router = createBrowserRouter([
   {
@@ -16,9 +18,13 @@ const router = createBrowserRouter([
       { path: "/", element: <LandingPage /> },
       { path: "/about", element: <AboutUsPage /> },
       {
+        element: <MainLayout />,
         children: [
           // Routes for every role
-          {},
+          {
+            path: "/programs",
+            element: <TrainingProgramsPage />,
+          },
           // Routes for trainers only
           {},
           // Routes for trainees only

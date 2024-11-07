@@ -46,7 +46,7 @@ const LandingPage = () => {
                   />
                 </svg>
                 <div className="relative z-10">
-                  <p className="text-muted-foreground dark:text-foreground/75 lg:text-xl ">
+                  <p className="text-muted-foreground dark:text-foreground/75 lg:text-xl">
                     Transform your fitness journey with GetHealthy! Your
                     personalized training programs, exercise tracking, and
                     expert guidance all in one place. Start achieving your goals

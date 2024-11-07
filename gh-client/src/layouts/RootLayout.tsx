@@ -5,7 +5,7 @@ export default function RootLayout() {
   return (
     <div className="h-svh w-full flex flex-col">
       <main className="flex-1">
-        <Outlet></Outlet>
+        <Outlet />
         <Toaster position="bottom-right" />
       </main>
     </div>

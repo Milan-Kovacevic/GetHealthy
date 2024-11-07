@@ -1,13 +1,6 @@
 import { Globe } from "lucide-react";
-import appIcon from "@/assets/applogo.png";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -19,6 +12,7 @@ import {
   TopBackgroundBlob,
 } from "../shared/BackgroundBlobs";
 import InputFormField from "@/components/primitives/InputFormField";
+import AuthCardHeader from "../shared/AuthCardHeader";
 
 const formSchema = z.object({
   username: z
@@ -58,7 +52,7 @@ const LoginPage = () => {
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
         </pre>
       );
-      navigate("/");
+      navigate("/programs");
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
@@ -73,27 +67,18 @@ const LoginPage = () => {
         variant="light"
         className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
       />
-      <div className="relative container mx-auto z-10 mt-28">
+      <div className="relative container mx-auto z-10 my-28">
         <div className="flex flex-col gap-4">
           <Card className="mx-auto w-full max-w-md animate-fade-down shadow-md dark:shadow-white/5">
-            <CardHeader className="items-center">
-              <Link to="/" className="self-center">
-                <img
-                  src={appIcon}
-                  alt="logo"
-                  className="h-16 w-20 dark:filter-white"
-                />
-              </Link>
-              <CardTitle className="sm:text-xl text-lg text-center leading-tight sm:leading-normal">
-                Log in with your email or username
-              </CardTitle>
-              <CardDescription>Enter your information to login</CardDescription>
-            </CardHeader>
+            <AuthCardHeader
+              title="Log in with your email or username"
+              description="Enter your information to login"
+            />
             <CardContent>
               <div className="grid gap-4">
                 <Button variant="outline" className="w-full">
                   <Globe className="mr-2 size-4" />
-                  Sign up with Google
+                  Continue with Google
                 </Button>
                 <div className="flex items-center gap-4">
                   <span className="h-px w-full bg-input"></span>
@@ -137,7 +122,7 @@ const LoginPage = () => {
               to="/register"
               className="underline text-foreground/80 hover:text-foreground"
             >
-              Register
+              Sign up
             </Link>
           </div>
         </div>
