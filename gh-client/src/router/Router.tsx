@@ -8,6 +8,7 @@ import LoginPage from "@/pages/login/LoginPage";
 import RegisterPage from "@/pages/register/RegisterPage";
 import MainLayout from "@/layouts/MainLayout";
 import TrainingProgramsPage from "@/pages/training-programs/TrainingProgramsPage";
+import { ManageTrainingProgramsPage } from "@/pages/training-programs/ManageTrainingProgramsPage";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +24,18 @@ const router = createBrowserRouter([
           // Routes for every role
           {
             path: "/programs",
-            element: <TrainingProgramsPage />,
+            children: [
+              {
+                index: true,
+                element: <TrainingProgramsPage></TrainingProgramsPage>,
+              },
+              {
+                path: "manage",
+                element: (
+                  <ManageTrainingProgramsPage></ManageTrainingProgramsPage>
+                ),
+              },
+            ],
           },
           // Routes for trainers only
           {},
