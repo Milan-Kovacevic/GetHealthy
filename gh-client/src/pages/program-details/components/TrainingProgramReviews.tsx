@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SendIcon } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Comment {
   id: number;
@@ -51,48 +52,53 @@ export default function TrainingProgramReviews() {
   };
 
   return (
-    <div className="w-full max-w-screen-lg mx-2">
-      <div className="mt-5">
-        <h3 className="text-lg font-semibold">Comments on training program</h3>
-      </div>
-      <div className="flex flex-col gap-4 mt-4">
-        <form onSubmit={handleSubmit} className="space-y-4 flex-1 my-4 mt-0">
-          <div className="flex flex-row items-end gap-2">
-            <Textarea
-              placeholder="Write your comment here..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="min-h-[100px] resize-none"
-            />
-            <Button variant="secondary" type="submit">
-              <SendIcon className="text-primary" />
-              Send comment
-            </Button>
-          </div>
-        </form>
-        <div className="space-y-4 flex-1 w-full mb-4">
-          {comments.map((comment) => (
-            <div key={comment.id} className="flex items-start space-x-4 pb-2">
-              <Avatar className="h-14 w-14">
-                <AvatarFallback>{comment.author[0]}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 space-y-1">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-base font-semibold">{comment.author}</h3>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm text-muted-foreground">
-                    {comment.content}
-                  </p>
-                  <time className="text-xs text-muted-foreground">
-                    {comment.timestamp}
-                  </time>
+    <div className="w-full max-w-screen-lg md:px-2 my-4 flex flex-col md:p-0 p-3">
+      <ScrollArea className="flex-1">
+        <div className="flex flex-col gap-4 mt-2">
+          <div className="space-y-4 flex-1 w-full mb-2 mt-1">
+            {comments.map((comment) => (
+              <div key={comment.id} className="flex items-start space-x-4 pb-2">
+                <Avatar className="h-14 w-14">
+                  <AvatarFallback>{comment.author[0]}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-semibold">
+                      {comment.author}
+                    </h3>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <p className="text-sm text-muted-foreground">
+                      {comment.content}
+                    </p>
+                    <time className="text-xs text-muted-foreground">
+                      {comment.timestamp}
+                    </time>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4 flex-1 my-4 px-1 mt-0"
+          >
+            <div className="flex flex-col md:flex-row items-end gap-2">
+              <Textarea
+                placeholder="Write your comment here..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                className="min-h-[100px] resize-none"
+              />
+              <Button variant="secondary" type="submit">
+                <SendIcon className="text-primary" />
+                Send comment
+              </Button>
             </div>
-          ))}
+          </form>
         </div>
-      </div>
+      </ScrollArea>
     </div>
   );
 }
