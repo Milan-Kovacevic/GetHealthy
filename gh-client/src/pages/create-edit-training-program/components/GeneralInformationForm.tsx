@@ -36,18 +36,25 @@ export default function GeneralInformationForm() {
     setRequirements('')
     setCategories([])
   }
-  const categoryOptions = [
-    { label: "Technical", value: "technical" },
-    { label: "Soft Skills", value: "soft-skills" },
-    { label: "Leadership", value: "leadership" },
-    { label: "Project Management", value: "project-management" },
-    { label: "Design", value: "design" },
-  ];
   
-    return (
+  const categoryOptions = [
+    { label: "Technical", value: "1" },
+    { label: "Soft Skills", value: "2" },
+    { label: "Leadership", value: "3" },
+    { label: "Project Management", value: "4" },
+    { label: "Design", value: "5" },
+  ];  
+  const toggleCategory = (category: string) => {
+    setCategories(current =>
+      current.includes(category)
+        ? current.filter(c => c !== category)
+        : [...current, category]
+    )
+  }
+  return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle>General Informations</CardTitle>
+        <CardTitle>General Information</CardTitle>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="grid grid-cols-2 gap-4">
@@ -62,8 +69,14 @@ export default function GeneralInformationForm() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="categories">Categories (Select multiple)</Label>
-            <MultiSelect options={categoryOptions} value={categories}
-                onValueChange={setCategories}/>
+            <MultiSelect className='' options={categoryOptions.map((elem, index)=>({
+                label: elem.label,
+                value: index.toString()
+            }))} value={categories}
+                onValueChange={(categories) => {
+                    categories.forEach((category) => toggleCategory(category)) 
+                  }}
+                maxCount={3}/>
                 
           </div>
           <div className="space-y-2">
