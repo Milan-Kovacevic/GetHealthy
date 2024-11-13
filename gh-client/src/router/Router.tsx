@@ -13,6 +13,7 @@ import TrainingProgramDetails from "@/pages/program-details/components/TrainingP
 import TrainingProgramTrainees from "@/pages/program-details/components/TrainingProgramTrainees";
 import TrainingProgramReviews from "@/pages/program-details/components/TrainingProgramReviews";
 import ProgramTrainerInfo from "@/pages/program-details/components/ProgramTrainerInfo";
+import GeneralInformationForm from "@/pages/create-edit-training-program/components/GeneralInformationForm";
 
 const router = createBrowserRouter([
   {
@@ -56,7 +57,10 @@ const router = createBrowserRouter([
             ],
           },
           // Routes for trainers only
-          {},
+          {
+            path: "generalInfo",
+            element: <GeneralInformationForm />,
+          },
           // Routes for trainees only
           {},
         ],
