@@ -71,7 +71,10 @@ const router = createBrowserRouter([
             ],
           },
           // Routes for trainers only
-          {},
+          {
+            path: "create-trainer-program",
+            element: <ExercisesForm />,
+          },
           // Routes for trainees only
           {},
         ],
