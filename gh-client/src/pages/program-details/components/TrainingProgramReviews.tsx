@@ -9,7 +9,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { SendIcon } from "lucide-react";
+import { MessageCircleIcon, SendIcon } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Comment {
@@ -52,7 +52,13 @@ export default function TrainingProgramReviews() {
   };
 
   return (
-    <div className="w-full max-w-screen-lg md:px-2 my-4 flex flex-col md:p-0 p-3">
+    <div className="w-full max-w-screen-lg md:px-2 my-5 flex flex-col md:p-0 p-3">
+      <div className="flex flex-row items-center gap-1.5 ml-1 mb-4">
+        <MessageCircleIcon className="h-5 w-5 text-foreground/80" />
+        <p className="font-medium text-xl tracking-wide mb-0.5">
+          Program comments
+        </p>
+      </div>
       <ScrollArea className="flex-1">
         <div className="flex flex-col gap-4 mt-2">
           <div className="space-y-4 flex-1 w-full mb-2 mt-1">

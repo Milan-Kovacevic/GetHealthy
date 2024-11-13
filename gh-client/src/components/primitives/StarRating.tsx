@@ -41,7 +41,7 @@ export default function StarRating({
             aria-label={`Rate ${starValue} star${starValue !== 1 ? "s" : ""}`}
           >
             <Star
-              className={`w-4 h-4 ${
+              className={`w-5 h-5 ${
                 starValue <= (hover || rating)
                   ? "text-primary fill-primary"
                   : "text-primary"
@@ -50,7 +50,7 @@ export default function StarRating({
           </button>
         );
       })}
-      <span className="ml-2 text-xs">{rating.toFixed(1)}</span>
+      <span className="ml-2 text-sm font-medium">{rating.toFixed(1)}</span>
     </div>
   );
 }
