@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,7 +19,32 @@ import {
 } from "@/components/ui/popover"
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { cn } from "@/lib/utils"
-import { MultiSelect } from '@/components/primitives/MultiSelectFormFIeld'
+import { MultiSelect } from '@/components/primitives/MultiSelectFormField'
+import { Link, useNavigate } from "react-router-dom";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { Form } from "@/components/ui/form";
+
+const formSchema = z.object({
+    name: z
+      .string()
+      .min(1, {
+        message: "Name is required.",
+      }),
+    info: z
+      .string()
+      .min(1, {
+        message: "Description is required.",
+      }),
+      categories: z
+      .array(z.string()).min(1, {
+        message: "At least one category is required.",
+      }),
+      requirements: z
+      .string()
+  });
 
 export default function GeneralInformationForm() {
   const [name, setName] = useState('')
@@ -28,13 +53,28 @@ export default function GeneralInformationForm() {
   const [categories, setCategories] = useState<string[]>([])
   const [open, setOpen] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log({ name, description, requirements, categories })
-    setName('')
-    setDescription('')
-    setRequirements('')
-    setCategories([])
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      info: "",
+      categories: [],
+      requirements: ""
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      console.log(values);
+      toast(
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
+        </pre>
+      );
+    } catch (error) {
+      console.error("Form submission error", error);
+      toast.error("Failed to submit the form. Please try again.");
+    }
   }
   
   const categoryOptions = [
@@ -56,12 +96,14 @@ export default function GeneralInformationForm() {
       <CardHeader>
         <CardTitle>General Information</CardTitle>
       </CardHeader>
-      <form onSubmit={handleSubmit}>
+      <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <CardContent className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="name">Name of Training Program</Label>
             <Input
               id="name"
+              {...form.register("name")}
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -76,14 +118,18 @@ export default function GeneralInformationForm() {
                 onValueChange={(categories) => {
                     categories.forEach((category) => toggleCategory(category)) 
                   }}
-                maxCount={3}/>
+                {...form.register("categories")}
+                maxCount={3}
+                minCount={1}/>
                 
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
+              {...form.register("info")}
               value={description}
+              name="info"
               onChange={(e) => setDescription(e.target.value)}
               required
               className="h-32"
@@ -93,13 +139,19 @@ export default function GeneralInformationForm() {
             <Label htmlFor="requirements">Requirements</Label>
             <Textarea
               id="requirements"
+              {...form.register("requirements")}
               value={requirements}
+              name="requirements"
               onChange={(e) => setRequirements(e.target.value)}
               className="h-32"
             />
           </div>
         </CardContent>
+        <CardFooter>
+            <Button type="submit">Submit</Button>
+        </CardFooter>
       </form>
+      </Form>
     </Card>
     );
 }

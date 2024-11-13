@@ -100,6 +100,10 @@ interface MultiSelectProps
   maxCount?: number;
 
   /**
+   * Minimum number of items to display.
+   */
+  minCount?:number;
+  /**
    * The modality of the popover. When set to true, interaction with outside elements
    * will be disabled and only popover content will be visible to screen readers.
    * Optional, defaults to false.
@@ -131,6 +135,7 @@ export const MultiSelect = React.forwardRef<
       defaultValue = [],
       placeholder = "Select options",
       animation = 0,
+      minCount = 1,//TODO da li je svugdje default 1?
       maxCount = 3,
       modalPopover = false,
       asChild = false,
