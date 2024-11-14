@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputFormField from "@/components/primitives/InputFormField";
+import TextareaFormField from "@/components/primitives/TextareaFormField";
 
 interface Framework {
   value: string;
@@ -32,29 +33,46 @@ const frameworks: Framework[] = [
   { value: "sveltekit", label: "Sklek" },
   { value: "nuxt.js", label: "Trcanje" },
   { value: "remix", label: "Trbusnjaci" },
-  { value: "astro", label: "Lats" },
+  { value: "as21tro", label: "Lats" },
 ];
 
 const exerciseFormSchema = z.object({
-  numebrOfRepetitons: z.number(),
+  numberOfRepetitions: z
+    .string()
+    .regex(/^\d*$/, "Please enter a positive whole number")
+    .refine((val) => parseInt(val, 10) > 0, {
+      message: "Please enter a positive number!",
+    }),
 });
 
-export default function ComboboxDemo() {
+export default function ExercisesForm() {
   const [open, setOpen] = React.useState(false);
   const [selectedItems, setSelectedItems] = React.useState<Framework[]>([]);
   const [selectedExercise, setSelectedExercise] =
     React.useState<Framework | null>(null);
-  const [repetitions, setRepetitions] = React.useState("");
 
   const handleSelect = (currentValue: string) => {
     const selectedFramework = frameworks.find((f) => f.value === currentValue);
 
-    if (
-      selectedFramework &&
-      !selectedItems.some((item) => item.value === currentValue)
-    ) {
-      setSelectedItems([...selectedItems, selectedFramework]);
+    if (selectedFramework) {
+      const isSelected = selectedItems.some(
+        (item) => item.value === currentValue
+      );
+
+      if (isSelected) {
+        // Deselect and remove the exercise card
+        setSelectedItems(
+          selectedItems.filter((item) => item.value !== currentValue)
+        );
+        if (selectedExercise && selectedExercise.value === currentValue) {
+          setSelectedExercise(null); // Remove selected exercise if it was the same
+        }
+      } else {
+        // Select the framework and add the exercise card
+        setSelectedItems([...selectedItems, selectedFramework]);
+      }
     }
+
     setOpen(false);
   };
 
@@ -73,20 +91,19 @@ export default function ComboboxDemo() {
     const draggedIndex = parseInt(e.dataTransfer.getData("index"));
     const newItems = [...selectedItems];
     const [draggedItem] = newItems.splice(draggedIndex, 1);
-
-    // Reinsert the dragged item at the target position
     newItems.splice(targetIndex, 0, draggedItem);
     setSelectedItems(newItems);
   };
 
   const handleDragOver = (e: React.DragEvent, targetIndex: number) => {
     e.preventDefault();
-    // Optionally add a visual indicator for the drop position.
-    // You could change the background color or add a placeholder here.
   };
 
   const form = useForm<z.infer<typeof exerciseFormSchema>>({
     resolver: zodResolver(exerciseFormSchema),
+    defaultValues: {
+      numberOfRepetitions: "",
+    },
   });
 
   function onSubmit(values: z.infer<typeof exerciseFormSchema>) {
@@ -170,11 +187,11 @@ export default function ComboboxDemo() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
               <InputFormField
                 control={form.control}
-                name="username"
+                name="numberOfRepetitions"
                 type="text"
-                description="Enter your username or email."
-                display="Username *"
-                placeholder="ex. user1"
+                description="Enter the number of repetitions."
+                display="Repetitions *"
+                placeholder="ex. 2"
               />
 
               <Button className="mt-10" type="submit" variant="default">
