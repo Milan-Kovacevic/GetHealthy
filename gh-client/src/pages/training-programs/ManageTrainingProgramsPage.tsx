@@ -1,7 +1,7 @@
-import { Delete } from "../shared/Delete";
+import { TrainingProgramLayout } from "./TrainingProgramLayout";
 
 export const ManageTrainingProgramsPage = () => {
-  return <div>
-    <Delete className="m-1" description="nesto" title="nesto drugo"></Delete>
-  </div>;
+  return (
+    <TrainingProgramLayout myTrainingPrograms={true}></TrainingProgramLayout>
+  );
 };

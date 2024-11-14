@@ -3,19 +3,26 @@ import { useState } from "react";
 import { Search as SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export const Search = () => {
+type SearchProps = {
+  updateList: any;
+  service: any;
+};
+
+export const Search = (props: SearchProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSearch = (e: React.FormEvent) => {
+  async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
-    // Implement your search logic here
+    var list = await props.service.search(searchQuery);
+    console.log(list);
+    props.updateList(list);
     console.log("Searching for:", searchQuery);
-  };
+  }
 
   return (
     <form
       onSubmit={handleSearch}
-      className="flex w-full max-w-sm items-center space-x-2"
+      className="flex max-w-sm items-start justify-start m-3 mb-4 space-x-2"
     >
       <Input
         type="text"

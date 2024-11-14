@@ -4,34 +4,43 @@ import {
   CardContent,
   CardDescription,
   CardFooter,
+  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Delete } from "@/pages/shared/Delete";
-import { Edit } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 
 type TrainingProgramCardProps = {
   title: string;
   description: string;
   img: string;
-  key: number;
+  id: number;
+  trainer: string;
+  myProgram: boolean;
 };
 
 export function TrainingProgramCard(props: TrainingProgramCardProps) {
   return (
-    <Card className="w-full m-5 flex" key={props.key}>
+    <Card
+      key={props.id}
+      className="h-25 transform hover:scale-110 max-w-xl mt-4 rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-shadow duration-300"
+    >
+      <img src={props.img} className="w-full h-25 object-cover"></img>
+      <CardHeader>
+        <CardTitle className="text-1xl">{props.title}</CardTitle>
+      </CardHeader>
       <CardContent>
-       
+        <CardDescription>{props.description}</CardDescription>
       </CardContent>
-      <CardTitle className="w-full m-10">{props.title}</CardTitle>
-      <CardDescription className="m-10">{props.description}</CardDescription>
-      <div className="flex justify-end w-full">
-        <CardFooter className="flex p-2 flex-col m-2">
-          <Button className="m-1">
-            <Edit></Edit>
-          </Button>
-          <Delete className="m-1" description="nesto" title="Brisi"></Delete>
-        </CardFooter>
-      </div>
+      <CardFooter>
+        <div className="flex gap-2 justify-between space-between">
+          <p>{props.trainer}</p>
+          {props.myProgram && (
+            <Button>
+              <TrashIcon></TrashIcon>
+            </Button>
+          )}
+        </div>
+      </CardFooter>
     </Card>
   );
 }
