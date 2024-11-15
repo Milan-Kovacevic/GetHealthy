@@ -32,10 +32,16 @@ const formSchema = z.object({
   requirements: z.string().optional(),
 });
 
-export default function GeneralInformationForm() {
+export default function GeneralInformationForm({
+  defaultValues,
+  isEdit = false,
+}: {
+  defaultValues?: z.infer<typeof formSchema>;
+  isEdit?: boolean;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: defaultValues || {
       name: "",
       info: "",
       categories: [],
@@ -45,12 +51,19 @@ export default function GeneralInformationForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
+      if (!isEdit) {
+        console.log(values);
+        toast(
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">
+              {JSON.stringify(values, null, 2)}
+            </code>
+          </pre>
+        );
+      } else {
+        console.log("Updated values:", values);
+        toast.success("Changes saved successfully.");
+      }
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
@@ -98,7 +111,7 @@ export default function GeneralInformationForm() {
                         <MultiSelect
                           className=""
                           options={categoryOptions}
-                          value={field.value}
+                          value={field.value || []}
                           onValueChange={(categories) =>
                             field.onChange(categories)
                           }
@@ -134,12 +147,12 @@ export default function GeneralInformationForm() {
                   placeholder="ex. Not for someone with heart problems"
                 />
               </div>
-              </div>
-              <div className="flex justify-end mt-2">
-                <CardFooter className="p-0">
-                  <Button type="submit">Submit</Button>
-                </CardFooter>
-              </div>
+            </div>
+            <div className="flex justify-end mt-2">
+              <CardFooter className="p-0">
+                <Button type="submit">{isEdit ? "Save Changes" : "Submit"}</Button>
+              </CardFooter>
+            </div>
           </form>
         </Form>
       </CardContent>

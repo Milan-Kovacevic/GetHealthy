@@ -15,8 +15,9 @@ import TrainingProgramTrainees from "@/pages/program-details/components/Training
 import TrainingProgramReviews from "@/pages/program-details/components/TrainingProgramReviews";
 import ProgramTrainerInfo from "@/pages/program-details/components/ProgramTrainerInfo";
 import SchedulePage from "@/pages/schedule/SchedulePage";
-import GeneralInformationForm from "@/pages/create-edit-training-program/components/GeneralInformationForm";
+import EditTrainingProgramPage from "@/pages/create-edit-training-program/EditTrainingProgramPage";
 import CreateTrainingProgramPage from "@/pages/create-edit-training-program/CreateTrainingProgramPage";
+import GeneralInformationForm from "@/pages/create-edit-training-program/components/GeneralInformationForm";
 
 const router = createBrowserRouter([
   {
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
           {
             path: "create-training-plan",
             element: <CreateTrainingProgramPage />,
+          },
+          {
+            path: "edit-training-plan",
+            element: <EditTrainingProgramPage />,
           },
           // Routes for trainees only
           {},
