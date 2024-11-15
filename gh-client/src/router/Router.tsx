@@ -10,7 +10,6 @@ import MainLayout from "@/layouts/MainLayout";
 import { TrainingProgramsPage } from "@/pages/training-programs/TrainingProgramsPage";
 import { ManageTrainingProgramsPage } from "@/pages/training-programs/ManageTrainingProgramsPage";
 import { TestPage } from "@/pages/test/TestPage";
-import TrainingProgramsPage from "@/pages/training-programs/TrainingProgramsPage";
 import ProgramDetailsLayout from "@/layouts/ProgramDetailsLayout";
 import TrainingProgramDetails from "@/pages/program-details/components/TrainingProgramDetails";
 import TrainingProgramTrainees from "@/pages/program-details/components/TrainingProgramTrainees";
