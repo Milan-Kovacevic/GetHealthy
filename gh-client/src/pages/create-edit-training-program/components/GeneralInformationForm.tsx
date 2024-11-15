@@ -1,157 +1,161 @@
-import React from 'react';
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import InputFormField from "@/components/primitives/InputFormField";
+import { MultiSelect } from "@/components/primitives/MultiSelectFormField";
+import TextareaFormField from "@/components/primitives/TextareaFormField";
+import { Button } from "@/components/ui/button";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command"
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Check, ChevronsUpDown } from 'lucide-react'
-import { cn } from "@/lib/utils"
-import { MultiSelect } from '@/components/primitives/MultiSelectFormField'
-import { Link, useNavigate } from "react-router-dom";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Form } from "@/components/ui/form";
+import * as z from "zod";
 
 const formSchema = z.object({
-    name: z
-      .string()
-      .min(1, {
-        message: "Name is required.",
-      }),
-    info: z
-      .string()
-      .min(1, {
-        message: "Description is required.",
-      }),
-      categories: z
-      .array(z.string()).min(1, {
-        message: "At least one category is required.",
-      }),
-      requirements: z
-      .string()
-  });
+  name: z.string().min(1, { message: "Name is required." }),
+  info: z.string().min(1, { message: "Description is required." }),
+  categories: z
+    .array(z.string())
+    .min(1, { message: "At least one category is required." }),
+  requirements: z.string().optional(),
+});
 
-export default function GeneralInformationForm() {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [requirements, setRequirements] = useState('')
-  const [categories, setCategories] = useState<string[]>([])
-  const [open, setOpen] = useState(false)
-
+export default function GeneralInformationForm({
+  defaultValues,
+  isEdit = false,
+}: {
+  defaultValues?: z.infer<typeof formSchema>;
+  isEdit?: boolean;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: defaultValues || {
       name: "",
       info: "",
       categories: [],
-      requirements: ""
+      requirements: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
+      if (!isEdit) {
+        console.log(values);
+        toast(
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">
+              {JSON.stringify(values, null, 2)}
+            </code>
+          </pre>
+        );
+      } else {
+        console.log("Updated values:", values);
+        toast.success("Changes saved successfully.");
+      }
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
     }
   }
-  
+
   const categoryOptions = [
-    { label: "Technical", value: "1" },
-    { label: "Soft Skills", value: "2" },
-    { label: "Leadership", value: "3" },
-    { label: "Project Management", value: "4" },
-    { label: "Design", value: "5" },
-  ];  
-  const toggleCategory = (category: string) => {
-    setCategories(current =>
-      current.includes(category)
-        ? current.filter(c => c !== category)
-        : [...current, category]
-    )
-  }
+    { label: "Technical", value: "technical" },
+    { label: "Soft Skills", value: "soft-skills" },
+    { label: "Leadership", value: "leadership" },
+    { label: "Project Management", value: "management" },
+    { label: "Design", value: "design" },
+  ];
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle>General Information</CardTitle>
       </CardHeader>
-      <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <CardContent className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name of Training Program</Label>
-            <Input
-              id="name"
-              {...form.register("name")}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="categories">Categories (Select multiple)</Label>
-            <MultiSelect className='' options={categoryOptions.map((elem, index)=>({
-                label: elem.label,
-                value: index.toString()
-            }))} value={categories}
-                onValueChange={(categories) => {
-                    categories.forEach((category) => toggleCategory(category)) 
-                  }}
-                {...form.register("categories")}
-                maxCount={3}
-                minCount={1}/>
-                
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              {...form.register("info")}
-              value={description}
-              name="info"
-              onChange={(e) => setDescription(e.target.value)}
-              required
-              className="h-32"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="requirements">Requirements</Label>
-            <Textarea
-              id="requirements"
-              {...form.register("requirements")}
-              value={requirements}
-              name="requirements"
-              onChange={(e) => setRequirements(e.target.value)}
-              className="h-32"
-            />
-          </div>
-        </CardContent>
-        <CardFooter>
-            <Button type="submit">Submit</Button>
-        </CardFooter>
-      </form>
-      </Form>
+      <CardContent className="">
+        {" "}
+        {/*grid grid-cols-2 gap-4*/}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex flex-wrap gap-5">
+              <div className="flex flex-1 flex-col gap-5">
+                <InputFormField
+                  control={form.control}
+                  name="name"
+                  type="text"
+                  description="Enter a training program name."
+                  placeholder="ex. HIIT"
+                  display="Name of Training Program"
+                />
+              </div>
+              <div className="flex flex-1 flex-col gap-5">
+                <FormField
+                  control={form.control}
+                  name="categories"
+                  render={({ field }) => (
+                    <FormItem className="space-y-[2px]">
+                      <FormLabel className="">Categories</FormLabel>
+
+                      <FormControl>
+                        <MultiSelect
+                          className=""
+                          options={categoryOptions}
+                          value={field.value || []}
+                          onValueChange={(categories) =>
+                            field.onChange(categories)
+                          }
+                          maxCount={3}
+                          minCount={1}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-xs ml-0.5">
+                        Select one or more categories.
+                      </FormDescription>
+                      <FormMessage className="text-xs ml-0.5" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-5 mt-8">
+              <div className="flex flex-1 flex-col gap-5">
+                <TextareaFormField
+                  control={form.control}
+                  name="info"
+                  display="Description"
+                  description="Enter a description for training program."
+                  placeholder="ex. HIIT is a functional training program"
+                />
+              </div>
+              <div className="flex flex-1 flex-col gap-5">
+                <TextareaFormField
+                  control={form.control}
+                  name="requirements"
+                  display="Requirements"
+                  description="Enter requirements for training program."
+                  placeholder="ex. Not for someone with heart problems"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end mt-2">
+              <CardFooter className="p-0">
+                <Button type="submit">{isEdit ? "Save Changes" : "Submit"}</Button>
+              </CardFooter>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
     </Card>
-    );
+  );
 }

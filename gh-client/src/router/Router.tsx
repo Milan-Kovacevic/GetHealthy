@@ -13,10 +13,9 @@ import TrainingProgramDetails from "@/pages/program-details/components/TrainingP
 import TrainingProgramTrainees from "@/pages/program-details/components/TrainingProgramTrainees";
 import TrainingProgramReviews from "@/pages/program-details/components/TrainingProgramReviews";
 import ProgramTrainerInfo from "@/pages/program-details/components/ProgramTrainerInfo";
-import ExercisesForm from "@/pages/create-edit-training-program/components/ExercisesForm";
-import GeneralInformationForm from "@/pages/create-edit-training-program/components/GeneralInformationForm";
+import EditTrainingProgramPage from "@/pages/create-edit-training-program/EditTrainingProgramPage";
 import CreateTrainingProgramPage from "@/pages/create-edit-training-program/CreateTrainingProgramPage";
-import ExercisePlanner from "@/pages/create-edit-training-program/components/ExercisePlanner";
+import GeneralInformationForm from "@/pages/create-edit-training-program/components/GeneralInformationForm";
 
 const router = createBrowserRouter([
   {
@@ -61,16 +60,16 @@ const router = createBrowserRouter([
           },
           // Routes for trainers only
           {
-            path: "create-trainer-program",
-            element: <ExercisePlanner />,
-          },
-          {
             path: "generalInfo",
             element: <GeneralInformationForm />,
           },
           {
             path: "create-training-plan",
             element: <CreateTrainingProgramPage />,
+          },
+          {
+            path: "edit-training-plan",
+            element: <EditTrainingProgramPage />,
           },
           // Routes for trainees only
           {},
