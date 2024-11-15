@@ -1,7 +1,7 @@
-import React from "react";
+import { TrainingProgramLayout } from "./TrainingProgramLayout";
 
-function TrainingProgramsPage() {
-  return <div>TrainingProgramsPage!</div>;
-}
-
-export default TrainingProgramsPage;
+export const TrainingProgramsPage = () => {
+  return (
+    <TrainingProgramLayout myTrainingPrograms={false}></TrainingProgramLayout>
+  );
+};

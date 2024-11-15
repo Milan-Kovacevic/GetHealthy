@@ -1,4 +1,4 @@
-import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
+import { Book, GlassWater, Menu, Sunset, Trees, Zap } from "lucide-react";
 
 import {
   Accordion,
@@ -30,25 +30,16 @@ import ThemeToggle from "@/components/primitives/ThemeToggle";
 
 const subMenuItemsOne = [
   {
-    title: "Blog",
-    description: "The latest industry news, updates, and info",
-    icon: <Book className="size-5 shrink-0" />,
+    title: "Pregled",
+    description: "Pretražite planove treninga",
+    icon: <GlassWater className="size-5 shrink-0" />,
+    link: "/programs",
   },
   {
-    title: "Compnay",
-    description: "Our mission is to innovate and empower the world",
+    title: "Upravljanje",
+    description: "Upravljajte svojim planovima treninga",
     icon: <Trees className="size-5 shrink-0" />,
-  },
-  {
-    title: "Careers",
-    description: "Browse job listing and discover our workspace",
-    icon: <Sunset className="size-5 shrink-0" />,
-  },
-  {
-    title: "Support",
-    description:
-      "Get in touch with our support team or visit our community forums",
-    icon: <Zap className="size-5 shrink-0" />,
+    link:"/programs/manage"
   },
 ];
 
@@ -126,18 +117,18 @@ const DesktopNavbar = () => {
             <NavigationMenuList>
               <NavigationMenuItem className="text-muted-foreground">
                 <NavigationMenuTrigger>
-                  <span>Products</span>
+                  <span>Training Programs</span>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="w-80 p-3">
                     <NavigationMenuLink>
                       {subMenuItemsOne.map((item, idx) => (
                         <li key={idx}>
-                          <a
+                          <Link
                             className={cn(
                               "flex select-none gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                             )}
-                            href="#"
+                            to={item.link}
                           >
                             {item.icon}
                             <div>
@@ -148,7 +139,7 @@ const DesktopNavbar = () => {
                                 {item.description}
                               </p>
                             </div>
-                          </a>
+                          </Link>
                         </li>
                       ))}
                     </NavigationMenuLink>
@@ -162,11 +153,11 @@ const DesktopNavbar = () => {
                     <NavigationMenuLink>
                       {subMenuItemsTwo.map((item, idx) => (
                         <li key={idx}>
-                          <a
+                          <Link
                             className={cn(
                               "flex select-none gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                             )}
-                            href="#"
+                            to="#"
                           >
                             {item.icon}
                             <div>
@@ -177,7 +168,7 @@ const DesktopNavbar = () => {
                                 {item.description}
                               </p>
                             </div>
-                          </a>
+                          </Link>
                         </li>
                       ))}
                     </NavigationMenuLink>
