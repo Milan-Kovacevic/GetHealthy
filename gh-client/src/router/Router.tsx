@@ -16,6 +16,7 @@ import ProgramTrainerInfo from "@/pages/program-details/components/ProgramTraine
 import ExercisesForm from "@/pages/create-edit-training-program/components/ExercisesForm";
 import GeneralInformationForm from "@/pages/create-edit-training-program/components/GeneralInformationForm";
 import CreateTrainingProgramPage from "@/pages/create-edit-training-program/CreateTrainingProgramPage";
+import ExercisePlanner from "@/pages/create-edit-training-program/components/ExercisePlanner";
 
 const router = createBrowserRouter([
   {
@@ -61,7 +62,7 @@ const router = createBrowserRouter([
           // Routes for trainers only
           {
             path: "create-trainer-program",
-            element: <ExercisesForm />,
+            element: <ExercisePlanner />,
           },
           {
             path: "generalInfo",
