@@ -1,5 +1,5 @@
 import InputFormField from "@/components/primitives/InputFormField";
-import { MultiSelect } from "@/components/primitives/MultiSelectFormField";
+import { MultiSelect } from "@/components/primitives/MultiSelectFormFIeld";
 import TextareaFormField from "@/components/primitives/TextareaFormField";
 import { Button } from "@/components/ui/button";
 import {
@@ -112,6 +112,7 @@ export default function GeneralInformationForm({
                           className=""
                           options={categoryOptions}
                           value={field.value || []}
+                          defaultValue={defaultValues?.categories}
                           onValueChange={(categories) =>
                             field.onChange(categories)
                           }
