@@ -75,8 +75,8 @@ export default function GeneralInformationForm() {
         {/*grid grid-cols-2 gap-4*/}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex gap-5">
-              <div className="w-[50%]">
+            <div className="flex flex-wrap gap-5">
+              <div className="flex flex-1 flex-col gap-5">
                 <InputFormField
                   control={form.control}
                   name="name"
@@ -86,7 +86,7 @@ export default function GeneralInformationForm() {
                   display="Name of Training Program"
                 />
               </div>
-              <div className="w-[50%]">
+              <div className="flex flex-1 flex-col gap-5">
                 <FormField
                   control={form.control}
                   name="categories"
@@ -115,8 +115,8 @@ export default function GeneralInformationForm() {
                 />
               </div>
             </div>
-            <div className="flex gap-5 mt-8">
-              <div className="w-[50%]">
+            <div className="flex flex-wrap gap-5 mt-8">
+              <div className="flex flex-1 flex-col gap-5">
                 <TextareaFormField
                   control={form.control}
                   name="info"
@@ -125,7 +125,7 @@ export default function GeneralInformationForm() {
                   placeholder="ex. HIIT is a functional training program"
                 />
               </div>
-              <div className="w-[50%]">
+              <div className="flex flex-1 flex-col gap-5">
                 <TextareaFormField
                   control={form.control}
                   name="requirements"
