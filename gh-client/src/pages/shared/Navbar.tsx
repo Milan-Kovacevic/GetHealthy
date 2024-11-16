@@ -30,14 +30,14 @@ import ThemeToggle from "@/components/primitives/ThemeToggle";
 
 const subMenuItemsOne = [
   {
-    title: "Pregled",
-    description: "Pretražite planove treninga",
+    title: "Overview",
+    description: "Browse training plans",
     icon: <GlassWater className="size-5 shrink-0" />,
     link: "/programs",
   },
   {
-    title: "Upravljanje",
-    description: "Upravljajte svojim planovima treninga",
+    title: "Management",
+    description: "Manage your training plans",
     icon: <Trees className="size-5 shrink-0" />,
     link:"/programs/manage"
   },
@@ -253,7 +253,7 @@ const MobileNavbar = () => {
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="products" className="border-b-0">
                   <AccordionTrigger className="mb-4 py-0 font-semibold hover:no-underline">
-                    Products
+                    Training programs
                   </AccordionTrigger>
                   <AccordionContent className="mt-2">
                     {subMenuItemsOne.map((item, idx) => (
