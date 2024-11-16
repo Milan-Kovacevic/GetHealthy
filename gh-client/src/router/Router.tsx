@@ -1,11 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
-import RootLayout from "@/layouts/RootLayout";
-import NotFoundPage from "@/pages/not-found/NotFoundPage";
 import AuthLayout from "@/layouts/AuthLayout";
-import LandingPage from "@/pages/landing/LandingPage";
-import AboutUsPage from "@/pages/about/AboutUsPage";
-import LoginPage from "@/pages/login/LoginPage";
-import RegisterPage from "@/pages/register/RegisterPage";
 import MainLayout from "@/layouts/MainLayout";
 import { TrainingProgramsPage } from "@/pages/training-programs/TrainingProgramsPage";
 import { ManageTrainingProgramsPage } from "@/pages/training-programs/ManageTrainingProgramsPage";
@@ -16,8 +9,15 @@ import TrainingProgramReviews from "@/pages/program-details/components/TrainingP
 import ProgramTrainerInfo from "@/pages/program-details/components/ProgramTrainerInfo";
 import SchedulePage from "@/pages/schedule/SchedulePage";
 import EditTrainingProgramPage from "@/pages/create-edit-training-program/EditTrainingProgramPage";
+import RootLayout from "@/layouts/RootLayout";
+import AboutUsPage from "@/pages/about/AboutUsPage";
 import CreateTrainingProgramPage from "@/pages/create-edit-training-program/CreateTrainingProgramPage";
 import GeneralInformationForm from "@/pages/create-edit-training-program/components/GeneralInformationForm";
+import LandingPage from "@/pages/landing/LandingPage";
+import LoginPage from "@/pages/login/LoginPage";
+import NotFoundPage from "@/pages/not-found/NotFoundPage";
+import RegisterPage from "@/pages/register/RegisterPage";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
@@ -83,7 +83,7 @@ const router = createBrowserRouter([
             element: <CreateTrainingProgramPage />,
           },
           {
-            path: "edit-training-plan",
+            path: "edit-training-plan/:id",
             element: <EditTrainingProgramPage />,
           },
           // Routes for trainees only

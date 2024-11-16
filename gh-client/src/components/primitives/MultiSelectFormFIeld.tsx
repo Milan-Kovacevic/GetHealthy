@@ -102,7 +102,7 @@ interface MultiSelectProps
   /**
    * Minimum number of items to display.
    */
-  minCount?:number;
+  minCount?: number;
   /**
    * The modality of the popover. When set to true, interaction with outside elements
    * will be disabled and only popover content will be visible to screen readers.
@@ -135,7 +135,7 @@ export const MultiSelect = React.forwardRef<
       defaultValue = [],
       placeholder = "Select options",
       animation = 0,
-      minCount = 1,//TODO da li je svugdje default 1?
+      minCount = 1, //TODO da li je svugdje default 1?
       maxCount = 3,
       modalPopover = false,
       asChild = false,
@@ -149,7 +149,9 @@ export const MultiSelect = React.forwardRef<
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
     const [isAnimating, setIsAnimating] = React.useState(false);
 
-    React.useEffect(() => {console.log('Selected values:', selectedValues);}, [selectedValues]);
+    React.useEffect(() => {
+      console.log("Selected values:", selectedValues);
+    }, [selectedValues]);
 
     const handleInputKeyDown = (
       event: React.KeyboardEvent<HTMLInputElement>
