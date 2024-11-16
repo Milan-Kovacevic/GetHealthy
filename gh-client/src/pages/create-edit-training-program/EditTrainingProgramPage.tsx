@@ -1,4 +1,5 @@
 import GeneralInformationForm from "./components/GeneralInformationForm";
+import ExercisePlanBuilder from "./components/ExercisePlanBuilder";
 
 export default function EditTrainingProgramPage() {
   const mockData = {
@@ -11,10 +12,8 @@ export default function EditTrainingProgramPage() {
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">Edit Training Program</h1>
-      <GeneralInformationForm 
-        defaultValues={mockData} 
-        isEdit={true} 
-      />
+      <GeneralInformationForm defaultValues={mockData} isEdit={true} />
+      <ExercisePlanBuilder isEdit={true} />
     </div>
   );
 }

@@ -150,7 +150,9 @@ export default function GeneralInformationForm({
             </div>
             <div className="flex justify-end mt-2">
               <CardFooter className="p-0">
-                <Button type="submit">{isEdit ? "Save Changes" : "Submit"}</Button>
+                <Button type="submit">
+                  {isEdit ? "Save Changes" : "Submit"}
+                </Button>
               </CardFooter>
             </div>
           </form>

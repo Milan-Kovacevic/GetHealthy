@@ -15,7 +15,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "../../../components/ui/form";
 import {
   Popover,
@@ -29,8 +28,8 @@ type ExerciseSelectorProps = {
   disableSearch?: boolean;
   comboBoxOpen: boolean;
   setComboBoxOpen: (value: boolean) => void;
-  placeholder?: boolean;
-  onSelect: (value: any) => void;
+  placeholder?: string;
+  onSelect?: (value: any) => void;
   selectedExercises: any;
 };
 
@@ -49,8 +48,8 @@ const ExerciseSelector = ({
       control={form.control}
       name="exercises"
       render={({ field }) => (
-        <FormItem>
-          <FormLabel>Select exercises</FormLabel>
+        <FormItem className="space-y-[2px]">
+          <FormLabel>Exercises</FormLabel>
           <FormControl>
             <Popover open={comboBoxOpen} onOpenChange={setComboBoxOpen}>
               <PopoverTrigger asChild>
@@ -75,13 +74,18 @@ const ExerciseSelector = ({
                       {exercises.map((item: any) => (
                         <CommandItem
                           key={item.id}
-                          value={item.name}
+                          value={item.value}
                           onSelect={() => {
-                            // onSelect(item.id);
-                            field.onChange([...field.value, item]);
+                            const newExercise = {
+                              ...item,
+                              name: item.label,
+                              sets: [],
+                            };
+                            // field.onChange([...field.value, newExercise]);
+                            onSelect?.(newExercise);
                           }}
                         >
-                          {item.name}
+                          {item.label}
                           <Check
                             className={cn(
                               "ml-auto",
@@ -100,8 +104,12 @@ const ExerciseSelector = ({
               </PopoverContent>
             </Popover>
           </FormControl>
-          <FormDescription></FormDescription>
-          <FormMessage className="text-xs" />
+          <FormDescription>Select exercises for training</FormDescription>
+          {form.formState.errors.exercises && (
+            <p className="text-sm font-medium text-destructive">
+              {form.formState.errors.exercises.message}
+            </p>
+          )}
         </FormItem>
       )}
     ></FormField>
