@@ -15,9 +15,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import CategoryService, { Category } from "@/api/services/CategoryService";
+import { FilterIcon } from "lucide-react";
 
 type FilterProps = {
-  updateList: any;
+  setData: any;
   service: any;
 };
 
@@ -36,14 +37,16 @@ export default function FilterModal(props: FilterProps) {
 
   async function filter(event: any) {
     setCategory(event);
-    let data = await props.service.filter(event);
-    props.updateList(data);
+    props.setData(event);
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="m-3">Filter</Button>
+        <Button variant={"outline"}>
+          <FilterIcon></FilterIcon>
+          <p>Filter</p>
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Select Options</DropdownMenuLabel>
@@ -56,7 +59,7 @@ export default function FilterModal(props: FilterProps) {
             <SelectContent>
               {categories.map((category) => {
                 return (
-                  <SelectItem value={category.title}>
+                  <SelectItem key={category.id} value={category.title}>
                     {category.title}
                   </SelectItem>
                 );

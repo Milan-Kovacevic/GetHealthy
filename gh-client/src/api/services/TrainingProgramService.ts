@@ -93,22 +93,27 @@ export default class TrainingProgramService {
     },
   ];
 
-  public async get(): Promise<TrainingProgram[]> {
-    return Promise.resolve(this.programs);
-  }
-
-  public async search(searchString: string): Promise<TrainingProgram[]> {
+  public async getFilteredPrograms(
+    searchString: string,
+    category: string,
+    sortType: string
+  ): Promise<TrainingProgram[]> {
+    console.log(searchString, category, sortType);
     return Promise.resolve(
-      this.programs.filter((item) =>
-        item.title.toLowerCase().includes(searchString.toLowerCase())
-      )
+      this.programs
+        .filter((item) => {
+          if (category === "All") return true;
+          return category.toLowerCase() === item.category.toLowerCase();
+        })
+        .filter((item) => {
+          if (searchString.length === 0) return true;
+          return item.title.toLowerCase().includes(searchString.toLowerCase());
+        })
+        .sort((x, y) => {
+          return sortType === "asc"
+            ? x.title.localeCompare(y.title)
+            : y.title.localeCompare(x.title);
+        })
     );
-  }
-
-  public async filter(category: string): Promise<TrainingProgram[]> {
-    if (category === "All") return this.programs;
-    return this.programs.filter((item) => {
-      return item.category.toLowerCase() === category.toLowerCase();
-    });
   }
 }

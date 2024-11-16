@@ -15,22 +15,20 @@ import { Trash } from "lucide-react";
 type AlertDialogProps = {
   description: string;
   title: string;
-  className: string;
 };
 
-export const Delete = (props: AlertDialogProps) => {
+export const DeleteAlert = (props: AlertDialogProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button className={props.className} variant="outline">
+        <Button variant="outline">
           <Trash></Trash>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{props.title}</AlertDialogTitle>
-          <AlertDialogDescription>{props.description}
-          </AlertDialogDescription>
+          <AlertDialogDescription>{props.description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>

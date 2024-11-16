@@ -1,15 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
-import { Search } from "../shared/Search";
+import { SearchBar } from "../shared/SearchBar";
 import { TrainingProgramCard } from "./components/TrainingProgramCard";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Pagination,
   PaginationContent,
@@ -23,9 +15,10 @@ import { PlusIcon } from "lucide-react";
 import TrainingProgramService, {
   TrainingProgram,
 } from "@/api/services/TrainingProgramService";
-import { SelectContent } from "@radix-ui/react-select";
 import CategoryService, { Category } from "@/api/services/CategoryService";
 import FilterModal from "./components/FilterModal";
+import { Separator } from "@/components/ui/separator";
+import SortByButton from "../shared/SortByButton";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -35,9 +28,22 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   const [myTrainingPrograms, setMyTrainingPrograms] = useState(false);
   const [programs, setPrograms] = useState<TrainingProgram[]>([]);
 
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  const [searchString, setSearchString] = useState("");
+  const [filter, setFilter] = useState("All");
+  const [sort, setSort] = useState("asc");
+
   const service = new TrainingProgramService();
 
-  const [categories, setCategories] = useState<Category[]>([]);
+  useEffect(() => {
+    async function updateList() {
+      var list = await service.getFilteredPrograms(searchString, filter, sort);
+      console.log(list);
+      setPrograms(list);
+    }
+    updateList();
+  }, [searchString, filter, sort]);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -50,8 +56,8 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
 
   useEffect(() => {
     async function fetchTP() {
-      const data = await service.get();
-      setPrograms(data);
+      const data = await service.getFilteredPrograms("", "All", "asc");
+      setPrograms(data!);
     }
 
     fetchTP();
@@ -64,28 +70,48 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   }, [myTrainingPrograms]);
 
   return (
-    <section className="relative overflow-hidden px-2 h-full">
+    <section className="relative overflow-hidden px-2 h-full pb-3">
       <div className="container mx-auto my-auto h-full">
         <div className="mx-auto flex flex-col py-10">
-          <div className="flex justify-between  m-3 mb-5">
-            <p className="text-3xl">Trening programi</p>
+          <div className="flex justify-between m-3 mb-5">
+            <div>
+              <p className="text-3xl font-semibold">Training Programs</p>
+              <p className="text-muted-foreground text-base">
+                Browse and explore your perfect training program today.
+              </p>
+            </div>
             {myTrainingPrograms === true && (
               <Fragment>
-                <Button>
+                <Button variant={"outline"}>
                   <PlusIcon></PlusIcon>
+                  Create program
                 </Button>
               </Fragment>
             )}
           </div>
-          <hr></hr>
-          <div className="flex justify-between">
-            <Search updateList={setPrograms} service={service}></Search>
-            <FilterModal service={service} updateList={setPrograms}></FilterModal>
+          <Separator></Separator>
+          <div className="flex justify-between m-3">
+            <SearchBar
+              setData={setSearchString}
+              service={service}
+            ></SearchBar>
+            <div className="flex justify-between gap-2">
+              <FilterModal
+                setData={setFilter}
+                service={service}
+              ></FilterModal>
+              <SortByButton
+                setData={setSort}
+                service={service}
+              ></SortByButton>
+            </div>
           </div>
-          <hr></hr>
-          <div className="grid gap-6 p-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-7">
+          <Separator></Separator>
+          <div className="grid gap-6 p-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
             {programs.map((item) => (
               <TrainingProgramCard
+                rating={4.4}
+                category={item.category}
                 key={item.id}
                 myProgram={props.myTrainingPrograms}
                 title={item.title}
