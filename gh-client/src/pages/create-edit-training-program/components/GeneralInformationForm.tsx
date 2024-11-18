@@ -79,7 +79,7 @@ export default function GeneralInformationForm({
   ];
 
   return (
-    <Card className="w-full max-w-4xl mx-auto border-none shadow-none">
+    <Card className="w-full border-none shadow-none">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <span className="w-3 h-3 border-2 border-black rounded-full"></span>
@@ -89,7 +89,7 @@ export default function GeneralInformationForm({
       <CardContent className="">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-1 gap-0 md:grid-cols-2 md:gap-5">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <InputFormField
                 control={form.control}
                 name="name"
@@ -98,12 +98,14 @@ export default function GeneralInformationForm({
                 placeholder="ex. HIIT"
                 display="Name of Training Program"
               />
+
               <FormField
                 control={form.control}
                 name="categories"
                 render={({ field }) => (
                   <FormItem className="space-y-[2px]">
                     <FormLabel className="">Categories</FormLabel>
+
                     <FormControl>
                       <MultiSelect
                         className=""
@@ -125,7 +127,8 @@ export default function GeneralInformationForm({
                 )}
               />
             </div>
-            <div className="grid grid-cols-1 gap-5 mt-2 md:grid-cols-2">
+
+            <div className="grid grid-cols-1 gap-5 mt-8 md:grid-cols-2">
               <TextareaFormField
                 control={form.control}
                 name="info"
@@ -135,7 +138,8 @@ export default function GeneralInformationForm({
                 className="col-span-full w-full"
               />
             </div>
-            <div className="grid grid-cols-1 gap-5 mt-2 md:grid-cols-2">
+
+            <div className="grid grid-cols-1 gap-5 mt-8 md:grid-cols-2">
               <TextareaFormField
                 control={form.control}
                 name="requirements"
@@ -145,7 +149,8 @@ export default function GeneralInformationForm({
                 className="col-span-full w-full"
               />
             </div>
-            <div className="flex justify-end mt-4">
+
+            <div className="flex justify-end mt-2">
               <CardFooter className="p-0">
                 <Button type="submit" variant="secondary">
                   {isEdit ? "Save Changes" : "Submit"}

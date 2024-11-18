@@ -162,7 +162,10 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
     <div className="mt-5  w-full">
       {/**border rounded-lg p-5*/}
       <div className="text-2xl font-semibold leading-none tracking-tight mb-5">
-        ○ Workout Plan
+        <div className="flex items-center space-x-2">
+          <span className="w-3 h-3 border-2 border-black rounded-full"></span>
+          <span> Workout Plan</span>
+        </div>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
