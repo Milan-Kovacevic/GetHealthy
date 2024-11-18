@@ -1,36 +1,24 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Download } from "lucide-react";
 import trainerImg from "@/assets/trainer-example.png";
 
-interface TrainerInfoProps {
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  gender: string;
-  email: string;
-  phone: string;
-  avatarUrl: string;
-  biography: string;
-}
-
 export default function ProgramTrainerInfo() {
   return (
-    <Card className="w-full border-0">
-      <CardHeader className="relative">
+    <div className="w-full border-0 bg-background">
+      <div className="relative p-4">
         <Button
           variant="secondary"
           className="absolute top-4 mt-8 right-4"
-          aria-label="Download trainer qualification"
+          aria-label="Download qualification"
         >
           <div className="flex items-center gap-1.5">
             <Download className="h-4 w-4" />
             <p className="sm:block hidden">Download qualification</p>
           </div>
         </Button>
-      </CardHeader>
-      <CardContent>
+      </div>
+      <div className="p-4">
         <div className="flex flex-col md:flex-row gap-6">
           <Avatar className="w-24 h-24 md:w-32 md:h-32">
             <AvatarImage src={trainerImg} alt="avatar" />
@@ -56,15 +44,15 @@ export default function ProgramTrainerInfo() {
           </div>
         </div>
         <div className="mt-6 max-w-screen-lg">
-          <h3 className="text-base text-muted-foreground text-justify text-pretty">
+          <p className="text-base text-muted-foreground text-justify text-pretty">
             Magistar sporta i tjelesnog odgoja sa dugogodišnjim iskustvom
             personal trenera u fitness centrima. Nekoliko godina je radila kao
             trener plivanja u klubu „Adriatic“ na olimpijskom bazenu Otoka. Rad
             se bazirao na radu sa neplivačima i djecom predškolskog uzrasta i
             mlađe.
-          </h3>
+          </p>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
