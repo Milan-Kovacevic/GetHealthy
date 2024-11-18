@@ -89,7 +89,7 @@ export default function GeneralInformationForm({
       <CardContent className="">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-1 gap-0 md:grid-cols-2 md:gap-5">
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-5 mt-2">
               <InputFormField
                 control={form.control}
                 name="name"
