@@ -22,7 +22,8 @@ const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
   });
 
   return (
-    <div className="mt-8 p-6 border rounded-lg">
+    <div className="w-full p-6 border rounded-lg">
+      {/** mt-8*/}
       <h3 className="text-lg font-semibold mb-4">{exercise?.name} </h3>
       <FormField
         control={form.control}
@@ -59,7 +60,6 @@ const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
           </FormItem>
         )}
       />
-
       {fields.map((field, setIndex) => (
         <SetForm
           key={field.id}

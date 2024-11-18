@@ -159,61 +159,76 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
   };
 
   return (
-    <div className="border rounded-lg p-5 mt-5 max-w-4xl mx-auto w-full">
+    <div className="mt-5  w-full">
+      {/**border rounded-lg p-5*/}
       <div className="text-2xl font-semibold leading-none tracking-tight mb-5">
-        Workout Plan
+        ○ Workout Plan
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="w-60">
-            <ExerciseSelector
-              form={form}
-              comboBoxOpen={comboBoxOpen}
-              setComboBoxOpen={setComboBoxOpen}
-              exercises={exercises}
-              onSelect={handleSelect}
-              placeholder="Search exercise"
-              selectedExercises={selectedExercises}
-            />
-          </div>
-          <div className="flex gap-5 flex-wrap">
-            {form.watch("exercises").map((exercise, index) => (
-              <div
-                key={index}
-                draggable
-                onDragStart={(e) => handleDragStart(e, index)}
-                onDragOver={(e) => handleDragOver(e)}
-                onDrop={(e) => handleDrop(e, index)}
-                className="cursor-move"
-              >
-                <ExerciseCard
-                  key={exercise.id}
-                  exercise={exercise}
-                  index={index}
-                  isSelected={selectedExerciseIndex === index}
-                  onSelect={() =>
-                    selectedExerciseIndex !== null
-                      ? selectedExerciseIndex === index
-                        ? setSelectedExerciseIndex(null)
-                        : setSelectedExerciseIndex(index)
-                      : setSelectedExerciseIndex(index)
-                  }
-                  form={form}
-                  onRemove={handleRemoveExercise}
-                />
+          <div className="flex flex-col space-y-8">
+            <div className="flex flex-col md:flex-row flex-1 space-y-4 md:space-y-0">
+              <div className="flex flex-col w-full md:w-1/5 space-y-8 pr-0 md:pr-4 lg:ml-4 md:ml-4">
+                <div className="w-full">
+                  <ExerciseSelector
+                    form={form}
+                    comboBoxOpen={comboBoxOpen}
+                    setComboBoxOpen={setComboBoxOpen}
+                    exercises={exercises}
+                    onSelect={handleSelect}
+                    placeholder="Search exercise"
+                    selectedExercises={selectedExercises}
+                  />
+                </div>
+                <div className="flex flex-col gap-5">
+                  {form.watch("exercises").map((exercise, index) => (
+                    <div
+                      key={index}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, index)}
+                      onDragOver={(e) => handleDragOver(e)}
+                      onDrop={(e) => handleDrop(e, index)}
+                      className="cursor-move"
+                    >
+                      <ExerciseCard
+                        key={exercise.id}
+                        exercise={exercise}
+                        index={index}
+                        isSelected={selectedExerciseIndex === index}
+                        onSelect={() =>
+                          selectedExerciseIndex !== null
+                            ? selectedExerciseIndex === index
+                              ? setSelectedExerciseIndex(null)
+                              : setSelectedExerciseIndex(index)
+                            : setSelectedExerciseIndex(index)
+                        }
+                        form={form}
+                        onRemove={handleRemoveExercise}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
-          {selectedExerciseIndex !== null && (
-            <ExerciseForm
-              key={selectedExerciseIndex}
-              exercise={form.watch("exercises")[selectedExerciseIndex]}
-              index={selectedExerciseIndex}
-              form={form}
-            />
-          )}
-          <div className="justify-end flex">
-            <Button type="submit">{isEdit ? "Save changes" : "Submit"}</Button>
+              <div className="flex flex-col w-full md:w-4/5 space-y-4 items-start lg:p-4">
+                {selectedExerciseIndex !== null ? (
+                  <ExerciseForm
+                    key={selectedExerciseIndex}
+                    exercise={form.watch("exercises")[selectedExerciseIndex]}
+                    index={selectedExerciseIndex}
+                    form={form}
+                  />
+                ) : (
+                  <div className="text-center text-muted-foreground">
+                    <p>Select an exercise to view or edit details.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex justify-end mt-8">
+              <Button type="submit">
+                {isEdit ? "Save changes" : "Submit"}
+              </Button>
+            </div>
           </div>
         </form>
       </Form>
