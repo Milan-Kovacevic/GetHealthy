@@ -224,7 +224,7 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
                 )}
               </div>
             </div>
-            <div className="flex justify-end mt-8">
+            <div className="flex justify-end mt-8 md:mr-4">
               <Button type="submit">
                 {isEdit ? "Save changes" : "Submit"}
               </Button>

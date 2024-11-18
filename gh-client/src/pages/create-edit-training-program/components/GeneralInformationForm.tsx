@@ -88,70 +88,67 @@ export default function GeneralInformationForm({
         {/*grid grid-cols-2 gap-4*/}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                <InputFormField
-                  control={form.control}
-                  name="name"
-                  type="text"
-                  description="Enter a training program name."
-                  placeholder="ex. HIIT"
-                  display="Name of Training Program"
-                />
-              
-                <FormField
-                  control={form.control}
-                  name="categories"
-                  render={({ field }) => (
-                    <FormItem className="space-y-[2px]">
-                      <FormLabel className="">Categories</FormLabel>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <InputFormField
+                control={form.control}
+                name="name"
+                type="text"
+                description="Enter a training program name."
+                placeholder="ex. HIIT"
+                display="Name of Training Program"
+              />
 
-                      <FormControl>
-                        <MultiSelect
-                          className=""
-                          options={categoryOptions}
-                          value={field.value || []}
-                          defaultValue={defaultValues?.categories}
-                          onValueChange={(categories) =>
-                            field.onChange(categories)
-                          }
-                          maxCount={3}
-                          minCount={1}
-                        />
-                      </FormControl>
-                      <FormDescription className="text-xs ml-0.5">
-                        Select one or more categories.
-                      </FormDescription>
-                      <FormMessage className="text-xs ml-0.5" />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            
-           
-              <div className="grid grid-cols-1 gap-5 mt-8 md:grid-cols-2">
-                <TextareaFormField
-                  control={form.control}
-                  name="info"
-                  display="Description"
-                  description="Enter a description for training program."
-                  placeholder="ex. HIIT is a functional training program"
-                  className="col-span-full w-full"
-                />
-              </div>
-            
+              <FormField
+                control={form.control}
+                name="categories"
+                render={({ field }) => (
+                  <FormItem className="space-y-[2px]">
+                    <FormLabel className="">Categories</FormLabel>
+
+                    <FormControl>
+                      <MultiSelect
+                        className=""
+                        options={categoryOptions}
+                        value={field.value || []}
+                        defaultValue={defaultValues?.categories}
+                        onValueChange={(categories) =>
+                          field.onChange(categories)
+                        }
+                        maxCount={3}
+                        minCount={1}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-xs ml-0.5">
+                      Select one or more categories.
+                    </FormDescription>
+                    <FormMessage className="text-xs ml-0.5" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <div className="grid grid-cols-1 gap-5 mt-8 md:grid-cols-2">
-             
-                <TextareaFormField
-                  control={form.control}
-                  name="requirements"
-                  display="Requirements"
-                  description="Enter requirements for training program."
-                  placeholder="ex. Not for someone with heart problems"
-                  className="col-span-full w-full"
-                />
-              </div>
-            
+              <TextareaFormField
+                control={form.control}
+                name="info"
+                display="Description"
+                description="Enter a description for training program."
+                placeholder="ex. HIIT is a functional training program"
+                className="col-span-full w-full"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-5 mt-8 md:grid-cols-2">
+              <TextareaFormField
+                control={form.control}
+                name="requirements"
+                display="Requirements"
+                description="Enter requirements for training program."
+                placeholder="ex. Not for someone with heart problems"
+                className="col-span-full w-full"
+              />
+            </div>
+
             <div className="flex justify-end mt-2">
               <CardFooter className="p-0">
                 <Button type="submit" variant="secondary">
