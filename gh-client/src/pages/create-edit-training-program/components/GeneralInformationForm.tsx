@@ -81,11 +81,12 @@ export default function GeneralInformationForm({
   return (
     <Card className="w-full max-w-4xl mx-auto border-none shadow-none">
       <CardHeader>
-        <CardTitle>General Information</CardTitle>
+        <CardTitle className="flex items-center space-x-2">
+          <span className="w-3 h-3 border-2 border-black rounded-full"></span>
+          <span>General Information</span>
+        </CardTitle>
       </CardHeader>
       <CardContent className="">
-        {" "}
-        {/*grid grid-cols-2 gap-4*/}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
