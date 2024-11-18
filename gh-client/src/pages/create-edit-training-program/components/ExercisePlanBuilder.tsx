@@ -213,7 +213,7 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
             />
           )}
           <div className="justify-end flex">
-            <Button type="submit">{isEdit ? "Save changes" : "Submit"}</Button>
+            <Button type="submit">{isEdit ? "Save Changes" : "Submit"}</Button>
           </div>
         </form>
       </Form>
