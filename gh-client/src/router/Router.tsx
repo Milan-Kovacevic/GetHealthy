@@ -22,17 +22,18 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
     element: <RootLayout />,
     children: [
-      {
-        path: "/test",
-        element: <TestPage></TestPage>,
-      },
       { path: "/", element: <LandingPage /> },
       { path: "/about", element: <AboutUsPage /> },
       {
         element: <MainLayout />,
         children: [
+          {
+            path: "/test",
+            element: <TestPage></TestPage>,
+          },
           // Routes for every role
           {
+            
             path: "/programs",
             children: [
               {
