@@ -17,6 +17,7 @@ import LandingPage from "@/pages/landing/LandingPage";
 import LoginPage from "@/pages/login/LoginPage";
 import NotFoundPage from "@/pages/not-found/NotFoundPage";
 import RegisterPage from "@/pages/register/RegisterPage";
+import TrainingProgramSchedule from "@/pages/training-schedule/TrainingProgramSchedule";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 const router = createBrowserRouter([

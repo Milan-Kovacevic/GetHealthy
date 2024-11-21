@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -8,6 +10,12 @@ import { z } from "zod";
 import ExerciseCard from "./ExerciseCard";
 import ExerciseForm from "./ExerciseForm";
 import ExerciseSelector from "./ExerciseSelector";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // mock data of exercises
 const exercises = [
@@ -143,6 +151,7 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
     exercises.splice(targetIndex, 0, draggedItem);
 
     form.setValue("exercises", exercises);
+    setSelectedExerciseIndex(targetIndex);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -162,15 +171,15 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
     <div className="mt-5  w-full">
       <div className="text-2xl font-semibold leading-none tracking-tight mb-5">
         <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 border-2 border-black rounded-full"></span>
+          <span className="w-3 h-3 border-2 border-black dark:border-white rounded-full"></span>
           <span> Workout Plan</span>
         </div>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-col space-y-8">
-            <div className="flex flex-col md:flex-row flex-1 space-y-4 md:space-y-0">
-              <div className="flex flex-col w-full md:w-1/5 space-y-8 pr-0 md:pr-4 lg:ml-4 md:ml-4">
+            <div className="flex flex-col sm:flex-row flex-1 space-y-4 sm:space-y-0">
+              <div className="flex flex-col w-full sm:w-[330px] overflow-hidden  space-y-8 pr-0 sm:pr-4  sm:ml-4">
                 <div className="w-full">
                   <ExerciseSelector
                     form={form}
@@ -178,55 +187,91 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
                     setComboBoxOpen={setComboBoxOpen}
                     exercises={exercises}
                     onSelect={handleSelect}
-                    placeholder="Search exercise"
+                    placeholder="Search exercise ..."
                     selectedExercises={selectedExercises}
                   />
                 </div>
-                <div className="flex flex-col gap-5">
-                  {form.watch("exercises").map((exercise, index) => (
-                    <div
-                      key={index}
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, index)}
-                      onDragOver={(e) => handleDragOver(e)}
-                      onDrop={(e) => handleDrop(e, index)}
-                      className="cursor-move"
-                    >
-                      <ExerciseCard
-                        key={exercise.id}
-                        exercise={exercise}
-                        index={index}
-                        isSelected={selectedExerciseIndex === index}
-                        onSelect={() =>
-                          selectedExerciseIndex !== null
-                            ? selectedExerciseIndex === index
-                              ? setSelectedExerciseIndex(null)
-                              : setSelectedExerciseIndex(index)
-                            : setSelectedExerciseIndex(index)
-                        }
-                        form={form}
-                        onRemove={handleRemoveExercise}
-                      />
+                <ScrollArea className="h-[50vh] pr-3 border-b-2 border-t-2 rounded-lg">
+                  {form.watch("exercises").length === 0 ? (
+                    <div className="flex justify-center items-center h-full w-full text-muted-foreground">
+                      Exercises
                     </div>
-                  ))}
-                </div>
+                  ) : (
+                    ""
+                  )}
+                  <div className="flex flex-col gap-5 m-1">
+                    {form.watch("exercises").map((exercise, index) => (
+                      <div
+                        key={index}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, index)}
+                        onDragOver={(e) => handleDragOver(e)}
+                        onDrop={(e) => handleDrop(e, index)}
+                        className="cursor-move"
+                      >
+                        <ExerciseCard
+                          key={exercise.id}
+                          exercise={exercise}
+                          index={index}
+                          isSelected={selectedExerciseIndex === index}
+                          onSelect={() =>
+                            selectedExerciseIndex !== null
+                              ? selectedExerciseIndex === index
+                                ? setSelectedExerciseIndex(null)
+                                : setSelectedExerciseIndex(index)
+                              : setSelectedExerciseIndex(index)
+                          }
+                          form={form}
+                          onRemove={handleRemoveExercise}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <ScrollBar orientation="vertical" />
+                </ScrollArea>
               </div>
-              <div className="flex flex-col w-full md:w-4/5 space-y-4 items-start lg:p-4">
+              <div className="border-2 rounded-lg p-4 flex flex-col w-full  space-y-4 items-start lg:p-4">
                 {selectedExerciseIndex !== null ? (
-                  <ExerciseForm
-                    key={selectedExerciseIndex}
-                    exercise={form.watch("exercises")[selectedExerciseIndex]}
-                    index={selectedExerciseIndex}
-                    form={form}
-                  />
+                  <>
+                    <div className="flex justify-end w-full">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-full hover:bg-destructive hover:text-destructive-foreground flex-shrink-0"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedExerciseIndex(null);
+                              }}
+                            >
+                              <X className="h-4 w-4" />
+                              <span className="sr-only">Remove exercise</span>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Remove exercise form</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    <ExerciseForm
+                      key={selectedExerciseIndex}
+                      exercise={form.watch("exercises")[selectedExerciseIndex]}
+                      index={selectedExerciseIndex}
+                      form={form}
+                    />
+                  </>
                 ) : (
-                  <div className="text-center text-muted-foreground">
+                  <div className="flex justify-center items-center h-full w-full text-center text-muted-foreground">
                     <p>Select an exercise to view or edit details.</p>
                   </div>
                 )}
               </div>
             </div>
-            <div className="flex justify-end mt-8 md:mr-4">
+            <div className="flex justify-end mt-8 ">
               <Button type="submit">
                 {isEdit ? "Save changes" : "Submit"}
               </Button>

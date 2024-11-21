@@ -59,7 +59,7 @@ const ExerciseSelector = ({
                   aria-expanded={comboBoxOpen}
                   className="w-full justify-between"
                 >
-                  Select exercises ...
+                  Select exercises
                   <ChevronsUpDown className="opacity-50" />
                 </Button>
               </PopoverTrigger>
@@ -104,7 +104,7 @@ const ExerciseSelector = ({
               </PopoverContent>
             </Popover>
           </FormControl>
-          <FormDescription>Select exercises for training</FormDescription>
+          <FormDescription>Add exercises to workout</FormDescription>
           {form.formState.errors.exercises && (
             <p className="text-sm font-medium text-destructive">
               {form.formState.errors.exercises.message}

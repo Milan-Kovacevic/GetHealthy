@@ -80,7 +80,7 @@ export default function GeneralInformationForm({
 
   return (
     <Card className="w-full border-none shadow-none">
-      <CardHeader>
+      <CardHeader className="p-1">
         <CardTitle className="flex items-center space-x-2">
           <span className="w-3 h-3 border-2 border-black rounded-full"></span>
           <span>General Information</span>

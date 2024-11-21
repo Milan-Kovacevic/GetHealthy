@@ -8,6 +8,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useFieldArray } from "react-hook-form";
 import SetForm from "./SetForm";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollBar } from "@/components/ui/scroll-area";
 
 type ExerciseFormProps = {
   exercise: any;
@@ -22,8 +24,8 @@ const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
   });
 
   return (
-    <div className="w-full p-6 border rounded-lg">
-      {/** mt-8*/}
+    <div className="w-full p-3 pt-0">
+      {/** mt-8 border rounded-lg*/}
       <h3 className="text-lg font-semibold mb-4">{exercise?.name} </h3>
       <FormField
         control={form.control}
@@ -60,15 +62,22 @@ const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
           </FormItem>
         )}
       />
-      {fields.map((field, setIndex) => (
-        <SetForm
-          key={field.id}
-          exerciseIndex={index}
-          setIndex={setIndex}
-          form={form}
-          exerciseType={exercise?.type}
-        />
-      ))}
+
+      <ScrollArea className="h-[32vh] w-full ">
+        <div className="mr-3 ">
+          {fields.length > 0 ? <h4 className="font-medium mb-2">Sets:</h4> : ""}
+          {fields.map((field, setIndex) => (
+            <SetForm
+              key={field.id}
+              exerciseIndex={index}
+              setIndex={setIndex}
+              form={form}
+              exerciseType={exercise?.type}
+            />
+          ))}
+        </div>
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
     </div>
   );
 };
