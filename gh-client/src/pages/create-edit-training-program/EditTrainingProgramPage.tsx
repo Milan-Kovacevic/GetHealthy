@@ -7,6 +7,7 @@ export default function EditTrainingProgramPage() {
     info: "Enhance your leadership skills through practical sessions.",
     categories: ["technical", "soft-skills"],
     requirements: "At least 3 years of management experience.",
+    //files:"https://example"
   };
 
   return (
