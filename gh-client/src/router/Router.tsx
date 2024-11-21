@@ -15,6 +15,7 @@ import TrainingProgramReviews from "@/pages/program-details/components/TrainingP
 import TrainingProgramTrainees from "@/pages/program-details/components/TrainingProgramTrainees";
 import RegisterPage from "@/pages/register/RegisterPage";
 import TrainingProgramsPage from "@/pages/training-programs/TrainingProgramsPage";
+import TrainingProgramSchedule from "@/pages/training-schedule/TrainingProgramSchedule";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
           {
             path: "/programs",
             element: <TrainingProgramsPage />,
+          },
+          {
+            path: "training-program-schedule",
+            element: <TrainingProgramSchedule />,
           },
           {
             path: "/programs/:id",

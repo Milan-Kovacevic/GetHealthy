@@ -11,14 +11,14 @@ type ExerciseCardProps = {
   onRemove: (value: any) => void;
 };
 
-const ExerciseCard = ({
+export default function ExerciseCard({
   exercise,
   index,
   isSelected,
   onSelect,
   form,
   onRemove,
-}: ExerciseCardProps) => {
+}: ExerciseCardProps) {
   const exerciseErrors = form?.formState.errors?.exercises?.[index];
 
   return (
@@ -28,20 +28,25 @@ const ExerciseCard = ({
       } ${exerciseErrors ? "ring-2 ring-destructive" : ""}`}
       onClick={onSelect}
     >
-      <CardContent className="p-3 flex items-center justify-between">
-        <div>
-          <h3 className="font-semibold text-base mb-1">{exercise.name}</h3>
-          <div className="flex items-center text-xs text-muted-foreground space-x-2">
-            <span>{exercise.type}</span>
-            <span>•</span>
-            <span>{exercise.sets.length} sets</span>
+      <CardContent className="p-3 flex items-center">
+        <div className="flex items-center flex-1 mr-2">
+          <div className="flex items-center justify-center bg-muted text-muted-foreground rounded-full w-8 h-8 mr-3 flex-shrink-0">
+            <span className="text-sm font-semibold">{index + 1}</span>
+          </div>
+          <div>
+            <h3 className="font-semibold text-base mb-1">{exercise.name}</h3>
+            <div className="flex items-center text-xs text-muted-foreground space-x-2">
+              <span>{exercise.type}</span>
+              <span>•</span>
+              <span>{exercise.sets.length} sets</span>
+            </div>
           </div>
         </div>
         <Button
           type="button"
           variant="ghost"
           size="icon"
-          className="h-8 w-8 rounded-full hover:bg-destructive hover:text-destructive-foreground"
+          className="h-8 w-8 rounded-full hover:bg-destructive hover:text-destructive-foreground flex-shrink-0"
           onClick={(e) => {
             e.stopPropagation();
             onRemove(index);
@@ -53,6 +58,4 @@ const ExerciseCard = ({
       </CardContent>
     </Card>
   );
-};
-
-export default ExerciseCard;
+}
