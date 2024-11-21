@@ -19,6 +19,8 @@ import CategoryService, { Category } from "@/api/services/CategoryService";
 import FilterModal from "./components/FilterModal";
 import { Separator } from "@/components/ui/separator";
 import SortByButton from "../shared/SortByButton";
+import FeaturedTrainingPrograms from "./components/FeaturedTrainingPrograms";
+import { TrainingProgramFilters } from "./components/TrainingProgramFilters";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -70,84 +72,102 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   }, [myTrainingPrograms]);
 
   return (
-    <section className="relative overflow-hidden px-2 h-full pb-3">
-      <div className="container mx-auto my-auto h-full">
-        <div className="mx-auto flex flex-col py-10">
-          <div className="flex justify-between m-3 mb-5">
-            <div>
-              <p className="text-3xl font-semibold">Training Programs</p>
-              <p className="text-muted-foreground text-base">
-                Browse and explore your perfect training program today.
-              </p>
-            </div>
-            {myTrainingPrograms === true && (
-              <Fragment>
-                <Button variant={"outline"}>
-                  <PlusIcon></PlusIcon>
-                  Create program
-                </Button>
-              </Fragment>
-            )}
-          </div>
-          <Separator></Separator>
-          <div className="flex justify-between m-3">
-            <SearchBar
-              setData={setSearchString}
-              service={service}
-            ></SearchBar>
-            <div className="flex justify-between gap-2">
-              <FilterModal
-                setData={setFilter}
+    <section className="relative overflow-hidden md:px-2 sm:px-4 px-6 h-full pt-8 pb-10">
+      <div className="container mx-auto my-auto h-full space-y-5">
+        <div className="mx-auto flex flex-col">
+          <TrainingProgramsPageTitle showCreate={myTrainingPrograms} />
+          <Separator className="my-4" />
+          {!myTrainingPrograms && <FeaturedTrainingPrograms />}
+          {!myTrainingPrograms && (
+            <>
+              <div className="space-y-0.5">
+                <h2 className="text-2xl font-medium">Training programs</h2>
+              </div>
+              <Separator className="my-4" />
+            </>
+          )}
+
+          <div className="flex flex-row gap-8">
+            <div className="flex flex-col my-6 pr-4 border-r">
+              <SearchBar
+                setData={setSearchString}
                 service={service}
-              ></FilterModal>
-              <SortByButton
-                setData={setSort}
-                service={service}
-              ></SortByButton>
+              ></SearchBar>
+              {/* <div className="flex justify-between gap-2">
+                <FilterModal
+                  setData={setFilter}
+                  service={service}
+                ></FilterModal>
+                <SortByButton
+                  setData={setSort}
+                  service={service}
+                ></SortByButton>
+              </div> */}
+              <TrainingProgramFilters />
+            </div>
+            <div className="grid gap-x-6 gap-y-3 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 flex-1">
+              {programs.map((item) => (
+                <TrainingProgramCard
+                  rating={4.4}
+                  categories={[item.category]}
+                  key={item.id}
+                  editable={props.myTrainingPrograms}
+                  title={item.title}
+                  description={item.description}
+                  id={item.id}
+                  difficulty={item.difficulty}
+                  image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
+                  trainer="Bruce Wayne"
+                ></TrainingProgramCard>
+              ))}
             </div>
           </div>
-          <Separator></Separator>
-          <div className="grid gap-6 p-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
-            {programs.map((item) => (
-              <TrainingProgramCard
-                rating={4.4}
-                category={item.category}
-                key={item.id}
-                myProgram={props.myTrainingPrograms}
-                title={item.title}
-                description={item.description}
-                id={item.id}
-                img="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
-                trainer="Bruce Wayne"
-              ></TrainingProgramCard>
-            ))}
-          </div>
+
+          <Pagination className="mt-10">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#" isActive>
+                  2
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">3</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
       </div>
     </section>
+  );
+};
+
+const TrainingProgramsPageTitle = ({ showCreate }: { showCreate: boolean }) => {
+  return (
+    <div className="flex justify-between">
+      <div className="space-y-0.5">
+        <p className="text-2xl font-bold">Training Programs</p>
+        <p className="text-muted-foreground text-sm">
+          Browse and explore your perfect training program today.
+        </p>
+      </div>
+      {showCreate && (
+        <Button variant={"secondary"} className="self-end">
+          <PlusIcon className="text-primary"></PlusIcon>
+          Create program
+        </Button>
+      )}
+    </div>
   );
 };

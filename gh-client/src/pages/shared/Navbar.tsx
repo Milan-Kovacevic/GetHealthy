@@ -39,7 +39,7 @@ const subMenuItemsOne = [
     title: "Management",
     description: "Manage your training plans",
     icon: <Trees className="size-5 shrink-0" />,
-    link:"/programs/manage"
+    link: "/programs/manage",
   },
 ];
 
@@ -101,7 +101,7 @@ const DesktopNavbar = () => {
       <div className="flex items-center gap-6">
         <AppBanner />
         <div className="flex items-center">
-          <a
+          {/* <a
             className={cn(
               "text-muted-foreground",
               navigationMenuTriggerStyle,
@@ -112,7 +112,7 @@ const DesktopNavbar = () => {
             href="#"
           >
             Home
-          </a>
+          </a> */}
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem className="text-muted-foreground">

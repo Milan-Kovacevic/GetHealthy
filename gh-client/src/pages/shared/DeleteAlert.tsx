@@ -11,20 +11,18 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
+import { ReactNode } from "react";
 
 type AlertDialogProps = {
   description: string;
   title: string;
+  children: ReactNode;
 };
 
 export const DeleteAlert = (props: AlertDialogProps) => {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline">
-          <Trash></Trash>
-        </Button>
-      </AlertDialogTrigger>
+      <AlertDialogTrigger asChild>{props.children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{props.title}</AlertDialogTitle>

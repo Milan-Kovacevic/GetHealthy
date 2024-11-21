@@ -9,67 +9,87 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DeleteAlert } from "@/pages/shared/DeleteAlert";
-import { Edit2Icon, Star, StarHalf } from "lucide-react";
+import { Edit2Icon, Star, StarHalf, TrashIcon } from "lucide-react";
 
 type TrainingProgramCardProps = {
-  title: string;
-  description: string;
-  img: string;
   id: number;
+  title: string;
   trainer: string;
-  myProgram: boolean;
-  category: string;
+  description: string;
+  image: string;
   rating: number;
+  categories: string[];
+  difficulty: string;
+  editable: boolean;
 };
 
 export function TrainingProgramCard(props: TrainingProgramCardProps) {
-  const fullStars = Math.floor(props.rating);
-  const hasHalfStar = props.rating % 1 != 0;
   return (
     <Card
       key={props.id}
-      className="h-25 transform hover:cursor-pointer hover:scale-110 max-w-xl mt-4 rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-shadow duration-300 relative"
+      className="h-25 group transform hover:cursor-pointer max-w-xl mt-4 rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-all duration-200 relative"
     >
-      <Badge className="absolute m-3 z-10" variant={"secondary"}>
-        {props.category}
-      </Badge>
-      <Badge
-        variant="secondary"
-        className="absolute top-3 right-3 font-semibold px-2 py-1"
-      >
-        {[...Array(fullStars)].map((_, i) => (
-          <Star key={i} className="w-4 h-4 inline fill-primary text-primary" />
-        ))}
-        {hasHalfStar && (
-          <StarHalf className="w-4 h-4 inline fill-primary text-primary" />
-        )}
-        <span className="ml-1 text-xs">{props.rating.toFixed(1)}</span>
-      </Badge>
-      <img src={props.img} className="w-full h-25 object-cover"></img>
-      <CardHeader>
-        <CardTitle className="text-1xl">{props.title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CardDescription className="line-clamp-2">
+      <div className="border-b">
+        <div className="z-10">
+          <Badge
+            className="absolute m-3 z-10 pointer-events-none"
+            variant={"secondary"}
+          >
+            {props.difficulty}
+          </Badge>
+          <Badge
+            variant="secondary"
+            className="absolute top-3 z-10 right-3 font-semibold px-2 py-1 pointer-events-none"
+          >
+            <Star className="w-4 h-4 text-primary/80 mr-1 fill-primary" />
+            <span className="font-medium text-sm">
+              {props.rating.toFixed(1)}
+            </span>
+          </Badge>
+        </div>
+
+        <img
+          src={props.image}
+          className="w-full h-48 object-cover opacity-70 group-hover:opacity-100"
+        ></img>
+      </div>
+
+      <CardContent className="p-3 px-4">
+        <div className="flex justify-between items-center gap-2">
+          <CardTitle className="text-lg font-semibold leading-tight">
+            {props.title}
+          </CardTitle>
+          <div className="flex gap-0 justify-between space-between">
+            {props.editable && (
+              <>
+                <DeleteAlert title="Delete" description="Confirm deletion">
+                  <Button size="sm" variant="ghost">
+                    <TrashIcon />
+                  </Button>
+                </DeleteAlert>
+                <Button size="sm" variant="ghost">
+                  <Edit2Icon></Edit2Icon>
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+
+        <p className="text-foreground/85 my-2 text-sm">
+          Trainer: {props.trainer}
+        </p>
+        <div className="mb-2 flex flex-wrap gap-x-1.5 gap-y-1.5">
+          {props.categories.slice(0, 4).map((category: any, index: number) => (
+            <Badge key={index} variant="secondary" className="">
+              {category}
+            </Badge>
+          ))}
+        </div>
+        <CardDescription className="line-clamp-2 text-xs">
           {props.description}
         </CardDescription>
       </CardContent>
-      <CardFooter>
-        <div className="flex gap-2 justify-between space-between">
-          <p>{props.trainer}</p>
-          {props.myProgram && (
-            <>
-              <DeleteAlert
-                title="Delete"
-                description="Confirm deletion"
-              ></DeleteAlert>
-              <Button variant={"outline"}>
-                <Edit2Icon></Edit2Icon>
-              </Button>
-            </>
-          )}
-        </div>
-      </CardFooter>
+      <CardFooter></CardFooter>
     </Card>
   );
 }
