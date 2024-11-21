@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
 
 import {
   Command,
@@ -41,13 +39,14 @@ import { TimePicker } from "./TimePicker";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const options = [
   { value: "beginner-strength-training", label: "Beginner Strength Training" },
@@ -55,7 +54,7 @@ const options = [
   { value: "advanced-powerlifting", label: "Advanced Powerlifting" },
   { value: "cardio-and-core", label: "Cardio and Core" },
   { value: "flexibility-and-yoga", label: "Flexibility and Yoga" },
-];
+] as const;
 
 const daysOfWeek = [
   "Monday",
@@ -65,30 +64,57 @@ const daysOfWeek = [
   "Friday",
   "Saturday",
   "Sunday",
-];
+] as const;
+
+const formSchema = z
+  .object({
+    program: z
+      .string({
+        required_error: "Please select a program.",
+        invalid_type_error: "That's not a valid program.",
+      })
+      .refine(
+        (val) => options.some((option) => option.value === val),
+        "Please select a program."
+      ),
+
+    day: z.enum(daysOfWeek, {
+      required_error: "Please select a day.",
+      invalid_type_error: "That's not a valid day.",
+    }),
+
+    startTime: z.date().refine((val) => !isNaN(new Date(val).getTime()), {
+      message: "Please enter a valid start time.",
+    }),
+
+    endTime: z.date().refine((val) => !isNaN(new Date(val).getTime()), {
+      message: "Please enter a valid end time.",
+    }),
+  })
+  .refine((data) => data.endTime > data.startTime, {
+    message: "End time must be after the start time.",
+    path: ["endTime"], // This specifies which field the error is associated with
+  });
 
 export default function TrainingProgramModal() {
-  const minuteRef = React.useRef<HTMLInputElement>(null);
-  const hourRef = React.useRef<HTMLInputElement>(null);
-  const secondRef = React.useRef<HTMLInputElement>(null);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      program: "",
+      day: "",
+      startTime: new Date(),
+      endTime: new Date(),
+    },
+  });
 
-  const form = useForm();
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+    setOpen(false);
+  }
 
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [program, setProgram] = useState("");
-  const [startDay, setStartDay] = useState("");
-  const [startTime, setStartTime] = useState("");
-
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
-
-  const handleConfirm = () => {
-    console.log("Selected Program:", program);
-    console.log("Start Day:", startDay);
-    console.log("Start Time:", startTime);
-    setOpen(false);
-  };
 
   const handleChange = (value: any) => {
     setProgram(value);
@@ -101,142 +127,160 @@ export default function TrainingProgramModal() {
         <Button variant="outline">Select Training Program</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Select Training Program</DialogTitle>
-          <DialogDescription>
-            Choose your training program, start day, and time. Click confirm
-            when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          <div className="grid gap-4 py-4">
-            <FormField
-              control={form.control}
-              name="program"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Program</FormLabel>
-                  <FormControl>
-                    <div className="flex flex-col gap-4">
-                      <Popover open={searchOpen} onOpenChange={setSearchOpen}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={open}
-                            className="w-[200px] justify-between"
-                          >
-                            {program
-                              ? options.find(
-                                  (option) => option.value === program
-                                )?.label
-                              : "Select program..."}
-                            <ChevronsUpDown className="opacity-50" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput
-                              placeholder="Search program..."
-                              className="h-9"
-                            />
-                            <CommandList>
-                              <CommandEmpty>No program found.</CommandEmpty>
-                              <CommandGroup>
-                                {options.map((option: any) => (
-                                  <CommandItem
-                                    key={option.value}
-                                    value={option.value}
-                                    onSelect={(currentValue) => {
-                                      handleChange(
-                                        currentValue === program
-                                          ? ""
-                                          : currentValue
-                                      );
-                                      setSearchOpen(false);
-                                    }}
-                                  >
-                                    {option.label}
-                                    <Check
-                                      className={cn(
-                                        "ml-auto",
-                                        program === option.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      )}
-                                    />
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="day"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Select Day</FormLabel>
-                  <FormControl>
-                    <div className="flex flex-col gap-4">
-                      <Select onValueChange={setStartDay} value={startDay}>
-                        <SelectTrigger className="col-span-3">
-                          <SelectValue placeholder="Select a day" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {daysOfWeek.map((day) => (
-                            <SelectItem key={day} value={day}>
-                              {day}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="startTime"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Start Time</FormLabel>
-                  <FormControl>
-                    <div className="flex flex-col gap-4">
-                      <TimePicker date={startDate} setDate={setStartDate} />
-                    </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="endTime"
-              render={() => (
-                <FormItem>
-                  <FormLabel>End Time</FormLabel>
-                  <FormControl>
-                    <div className="flex flex-col gap-4">
-                      <TimePicker date={endDate} setDate={setEndDate} />
-                    </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-        </Form>
-        <DialogFooter>
-          <Button type="submit" onClick={handleConfirm}>
-            Confirm
-          </Button>
-        </DialogFooter>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <DialogHeader>
+            <DialogTitle>Select Training Program</DialogTitle>
+            <DialogDescription>
+              Choose your training program, start day, and time. Click confirm
+              when you're done.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <div className="grid gap-4 py-4">
+              <FormField
+                control={form.control}
+                name="program"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Program</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-col gap-4">
+                        <Popover open={searchOpen} onOpenChange={setSearchOpen}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              aria-expanded={open}
+                              className="justify-between"
+                            >
+                              {field.value
+                                ? options.find(
+                                    (option) => option.value === program
+                                  )?.label
+                                : "Select program..."}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="p-0">
+                            <Command>
+                              <CommandInput
+                                placeholder="Search program..."
+                                className="h-9"
+                              />
+                              <CommandList>
+                                <CommandEmpty>No program found.</CommandEmpty>
+                                <CommandGroup>
+                                  {options.map((option: any) => (
+                                    <CommandItem
+                                      key={option.value}
+                                      value={option.value}
+                                      onSelect={(currentValue) => {
+                                        handleChange(
+                                          currentValue === program
+                                            ? ""
+                                            : currentValue
+                                        );
+                                        field.onChange(
+                                          currentValue === program
+                                            ? ""
+                                            : currentValue
+                                        );
+                                        setSearchOpen(false);
+                                      }}
+                                    >
+                                      {option.label}
+                                      <Check
+                                        className={cn(
+                                          "ml-auto",
+                                          program === option.value
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                      />
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="day"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Select Day</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-col gap-4">
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="col-span-3">
+                            <SelectValue placeholder="Select a day" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {daysOfWeek.map((day) => (
+                              <SelectItem key={day} value={day}>
+                                {day}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="startTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Start Time</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-col gap-4">
+                        <TimePicker
+                          date={new Date(field.value)}
+                          setDate={(date) => field.onChange(date)}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="endTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>End Time</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-col gap-4">
+                        <TimePicker
+                          date={new Date(field.value)}
+                          setDate={(date) => field.onChange(date)}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </Form>
+          <DialogFooter>
+            <Button type="submit">Confirm</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
