@@ -179,7 +179,7 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-col space-y-8">
             <div className="flex flex-col sm:flex-row flex-1 space-y-4 sm:space-y-0">
-              <div className="flex flex-col w-full sm:w-[330px] overflow-hidden  space-y-8 pr-0 sm:pr-4  sm:ml-4">
+              <div className="flex flex-col w-full sm:w-[330px] overflow-hidden  space-y-8 pr-0 sm:pr-4  sm:ml-5">
                 <div className="w-full">
                   <ExerciseSelector
                     form={form}
