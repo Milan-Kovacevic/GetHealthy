@@ -50,6 +50,10 @@ const router = createBrowserRouter([
             ],
           },
           {
+            path: "training-program-schedule",
+            element: <TrainingProgramSchedule />,
+          },
+          {
             path: "/programs/:id",
             element: <ProgramDetailsLayout />,
             children: [
