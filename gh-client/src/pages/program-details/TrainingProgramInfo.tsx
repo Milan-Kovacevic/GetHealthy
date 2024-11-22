@@ -21,11 +21,19 @@ export default function TrainingProgramInfo() {
           <div className="relative flex items-center gap-5">
             <h1 className="text-3xl font-semibold">Pilates Harmony</h1>
             <div className="flex items-center gap-2">
-              <Button variant="secondary" className="h-auto">
-                Join <UserPlus className="h-18 w-18 text-primary" />
+              <Button
+                variant="secondary"
+                className="h-auto flex items-center gap-2"
+              >
+                <UserPlus className="h-5 w-5 text-primary" />
+                <span>Join</span>
               </Button>
-              <Button variant="outline" className="">
-                Leave <UserXIcon className="h-18 w-18 text-destructive" />
+              <Button
+                variant="outline"
+                className="h-auto flex items-center gap-2"
+              >
+                <UserXIcon className="h-5 w-5 text-destructive" />
+                <span>Leave</span>
               </Button>
             </div>
           </div>
