@@ -101,7 +101,7 @@ const DesktopNavbar = () => {
       <div className="flex items-center gap-6">
         <AppBanner />
         <div className="flex items-center">
-          {/* <a
+          <Link
             className={cn(
               "text-muted-foreground",
               navigationMenuTriggerStyle,
@@ -109,10 +109,10 @@ const DesktopNavbar = () => {
                 variant: "ghost",
               })
             )}
-            href="#"
+            to="/schedule"
           >
-            Home
-          </a> */}
+            Schedule
+          </Link>
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem className="text-muted-foreground">

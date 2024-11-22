@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchBar } from "../shared/SearchBar";
 import { TrainingProgramCard } from "./components/TrainingProgramCard";
 import { Button } from "@/components/ui/button";
@@ -16,11 +16,10 @@ import TrainingProgramService, {
   TrainingProgram,
 } from "@/api/services/TrainingProgramService";
 import CategoryService, { Category } from "@/api/services/CategoryService";
-import FilterModal from "./components/FilterModal";
 import { Separator } from "@/components/ui/separator";
-import SortByButton from "../shared/SortByButton";
 import FeaturedTrainingPrograms from "./components/FeaturedTrainingPrograms";
 import { TrainingProgramFilters } from "./components/TrainingProgramFilters";
+import { TrainingProgramsLoader } from "./components/TrainingProgramsLoaders";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -29,7 +28,7 @@ type TrainingProgramLayoutProps = {
 export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   const [myTrainingPrograms, setMyTrainingPrograms] = useState(false);
   const [programs, setPrograms] = useState<TrainingProgram[]>([]);
-
+  const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
 
   const [searchString, setSearchString] = useState("");
@@ -61,8 +60,12 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
       const data = await service.getFilteredPrograms("", "All", "asc");
       setPrograms(data!);
     }
-
-    fetchTP();
+    // Mocked for now...
+    new Promise((resolve) => setTimeout(resolve, 3000)).then(() =>
+      fetchTP().then(() => {
+        setLoading(false);
+      })
+    );
   }, []);
 
   useEffect(() => {
@@ -93,35 +96,31 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                 setData={setSearchString}
                 service={service}
               ></SearchBar>
-              {/* <div className="flex justify-between gap-2">
-                <FilterModal
-                  setData={setFilter}
-                  service={service}
-                ></FilterModal>
-                <SortByButton
-                  setData={setSort}
-                  service={service}
-                ></SortByButton>
-              </div> */}
+
               <h2 className="text-lg font-semibold mb-0 mt-6">Filters</h2>
               <TrainingProgramFilters />
             </div>
-            <div className="grid gap-x-6 gap-y-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 flex-1">
-              {programs.map((item) => (
-                <TrainingProgramCard
-                  rating={4.4}
-                  categories={[item.category]}
-                  key={item.id}
-                  editable={props.myTrainingPrograms}
-                  title={item.title}
-                  description={item.description}
-                  id={item.id}
-                  difficulty={item.difficulty}
-                  image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
-                  trainer="Bruce Wayne"
-                ></TrainingProgramCard>
-              ))}
-            </div>
+
+            {loading ? (
+              <TrainingProgramsLoader />
+            ) : (
+              <div className="grid mt-5 gap-x-6 gap-y-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 flex-1">
+                {programs.map((item) => (
+                  <TrainingProgramCard
+                    rating={4.4}
+                    categories={[item.category]}
+                    key={item.id}
+                    editable={props.myTrainingPrograms}
+                    title={item.title}
+                    description={item.description}
+                    id={item.id}
+                    difficulty={item.difficulty}
+                    image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
+                    trainer="Bruce Wayne"
+                  ></TrainingProgramCard>
+                ))}
+              </div>
+            )}
           </div>
 
           <Pagination className="mt-10">

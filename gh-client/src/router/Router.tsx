@@ -9,12 +9,12 @@ import RegisterPage from "@/pages/register/RegisterPage";
 import MainLayout from "@/layouts/MainLayout";
 import { TrainingProgramsPage } from "@/pages/training-programs/TrainingProgramsPage";
 import { ManageTrainingProgramsPage } from "@/pages/training-programs/ManageTrainingProgramsPage";
-import { TestPage } from "@/pages/test/TestPage";
 import ProgramDetailsLayout from "@/layouts/ProgramDetailsLayout";
 import TrainingProgramDetails from "@/pages/program-details/components/TrainingProgramDetails";
 import TrainingProgramTrainees from "@/pages/program-details/components/TrainingProgramTrainees";
 import TrainingProgramReviews from "@/pages/program-details/components/TrainingProgramReviews";
 import ProgramTrainerInfo from "@/pages/program-details/components/ProgramTrainerInfo";
+import SchedulePage from "@/pages/schedule/SchedulePage";
 
 const router = createBrowserRouter([
   {
@@ -28,23 +28,20 @@ const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
           {
-            path: "/test",
-            element: <TestPage></TestPage>,
+            path: "/schedule",
+            element: <SchedulePage />,
           },
           // Routes for every role
           {
-            
             path: "/programs",
             children: [
               {
                 index: true,
-                element: <TrainingProgramsPage></TrainingProgramsPage>,
+                element: <TrainingProgramsPage />,
               },
               {
                 path: "manage",
-                element: (
-                  <ManageTrainingProgramsPage></ManageTrainingProgramsPage>
-                ),
+                element: <ManageTrainingProgramsPage />,
               },
             ],
           },

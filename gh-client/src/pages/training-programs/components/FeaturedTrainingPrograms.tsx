@@ -8,6 +8,8 @@ import {
 import FeaturedProgramCard from "./FeaturedProgramCard";
 import Autoplay from "embla-carousel-autoplay";
 import { CircleIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FeaturedProgramCardSkeleton } from "./TrainingProgramsLoaders";
 
 // Sample data for training programs
 const trainingPrograms = [
@@ -80,6 +82,13 @@ const trainingPrograms = [
 
 export default function FeaturedTrainingPrograms() {
   const plugins: any = [];
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    new Promise((resolve) => setTimeout(resolve, 2400)).then(() =>
+      setLoading(false)
+    );
+  }, []);
 
   plugins.push(
     Autoplay({
@@ -115,14 +124,23 @@ export default function FeaturedTrainingPrograms() {
           plugins={plugins}
         >
           <CarouselContent className="px-0 py-6">
-            {trainingPrograms.map((program) => (
-              <CarouselItem
-                className="sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-                key={program.id}
-              >
-                <FeaturedProgramCard program={program} />
-              </CarouselItem>
-            ))}
+            {loading
+              ? Array.from(Array(4).keys()).map((item) => (
+                  <CarouselItem
+                    className="sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                    key={item}
+                  >
+                    <FeaturedProgramCardSkeleton />
+                  </CarouselItem>
+                ))
+              : trainingPrograms.map((program) => (
+                  <CarouselItem
+                    className="sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                    key={program.id}
+                  >
+                    <FeaturedProgramCard program={program} />
+                  </CarouselItem>
+                ))}
           </CarouselContent>
         </Carousel>
       </div>

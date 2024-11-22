@@ -27,7 +27,7 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
   return (
     <Card
       key={props.id}
-      className="h-25 group transform hover:cursor-pointer max-w-xl mt-4 rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-all duration-200 relative"
+      className="group transform hover:cursor-pointer max-w-xl rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-all duration-200 relative"
     >
       <div className="border-b">
         <div className="z-10">

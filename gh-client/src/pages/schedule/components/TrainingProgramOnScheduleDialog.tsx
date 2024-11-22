@@ -101,7 +101,7 @@ export default function TrainingProgramModal() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       program: "",
-      day: "",
+      day: undefined,
       startTime: new Date(),
       endTime: new Date(),
     },
@@ -239,42 +239,44 @@ export default function TrainingProgramModal() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="startTime"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Start Time</FormLabel>
-                    <FormControl>
-                      <div className="flex flex-col gap-4">
-                        <TimePicker
-                          date={new Date(field.value)}
-                          setDate={(date) => field.onChange(date)}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="endTime"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>End Time</FormLabel>
-                    <FormControl>
-                      <div className="flex flex-col gap-4">
-                        <TimePicker
-                          date={new Date(field.value)}
-                          setDate={(date) => field.onChange(date)}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex flex-row gap-8">
+                <FormField
+                  control={form.control}
+                  name="startTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Start Time</FormLabel>
+                      <FormControl>
+                        <div className="flex flex-col gap-4">
+                          <TimePicker
+                            date={new Date(field.value)}
+                            setDate={(date) => field.onChange(date)}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="endTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>End Time</FormLabel>
+                      <FormControl>
+                        <div className="flex flex-col gap-4">
+                          <TimePicker
+                            date={new Date(field.value)}
+                            setDate={(date) => field.onChange(date)}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
           </Form>
           <DialogFooter>
