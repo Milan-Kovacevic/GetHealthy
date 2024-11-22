@@ -50,13 +50,13 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
 
         <img
           src={props.image}
-          className="w-full h-48 object-cover opacity-70 group-hover:opacity-100"
+          className="w-full h-48 object-cover opacity-75 group-hover:opacity-100"
         ></img>
       </div>
 
       <CardContent className="p-3 px-4">
         <div className="flex justify-between items-center gap-2">
-          <CardTitle className="text-lg font-semibold leading-tight">
+          <CardTitle className="xl:text-lg font-semibold xl:leading-tight text-base leading-none">
             {props.title}
           </CardTitle>
           <div className="flex gap-0 justify-between space-between">

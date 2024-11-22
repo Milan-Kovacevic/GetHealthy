@@ -87,8 +87,8 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
             </>
           )}
 
-          <div className="flex flex-row gap-8">
-            <div className="flex flex-col my-6 pr-4 border-r">
+          <div className="flex lg:flex-row flex-col lg:gap-8 gap-2">
+            <div className="flex flex-col my-6 pr-4 lg:border-r lg:border-b-0 border-b pb-4">
               <SearchBar
                 setData={setSearchString}
                 service={service}
@@ -103,9 +103,10 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                   service={service}
                 ></SortByButton>
               </div> */}
+              <h2 className="text-lg font-semibold mb-0 mt-6">Filters</h2>
               <TrainingProgramFilters />
             </div>
-            <div className="grid gap-x-6 gap-y-3 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 flex-1">
+            <div className="grid gap-x-6 gap-y-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 flex-1">
               {programs.map((item) => (
                 <TrainingProgramCard
                   rating={4.4}
