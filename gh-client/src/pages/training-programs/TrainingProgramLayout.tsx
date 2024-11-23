@@ -20,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import FeaturedTrainingPrograms from "./components/FeaturedTrainingPrograms";
 import { TrainingProgramFilters } from "./components/TrainingProgramFilters";
 import { TrainingProgramsLoader } from "./components/TrainingProgramsLoaders";
+import { useNavigate } from "react-router-dom";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -75,8 +76,8 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   }, [myTrainingPrograms]);
 
   return (
-    <section className="relative overflow-hidden md:px-2 sm:px-4 px-6 h-full pt-8 pb-10">
-      <div className="container mx-auto my-auto h-full space-y-5">
+    <section className="container mx-auto relative overflow-hidden sm:px-5 px-4 pt-8 pb-10">
+      <div className="h-full space-y-5">
         <div className="mx-auto flex flex-col">
           <TrainingProgramsPageTitle showCreate={myTrainingPrograms} />
           <Separator className="my-4" />
@@ -154,6 +155,12 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
 };
 
 const TrainingProgramsPageTitle = ({ showCreate }: { showCreate: boolean }) => {
+  const navigate = useNavigate();
+
+  const handleCreateProgram = () => {
+    navigate("/create-training-program");
+  };
+
   return (
     <div className="flex justify-between">
       <div className="space-y-0.5">
@@ -163,7 +170,11 @@ const TrainingProgramsPageTitle = ({ showCreate }: { showCreate: boolean }) => {
         </p>
       </div>
       {showCreate && (
-        <Button variant={"secondary"} className="self-end">
+        <Button
+          variant={"secondary"}
+          className="self-end"
+          onClick={handleCreateProgram}
+        >
           <PlusIcon className="text-primary"></PlusIcon>
           Create program
         </Button>

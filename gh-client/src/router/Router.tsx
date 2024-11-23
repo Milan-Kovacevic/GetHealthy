@@ -57,7 +57,7 @@ const router = createBrowserRouter([
             path: "/programs/:id",
             element: <ProgramDetailsLayout />,
             children: [
-              { path: "", element: <Navigate to="details" /> },
+              { path: "", element: <Navigate replace={true} to="details" /> },
 
               {
                 path: "details",
@@ -84,11 +84,11 @@ const router = createBrowserRouter([
             element: <GeneralInformationForm />,
           },
           {
-            path: "create-training-plan",
+            path: "create-training-program",
             element: <CreateTrainingProgramPage />,
           },
           {
-            path: "edit-training-plan/:id",
+            path: "edit-training-program/:id",
             element: <EditTrainingProgramPage />,
           },
           // Routes for trainees only

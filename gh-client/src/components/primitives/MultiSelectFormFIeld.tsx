@@ -224,7 +224,7 @@ export const MultiSelect = React.forwardRef<
                       <Badge
                         key={value}
                         className={cn(
-                          "dark:bg-slate-300",
+                          "dark:bg-background",
                           isAnimating ? "animate-bounce" : "",
                           multiSelectVariants({ variant })
                         )}

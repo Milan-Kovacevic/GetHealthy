@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { X } from "lucide-react";
+import { CheckIcon, DumbbellIcon, HashIcon, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import FormSectionTitle from "./FormSectionTitle";
 
 // mock data of exercises
 const exercises = [
@@ -37,16 +38,10 @@ const validExercisePlan: ExercisePlanValues = {
       sets: [
         {
           reps: 15,
-          weight: undefined,
-          time: undefined,
-          distance: undefined,
           pause: 30,
         },
         {
           reps: 12,
-          weight: undefined,
-          time: undefined,
-          distance: undefined,
           pause: 30,
         },
       ],
@@ -57,8 +52,6 @@ const validExercisePlan: ExercisePlanValues = {
       type: "cardio",
       sets: [
         {
-          reps: undefined,
-          weight: undefined,
           time: 600, // 10 minutes in seconds
           distance: 2.5, // 2.5 km
           pause: 60,
@@ -112,8 +105,8 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
 
   const handleSelect = (item: any) => {
     form.setValue("exercises", [...form.getValues("exercises"), item]);
-    console.log(form.getValues("exercises"));
     setComboBoxOpen(false);
+    setSelectedExerciseIndex(form.getValues("exercises").length - 1);
   };
 
   const handleRemoveExercise = (index: any) => {
@@ -168,19 +161,17 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
   };
 
   return (
-    <div className="mt-5  w-full">
-      <div className="text-2xl font-semibold leading-none tracking-tight mb-5">
-        <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 border-2 border-black dark:border-white rounded-full"></span>
-          <span> Workout Plan</span>
-        </div>
+    <div className="mt-8 w-full">
+      <div className="mb-5">
+        <FormSectionTitle title="Exercise plan" />
       </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="flex flex-col space-y-8">
-            <div className="flex flex-col sm:flex-row flex-1 space-y-4 sm:space-y-0">
-              <div className="flex flex-col w-full sm:w-[330px] overflow-hidden  space-y-8 pr-0 sm:pr-4  sm:ml-5">
-                <div className="w-full">
+          <div className="flex flex-col space-y-4">
+            <div className="flex flex-col lg:flex-row flex-1 space-y-4 lg:space-y-0 gap-6">
+              <div className="flex flex-col w-full lg:min-w-[340px] lg:max-w-[340px] md:min-w-[400px] md:max-w-[400px] overflow-hidden space-y-4">
+                <div className="w-full pr-3 pl-1">
                   <ExerciseSelector
                     form={form}
                     comboBoxOpen={comboBoxOpen}
@@ -191,57 +182,83 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
                     selectedExercises={selectedExercises}
                   />
                 </div>
-                <ScrollArea className="h-[50vh] pr-3 border-b-2 border-t-2 rounded-lg">
+                <ScrollArea className="">
                   {form.watch("exercises").length === 0 ? (
-                    <div className="flex justify-center items-center h-full w-full text-muted-foreground">
-                      Exercises
+                    <div className="flex flex-col mt-2 justify-center text-center bg-muted/40 items-center lg:h-[50vh] w-full border-2 border-dashed rounded-lg px-5">
+                      <DumbbellIcon
+                        strokeWidth={1.5}
+                        className="text-foreground/70 h-8 w-8 mb-1"
+                      />
+                      <p className="text-foreground/80 mb-2">
+                        No exercise selected
+                      </p>
+                      <p className="text-xs text-muted-foreground font-medium">
+                        You can drag-n-drop exercises in the list to change the
+                        workout order
+                      </p>
                     </div>
                   ) : (
-                    ""
+                    <div className="flex flex-col gap-2 m-1 pr-2 lg:h-[50vh]">
+                      {form
+                        .watch("exercises")
+                        .map((exercise: any, index: number) => (
+                          <div
+                            key={index}
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, index)}
+                            onDragOver={(e) => handleDragOver(e)}
+                            onDrop={(e) => handleDrop(e, index)}
+                            className="cursor-move"
+                          >
+                            <ExerciseCard
+                              key={exercise.id}
+                              exercise={exercise}
+                              index={index}
+                              isSelected={selectedExerciseIndex === index}
+                              onSelect={() =>
+                                selectedExerciseIndex !== null
+                                  ? selectedExerciseIndex === index
+                                    ? setSelectedExerciseIndex(null)
+                                    : setSelectedExerciseIndex(index)
+                                  : setSelectedExerciseIndex(index)
+                              }
+                              form={form}
+                              onRemove={handleRemoveExercise}
+                            />
+                          </div>
+                        ))}
+                    </div>
                   )}
-                  <div className="flex flex-col gap-5 m-1">
-                    {form.watch("exercises").map((exercise, index) => (
-                      <div
-                        key={index}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, index)}
-                        onDragOver={(e) => handleDragOver(e)}
-                        onDrop={(e) => handleDrop(e, index)}
-                        className="cursor-move"
-                      >
-                        <ExerciseCard
-                          key={exercise.id}
-                          exercise={exercise}
-                          index={index}
-                          isSelected={selectedExerciseIndex === index}
-                          onSelect={() =>
-                            selectedExerciseIndex !== null
-                              ? selectedExerciseIndex === index
-                                ? setSelectedExerciseIndex(null)
-                                : setSelectedExerciseIndex(index)
-                              : setSelectedExerciseIndex(index)
-                          }
-                          form={form}
-                          onRemove={handleRemoveExercise}
-                        />
-                      </div>
-                    ))}
-                  </div>
+
                   <ScrollBar orientation="vertical" />
                 </ScrollArea>
               </div>
-              <div className="border-2 rounded-lg p-4 flex flex-col w-full  space-y-4 items-start lg:p-4">
+              <div className="border-2 rounded-lg p-4 flex flex-col w-full space-y-4 items-start lg:p-4">
                 {selectedExerciseIndex !== null ? (
-                  <>
-                    <div className="flex justify-end w-full">
+                  <div className="p-1 w-full h-full flex flex-col">
+                    <div className="flex items-center justify-between w-full">
+                      <div>
+                        <p className="font-medium text-foreground/80 text-sm">
+                          Exercise no. {selectedExerciseIndex + 1}
+                        </p>
+                        <div className="flex flex-row items-center gap-0.5 pb-2">
+                          <HashIcon className="h-4 w-4 text-foreground/75 mt-0.5" />
+                          <h3 className="text-xl font-semibold">
+                            {
+                              form.watch("exercises")[selectedExerciseIndex]
+                                ?.name
+                            }
+                          </h3>
+                        </div>
+                      </div>
                       <TooltipProvider>
                         <Tooltip>
-                          <TooltipTrigger>
+                          <TooltipTrigger className="self-start">
                             <Button
                               type="button"
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 rounded-full hover:bg-destructive hover:text-destructive-foreground flex-shrink-0"
+                              className="h-8 w-8 flex-shrink-0"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedExerciseIndex(null);
@@ -252,18 +269,22 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p>Remove exercise form</p>
+                            <p>Close</p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     </div>
-                    <ExerciseForm
-                      key={selectedExerciseIndex}
-                      exercise={form.watch("exercises")[selectedExerciseIndex]}
-                      index={selectedExerciseIndex}
-                      form={form}
-                    />
-                  </>
+                    <div className="m-1 mt-3 flex-1 flex">
+                      <ExerciseForm
+                        key={selectedExerciseIndex}
+                        exercise={
+                          form.watch("exercises")[selectedExerciseIndex]
+                        }
+                        index={selectedExerciseIndex}
+                        form={form}
+                      />
+                    </div>
+                  </div>
                 ) : (
                   <div className="flex justify-center items-center h-full w-full text-center text-muted-foreground">
                     <p>Select an exercise to view or edit details.</p>
@@ -271,8 +292,9 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
                 )}
               </div>
             </div>
-            <div className="flex justify-end mt-8 ">
-              <Button type="submit">
+            <div className="flex justify-end">
+              <Button type="submit" className="min-w-32">
+                <CheckIcon />
                 {isEdit ? "Save changes" : "Submit"}
               </Button>
             </div>

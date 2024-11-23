@@ -17,6 +17,7 @@ type InputFormFieldProps = {
   placeholder?: string;
   type?: string;
   className?: string;
+  onChange?: (e: any, field: any) => void;
 };
 
 function InputFormField(props: InputFormFieldProps) {
@@ -34,6 +35,11 @@ function InputFormField(props: InputFormFieldProps) {
               className=""
               placeholder={props.placeholder}
               {...field}
+              onChange={(e) => {
+                props.onChange != undefined
+                  ? props.onChange(e, field)
+                  : field.onChange(e);
+              }}
             />
           </FormControl>
           {props.description && (

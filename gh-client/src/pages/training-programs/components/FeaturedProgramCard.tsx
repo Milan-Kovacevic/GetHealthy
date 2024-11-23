@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, Users } from "lucide-react";
 import React from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type FeatureProgramCardProps = {
   program: any;
@@ -13,9 +13,10 @@ type FeatureProgramCardProps = {
 
 export default function FeaturedProgramCard(props: FeatureProgramCardProps) {
   const { program } = props;
+  const navigate = useNavigate();
 
   const handleCardClicked = () => {
-    console.log("Navigate!!!");
+    navigate(`/programs/${program.id}`);
   };
 
   return (

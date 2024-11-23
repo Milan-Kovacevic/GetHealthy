@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { DeleteAlert } from "@/pages/shared/DeleteAlert";
 import { Edit2Icon, Star, StarHalf, TrashIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type TrainingProgramCardProps = {
   id: number;
@@ -24,9 +25,16 @@ type TrainingProgramCardProps = {
 };
 
 export function TrainingProgramCard(props: TrainingProgramCardProps) {
+  const navigate = useNavigate();
+
+  const handleCardClicked = () => {
+    navigate(`/programs/${props.id}`);
+  };
+
   return (
     <Card
       key={props.id}
+      onClick={handleCardClicked}
       className="group transform hover:cursor-pointer max-w-xl rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-all duration-200 relative"
     >
       <div className="border-b">
