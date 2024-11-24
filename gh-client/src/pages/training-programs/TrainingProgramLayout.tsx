@@ -21,6 +21,10 @@ import FeaturedTrainingPrograms from "./components/FeaturedTrainingPrograms";
 import { TrainingProgramFilters } from "./components/TrainingProgramFilters";
 import { TrainingProgramsLoader } from "./components/TrainingProgramsLoaders";
 import { useNavigate } from "react-router-dom";
+import {
+  TopBackgroundBlob,
+  CircleBackgroundBlob,
+} from "../shared/BackgroundBlobs";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -76,8 +80,22 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   }, [myTrainingPrograms]);
 
   return (
-    <section className="container mx-auto relative overflow-hidden sm:px-5 px-4 pt-8 pb-10">
-      <div className="h-full space-y-5">
+    <section className="overflow-hidden relative sm:px-5 px-4 pt-8 pb-10">
+      {/* <TopBackgroundBlob /> */}
+      <CircleBackgroundBlob
+        variant="lighter"
+        className="left-auto -right-56 w-80 h-96 top-44"
+      />
+      <CircleBackgroundBlob
+        variant="lightest"
+        className="left-20 w-1/3 h-96 top-72"
+      />
+      <CircleBackgroundBlob variant="lighter" />
+      <CircleBackgroundBlob
+        variant="light"
+        className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
+      />
+      <div className="container mx-auto h-full space-y-5 z-10 relative">
         <div className="mx-auto flex flex-col">
           <TrainingProgramsPageTitle showCreate={myTrainingPrograms} />
           <Separator className="my-4" />

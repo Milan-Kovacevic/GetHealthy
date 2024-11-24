@@ -44,7 +44,7 @@ export function TrainingProgramFilters() {
   };
 
   return (
-    <aside className="lg:w-64 bg-background mt-3 flex lg:flex-col md:flex-row flex-col flex-1 gap-6">
+    <aside className="lg:w-64 mt-3 flex lg:flex-col md:flex-row flex-col flex-1 gap-6">
       <div className="space-y-5 lg:flex-none flex-1">
         <div>
           <h3 className="text-sm font-medium mb-2">Sort By</h3>

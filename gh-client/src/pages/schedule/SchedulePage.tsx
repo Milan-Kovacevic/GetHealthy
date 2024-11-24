@@ -1,12 +1,18 @@
-import React from "react";
-import TrainingProgramOnScheduleDialog from "./components/TrainingProgramOnScheduleDialog";
 import { Button } from "@/components/ui/button";
+import TrainingProgramOnScheduleDialog from "./components/TrainingProgramOnScheduleDialog";
+import TrainingWorkoutDialog from "../training-workout/TrainingWorkoutDialog";
+import { DumbbellIcon } from "lucide-react";
 
 export default function SchedulePage() {
   return (
     <div>
       <TrainingProgramOnScheduleDialog></TrainingProgramOnScheduleDialog>
-      <Button>Begin workout</Button>
+      <TrainingWorkoutDialog>
+        <Button className="" variant="secondary">
+          <DumbbellIcon />
+          Begin your workout
+        </Button>
+      </TrainingWorkoutDialog>
     </div>
   );
 }
