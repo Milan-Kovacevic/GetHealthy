@@ -88,7 +88,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
       />
       <CircleBackgroundBlob
         variant="lightest"
-        className="left-20 w-1/3 h-96 top-72"
+        className="-left-72 w-1/4 h-96 top-44"
       />
       <CircleBackgroundBlob variant="lighter" />
       <CircleBackgroundBlob
