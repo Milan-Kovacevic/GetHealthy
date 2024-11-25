@@ -24,7 +24,7 @@ export default function TrainingWorkoutDialog({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger>{children}</AlertDialogTrigger>
-      <AlertDialogContent className="sm:max-w-[500px]">
+      <AlertDialogContent className="max-w-fit">
         <AlertDialogHeader>
           <div className="flex items-center justify-between">
             <div>
