@@ -11,15 +11,18 @@ import WorkoutSummary from "./WorkoutSummary";
 import FeedbackSurvey from "./FeedbackSurvey";
 import WorkoutCountdownTimer from "./WorkoutCountdownTimer";
 import CurrentExerciseView from "./CurrentExerciseView";
+import { ArrowRight, SkipForward } from "lucide-react";
 
-// Define types
+type Set = {
+  reps: number;
+  weight: number;
+  restTime: number;
+  status: "pending" | "completed" | "skipped";
+};
+
 type Exercise = {
   name: string;
-  sets: Array<{
-    reps: number;
-    weight: number;
-    restTime: number;
-  }>;
+  sets: Set[];
   description: string;
   videoLink: string;
 };
@@ -30,6 +33,7 @@ type WorkoutProgram = {
   difficulty: string;
   exercises: Exercise[];
   estimatedTime: number;
+  trainer: string;
 };
 
 const sampleProgram: WorkoutProgram = {
@@ -40,9 +44,9 @@ const sampleProgram: WorkoutProgram = {
     {
       name: "Squats",
       sets: [
-        { reps: 10, weight: 100, restTime: 60 },
-        { reps: 10, weight: 100, restTime: 60 },
-        { reps: 10, weight: 100, restTime: 60 },
+        { reps: 10, weight: 100, restTime: 60, status: "pending" },
+        { reps: 10, weight: 100, restTime: 60, status: "pending" },
+        { reps: 10, weight: 100, restTime: 60, status: "pending" },
       ],
       description:
         "Stand with feet shoulder-width apart, lower your body as if sitting back into a chair, then push back up.",
@@ -51,9 +55,31 @@ const sampleProgram: WorkoutProgram = {
     {
       name: "Bench Press",
       sets: [
-        { reps: 8, weight: 135, restTime: 90 },
-        { reps: 8, weight: 135, restTime: 90 },
-        { reps: 8, weight: 135, restTime: 90 },
+        { reps: 8, weight: 135, restTime: 90, status: "pending" },
+        { reps: 8, weight: 135, restTime: 90, status: "pending" },
+        { reps: 8, weight: 135, restTime: 90, status: "pending" },
+      ],
+      description:
+        "Lie on a bench, lower the barbell to your chest, then push it back up to starting position.",
+      videoLink: "https://example.com/bench-press-video",
+    },
+    {
+      name: "Squats",
+      sets: [
+        { reps: 10, weight: 100, restTime: 60, status: "pending" },
+        { reps: 10, weight: 100, restTime: 60, status: "pending" },
+        { reps: 10, weight: 100, restTime: 60, status: "pending" },
+      ],
+      description:
+        "Stand with feet shoulder-width apart, lower your body as if sitting back into a chair, then push back up.",
+      videoLink: "https://example.com/squat-video",
+    },
+    {
+      name: "Bench Press",
+      sets: [
+        { reps: 8, weight: 135, restTime: 90, status: "pending" },
+        { reps: 8, weight: 135, restTime: 90, status: "pending" },
+        { reps: 8, weight: 135, restTime: 90, status: "pending" },
       ],
       description:
         "Lie on a bench, lower the barbell to your chest, then push it back up to starting position.",
@@ -61,10 +87,11 @@ const sampleProgram: WorkoutProgram = {
     },
   ],
   estimatedTime: 45,
+  trainer: "Anja Mirkovic",
 };
 
 export default function TrainingWorkoutForm() {
-  const [program] = useState<WorkoutProgram>(sampleProgram);
+  const [program, setProgram] = useState<WorkoutProgram>(sampleProgram);
   const [showSummary, setShowSummary] = useState(true);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
@@ -78,6 +105,12 @@ export default function TrainingWorkoutForm() {
   };
 
   const nextSet = () => {
+    const updatedProgram = { ...program };
+    updatedProgram.exercises[currentExerciseIndex].sets[
+      currentSetIndex
+    ].status = "completed";
+    setProgram(updatedProgram);
+
     if (
       currentSetIndex ===
         program.exercises[currentExerciseIndex].sets.length - 1 &&
@@ -125,6 +158,19 @@ export default function TrainingWorkoutForm() {
     handleRestComplete();
   };
 
+  const skipSet = () => {
+    const updatedProgram = { ...program };
+    updatedProgram.exercises[currentExerciseIndex].sets[
+      currentSetIndex
+    ].status = "skipped";
+    setProgram(updatedProgram);
+    moveToNextSet();
+  };
+
+  const returnToSummary = () => {
+    setShowSummary(true);
+  };
+
   return (
     <div className="w-full mx-auto h-full flex flex-col">
       <CardContent className="p-0 flex flex-col flex-1">
@@ -145,18 +191,26 @@ export default function TrainingWorkoutForm() {
             exercise={program.exercises[currentExerciseIndex]}
             currentSet={currentSetIndex + 1}
             totalSets={program.exercises[currentExerciseIndex].sets.length}
+            onReturnToSummary={returnToSummary}
           />
         )}
       </CardContent>
-      <CardFooter className="p-0">
+      <CardFooter className="p-4">
         {!showSummary && !showRestTimer && !showFeedback && (
-          <Button onClick={nextSet} className="w-full" variant="secondary">
-            {currentSetIndex ===
-              program.exercises[currentExerciseIndex].sets.length - 1 &&
-            currentExerciseIndex === program.exercises.length - 1
-              ? "Finish Workout"
-              : "Next Set"}
-          </Button>
+          <div className="flex w-full gap-4">
+            <Button onClick={skipSet} className="flex-1" variant="outline">
+              <SkipForward className="w-4 h-4 mr-2" />
+              Skip Set
+            </Button>
+            <Button onClick={nextSet} className="flex-1" variant="secondary">
+              <ArrowRight className="w-4 h-4 ml-2" />
+              {currentSetIndex ===
+                program.exercises[currentExerciseIndex].sets.length - 1 &&
+              currentExerciseIndex === program.exercises.length - 1
+                ? "Finish"
+                : "Next"}
+            </Button>
+          </div>
         )}
       </CardFooter>
     </div>

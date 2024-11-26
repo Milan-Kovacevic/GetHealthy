@@ -9,9 +9,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { XIcon } from "lucide-react";
+import { SquareArrowOutUpRight, XIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 type TrainingWorkoutDialogProps = {
   children: ReactNode;
@@ -27,11 +28,13 @@ export default function TrainingWorkoutDialog({
       <AlertDialogContent className="sm:max-w-[500px]">
         <AlertDialogHeader>
           <div className="flex items-center justify-between">
-            <div>
-              <AlertDialogTitle>Program workout</AlertDialogTitle>
-              <AlertDialogDescription>
-                Start your training program interactively
-              </AlertDialogDescription>
+            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+              <h2 className="text-xl font-bold">Full Body Strength</h2>
+              <Link to="/programs/1">
+                <Button variant="ghost" size="sm" className="h-auto py-2">
+                  <SquareArrowOutUpRight />
+                </Button>
+              </Link>
             </div>
             <AlertDialogCancel
               className={cn(
