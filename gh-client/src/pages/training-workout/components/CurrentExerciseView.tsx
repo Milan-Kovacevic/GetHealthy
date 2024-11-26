@@ -7,7 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import workoutAvatar from "@/assets/workout-avatar.gif";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, HomeIcon } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type CurrentExerciseViewProps = {
   exercise: {
@@ -36,20 +42,36 @@ export default function CurrentExerciseView({
         className="w-20 h-20 mx-2 translate-y-4"
       />
       <Card className="">
-        <CardHeader className="pb-2 space-y-1">
-          <p className="font-medium text-muted-foreground text-sm">
-            Exercise no. {exerciseIndex + 1}
-          </p>
-          <CardTitle className="pt-0">{exercise.name}</CardTitle>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onReturnToSummary}
-            aria-label="Return to summary"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <p className="text-foreground/80 text-sm">
+        <CardHeader className="pb-2 space-y-2">
+          <div className="flex items-center justify-between flex-wrap">
+            <div>
+              <p className="font-medium text-muted-foreground text-sm">
+                Exercise no. {exerciseIndex + 1}
+              </p>
+              <CardTitle className="pt-0">{exercise.name}</CardTitle>
+            </div>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onReturnToSummary}
+                    aria-label="Return to summary"
+                    className="self-start"
+                  >
+                    <HomeIcon className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Go to program summary</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+
+          <p className="text-foreground/80 text-base">
             Set{" "}
             <span className="font-semibold text-foreground">{currentSet}</span>{" "}
             of{" "}

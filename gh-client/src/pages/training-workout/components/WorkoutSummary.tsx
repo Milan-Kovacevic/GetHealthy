@@ -28,57 +28,52 @@ type WorkoutSummaryProps = {
     estimatedTime: number;
     trainer: string;
   };
-  onStart: (feedback: boolean) => void;
+  onStart: () => void;
+  onContinue: () => void;
+  giveFeedback: boolean;
+  onFeedbackChecked: (value: boolean) => void;
 };
 
 export default function WorkoutSummary({
   program,
   onStart,
+  onContinue,
+  giveFeedback,
+  onFeedbackChecked,
 }: WorkoutSummaryProps) {
-  const [giveFeedback, setGiveFeedback] = useState(false);
-
   const isWorkoutStarted = program.exercises.some((exercise) =>
     exercise.sets.some((set) => set.status !== "pending")
   );
 
   return (
-    <div className="space-y-6 flex flex-col max-w-lg w-full">
-      <div>
-        <div className="flex items-center gap-2 flex-wrap mb-0.5">
-          <h2 className="text-base text-muted-foreground mb-2">
-            Trainer: {program.trainer}
-          </h2>
-        </div>
-        <div className="flex flex-wrap gap-2 mb-2">
-          {program.categories.map((category, index) => (
-            <Badge key={index} variant="secondary">
-              {category}
-            </Badge>
-          ))}
-          <div className="text-sm flex items-center gap-2 w-full mb-0.5">
-            <p>Level:</p>
-            <p>{program.difficulty}</p>
+    <div className="space-y-4 flex flex-col w-[440px]">
+      <div className="space-y-2">
+        <div>
+          <div className="flex items-center gap-2 flex-wrap mb-0.5">
+            <h2 className="text-base text-muted-foreground mb-2">
+              Trainer: {program.trainer}
+            </h2>
+          </div>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {program.categories.map((category, index) => (
+              <Badge key={index} variant="secondary">
+                {category}
+              </Badge>
+            ))}
+            <div className="text-sm flex items-center gap-1.5 w-full mb-0.5 mx-0.5">
+              <p className="text-foreground/80">Level:</p>
+              <p className="font-medium">{program.difficulty}</p>
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-2 w-full text-sm">
-          <p className="text-secondary-foreground">Estimated Workout Time:</p>
-          <p>{program.estimatedTime} minutes</p>
-        </div>
-      </div>
-
-      <div className="mt-6">
-        <h3 className="text-xl font-semibold mb-2">Exercises</h3>
-        <ScrollArea
-          className={
-            program.exercises.length > 2 ? "max-h-64 overflow-auto" : ""
-          }
-        >
-          <ul className="space-y-4">
+        <h3 className="text-xl font-semibold mb-2 pt-2">Exercises</h3>
+        <ScrollArea className="">
+          <ul className="space-y-3 max-h-80">
             {program.exercises.map((exercise, index) => (
               <li key={index}>
                 <Card>
                   <CardTitle className="text-lg px-4 py-2">
-                    {exercise.name}
+                    {index + 1}. {exercise.name}
                   </CardTitle>
 
                   <CardContent className="p-4 pt-0">
@@ -98,14 +93,14 @@ export default function WorkoutSummary({
                           </span>
                           {set.status === "completed" && (
                             <CheckCircle
-                              className="text-green-500"
+                              className="text-primary/85"
                               size={16}
                               aria-label="Completed"
                             />
                           )}
                           {set.status === "skipped" && (
                             <XCircle
-                              className="text-red-500"
+                              className="text-destructive"
                               size={16}
                               aria-label="Skipped"
                             />
@@ -122,17 +117,20 @@ export default function WorkoutSummary({
         </ScrollArea>
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 ml-1">
         <Checkbox
           id="feedback"
           checked={giveFeedback}
-          onCheckedChange={(checked) => setGiveFeedback(checked as boolean)}
+          onCheckedChange={onFeedbackChecked}
         />
         <Label htmlFor="feedback">Give feedback during workout</Label>
       </div>
       <Button
         variant="secondary"
-        onClick={() => onStart(giveFeedback)}
+        onClick={() => {
+          if (!isWorkoutStarted) onStart();
+          else onContinue();
+        }}
         className="w-full"
       >
         {isWorkoutStarted ? "Continue Workout" : "Start Workout"}
