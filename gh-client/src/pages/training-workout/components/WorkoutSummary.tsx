@@ -42,7 +42,7 @@ export default function WorkoutSummary({
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex flex-col max-w-lg w-full">
       <div>
         <div className="flex items-center gap-2 flex-wrap mb-0.5">
           <h2 className="text-base text-muted-foreground mb-2">
