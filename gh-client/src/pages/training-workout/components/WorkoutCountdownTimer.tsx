@@ -18,7 +18,7 @@ export default function WorkoutCountdownTimer({
   onComplete,
   onSkip,
 }: WorkoutCountdownTimerProps) {
-  const [totalSeconds, setTotalSeconds] = useState(duration);
+  const totalSeconds = duration;
   const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
   const [feedback, setFeedback] = useState(false);
   const [isActive, setIsActive] = useState(true);
@@ -42,15 +42,6 @@ export default function WorkoutCountdownTimer({
     };
   }, [isActive, secondsLeft]);
 
-  //   useEffect(() => {
-  //     if (timeLeft > 0) {
-  //       const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-  //       return () => clearTimeout(timerId);
-  //     } else if (feedback) {
-  //       onComplete();
-  //     }
-  //   }, [timeLeft, onComplete]);
-
   const handleFeedbackSubmit = () => {
     // do something with the feedback
     if (secondsLeft > 0) {
@@ -69,7 +60,7 @@ export default function WorkoutCountdownTimer({
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-[460px]">
       <img
         src={workoutAvatarRest}
         alt="workout avatar"

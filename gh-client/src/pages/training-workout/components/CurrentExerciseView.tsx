@@ -15,6 +15,7 @@ type CurrentExerciseViewProps = {
     description: string;
     videoLink: string;
   };
+  exerciseIndex: number;
   currentSet: number;
   totalSets: number;
   onReturnToSummary: () => void;
@@ -22,20 +23,24 @@ type CurrentExerciseViewProps = {
 
 export default function CurrentExerciseView({
   exercise,
+  exerciseIndex,
   currentSet,
   totalSets,
   onReturnToSummary,
 }: CurrentExerciseViewProps) {
   return (
-    <div className="flex flex-col -translate-y-2">
+    <div className="flex flex-col -translate-y-4 max-w-lg">
       <img
         src={workoutAvatar}
         alt="workout avatar"
         className="w-20 h-20 mx-2 translate-y-4"
       />
-      <Card className="mb-4">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-2xl font-bold">{exercise.name}</CardTitle>
+      <Card className="">
+        <CardHeader className="pb-2 space-y-1">
+          <p className="font-medium text-muted-foreground text-sm">
+            Exercise no. {exerciseIndex + 1}
+          </p>
+          <CardTitle className="pt-0">{exercise.name}</CardTitle>
           <Button
             variant="ghost"
             size="icon"
@@ -44,21 +49,22 @@ export default function CurrentExerciseView({
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
+          <p className="text-foreground/80 text-sm">
+            Set{" "}
+            <span className="font-semibold text-foreground">{currentSet}</span>{" "}
+            of{" "}
+            <span className="font-semibold text-foreground">{totalSets}</span>
+          </p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p>{exercise.description}</p>
-          <div>
-            <strong>Demonstration Video:</strong>{" "}
-            <Button variant="link" className="px-1">
-              <a
-                href={exercise.videoLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-foreground"
-              >
-                Watch Video
-              </a>
-            </Button>
+          <p className="text-muted-foreground text-sm">
+            {exercise.description}
+          </p>
+          <div className="flex flex-col gap-1.5">
+            <iframe
+              src="https://www.youtube.com/embed/tgbNymZ7vqY"
+              className="h-[200px] sm:h-[220px] rounded-lg"
+            ></iframe>
           </div>
         </CardContent>
       </Card>

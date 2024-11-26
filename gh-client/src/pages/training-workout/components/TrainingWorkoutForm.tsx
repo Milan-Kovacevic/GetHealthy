@@ -12,6 +12,7 @@ import FeedbackSurvey from "./FeedbackSurvey";
 import WorkoutCountdownTimer from "./WorkoutCountdownTimer";
 import CurrentExerciseView from "./CurrentExerciseView";
 import { ArrowRight, SkipForward } from "lucide-react";
+import ExerciseSummary from "./ExerciseSummary";
 
 type Set = {
   reps: number;
@@ -49,7 +50,7 @@ const sampleProgram: WorkoutProgram = {
         { reps: 10, weight: 100, restTime: 60, status: "pending" },
       ],
       description:
-        "Stand with feet shoulder-width apart, lower your body as if sitting back into a chair, then push back up.",
+        "Stand with feet shoulder-width apart, lower your body as if sitting back into a chair, then push back up. ",
       videoLink: "https://example.com/squat-video",
     },
     {
@@ -98,10 +99,12 @@ export default function TrainingWorkoutForm() {
   const [giveFeedback, setGiveFeedback] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showRestTimer, setShowRestTimer] = useState(false);
+  const [showExerciseSummary, setShowExerciseSummary] = useState(false);
 
   const startWorkout = (feedback: boolean) => {
     setGiveFeedback(feedback);
     setShowSummary(false);
+    setShowExerciseSummary(true);
   };
 
   const nextSet = () => {
@@ -126,7 +129,9 @@ export default function TrainingWorkoutForm() {
       setCurrentSetIndex(currentSetIndex + 1);
     } else {
       if (currentExerciseIndex < program.exercises.length - 1) {
+        // Next exercise
         setCurrentExerciseIndex(currentExerciseIndex + 1);
+        setShowExerciseSummary(true);
         setCurrentSetIndex(0);
       } else {
         // Workout completed
@@ -139,18 +144,7 @@ export default function TrainingWorkoutForm() {
     setShowRestTimer(false);
   };
 
-  // const handleFeedbackSubmit = () => {
-  //   // setShowRestTimer(true);
-  //   moveToNextSet();
-  // };
-
   const handleRestComplete = () => {
-    // if (giveFeedback) {
-    //   setShowRestTimer(true);
-    // } else {
-    //   moveToNextSet();
-    // }
-
     moveToNextSet();
   };
 
@@ -171,8 +165,16 @@ export default function TrainingWorkoutForm() {
     setShowSummary(true);
   };
 
+  const handleStartExercise = () => {
+    setShowExerciseSummary(false);
+  };
+
+  const handleSkipExercise = () => {
+    setShowExerciseSummary(false);
+  };
+
   return (
-    <div className="w-full mx-auto h-full flex flex-col">
+    <div className="w-full flex flex-col">
       <CardContent className="p-0 flex flex-col flex-1">
         {showSummary ? (
           <WorkoutSummary program={program} onStart={startWorkout} />
@@ -186,33 +188,45 @@ export default function TrainingWorkoutForm() {
             onSkip={handleSkipRest}
             showFeedback={giveFeedback}
           />
+        ) : showExerciseSummary ? (
+          <ExerciseSummary
+            onStart={handleStartExercise}
+            onSkip={handleSkipExercise}
+            exerciseIndex={currentExerciseIndex}
+            exercise={program.exercises[currentExerciseIndex]}
+          />
         ) : (
           <CurrentExerciseView
             exercise={program.exercises[currentExerciseIndex]}
+            exerciseIndex={currentExerciseIndex}
             currentSet={currentSetIndex + 1}
             totalSets={program.exercises[currentExerciseIndex].sets.length}
             onReturnToSummary={returnToSummary}
           />
         )}
       </CardContent>
-      <CardFooter className="p-4">
-        {!showSummary && !showRestTimer && !showFeedback && (
-          <div className="flex w-full gap-4">
-            <Button onClick={skipSet} className="flex-1" variant="outline">
-              <SkipForward className="w-4 h-4 mr-2" />
-              Skip Set
-            </Button>
-            <Button onClick={nextSet} className="flex-1" variant="secondary">
-              <ArrowRight className="w-4 h-4 ml-2" />
-              {currentSetIndex ===
-                program.exercises[currentExerciseIndex].sets.length - 1 &&
-              currentExerciseIndex === program.exercises.length - 1
-                ? "Finish"
-                : "Next"}
-            </Button>
-          </div>
+
+      {!showSummary &&
+        !showRestTimer &&
+        !showFeedback &&
+        !showExerciseSummary && (
+          <CardFooter className="p-4">
+            <div className="flex w-full gap-4">
+              <Button onClick={skipSet} className="flex-1" variant="outline">
+                <SkipForward className="w-4 h-4 mr-2" />
+                Skip Set
+              </Button>
+              <Button onClick={nextSet} className="flex-1" variant="secondary">
+                <ArrowRight className="w-4 h-4 ml-2" />
+                {currentSetIndex ===
+                  program.exercises[currentExerciseIndex].sets.length - 1 &&
+                currentExerciseIndex === program.exercises.length - 1
+                  ? "Finish"
+                  : "Next"}
+              </Button>
+            </div>
+          </CardFooter>
         )}
-      </CardFooter>
     </div>
   );
 }
