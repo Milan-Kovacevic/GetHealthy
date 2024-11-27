@@ -3,22 +3,36 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import FeedbackSurvey from "./FeedbackSurvey";
 import workoutAvatarRest from "@/assets/workout-avatar-rest.gif";
-import { Slider } from "@/components/ui/slider";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { HomeIcon } from "lucide-react";
+
+type ExerciseSet = {
+  reps: number;
+  weight: number;
+  restTime: number;
+};
 
 type WorkoutCountdownTimerProps = {
-  duration: number;
   showFeedback: boolean;
   onComplete: () => void;
   onSkip: () => void;
+  onReturnToSummary: () => void;
+  set: ExerciseSet;
 };
 
 export default function WorkoutCountdownTimer({
-  duration,
+  set,
   showFeedback,
   onComplete,
   onSkip,
+  onReturnToSummary,
 }: WorkoutCountdownTimerProps) {
-  const [totalSeconds, setTotalSeconds] = useState(duration);
+  const totalSeconds = set.restTime;
   const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
   const [feedback, setFeedback] = useState(false);
   const [isActive, setIsActive] = useState(true);
@@ -42,15 +56,6 @@ export default function WorkoutCountdownTimer({
     };
   }, [isActive, secondsLeft]);
 
-  //   useEffect(() => {
-  //     if (timeLeft > 0) {
-  //       const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-  //       return () => clearTimeout(timerId);
-  //     } else if (feedback) {
-  //       onComplete();
-  //     }
-  //   }, [timeLeft, onComplete]);
-
   const handleFeedbackSubmit = () => {
     // do something with the feedback
     if (secondsLeft > 0) {
@@ -69,26 +74,53 @@ export default function WorkoutCountdownTimer({
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <img
-        src={workoutAvatarRest}
-        alt="workout avatar"
-        className="w-20 h-20 self-center mt-2 mx-2 translate-y-3"
-      />
-      <div className="py-4 space-y-2 mb-4 mt-1">
-        <div className="text-center flex flex-col w-full">
-          <span className="text-muted-foreground font-medium text-base leading-none">
-            Rest time
-          </span>
-          <span className="text-4xl font-bold">{formatTime(secondsLeft)}</span>
-        </div>
-        <Progress
-          value={(secondsLeft / totalSeconds) * 100}
-          className="w-full [&>*]:bg-primary/50"
+    <div className="flex flex-col h-full w-[460px]">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onReturnToSummary}
+              aria-label="Return to summary"
+              className="self-end"
+            >
+              <HomeIcon className="h-5 w-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Go to program summary</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <div className="flex gap-1 flex-wrap items-center justify-center mb-1.5">
+        <img
+          src={workoutAvatarRest}
+          alt="workout avatar"
+          className="w-20 h-20 self-center mx-2"
         />
+        <div className="space-y-2 mt-1">
+          <div className="text-center flex flex-col w-full">
+            <span className="text-muted-foreground font-medium text-base leading-none">
+              Rest time
+            </span>
+            <span className="text-4xl font-bold">
+              {formatTime(secondsLeft)}
+            </span>
+          </div>
+        </div>
       </div>
+      <Progress
+        value={(secondsLeft / totalSeconds) * 100}
+        className="w-full [&>*]:bg-primary/50 mb-2"
+      />
       {showFeedback && (
-        <FeedbackSurvey disabled={feedback} onSubmit={handleFeedbackSubmit} />
+        <FeedbackSurvey
+          disabled={feedback}
+          onSubmit={handleFeedbackSubmit}
+          targetReps={set.reps}
+          targetWeight={set.weight}
+        />
       )}
       <Button
         onClick={onSkip}
