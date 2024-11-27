@@ -29,16 +29,24 @@ type WorkoutSummaryProps = {
     trainer: string;
   };
   onStart: (feedback: boolean) => void;
+  currentExerciseIndex: number;
+  onFinish: () => void;
 };
 
 export default function WorkoutSummary({
   program,
   onStart,
+  currentExerciseIndex,
+  onFinish,
 }: WorkoutSummaryProps) {
   const [giveFeedback, setGiveFeedback] = useState(false);
 
   const isWorkoutStarted = program.exercises.some((exercise) =>
     exercise.sets.some((set) => set.status !== "pending")
+  );
+
+  const isWorkoutFinished = program.exercises.every((exercise) =>
+    exercise.sets.every((set) => set.status !== "pending")
   );
 
   return (
@@ -76,7 +84,15 @@ export default function WorkoutSummary({
           <ul className="space-y-4">
             {program.exercises.map((exercise, index) => (
               <li key={index}>
-                <Card>
+                <Card
+                  className={
+                    index === currentExerciseIndex &&
+                    isWorkoutStarted &&
+                    !isWorkoutFinished
+                      ? " border-black"
+                      : ""
+                  }
+                >
                   <CardTitle className="text-lg px-4 py-2">
                     {exercise.name}
                   </CardTitle>
@@ -122,20 +138,26 @@ export default function WorkoutSummary({
         </ScrollArea>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <Checkbox
-          id="feedback"
-          checked={giveFeedback}
-          onCheckedChange={(checked) => setGiveFeedback(checked as boolean)}
-        />
-        <Label htmlFor="feedback">Give feedback during workout</Label>
-      </div>
+      {!isWorkoutFinished && (
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="feedback"
+            checked={giveFeedback}
+            onCheckedChange={(checked) => setGiveFeedback(checked as boolean)}
+          />
+          <Label htmlFor="feedback">Give feedback during workout</Label>
+        </div>
+      )}
       <Button
         variant="secondary"
-        onClick={() => onStart(giveFeedback)}
+        onClick={isWorkoutFinished ? onFinish : () => onStart(giveFeedback)}
         className="w-full"
       >
-        {isWorkoutStarted ? "Continue Workout" : "Start Workout"}
+        {isWorkoutFinished
+          ? "Finish"
+          : isWorkoutStarted
+          ? "Continue Workout"
+          : "Start Workout"}
       </Button>
     </div>
   );

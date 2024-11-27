@@ -13,6 +13,7 @@ import WorkoutCountdownTimer from "./WorkoutCountdownTimer";
 import CurrentExerciseView from "./CurrentExerciseView";
 import { ArrowRight, SkipForward } from "lucide-react";
 import ExerciseSummary from "./ExerciseSummary";
+import { useNavigate } from "react-router-dom";
 
 type Set = {
   reps: number;
@@ -100,6 +101,7 @@ export default function TrainingWorkoutForm() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showRestTimer, setShowRestTimer] = useState(false);
   const [showExerciseSummary, setShowExerciseSummary] = useState(false);
+  const navigate = useNavigate();
 
   const startWorkout = (feedback: boolean) => {
     setGiveFeedback(feedback);
@@ -129,12 +131,10 @@ export default function TrainingWorkoutForm() {
       setCurrentSetIndex(currentSetIndex + 1);
     } else {
       if (currentExerciseIndex < program.exercises.length - 1) {
-        // Next exercise
         setCurrentExerciseIndex(currentExerciseIndex + 1);
         setShowExerciseSummary(true);
         setCurrentSetIndex(0);
       } else {
-        // Workout completed
         setShowSummary(true);
         setCurrentExerciseIndex(0);
         setCurrentSetIndex(0);
@@ -173,11 +173,20 @@ export default function TrainingWorkoutForm() {
     setShowExerciseSummary(false);
   };
 
+  const finishWorkout = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="w-full flex flex-col">
       <CardContent className="p-0 flex flex-col flex-1">
         {showSummary ? (
-          <WorkoutSummary program={program} onStart={startWorkout} />
+          <WorkoutSummary
+            program={program}
+            onStart={startWorkout}
+            currentExerciseIndex={currentExerciseIndex}
+            onFinish={finishWorkout}
+          />
         ) : showRestTimer ? (
           <WorkoutCountdownTimer
             duration={

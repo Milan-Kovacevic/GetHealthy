@@ -22,6 +22,7 @@ export default function TrainingWorkoutDialog({
   children,
 }: TrainingWorkoutDialogProps) {
   const [open, setOpen] = useState(false);
+
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger>{children}</AlertDialogTrigger>
