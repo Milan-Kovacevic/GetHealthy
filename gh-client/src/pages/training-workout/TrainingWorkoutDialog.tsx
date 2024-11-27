@@ -13,6 +13,13 @@ import { SquareArrowOutUpRight, XIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Separator } from "@/components/ui/separator";
 
 type TrainingWorkoutDialogProps = {
   children: ReactNode;
@@ -29,14 +36,24 @@ export default function TrainingWorkoutDialog({
       <AlertDialogContent className="max-w-fit">
         <AlertDialogHeader>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+            <div className="flex items-center flex-1 gap-2 flex-wrap mb-0.5">
               <h2 className="text-xl font-bold">Full Body Strength</h2>
-              <Link to="/programs/1">
-                <Button variant="ghost" size="sm" className="h-auto py-2">
-                  <SquareArrowOutUpRight />
-                </Button>
-              </Link>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/programs/1" target="_blank">
+                      <Button variant="ghost" size="sm" className="h-auto py-2">
+                        <SquareArrowOutUpRight />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View training program details</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
+
             <AlertDialogCancel
               className={cn(
                 buttonVariants({ variant: "ghost" }),
@@ -46,6 +63,7 @@ export default function TrainingWorkoutDialog({
               <XIcon />
             </AlertDialogCancel>
           </div>
+          <Separator className="-translate-y-0.5" />
         </AlertDialogHeader>
         <TrainingWorkoutForm />
       </AlertDialogContent>

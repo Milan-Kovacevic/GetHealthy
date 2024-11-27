@@ -8,8 +8,16 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  ArrowLeft,
   CircleIcon,
   HashIcon,
+  HomeIcon,
   PlayIcon,
   SkipBackIcon,
   SkipForwardIcon,
@@ -27,6 +35,7 @@ type ExerciseSummaryProps = {
   exerciseIndex: number;
   onStart: () => void;
   onSkip: () => void;
+  onReturnToSummary: () => void;
 };
 
 export default function ExerciseSummary({
@@ -34,18 +43,39 @@ export default function ExerciseSummary({
   exerciseIndex,
   onStart,
   onSkip,
+  onReturnToSummary,
 }: ExerciseSummaryProps) {
   return (
     <div className="flex flex-col max-w-lg">
-      <div className="mt-2">
-        <p className="font-medium text-muted-foreground text-sm">
-          Get ready for ...
-        </p>
-        {/* <p className="text-foreground/75 font-bold"></p> */}
-        <div className="flex flex-row items-end gap-0.5 pb-2">
-          <span className="text-2xl font-semibold">{exerciseIndex + 1}.</span>
-          <h3 className="text-2xl font-semibold">{exercise.name}</h3>
+      <div className="mt-2 flex items-center justify-between flex-wrap">
+        <div className="">
+          <p className="font-medium text-muted-foreground text-sm">
+            Get ready for ...
+          </p>
+          {/* <p className="text-foreground/75 font-bold"></p> */}
+          <div className="flex flex-row items-end gap-0.5 pb-2">
+            <span className="text-2xl font-semibold">{exerciseIndex + 1}.</span>
+            <h3 className="text-2xl font-semibold">{exercise.name}</h3>
+          </div>
         </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onReturnToSummary}
+                aria-label="Return to summary"
+                className="self-start"
+              >
+                <HomeIcon className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Go to program summary</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       <div className="space-y-4 mt-2">
