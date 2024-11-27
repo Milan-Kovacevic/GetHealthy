@@ -206,12 +206,10 @@ export default function TrainingWorkoutForm() {
           />
         ) : showRestTimer ? (
           <WorkoutCountdownTimer
-            duration={
-              program.exercises[currentExerciseIndex].sets[currentSetIndex]
-                .restTime
-            }
+            set={program.exercises[currentExerciseIndex].sets[currentSetIndex]}
             onComplete={handleRestComplete}
             onSkip={handleSkipRest}
+            onReturnToSummary={handleReturnToSummary}
             showFeedback={giveFeedback}
           />
         ) : showExerciseSummary ? (
