@@ -13,13 +13,15 @@ public class GlobalExceptionHandler {
     // Add more controller advices ...
 
     @ExceptionHandler(HttpException.class)
-    public final ResponseEntity<Object> handleHttpException(HttpException e, HandlerMethod handlerMethod){
+    public final ResponseEntity<Object> handleHttpException(HttpException e, HandlerMethod handlerMethod) {
+        if (e.getStatus() == null)
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(e.getData(), e.getStatus());
     }
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleException(Exception e, HandlerMethod handlerMethod){
-
+    public final ResponseEntity<Object> handleException(Exception e, HandlerMethod handlerMethod) {
         return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
 }
