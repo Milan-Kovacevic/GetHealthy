@@ -33,9 +33,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, PlusIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { TimePicker } from "./TimePicker";
 import {
   Form,
   FormControl,
@@ -47,6 +46,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TimePicker } from "@/components/primitives/TimePicker";
 
 const options = [
   { value: "beginner-strength-training", label: "Beginner Strength Training" },
@@ -96,7 +96,7 @@ const formSchema = z
     path: ["endTime"], // This specifies which field the error is associated with
   });
 
-export default function TrainingProgramModal() {
+export default function AddProgramToScheduleModal() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -124,7 +124,14 @@ export default function TrainingProgramModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Select Training Program</Button>
+        <Button
+          size="sm"
+          variant={"secondary"}
+          className="self-center border-primary border w-full"
+        >
+          <PlusIcon className="" />
+          Add program
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={form.handleSubmit(onSubmit)}>

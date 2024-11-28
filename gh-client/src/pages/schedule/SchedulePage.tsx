@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import TrainingProgramOnScheduleDialog from "./components/TrainingProgramOnScheduleDialog";
+import TrainingProgramOnScheduleDialog from "../training-schedule/components/AddProgramToScheduleModal";
 import TrainingWorkoutDialog from "../training-workout/TrainingWorkoutDialog";
 import { DumbbellIcon } from "lucide-react";
 

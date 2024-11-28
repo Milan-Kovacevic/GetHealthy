@@ -7,7 +7,6 @@ import TrainingProgramDetails from "@/pages/program-details/components/TrainingP
 import TrainingProgramTrainees from "@/pages/program-details/components/TrainingProgramTrainees";
 import TrainingProgramReviews from "@/pages/program-details/components/TrainingProgramReviews";
 import ProgramTrainerInfo from "@/pages/program-details/components/ProgramTrainerInfo";
-import SchedulePage from "@/pages/schedule/SchedulePage";
 import EditTrainingProgramPage from "@/pages/create-edit-training-program/EditTrainingProgramPage";
 import RootLayout from "@/layouts/RootLayout";
 import AboutUsPage from "@/pages/about/AboutUsPage";
@@ -17,8 +16,8 @@ import LandingPage from "@/pages/landing/LandingPage";
 import LoginPage from "@/pages/login/LoginPage";
 import NotFoundPage from "@/pages/not-found/NotFoundPage";
 import RegisterPage from "@/pages/register/RegisterPage";
-import TrainingProgramSchedule from "@/pages/training-schedule/TrainingProgramSchedule";
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import TrainingSchedulePage from "@/pages/training-schedule/TrainingSchedulePage";
 
 const router = createBrowserRouter([
   {
@@ -33,7 +32,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/schedule",
-            element: <SchedulePage />,
+            element: <TrainingSchedulePage />,
           },
           // Routes for every role
           {
@@ -49,10 +48,7 @@ const router = createBrowserRouter([
               },
             ],
           },
-          {
-            path: "training-program-schedule",
-            element: <TrainingProgramSchedule />,
-          },
+
           {
             path: "/programs/:id",
             element: <ProgramDetailsLayout />,

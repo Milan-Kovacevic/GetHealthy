@@ -19,7 +19,7 @@ interface SearchableSelectProps {
   className?: string;
 }
 
-const SearchableSelect: React.FC<SearchableSelectProps> = ({
+const SearchableSelectt: React.FC<SearchableSelectProps> = ({
   options,
   placeholder = "Select an option",
   onValueChange,
@@ -71,4 +71,4 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
   );
 };
 
-export default SearchableSelect;
+export default SearchableSelectt;
