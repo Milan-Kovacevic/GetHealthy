@@ -4,6 +4,7 @@ import {
   addDays,
   format,
   getDay,
+  getDayOfYear,
   isPast,
   isSameDay,
   isWithinInterval,
@@ -176,15 +177,18 @@ export default function TrainingSchedulePage() {
                   "flex flex-col rounded-none border border-b-2",
                   index === 0 && "border-l-2 rounded-bl-lg",
                   index === weekDays.length - 1 && "border-r-2 rounded-br-lg",
-                  getDay(day) == getDay(new Date()) && "border-t-0"
+                  getDay(day) == getDay(new Date()) &&
+                    "border-t-0 bg-secondary/15 dark:bg-secondary/15",
+                  getDayOfYear(day) < getDayOfYear(new Date()) &&
+                    "opacity-80 bg-muted/30 dark:bg-muted/40"
                 )}
               >
                 <CardContent className="flex-grow p-0 flex flex-col">
                   <div
                     className={cn(
-                      "text-lg font-semibold text-center bg-muted/25 dark:bg-muted/20 border border-l-0 border-r-0 border-b-2 p-1",
+                      "text-lg font-semibold text-center bg-accent/25 dark:bg-accent/20 border border-l-0 border-r-0 border-b-2 p-1",
                       getDay(day) == getDay(new Date()) &&
-                        "border-primary border-2 dark:border-primary/50"
+                        "border-primary border-2 dark:border-primary/45"
                     )}
                   >
                     <p className="text-muted-foreground font-medium text-sm leading-none pt-1">
