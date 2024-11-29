@@ -14,9 +14,9 @@ public class ExerciseResponse {
 
     private String videoLink;
 
-    private Trainer user;
+    private Integer userId;
 
-    private MetricType metricType1Id;
+    private Integer metricType1Id;
 
-    private MetricType matricType2Id;
+    private Integer matricType2Id;
 }
