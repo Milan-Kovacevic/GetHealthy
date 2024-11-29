@@ -97,7 +97,7 @@ const DesktopNavbar = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="hidden justify-between lg:flex px-4">
+    <nav className="hidden justify-between lg:flex">
       <div className="flex items-center gap-6">
         <AppBanner />
         <div className="flex items-center">

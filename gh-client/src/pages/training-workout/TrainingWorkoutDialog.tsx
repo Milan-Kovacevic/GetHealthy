@@ -40,7 +40,7 @@ export default function TrainingWorkoutDialog({
               <h2 className="text-xl font-bold">Full Body Strength</h2>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger asChild>
+                  <TooltipTrigger>
                     <Link to="/programs/1" target="_blank">
                       <Button variant="ghost" size="sm" className="h-auto py-2">
                         <SquareArrowOutUpRight />

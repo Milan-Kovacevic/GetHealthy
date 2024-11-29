@@ -16,6 +16,7 @@ import { CalendarIcon, PlusIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AddProgramToScheduleModal from "./components/AddProgramToScheduleModal";
 import { useNavigate } from "react-router-dom";
+import ProgramScheduleDay from "./components/ProgramScheduleDay";
 
 export interface TrainingProgram {
   id: number;
@@ -26,6 +27,7 @@ export interface TrainingProgram {
   trainerName: string;
   day: Date;
 }
+export type ScheduleTrainingStatus = "completed" | "upcoming" | "live";
 
 const mockPrograms: TrainingProgram[] = [
   {
@@ -33,7 +35,7 @@ const mockPrograms: TrainingProgram[] = [
     name: "Morning Yoga",
     description: "Start your day with energizing yoga",
     startTime: "07:00",
-    endTime: "08:00",
+    endTime: "12:00",
     trainerName: "Marko Markovic",
     day: new Date(),
   },
@@ -91,6 +93,15 @@ const mockPrograms: TrainingProgram[] = [
     trainerName: "Marko Markovic",
     day: addDays(new Date(), 4),
   },
+  {
+    id: 6,
+    name: "Cardio Blast v2",
+    description: "Boost your cardiovascular fitness",
+    startTime: "07:00",
+    endTime: "08:00",
+    trainerName: "Marko Markovic",
+    day: addDays(new Date(), -3),
+  },
 ];
 
 export default function TrainingSchedulePage() {
@@ -119,9 +130,10 @@ export default function TrainingSchedulePage() {
   const weekDays = Array.from({ length: 7 }, (_, i) =>
     addDays(startOfCurrentWeek, i)
   );
+
   const getProgramStatus = (
     program: TrainingProgram
-  ): "completed" | "upcoming" | "live" => {
+  ): ScheduleTrainingStatus => {
     const now = currentDate;
     const [startHour, startMinute] = program.startTime.split(":").map(Number);
     const [endHour, endMinute] = program.endTime.split(":").map(Number);
@@ -139,7 +151,7 @@ export default function TrainingSchedulePage() {
     return "upcoming";
   };
 
-  const viewProgramDetails = (programId: any) => {
+  const handleViewProgramDetails = (programId: any) => {
     navigate(`/programs/${programId}`);
   };
 
@@ -171,50 +183,16 @@ export default function TrainingSchedulePage() {
         <div className="flex-1 flex">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 flex-1">
             {weekDays.map((day, index) => (
-              <div
-                key={day.toISOString()}
-                className={cn(
-                  "flex flex-col rounded-none border border-b-2",
-                  index === 0 && "border-l-2 rounded-bl-lg",
-                  index === weekDays.length - 1 && "border-r-2 rounded-br-lg",
-                  getDay(day) == getDay(new Date()) &&
-                    "border-t-0 bg-secondary/15 dark:bg-secondary/15",
-                  getDayOfYear(day) < getDayOfYear(new Date()) &&
-                    "opacity-80 bg-muted/30 dark:bg-muted/40"
+              <ProgramScheduleDay
+                forDay={day}
+                dayOfWeek={index + 1}
+                getProgramStatus={getProgramStatus}
+                programs={programs.filter((program) =>
+                  isSameDay(program.day, day)
                 )}
-              >
-                <CardContent className="flex-grow p-0 flex flex-col">
-                  <div
-                    className={cn(
-                      "text-lg font-semibold text-center bg-accent/25 dark:bg-accent/20 border border-l-0 border-r-0 border-b-2 p-1",
-                      getDay(day) == getDay(new Date()) &&
-                        "border-primary border-2 dark:border-primary/45"
-                    )}
-                  >
-                    <p className="text-muted-foreground font-medium text-sm leading-none pt-1">
-                      {getDay(day) == getDay(new Date()) && "Today, "}
-                      {format(day, "dd. MMM")}
-                    </p>
-                    <p className="text-foreground">{format(day, "EEEE")}</p>
-                  </div>
-                  <ScrollArea className="p-3.5 flex-1 flex">
-                    <div className="space-y-2.5 flex-1">
-                      {programs
-                        .filter((program) => isSameDay(program.day, day))
-                        .map((program) => {
-                          return (
-                            <TrainingProgramCard
-                              key={program.id}
-                              program={program}
-                              onViewDetails={viewProgramDetails}
-                              getProgramStatus={getProgramStatus}
-                            />
-                          );
-                        })}
-                    </div>
-                  </ScrollArea>
-                </CardContent>
-              </div>
+                key={day.toISOString()}
+                onViewDetails={handleViewProgramDetails}
+              />
             ))}
           </div>
         </div>
@@ -222,13 +200,3 @@ export default function TrainingSchedulePage() {
     </div>
   );
 }
-
-const TrainingSchedulePageTitle = () => {
-  return (
-    <div className="flex justify-between items-end">
-      <div className="flex gap-1.5 items-center">
-        <p className="text-2xl font-bold">Your weekly schedule</p>
-      </div>
-    </div>
-  );
-};
