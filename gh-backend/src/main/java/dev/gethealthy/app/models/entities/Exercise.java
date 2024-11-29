@@ -13,6 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "exercise")
 public class Exercise implements BaseEntity<Integer> {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ExerciseId", nullable = false)
     private Integer id;
 

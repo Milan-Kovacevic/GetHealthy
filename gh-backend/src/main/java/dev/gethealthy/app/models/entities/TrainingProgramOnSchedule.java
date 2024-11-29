@@ -15,6 +15,7 @@ import java.time.LocalTime;
 @Table(name = "training_program_on_schedule")
 public class TrainingProgramOnSchedule implements BaseEntity<Integer> {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id", nullable = false)
     private Integer id;
 

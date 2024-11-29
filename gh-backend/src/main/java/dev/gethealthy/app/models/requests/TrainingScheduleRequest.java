@@ -15,7 +15,7 @@ public class TrainingScheduleRequest {
 
     private Byte dayOfWeek;
 
-    private TrainingProgram program;
+    private Integer programId;
 
-    private Trainer user;
+    private Integer userId;
 }
