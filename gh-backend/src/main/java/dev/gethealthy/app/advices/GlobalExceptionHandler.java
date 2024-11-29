@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpException.class)
     public final ResponseEntity<Object> handleHttpException(HttpException e, HandlerMethod handlerMethod) {
         if (e.getStatus() == null)
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(e.getData(), e.getStatus());
     }
 
