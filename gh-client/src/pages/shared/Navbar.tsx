@@ -27,6 +27,13 @@ import { cn } from "@/lib/utils";
 import appIcon from "@/assets/applogo.png";
 import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "@/components/primitives/ThemeToggle";
+import { Badge } from "@/components/ui/badge";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import NotificationsPopover from "../notifications/NotificationsPopover";
 
 const subMenuItemsOne = [
   {
@@ -178,30 +185,26 @@ const DesktopNavbar = () => {
             </NavigationMenuList>
           </NavigationMenu>
 
-          <a
-            className={cn(
-              "text-muted-foreground",
-              navigationMenuTriggerStyle,
-              buttonVariants({
-                variant: "ghost",
-              })
-            )}
-            href="#"
-          >
-            Pricing
-          </a>
-          <a
-            className={cn(
-              "text-muted-foreground",
-              navigationMenuTriggerStyle,
-              buttonVariants({
-                variant: "ghost",
-              })
-            )}
-            href="#"
-          >
-            Blog
-          </a>
+          <NotificationsPopover>
+            <Button
+              variant="ghost"
+              className={cn(
+                "text-muted-foreground relative",
+                navigationMenuTriggerStyle,
+                buttonVariants({
+                  variant: "ghost",
+                })
+              )}
+            >
+              <Badge
+                variant="secondary"
+                className="absolute border-none top-0.5 -right-0.5 rounded-full pointer-events-none text-primary-foreground leading-none bg-primary text-[10px] px-1.5 py-1 h-auto"
+              >
+                <span className="font-semibold leading-none">4</span>
+              </Badge>
+              Notifications
+            </Button>
+          </NotificationsPopover>
         </div>
       </div>
       <div className="flex items-center gap-2">
