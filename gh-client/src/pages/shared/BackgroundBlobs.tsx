@@ -23,9 +23,9 @@ const CircleBackgroundBlob = (props: CircleBackgroundBlobProps) => {
     <div
       aria-hidden="true"
       className={cn(
-        "absolute bottom-14 -left-4 w-96 h-96 bg-primary/15 dark:bg-primary/5 rounded-full filter blur-3xl",
-        variant == "light" && "bg-primary/15 dark:bg-primary/10",
-        variant == "lighter" && "bg-primary/10 dark:bg-primary/5",
+        "absolute bottom-14 -left-4 w-96 h-96 rounded-full filter blur-3xl",
+        variant == "light" && "bg-primary/15 dark:bg-primary/15",
+        variant == "lighter" && "bg-primary/10 dark:bg-primary/10",
         variant == "lightest" && "bg-primary/5 dark:bg-primary/5",
         className
       )}

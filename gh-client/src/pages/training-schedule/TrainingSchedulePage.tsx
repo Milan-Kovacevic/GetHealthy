@@ -17,6 +17,10 @@ import { cn } from "@/lib/utils";
 import AddProgramToScheduleModal from "./components/AddProgramToScheduleModal";
 import { useNavigate } from "react-router-dom";
 import ProgramScheduleDay from "./components/ProgramScheduleDay";
+import {
+  CircleBackgroundBlob,
+  TopBackgroundBlob,
+} from "../shared/BackgroundBlobs";
 
 export interface TrainingProgram {
   id: number;
@@ -102,6 +106,51 @@ const mockPrograms: TrainingProgram[] = [
     trainerName: "Marko Markovic",
     day: addDays(new Date(), -3),
   },
+  // {
+  //   id: 7,
+  //   name: "Cardio Blast v2",
+  //   description: "Boost your cardiovascular fitness",
+  //   startTime: "07:00",
+  //   endTime: "08:00",
+  //   trainerName: "Marko Markovic",
+  //   day: addDays(new Date(), 0),
+  // },
+  // {
+  //   id: 8,
+  //   name: "Cardio Blast v2",
+  //   description: "Boost your cardiovascular fitness",
+  //   startTime: "07:00",
+  //   endTime: "08:00",
+  //   trainerName: "Marko Markovic",
+  //   day: addDays(new Date(), 0),
+  // },
+  // {
+  //   id: 9,
+  //   name: "Cardio Blast v2",
+  //   description: "Boost your cardiovascular fitness",
+  //   startTime: "07:00",
+  //   endTime: "08:00",
+  //   trainerName: "Marko Markovic",
+  //   day: addDays(new Date(), 0),
+  // },
+  // {
+  //   id: 10,
+  //   name: "Cardio Blast v2",
+  //   description: "Boost your cardiovascular fitness",
+  //   startTime: "07:00",
+  //   endTime: "08:00",
+  //   trainerName: "Marko Markovic",
+  //   day: addDays(new Date(), 0),
+  // },
+  // {
+  //   id: 11,
+  //   name: "Cardio Blast v2",
+  //   description: "Boost your cardiovascular fitness",
+  //   startTime: "07:00",
+  //   endTime: "08:00",
+  //   trainerName: "Marko Markovic",
+  //   day: addDays(new Date(), 0),
+  // },
 ];
 
 export default function TrainingSchedulePage() {
@@ -156,47 +205,58 @@ export default function TrainingSchedulePage() {
   };
 
   return (
-    <div className="container mx-auto sm:px-0 px-4 pt-6 pb-10 flex flex-col h-full">
-      <div className="flex flex-col h-full">
-        <div className="border-2 shadow-md rounded-lg rounded-bl-none rounded-br-none border-b-0 flex justify-between gap-3 py-0 px-3 md:flex-row flex-col">
-          <div className="flex md:gap-2 md:items-center mx-3 py-3.5 md:pb-3.5 pb-1 md:flex-row flex-col items-start">
-            <div className="flex md:gap-2.5 gap-1.5 items-center">
-              <CalendarIcon className="text-foreground/90 w-6 h-6" />
-              <p className="md:text-2xl text-xl leading-tight font-bold">
-                Your weekly schedule
-              </p>
+    <section className="h-full relative overflow-hidden flex flex-col">
+      <CircleBackgroundBlob
+        variant="lighter"
+        className="-top-20 left-1/2 w-1/3 h-96 right-auto"
+      />
+      <CircleBackgroundBlob variant="lightest" />
+      <CircleBackgroundBlob
+        variant="lightest"
+        className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
+      />
+      <div className="container mx-auto sm:px-0 px-4 pt-8 pb-8 flex flex-col flex-1">
+        <div className="flex flex-col flex-1 z-10">
+          <div className="bg-background border-2 shadow-md rounded-lg rounded-bl-none rounded-br-none border-b-0 flex justify-between gap-3 py-0 px-3 md:flex-row flex-col">
+            <div className="flex md:gap-2 md:items-center mx-3 py-3.5 md:pb-3.5 pb-1 md:flex-row flex-col items-start">
+              <div className="flex md:gap-2.5 gap-1.5 items-center">
+                <CalendarIcon className="text-foreground/90 w-6 h-6" />
+                <p className="md:text-2xl text-xl leading-tight font-bold">
+                  Your weekly schedule
+                </p>
+              </div>
+              <span className="text-muted-foreground self-center text-lg md:block hidden">
+                |
+              </span>
+              <div className="flex flex-row items-center gap-1.5 mt-0.5">
+                <p className="md:text-lg text-base font-medium text-foreground/75 tracking-tight">
+                  {format(currentDate, "MMMM yyyy")}
+                </p>
+              </div>
             </div>
-            <span className="text-muted-foreground self-center text-lg md:block hidden">
-              |
-            </span>
-            <div className="flex flex-row items-center gap-1.5 mt-0.5">
-              <p className="md:text-lg text-base font-medium text-foreground/90 tracking-tight">
-                {format(currentDate, "MMMM yyyy")}
-              </p>
+            <div className="md:flex-none flex-1 md:mb-0 mb-3 md:self-center">
+              <AddProgramToScheduleModal />
             </div>
           </div>
-          <div className="md:flex-none flex-1 md:mb-0 mb-3 md:self-center">
-            <AddProgramToScheduleModal />
-          </div>
-        </div>
 
-        <div className="flex-1 flex">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 flex-1">
-            {weekDays.map((day, index) => (
-              <ProgramScheduleDay
-                forDay={day}
-                dayOfWeek={index + 1}
-                getProgramStatus={getProgramStatus}
-                programs={programs.filter((program) =>
-                  isSameDay(program.day, day)
-                )}
-                key={day.toISOString()}
-                onViewDetails={handleViewProgramDetails}
-              />
-            ))}
+          <div className="flex-1 flex bg-background">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 flex-1">
+              {weekDays.map((day, index) => (
+                <ProgramScheduleDay
+                  forDay={day}
+                  dayOfWeek={index + 1}
+                  getProgramStatus={getProgramStatus}
+                  programs={programs.filter((program) =>
+                    isSameDay(program.day, day)
+                  )}
+                  key={day.toISOString()}
+                  onViewDetails={handleViewProgramDetails}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
