@@ -18,13 +18,14 @@ interface NotificationItemProps {
     time: string;
     unread: boolean;
   };
-  markAsRead: (id: number) => void;
+  toggleReadStatus: (id: number) => void;
+  // markAsRead: (id: number) => void;
   isLast: boolean;
 }
 
 export default function NotificationItem({
   notification,
-  markAsRead,
+  toggleReadStatus,
   isLast,
 }: NotificationItemProps) {
   return (
@@ -58,9 +59,17 @@ export default function NotificationItem({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {notification.unread && (
-              <DropdownMenuItem onClick={() => markAsRead(notification.id)}>
+            {notification.unread ? (
+              <DropdownMenuItem
+                onClick={() => toggleReadStatus(notification.id)}
+              >
                 Mark as read
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem
+                onClick={() => toggleReadStatus(notification.id)}
+              >
+                Mark as unread
               </DropdownMenuItem>
             )}
             <DropdownMenuItem>Delete</DropdownMenuItem>

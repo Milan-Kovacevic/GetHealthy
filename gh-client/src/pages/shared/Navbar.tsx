@@ -185,7 +185,7 @@ const DesktopNavbar = () => {
             </NavigationMenuList>
           </NavigationMenu>
 
-          <NotificationsPopover>
+          <NotificationsPopover isTrainer={true}>
             <Button
               variant="ghost"
               className={cn(
