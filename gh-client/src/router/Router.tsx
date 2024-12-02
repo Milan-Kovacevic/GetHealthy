@@ -18,6 +18,7 @@ import NotFoundPage from "@/pages/not-found/NotFoundPage";
 import RegisterPage from "@/pages/register/RegisterPage";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import TrainingSchedulePage from "@/pages/training-schedule/TrainingSchedulePage";
+import ProfilePageLayout from "@/pages/profile/ProfilePageLayout";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +74,11 @@ const router = createBrowserRouter([
                 element: <TrainingProgramTrainees />,
               },
             ],
+          },
+          {
+            path: "profile",
+            element: <ProfilePageLayout />,
+            children: [{}],
           },
           // Routes for trainers only
           {
