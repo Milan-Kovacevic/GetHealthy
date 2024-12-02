@@ -19,6 +19,8 @@ import RegisterPage from "@/pages/register/RegisterPage";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import TrainingSchedulePage from "@/pages/training-schedule/TrainingSchedulePage";
 import ProfilePageLayout from "@/pages/profile/ProfilePageLayout";
+import AppearancePage from "@/pages/profile/components/AppearancePage";
+import AccountPage from "@/pages/profile/components/AccountPage";
 
 const router = createBrowserRouter([
   {
@@ -78,7 +80,17 @@ const router = createBrowserRouter([
           {
             path: "profile",
             element: <ProfilePageLayout />,
-            children: [{}],
+            children: [
+              {},
+              {
+                path: "account",
+                element: <AccountPage />,
+              },
+              {
+                path: "appearance",
+                element: <AppearancePage />,
+              },
+            ],
           },
           // Routes for trainers only
           {
