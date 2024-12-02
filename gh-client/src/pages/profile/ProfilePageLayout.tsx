@@ -5,23 +5,19 @@ import { Outlet } from "react-router-dom";
 const sidebarNavItems = [
   {
     title: "Profile",
-    href: "/examples/forms",
+    href: "",
   },
   {
     title: "Account",
-    href: "/examples/forms/account",
+    href: "/profile/account",
   },
   {
     title: "Appearance",
-    href: "/examples/forms/appearance",
+    href: "/profile/appearance",
   },
   {
-    title: "Notifications",
-    href: "/examples/forms/notifications",
-  },
-  {
-    title: "Display",
-    href: "/examples/forms/display",
+    title: "Statistics",
+    href: "/profile/statistics",
   },
 ];
 
