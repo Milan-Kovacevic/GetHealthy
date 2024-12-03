@@ -34,7 +34,7 @@ const PhoneInputFormField = (props: PhoneInputFormFieldProps) => {
               {props.description}
             </FormDescription>
           )}
-          <FormMessage />
+          <FormMessage className="text-xs ml-0.5" />
         </FormItem>
       )}
     />
