@@ -2,6 +2,7 @@ package dev.gethealthy.app.models.entities;
 
 import dev.gethealthy.app.base.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,19 +12,19 @@ import lombok.Setter;
 @Table(name = "exercise_feedback")
 public class ExerciseFeedback implements BaseEntity<Integer> {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id", nullable = false)
     private Integer id;
 
-    @Column(name = "Score", nullable = false)
-    private Integer score;
+    @Column(name = "Skipped")
+    private Boolean skipped;
 
-    @Column(name = "Skipped", nullable = false)
-    private Byte skipped;
-
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "TraineeExercisingId", nullable = false)
     private TraineeExercising traineeExercising;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ExerciseId", nullable = false)
     private Exercise exercise;

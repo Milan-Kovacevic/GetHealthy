@@ -2,12 +2,12 @@ package dev.gethealthy.app.models.entities;
 
 import dev.gethealthy.app.base.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Table(name = "qualification")
 public class Qualification implements BaseEntity<Integer> {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserId", nullable = false)
     private Integer id;
 
@@ -24,16 +25,9 @@ public class Qualification implements BaseEntity<Integer> {
     @JoinColumn(name = "UserId", nullable = false)
     private Trainer trainer;
 
-    @Column(name = "QualificationName", nullable = false, length = 128)
-    private String qualificationName;
-
-    @Column(name = "ValidTo", nullable = false)
-    private LocalDate validTo;
-
+    @Size(max = 192)
+    @NotNull
     @Column(name = "CertificationFilePath", nullable = false, length = 192)
     private String certificationFilePath;
-
-    @Column(name = "Description", length = 512)
-    private String description;
 
 }

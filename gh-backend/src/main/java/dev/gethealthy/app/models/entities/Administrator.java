@@ -11,6 +11,7 @@ import lombok.Setter;
 @Table(name = "administrator")
 public class Administrator implements BaseEntity<Integer> {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserId", nullable = false)
     private Integer id;
 

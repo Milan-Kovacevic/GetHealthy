@@ -10,16 +10,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "category")
-public class Category implements BaseEntity<Integer> {
+@Table(name = "exercise_metric")
+public class ExerciseMetric implements BaseEntity<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CategoryId", nullable = false)
+    @Column(name = "Id", nullable = false)
     private Integer id;
 
     @Size(max = 128)
     @NotNull
     @Column(name = "Name", nullable = false, length = 128)
     private String name;
+
+    @Size(max = 128)
+    @NotNull
+    @Column(name = "Unit", nullable = false, length = 128)
+    private String unit;
 
 }
