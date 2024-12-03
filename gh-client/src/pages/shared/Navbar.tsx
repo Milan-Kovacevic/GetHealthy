@@ -177,8 +177,7 @@ const DesktopNavbar = () => {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-
-          <a
+          <Link
             className={cn(
               "text-muted-foreground",
               navigationMenuTriggerStyle,
@@ -186,22 +185,10 @@ const DesktopNavbar = () => {
                 variant: "ghost",
               })
             )}
-            href="#"
+            to="/profile"
           >
-            Pricing
-          </a>
-          <a
-            className={cn(
-              "text-muted-foreground",
-              navigationMenuTriggerStyle,
-              buttonVariants({
-                variant: "ghost",
-              })
-            )}
-            href="#"
-          >
-            Blog
-          </a>
+            My Profile
+          </Link>
         </div>
       </div>
       <div className="flex items-center gap-2">

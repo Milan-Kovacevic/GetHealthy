@@ -1,25 +1,23 @@
-import { ReactNode, useState } from "react";
-import TrainingWorkoutForm from "./components/TrainingWorkoutForm";
 import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { SquareArrowOutUpRight, XIcon } from "lucide-react";
-import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { SquareArrowOutUpRight, XIcon } from "lucide-react";
+import { ReactNode, useState } from "react";
+import { Link } from "react-router-dom";
+import TrainingWorkoutForm from "./components/TrainingWorkoutForm";
 
 type TrainingWorkoutDialogProps = {
   children: ReactNode;

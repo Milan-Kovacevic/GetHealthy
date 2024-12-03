@@ -178,6 +178,7 @@ export default function GeneralInformationForm({
                   control={form.control}
                   name="info"
                   display="Description *"
+                  label="Description *"
                   description="Enter a description for training program."
                   placeholder="ex. HIIT is a functional training program"
                   className="col-span-full w-full"
@@ -186,6 +187,7 @@ export default function GeneralInformationForm({
                   control={form.control}
                   name="requirements"
                   display="Requirements"
+                  label="Requirements"
                   description="Enter requirements for training program."
                   placeholder="ex. Not for someone with heart problems"
                   className="col-span-full w-full"

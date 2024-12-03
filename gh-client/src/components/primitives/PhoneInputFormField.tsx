@@ -6,41 +6,39 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { PhoneInput } from "../ui/phone-input";
 import { cn } from "@/lib/utils";
-import { Textarea } from "../ui/textarea";
 
-type InputFormFieldProps = {
+type PhoneInputFormFieldProps = {
   control: any;
-  name: string;
   label: string;
-  display?: string;
+  name: string;
   description?: string;
   placeholder?: string;
   className?: string;
 };
 
-function TextareaFormField(props: InputFormFieldProps) {
+const PhoneInputFormField = (props: PhoneInputFormFieldProps) => {
   return (
     <FormField
       control={props.control}
-      name={props.name}
+      name="phone"
       render={({ field }) => (
-        <FormItem className={cn("w-full space-y-0.5", props.className)}>
-          <FormLabel className="">{props.label}</FormLabel>
-
-          <FormControl>
-            <Textarea className="" placeholder={props.placeholder} {...field} />
+        <FormItem className={cn("flex flex-col items-start", props.className)}>
+          <FormLabel className="text-left">{props.label}</FormLabel>
+          <FormControl className="w-full">
+            <PhoneInput placeholder={props.placeholder} {...field} />
           </FormControl>
           {props.description && (
             <FormDescription className="text-xs ml-0.5">
               {props.description}
             </FormDescription>
           )}
-          <FormMessage className="text-xs ml-0.5" />
+          <FormMessage />
         </FormItem>
       )}
     />
   );
-}
+};
 
-export default TextareaFormField;
+export default PhoneInputFormField;

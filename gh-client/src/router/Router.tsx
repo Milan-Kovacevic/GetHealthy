@@ -1,23 +1,27 @@
 import AuthLayout from "@/layouts/AuthLayout";
 import MainLayout from "@/layouts/MainLayout";
-import { TrainingProgramsPage } from "@/pages/training-programs/TrainingProgramsPage";
-import { ManageTrainingProgramsPage } from "@/pages/training-programs/ManageTrainingProgramsPage";
 import ProgramDetailsLayout from "@/layouts/ProgramDetailsLayout";
-import TrainingProgramDetails from "@/pages/program-details/components/TrainingProgramDetails";
-import TrainingProgramTrainees from "@/pages/program-details/components/TrainingProgramTrainees";
-import TrainingProgramReviews from "@/pages/program-details/components/TrainingProgramReviews";
-import ProgramTrainerInfo from "@/pages/program-details/components/ProgramTrainerInfo";
-import EditTrainingProgramPage from "@/pages/create-edit-training-program/EditTrainingProgramPage";
 import RootLayout from "@/layouts/RootLayout";
 import AboutUsPage from "@/pages/about/AboutUsPage";
 import CreateTrainingProgramPage from "@/pages/create-edit-training-program/CreateTrainingProgramPage";
+import EditTrainingProgramPage from "@/pages/create-edit-training-program/EditTrainingProgramPage";
 import GeneralInformationForm from "@/pages/create-edit-training-program/components/GeneralInformationForm";
 import LandingPage from "@/pages/landing/LandingPage";
 import LoginPage from "@/pages/login/LoginPage";
 import NotFoundPage from "@/pages/not-found/NotFoundPage";
+import ProfilePageLayout from "@/pages/profile/ProfilePageLayout";
+import ProgramTrainerInfo from "@/pages/program-details/components/ProgramTrainerInfo";
+import TrainingProgramDetails from "@/pages/program-details/components/TrainingProgramDetails";
+import TrainingProgramReviews from "@/pages/program-details/components/TrainingProgramReviews";
+import TrainingProgramTrainees from "@/pages/program-details/components/TrainingProgramTrainees";
 import RegisterPage from "@/pages/register/RegisterPage";
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { ManageTrainingProgramsPage } from "@/pages/training-programs/ManageTrainingProgramsPage";
+import { TrainingProgramsPage } from "@/pages/training-programs/TrainingProgramsPage";
 import TrainingSchedulePage from "@/pages/training-schedule/TrainingSchedulePage";
+import ProfilePage from "@/pages/profile/components/ProfilePage";
+import AppearancePage from "@/pages/profile/components/AppearancePage";
+import AccountPage from "@/pages/profile/components/AccountPage";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +75,24 @@ const router = createBrowserRouter([
               {
                 path: "trainees",
                 element: <TrainingProgramTrainees />,
+              },
+            ],
+          },
+          {
+            path: "profile",
+            element: <ProfilePageLayout />,
+            children: [
+              {
+                path: "",
+                element: <ProfilePage />,
+              },
+              {
+                path: "account",
+                element: <AccountPage />,
+              },
+              {
+                path: "appearance",
+                element: <AppearancePage />,
               },
             ],
           },

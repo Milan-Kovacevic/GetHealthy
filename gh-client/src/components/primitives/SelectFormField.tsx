@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 type SelectFormFieldProps = {
   control: any;
   name: string;
+  label: string;
   display?: string;
   description?: string;
   placeholder?: string;
@@ -32,25 +33,34 @@ function SelectFormField(props: SelectFormFieldProps) {
       control={props.control}
       name={props.name}
       render={({ field }) => (
-        <FormItem className={cn("w-full space-y-0.5", props.className)}>
-          {props.display && <FormLabel>{props.display}</FormLabel>}
-          <FormControl>
-            <Select onValueChange={field.onChange} value={field.value || ""}>
+        <FormItem
+          className={cn(
+            " flex flex-col flex-1 min-w-[200px] w-full ",
+            props.className
+          )}
+        >
+          <FormLabel>{props.label}</FormLabel>
+
+          <Select onValueChange={field.onChange} value={field.value || ""}>
+            <FormControl>
               <SelectTrigger className="w-full">
                 {props.options.find((option) => option.value === field.value)
-                  ?.label ||
-                  props.triggerName ||
-                  "Select an option"}
+                  ?.label || (
+                  <span className="text-muted-foreground">
+                    {props.placeholder}
+                  </span>
+                )}
               </SelectTrigger>
-              <SelectContent>
-                {props.options.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormControl>
+            </FormControl>
+            <SelectContent>
+              {props.options.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
           {props.description && (
             <FormDescription className="text-xs ml-0.5">
               {props.description}
