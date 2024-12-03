@@ -17,6 +17,7 @@ type InputFormFieldProps = {
   placeholder?: string;
   type?: string;
   className?: string;
+  disabled?: boolean;
   onChange?: (e: any, field: any) => void;
 };
 
@@ -31,6 +32,7 @@ function InputFormField(props: InputFormFieldProps) {
 
           <FormControl>
             <Input
+              disabled={props.disabled}
               type={props.type ?? "text"}
               className=""
               placeholder={props.placeholder}

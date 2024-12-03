@@ -21,10 +21,7 @@ import FeaturedTrainingPrograms from "./components/FeaturedTrainingPrograms";
 import { TrainingProgramFilters } from "./components/TrainingProgramFilters";
 import { TrainingProgramsLoader } from "./components/TrainingProgramsLoaders";
 import { useNavigate } from "react-router-dom";
-import {
-  TopBackgroundBlob,
-  CircleBackgroundBlob,
-} from "../shared/BackgroundBlobs";
+import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -182,8 +179,8 @@ const TrainingProgramsPageTitle = ({ showCreate }: { showCreate: boolean }) => {
   return (
     <div className="flex justify-between">
       <div className="space-y-0.5">
-        <p className="text-2xl font-bold">Training Programs</p>
-        <p className="text-muted-foreground text-sm">
+        <h2 className="text-2xl font-bold tracking-tight">Training Programs</h2>
+        <p className="text-muted-foreground">
           Browse and explore your perfect training program today.
         </p>
       </div>

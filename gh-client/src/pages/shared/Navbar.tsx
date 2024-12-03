@@ -1,11 +1,14 @@
 import { Book, GlassWater, Menu, Sunset, Trees, Zap } from "lucide-react";
 
+import appIcon from "@/assets/applogo.png";
+import ThemeToggle from "@/components/primitives/ThemeToggle";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -24,15 +27,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import appIcon from "@/assets/applogo.png";
 import { Link, useNavigate } from "react-router-dom";
-import ThemeToggle from "@/components/primitives/ThemeToggle";
-import { Badge } from "@/components/ui/badge";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import NotificationsPopover from "../notifications/NotificationsPopover";
 
 const subMenuItemsOne = [
@@ -205,6 +200,18 @@ const DesktopNavbar = () => {
               Notifications
             </Button>
           </NotificationsPopover>
+          <Link
+            className={cn(
+              "text-muted-foreground",
+              navigationMenuTriggerStyle,
+              buttonVariants({
+                variant: "ghost",
+              })
+            )}
+            to="/profile"
+          >
+            My Profile
+          </Link>
         </div>
       </div>
       <div className="flex items-center gap-2">
