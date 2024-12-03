@@ -5,6 +5,7 @@ import { z } from "zod";
 import DatePickerFormField from "@/components/primitives/DatePickerFormField";
 import { FileInputField } from "@/components/primitives/FileInputField";
 import InputFormField from "@/components/primitives/InputFormField";
+import NumberInputFormField from "@/components/primitives/NumberInputFormField";
 import PhoneInputFormField from "@/components/primitives/PhoneInputFormField";
 import SelectFormField from "@/components/primitives/SelectFormField";
 import TextareaFormField from "@/components/primitives/TextareaFormField";
@@ -13,16 +14,20 @@ import { Form } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 
 const profileFormSchema = z.object({
-  firstName: z.string({ required_error: "First name is required." }),
-  lastName: z.string({ required_error: "Last name is required." }),
+  firstName: z
+    .string({ required_error: "First name is required." })
+    .min(1, "First name is required"),
+  lastName: z
+    .string({ required_error: "Last name is required." })
+    .min(1, "Last name is required"),
   dob: z.date({
     required_error: "A date of birth is required.",
   }),
-  weight: z.number().min(1).max(200),
-  height: z.number().min(1),
-  medicHistory: z.string().max(160).min(4),
-  phone: z.string(),
-  bio: z.string().max(160).min(4),
+  weight: z.number().min(0, "Weight must be positive numebr.").optional(),
+  height: z.number().min(0, "Height must be positive number.").optional(),
+  medicHistory: z.string().max(160).min(4).optional(),
+  phone: z.string().optional(),
+  bio: z.string().max(160).min(4).optional(),
   gender: z.string({ required_error: "Gender is required" }),
 });
 
@@ -35,6 +40,10 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 const defaultValues: Partial<ProfileFormValues> = {
   bio: "I own a computer.",
+  firstName: "",
+  lastName: "",
+  weight: 0,
+  height: 0,
 };
 
 type ProfileFormProps = {
@@ -57,11 +66,12 @@ export function ProfileForm(props: ProfileFormProps) {
         </pre>
       ),
     });
+    console.log(data);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="flex flex-wrap gap-4">
           <InputFormField
             control={form.control}
@@ -101,26 +111,72 @@ export function ProfileForm(props: ProfileFormProps) {
             description="You can choose your gender."
           />
         </div>
+
         {props.isTrainer === false ? (
           <>
             <div className="flex flex-wrap gap-4">
-              <InputFormField
+              {/* <FormField
                 control={form.control}
                 name="weight"
-                type="number"
-                display="Weight"
-                placeholder="Enter a weight"
-                className="flex-1 min-w-[200px]"
-                description="This is your weight."
-              />
-              <InputFormField
+                render={({ field }) => (
+                  <FormItem className="flex-1 min-w-[200px]">
+                    <FormLabel>Weight</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="number"
+                        placeholder="Enter your weight"
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-xs ml-0.5">
+                      This is your weight in kg.
+                    </FormDescription>
+                    <FormMessage className="text-xs ml-0.5" />
+                  </FormItem>
+                )}
+              /> */}
+              {/* <FormField
                 control={form.control}
                 name="height"
-                type="number"
-                display="Height"
-                placeholder="Enter a height "
+                render={({ field }) => (
+                  <FormItem className="flex-1 min-w-[200px]">
+                    <FormLabel>Height</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="number"
+                        placeholder="Enter your height"
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-xs ml-0.5">
+                      This is your height in cm.
+                    </FormDescription>
+                    <FormMessage className="text-xs ml-0.5" />
+                  </FormItem>
+                )}
+              /> */}
+
+              <NumberInputFormField
+                control={form.control}
+                name="height"
+                label="Height"
                 className="flex-1 min-w-[200px]"
-                description="This is your height."
+                min={0}
+                max={300}
+                description="Enter your height in cm."
+              />
+              <NumberInputFormField
+                control={form.control}
+                name="weight"
+                label="Weight"
+                min={0}
+                max={300}
+                className="flex-1 min-w-[200px]"
+                description="Enter your weight in kg."
               />
             </div>
 
@@ -129,7 +185,7 @@ export function ProfileForm(props: ProfileFormProps) {
               name="medicHistory"
               label="Medical history"
               description="Share a brief summary about your medical history. 
-          This is important for the trainer to design a safe and effective training program."
+                This is important for the trainer to design a safe and effective training program."
               placeholder="Tell us a little bit about your medical history"
               className=""
             />
@@ -162,6 +218,7 @@ export function ProfileForm(props: ProfileFormProps) {
           description="You can set your profile image."
           formats=""
         />
+
         <Button variant="secondary" type="submit">
           Update profile
         </Button>
