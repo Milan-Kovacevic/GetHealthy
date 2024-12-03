@@ -51,13 +51,13 @@ export default function ProgramScheduleDay(props: ProgramScheduleDayProps) {
         </div>
         <ScrollArea className="p-3.5 flex-1 flex">
           {programs.length == 0 ? (
-            <div className="h-full flex items-start justify-center">
+            <div className="flex items-start justify-center">
               <p className="text-muted-foreground text-center font-light opacity-70 text-lg mt-4 italic">
                 Empty
               </p>
             </div>
           ) : (
-            <div className="space-y-2.5 flex-1 h-full">
+            <div className="space-y-2.5 flex-1">
               {programs.map((program) => {
                 return (
                   <TrainingProgramCard

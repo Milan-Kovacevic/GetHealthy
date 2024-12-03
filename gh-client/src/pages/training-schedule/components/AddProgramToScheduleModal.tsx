@@ -246,7 +246,7 @@ export default function AddProgramToScheduleModal() {
                   </FormItem>
                 )}
               />
-              <div className="flex flex-row gap-8">
+              <div className="flex flex-row sm:gap-x-8 gap-x-4 flex-wrap">
                 <FormField
                   control={form.control}
                   name="startTime"

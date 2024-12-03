@@ -84,12 +84,12 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
         className="left-auto -right-56 w-80 h-96 top-44"
       />
       <CircleBackgroundBlob
-        variant="lightest"
+        variant="lighter"
         className="-left-72 w-1/4 h-96 top-44"
       />
-      <CircleBackgroundBlob variant="lighter" />
+      <CircleBackgroundBlob variant="lightest" />
       <CircleBackgroundBlob
-        variant="light"
+        variant="lightest"
         className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
       />
       <div className="container mx-auto h-full space-y-5 z-10 relative">

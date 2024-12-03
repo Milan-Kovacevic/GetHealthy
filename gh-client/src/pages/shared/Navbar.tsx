@@ -1,11 +1,14 @@
 import { Book, GlassWater, Menu, Sunset, Trees, Zap } from "lucide-react";
 
+import appIcon from "@/assets/applogo.png";
+import ThemeToggle from "@/components/primitives/ThemeToggle";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -24,9 +27,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import appIcon from "@/assets/applogo.png";
 import { Link, useNavigate } from "react-router-dom";
-import ThemeToggle from "@/components/primitives/ThemeToggle";
+import NotificationsPopover from "../notifications/NotificationsPopover";
 
 const subMenuItemsOne = [
   {
@@ -177,6 +179,27 @@ const DesktopNavbar = () => {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
+
+          <NotificationsPopover isTrainer={true}>
+            <Button
+              variant="ghost"
+              className={cn(
+                "text-muted-foreground relative",
+                navigationMenuTriggerStyle,
+                buttonVariants({
+                  variant: "ghost",
+                })
+              )}
+            >
+              <Badge
+                variant="secondary"
+                className="absolute border-none top-0.5 -right-0.5 rounded-full pointer-events-none text-primary-foreground leading-none bg-primary text-[10px] px-1.5 py-1 h-auto"
+              >
+                <span className="font-semibold leading-none">4</span>
+              </Badge>
+              Notifications
+            </Button>
+          </NotificationsPopover>
           <Link
             className={cn(
               "text-muted-foreground",
