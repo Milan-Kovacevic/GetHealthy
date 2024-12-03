@@ -1,7 +1,5 @@
 package dev.gethealthy.app.models.responses;
 
-import dev.gethealthy.app.models.entities.Trainer;
-import dev.gethealthy.app.models.entities.TrainingProgram;
 import lombok.Data;
 
 import java.time.LocalTime;

@@ -1,7 +1,5 @@
 package dev.gethealthy.app.models.requests;
 
-import dev.gethealthy.app.models.entities.MetricType;
-import dev.gethealthy.app.models.entities.Trainer;
 import lombok.Data;
 
 @Data

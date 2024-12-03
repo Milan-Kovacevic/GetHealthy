@@ -11,7 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Entity
 @Table(name = "training_program_category")
-public class TrainingProgramCategory implements BaseEntity<TrainingProgramCategoryId> {
+public class TrainingProgramCategory implements BaseEntity<TrainingProgramCategoryId>{
     @EmbeddedId
     private TrainingProgramCategoryId id;
 
