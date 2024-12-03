@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { SidebarNav } from "./components/sidebar-nav";
+import { SidebarNav } from "./components/SidebarNav";
 import { Outlet } from "react-router-dom";
 
 const sidebarNavItems = [

@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import useTheme from "@/hooks/use-theme";
 
 const appearanceFormSchema = z.object({
   theme: z.enum(["light", "dark"], {
@@ -53,27 +54,20 @@ const languages = [
   { label: "Chinese", value: "zh" },
 ] as const;
 
-// This can come from your database or API.
-const defaultValues: Partial<AppearanceFormValues> = {
-  theme: "light",
-  language: "en",
-};
-
 export default function AppearanceForm() {
+  const state = useTheme();
+  const defaultValues: Partial<AppearanceFormValues> = {
+    theme: state.theme,
+    language: "en",
+  };
+
   const form = useForm<AppearanceFormValues>({
     resolver: zodResolver(appearanceFormSchema),
     defaultValues,
   });
 
   function onSubmit(data: AppearanceFormValues) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    state.setTheme(data.theme);
   }
 
   return (
@@ -154,8 +148,8 @@ export default function AppearanceForm() {
           control={form.control}
           name="language"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Language</FormLabel>
+            <FormItem className="flex flex-col space-y-1">
+              <FormLabel className="mb-0.5">Language</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -206,14 +200,14 @@ export default function AppearanceForm() {
                   </Command>
                 </PopoverContent>
               </Popover>
-              <FormDescription>
+              <FormDescription className="text-xs ml-0.5">
                 This is the language that will be used in the dashboard.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button variant="default" type="submit">
+        <Button variant="secondary" type="submit">
           Update preferences
         </Button>
       </form>
