@@ -2,14 +2,31 @@ package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.models.entities.TrainingProgram;
+import dev.gethealthy.app.models.responses.TrainingProgramResponse;
+import dev.gethealthy.app.repositories.TrainingProgramRepository;
 import dev.gethealthy.app.services.TrainingProgramService;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, Integer> implements TrainingProgramService {
-    public TrainingProgramServiceImpl(JpaRepository<TrainingProgram, Integer> repository, ModelMapper modelMapper) {
+    private final TrainingProgramRepository trainingProgramRepository;
+    private final ModelMapper modelMapper;
+
+    public TrainingProgramServiceImpl(TrainingProgramRepository repository, ModelMapper modelMapper) {
         super(repository, modelMapper, TrainingProgram.class);
+        trainingProgramRepository = repository;
+        this.modelMapper = modelMapper;
+    }
+
+    @Override
+    public Page<TrainingProgramResponse> findAll(Specification<TrainingProgram> spec, Sort sort, Pageable page) {
+        Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
+        return trainingProgramRepository.findAll(spec, pageableWithSort).map(e -> modelMapper.map(e, TrainingProgramResponse.class));
     }
 }
