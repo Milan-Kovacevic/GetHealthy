@@ -41,7 +41,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
 
   useEffect(() => {
     async function updateList() {
-      var list = await service.getFilteredPrograms(searchString, filter, sort);
+      var list = await service.get();
       console.log(list);
       setPrograms(list);
     }
@@ -59,7 +59,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
 
   useEffect(() => {
     async function fetchTP() {
-      const data = await service.getFilteredPrograms("", "All", "asc");
+      const data = await service.get();
       setPrograms(data!);
     }
     // Mocked for now...
