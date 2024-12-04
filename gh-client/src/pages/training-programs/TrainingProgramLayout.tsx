@@ -63,7 +63,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
       setPrograms(data!);
     }
     // Mocked for now...
-    new Promise((resolve) => setTimeout(resolve, 3000)).then(() =>
+    new Promise((resolve) => setTimeout(resolve)).then(() =>
       fetchTP().then(() => {
         setLoading(false);
       })

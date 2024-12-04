@@ -10,6 +10,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -47,10 +48,18 @@ public class TrainingProgram implements BaseEntity<Integer> {
     private LocalDate createdAt;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "UserId", nullable = false)
     private Trainer user;
+
+    @NotNull
+    @ManyToMany(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinTable(name="training_program_category",
+    joinColumns = @JoinColumn(name="ProgramId"),
+    inverseJoinColumns = @JoinColumn(name = "CategoryId"))
+    private Set<Category> Categories;
 
     @Column(name = "Deleted")
     private Boolean deleted;
