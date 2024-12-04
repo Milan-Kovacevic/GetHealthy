@@ -28,5 +28,7 @@ public class TrainingProgramResponse {
 
     private Set<CategoryResponse> categories;
 
+    private Double rating;
+
     private Trainer user;
 }

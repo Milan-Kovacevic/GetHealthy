@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,11 +38,11 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
                                                 @RequestParam(required = false, defaultValue = "0.0") double ratingLower,
                                                 @RequestParam(required = false, defaultValue = "0") long participantsUpper,
                                                 @RequestParam(required = false, defaultValue = "1000") long participantsLower,
-                                                @RequestParam(required = false, defaultValue = "beginner") String difficulty) {
+                                                @RequestParam(required = false, defaultValue = "1") int difficulty) {
         Specification<TrainingProgram> spec = Specification
             .where(TrainingProgramSpecification.hasRatingBetween(ratingLower, ratingUpper))
                 .and(TrainingProgramSpecification.hasParticipantCountBetween(participantsUpper, participantsLower))
-                .and(TrainingProgramSpecification.belongsToCategories(categories))
+                .and(TrainingProgramSpecification.belongsToCategories(categories!=null?categories:new ArrayList<>()))
                 .and(TrainingProgramSpecification.hasDifficulty(difficulty));
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);

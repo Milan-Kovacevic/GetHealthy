@@ -12,6 +12,6 @@ export default class TrainingProgramService {
   client = new GenericHttpClient();
 
   public async get(): Promise<TrainingProgram[]> {
-    return this.client.get("training-programs");
+    return this.client.get("training-programs/filter");
   }
 }
