@@ -1,0 +1,9 @@
+package dev.gethealthy.app.models.enums;
+
+public enum NotificationType {
+    PROGRAM_APPLICATION_ACCEPTED,
+    PROGRAM_APPLICATION_REJECTED,
+    NEW_COMMENT_ON_PROGRAM,
+    PROGRAM_ADDED_ON_SCHEDULE,
+    PROGRAM_REMOVED_FROM_SCHEDULE
+}

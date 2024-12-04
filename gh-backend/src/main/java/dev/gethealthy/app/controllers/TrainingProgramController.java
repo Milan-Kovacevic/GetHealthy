@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("${base-url}/training-programs")
+@RequestMapping("${gethealthy.base-url}/training-programs")
 public class TrainingProgramController extends CrudController<Integer, TrainingProgramRequest, TrainingProgramResponse>{
     private final TrainingProgramService trainingProgramService;
 
