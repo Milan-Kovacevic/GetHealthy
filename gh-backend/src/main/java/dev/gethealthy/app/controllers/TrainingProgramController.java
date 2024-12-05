@@ -41,9 +41,7 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
                                                 @RequestParam(required = false, defaultValue = "1") int difficulty) {
         Specification<TrainingProgram> spec = Specification
             .where(TrainingProgramSpecification.hasRatingBetween(ratingLower, ratingUpper))
-                .and(TrainingProgramSpecification.hasParticipantCountBetween(participantsUpper, participantsLower))
-                .and(TrainingProgramSpecification.belongsToCategories(categories!=null?categories:new ArrayList<>()))
-                .and(TrainingProgramSpecification.hasDifficulty(difficulty));
+                .and(TrainingProgramSpecification.hasParticipantCountBetween(participantsLower, participantsUpper));
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
 

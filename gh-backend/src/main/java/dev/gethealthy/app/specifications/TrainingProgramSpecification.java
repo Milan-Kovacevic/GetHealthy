@@ -5,28 +5,28 @@ import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+import java.util.Objects;
 
 public class TrainingProgramSpecification {
 
     public static Specification<TrainingProgram> hasRatingBetween(double ratingLower, double ratingUpper) {
         return (Root<TrainingProgram> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-            // Join the TrainingProgram entity with ProgramRating
-            Join<TrainingProgram, ProgramRating> ratingsJoin = root.join("ratings", JoinType.LEFT);
+            // Subquery to calculate the average rating of posts for each user
+            Subquery<Double> subquery = query.subquery(Double.class);
+            Root<ProgramRating> programRatingRoot = subquery.from(ProgramRating.class);
 
-            // Define the expression to calculate the average rating
-            Expression<Double> avgRating = cb.avg(ratingsJoin.get("rate"));
+            subquery.select(cb.avg(programRatingRoot.get("rate")))
+                    .where(cb.equal(programRatingRoot.get("program"), root));
 
-            // Set the query to return the root (TrainingProgram) entity
+            Predicate predicate = cb.conjunction();
 
-            // Group by the program within the ratings join
-            query.groupBy(ratingsJoin.get("program"));
+            predicate = cb.and(predicate,
+                    cb.greaterThanOrEqualTo(subquery, ratingLower));
 
-            // Apply the having clause to filter based on the average rating
-            query.having(cb.greaterThanOrEqualTo(avgRating, ratingLower));
-            query.having(cb.lessThanOrEqualTo(avgRating, ratingUpper));
+            predicate = cb.and(predicate,
+                    cb.lessThanOrEqualTo(subquery, ratingUpper));
 
-            // Return the CriteriaQuery itself
-            return query.getGroupRestriction();
+            return predicate;
         };
 
 
@@ -34,11 +34,22 @@ public class TrainingProgramSpecification {
 
     public static Specification<TrainingProgram> hasParticipantCountBetween(long participantLower, long participantUpper) {
         return (Root<TrainingProgram> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-            Join<TrainingProgram, TraineeOnTrainingProgram> traineesOnTrainingProgram = root.join("trainees", JoinType.LEFT);
-            //query.groupBy(traineesOnTrainingProgram.get("program"));
-            query.having(cb.greaterThanOrEqualTo(cb.count(traineesOnTrainingProgram), participantLower));
-            query.having(cb.lessThanOrEqualTo(cb.count(traineesOnTrainingProgram), participantUpper));
-            return query.getRestriction();
+            Subquery<Long> subquery = query.subquery(Long.class);
+            Root<TraineeOnTrainingProgram> traineeOnTrainingProgramRoot = subquery.from(TraineeOnTrainingProgram.class);
+
+            subquery.select(cb.count(traineeOnTrainingProgramRoot))
+                    .where(cb.equal(traineeOnTrainingProgramRoot.get("program"), root));
+
+            Predicate predicate = cb.conjunction();
+
+            predicate = cb.and(predicate,
+                    cb.greaterThanOrEqualTo(subquery, participantLower));
+
+
+            predicate = cb.and(predicate,
+                    cb.lessThanOrEqualTo(subquery, participantUpper));
+
+            return predicate;
         };
     }
 
