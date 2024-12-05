@@ -4,6 +4,7 @@ import dev.gethealthy.app.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -11,11 +12,11 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "user")
-public class User implements BaseEntity<Integer> {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class User implements BaseEntity<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserId", nullable = false)

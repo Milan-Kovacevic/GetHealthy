@@ -3,6 +3,7 @@ package dev.gethealthy.app.models.entities;
 import dev.gethealthy.app.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -12,9 +13,10 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "trainee")
-public class Trainee implements BaseEntity<Integer> {
+public class Trainee extends User implements BaseEntity<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserId", nullable = false)
