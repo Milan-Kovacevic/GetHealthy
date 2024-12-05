@@ -29,6 +29,12 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
     }
 
     @GetMapping
+    List<TrainingProgram> findAll() {
+        TrainingProgramResponse response = (TrainingProgramResponse) trainingProgramService.findAll(TrainingProgramResponse.class);
+        //response.categories = CategoriesService.getCategoriesForProgram();
+    }
+
+    @GetMapping
     @RequestMapping("/filter")
     public Page<TrainingProgramResponse> getAll(Pageable page,
                                                 @RequestParam(defaultValue = "name") String sortBy,

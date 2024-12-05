@@ -56,8 +56,10 @@ public class TrainingProgramSpecification {
     public static Specification<TrainingProgram> belongsToCategories(List<String> categories)
     {
         return (Root<TrainingProgram> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-            Join<TrainingProgram, Category> categoryJoin = root.join("categories", JoinType.INNER);
-            return categoryJoin.get("name").in(categories);
+            if (categories == null || categories.isEmpty()) {
+                return cb.conjunction(); // No filtering if the list is empty
+            }
+            return root.get("role").in(categories);
         };
     }
     
