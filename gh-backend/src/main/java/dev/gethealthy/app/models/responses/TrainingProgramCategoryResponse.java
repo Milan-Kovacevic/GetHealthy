@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
-public class RatingResponse {
-
-    private Integer rate;
+public class TrainingProgramCategoryResponse {
+    private CategoryResponse category;
 }

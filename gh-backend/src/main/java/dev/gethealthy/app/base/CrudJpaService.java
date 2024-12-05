@@ -31,7 +31,6 @@ public class CrudJpaService<E extends BaseEntity<ID>, ID extends Serializable> i
         this.modelMapper = modelMapper;
     }
 
-
     @Override
     public <T> List<T> findAll(Class<T> resultDtoClass) {
         return repository.findAll().stream().map(e -> modelMapper.map(e, resultDtoClass)).collect(Collectors.toList());

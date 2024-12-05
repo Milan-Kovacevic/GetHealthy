@@ -7,8 +7,6 @@ import dev.gethealthy.app.models.responses.TrainingProgramResponse;
 import dev.gethealthy.app.repositories.RatingRepository;
 import dev.gethealthy.app.repositories.TrainingProgramRepository;
 import dev.gethealthy.app.services.TrainingProgramService;
-import lombok.RequiredArgsConstructor;
-import org.eclipse.angus.mail.util.DefaultProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +31,12 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
     @Override
     public Page<TrainingProgramResponse> findAll(Specification<TrainingProgram> spec, Sort sort, Pageable page) {
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
-        return trainingProgramRepository.findAll(spec, pageableWithSort).map(e -> modelMapper.map(e, TrainingProgramResponse.class));
+        var dbResponse = trainingProgramRepository.findAll(spec, pageableWithSort);
+        var result = dbResponse.map(e -> modelMapper.map(e, TrainingProgramResponse.class));
+        for(int i=0;i< result.getContent().size();i++)
+        {
+            result.getContent().get(i).setRating(dbResponse.getContent().get(i).getTrainingProgramRatings().stream().mapToDouble(ProgramRating::getRate).average().orElse(0.0));
+        }
+        return result;
     }
 }

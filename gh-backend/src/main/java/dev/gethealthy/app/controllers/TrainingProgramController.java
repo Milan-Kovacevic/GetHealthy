@@ -29,12 +29,6 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
     }
 
     @GetMapping
-    List<TrainingProgram> findAll() {
-        TrainingProgramResponse response = (TrainingProgramResponse) trainingProgramService.findAll(TrainingProgramResponse.class);
-        //response.categories = CategoriesService.getCategoriesForProgram();
-    }
-
-    @GetMapping
     @RequestMapping("/filter")
     public Page<TrainingProgramResponse> getAll(Pageable page,
                                                 @RequestParam(defaultValue = "name") String sortBy,
@@ -42,16 +36,17 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
                                                 @RequestParam(required = false) List<String> categories,
                                                 @RequestParam(required = false, defaultValue = "5.0") double ratingUpper,
                                                 @RequestParam(required = false, defaultValue = "0.0") double ratingLower,
-                                                @RequestParam(required = false, defaultValue = "0") long participantsUpper,
-                                                @RequestParam(required = false, defaultValue = "1000") long participantsLower,
+                                                @RequestParam(required = false, defaultValue = "1000") long participantsUpper,
+                                                @RequestParam(required = false, defaultValue = "0") long participantsLower,
                                                 @RequestParam(required = false, defaultValue = "1") int difficulty) {
         Specification<TrainingProgram> spec = Specification
             .where(TrainingProgramSpecification.hasRatingBetween(ratingLower, ratingUpper))
-                .and(TrainingProgramSpecification.hasParticipantCountBetween(participantsLower, participantsUpper));
+                .and(TrainingProgramSpecification.hasParticipantCountBetween(participantsLower, participantsUpper))
+                .and(TrainingProgramSpecification.belongsToCategories(categories))
+                .and(TrainingProgramSpecification.hasDifficulty(difficulty));
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
 
         return trainingProgramService.findAll(spec, sort, page);
-
     }
 }

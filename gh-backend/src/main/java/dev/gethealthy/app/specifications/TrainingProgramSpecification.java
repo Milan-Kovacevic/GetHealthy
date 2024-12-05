@@ -15,7 +15,7 @@ public class TrainingProgramSpecification {
             Subquery<Double> subquery = query.subquery(Double.class);
             Root<ProgramRating> programRatingRoot = subquery.from(ProgramRating.class);
 
-            subquery.select(cb.avg(programRatingRoot.get("rate")))
+            subquery.select(cb.coalesce(cb.avg(programRatingRoot.get("rate")), 0.0))
                     .where(cb.equal(programRatingRoot.get("program"), root));
 
             Predicate predicate = cb.conjunction();
@@ -33,11 +33,10 @@ public class TrainingProgramSpecification {
     }
 
     public static Specification<TrainingProgram> hasParticipantCountBetween(long participantLower, long participantUpper) {
-        return (Root<TrainingProgram> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-            Subquery<Long> subquery = query.subquery(Long.class);
+        return (Root<TrainingProgram> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {            Subquery<Long> subquery = query.subquery(Long.class);
             Root<TraineeOnTrainingProgram> traineeOnTrainingProgramRoot = subquery.from(TraineeOnTrainingProgram.class);
 
-            subquery.select(cb.count(traineeOnTrainingProgramRoot))
+            subquery.select(cb.coalesce(cb.count(traineeOnTrainingProgramRoot), 0L))
                     .where(cb.equal(traineeOnTrainingProgramRoot.get("program"), root));
 
             Predicate predicate = cb.conjunction();
@@ -59,7 +58,9 @@ public class TrainingProgramSpecification {
             if (categories == null || categories.isEmpty()) {
                 return cb.conjunction(); // No filtering if the list is empty
             }
-            return root.get("role").in(categories);
+            // Use a subquery to perform the reverse join from Category to Product
+            Join<TrainingProgram, Category> categoryJoin = root.join("trainingProgramCategoryList").join("category");
+            return categoryJoin.get("name").in(categories);
         };
     }
     
