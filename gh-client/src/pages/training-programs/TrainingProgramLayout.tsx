@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/pagination";
 import { PlusIcon } from "lucide-react";
 import TrainingProgramService from "@/api/services/TrainingProgramService";
-import CategoryService from "@/api/services/CategoryService";
 import { Separator } from "@/components/ui/separator";
 import FeaturedTrainingPrograms from "./components/FeaturedTrainingPrograms";
 import { TrainingProgramFilters } from "./components/TrainingProgramFilters";
@@ -27,13 +26,32 @@ type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
 };
 
+interface ComplexState {
+  categories: Category[]; // Replace with the actual Category type
+  difficulty: number;
+  ratingRange: number[];
+  participantsRange: number[];
+  sortBy: string;
+}
+
 export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [myTrainingPrograms, setMyTrainingPrograms] = useState(false);
   const [programs, setPrograms] = useState<TrainingProgram[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchString, setSearchString] = useState("");
 
   const service = new TrainingProgramService();
+
+  const [filterParams, setFilterParams] = useState<ComplexState>({
+    categories: [],
+    difficulty: 0,
+    ratingRange: [0, 5],
+    participantsRange: [0, 1000],
+    sortBy: "name-asc",
+  });
 
   useEffect(() => {
     async function fetchTP() {
@@ -48,32 +66,44 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
     );
   }, []);
 
+  useEffect(() => {
+    async function fetchTP() {
+      var sortOpt = filterParams.sortBy.split("-");
+      let response = await service.getPage(
+        searchString,
+        currentPage-1,
+        filterParams.categories,
+        filterParams.difficulty,
+        filterParams.ratingRange,
+        filterParams.participantsRange,
+        sortOpt[0],
+        sortOpt[1]
+      );
+      setPrograms(response.content);
+      setTotalPages(response.totalPages);
+    }
+    fetchTP();
+  }, [currentPage, filterParams]);
+
   async function setFilter(
     categories: Category[],
     difficulty: number,
     ratingRange: number[],
     participantsRange: number[],
-    sortBy:string,
+    sortBy: string
   ) {
-    var sortOpt = sortBy.split("-");
-    setPrograms(
-      (
-        await service.getPage(
-          0,
-          categories,
-          difficulty,
-          ratingRange,
-          participantsRange,
-          sortOpt[0],
-          sortOpt[1],
-        )
-      ).content
-    );
+    setFilterParams({
+      categories,
+      difficulty,
+      ratingRange,
+      participantsRange,
+      sortBy,
+    });
   }
 
+  // nemam pojma sta ovo radi
   useEffect(() => {
     setMyTrainingPrograms(props.myTrainingPrograms);
-
     return () => {};
   }, [myTrainingPrograms]);
 
@@ -142,27 +172,46 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
             )}
           </div>
 
-          <Pagination className="mt-10">
+          <Pagination className="mt-10 cursor-pointer">
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious href="#" />
+                <PaginationPrevious
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  className={
+                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }
+                />
               </PaginationItem>
+              {[...Array(totalPages)]
+                .map((_, i) => (
+                  <PaginationItem key={i}>
+                    <PaginationLink
+                      onClick={() => setCurrentPage(i + 1)}
+                      isActive={currentPage === i + 1}
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))
+                .slice(
+                  Math.max(0, currentPage - 3),
+                  Math.min(totalPages, currentPage + 2)
+                )}
+              {currentPage + 2 < totalPages && (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )}
               <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  2
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
+                <PaginationNext
+                  href="#"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  className={
+                    currentPage === totalPages
+                      ? "pointer-events-none opacity-50"
+                      : ""
+                  }
+                />
               </PaginationItem>
             </PaginationContent>
           </Pagination>

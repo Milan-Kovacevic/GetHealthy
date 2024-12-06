@@ -1,6 +1,7 @@
 package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.base.CrudJpaService;
+import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.ProgramRating;
 import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.responses.TrainingProgramResponse;
@@ -18,13 +19,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, Integer> implements TrainingProgramService {
     private final TrainingProgramRepository trainingProgramRepository;
-    private final RatingRepository ratingRepository;
     private final ModelMapper modelMapper;
 
     public TrainingProgramServiceImpl(TrainingProgramRepository repository, RatingRepository ratingRepository , ModelMapper modelMapper) {
         super(repository, modelMapper, TrainingProgram.class);
         trainingProgramRepository = repository;
-        this.ratingRepository = ratingRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -38,5 +37,15 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
             result.getContent().get(i).setRating(dbResponse.getContent().get(i).getTrainingProgramRatings().stream().mapToDouble(ProgramRating::getRate).average().orElse(0.0));
         }
         return result;
+    }
+
+    @Override
+    public void delete(Integer id)
+    {
+        var trainingProgram = trainingProgramRepository.findById(id).orElse(null);
+        if (trainingProgram == null)
+            throw new NotFoundException();
+        trainingProgram.setDeleted(true);
+        trainingProgramRepository.save(trainingProgram);
     }
 }

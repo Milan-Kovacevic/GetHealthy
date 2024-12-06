@@ -9,9 +9,22 @@ import java.util.Objects;
 
 public class TrainingProgramSpecification {
 
+    public static Specification<TrainingProgram> isNotDeleted() {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.isFalse(root.get("deleted"));
+    }
+
+    public static Specification<TrainingProgram> nameContains(String keyword) {
+        return (root, query, criteriaBuilder) -> {
+            if (keyword == null || keyword.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + keyword.toLowerCase() + "%");
+        };
+    }
+
     public static Specification<TrainingProgram> hasRatingBetween(double ratingLower, double ratingUpper) {
         return (Root<TrainingProgram> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-            // Subquery to calculate the average rating of posts for each user
             Subquery<Double> subquery = query.subquery(Double.class);
             Root<ProgramRating> programRatingRoot = subquery.from(ProgramRating.class);
 
@@ -28,8 +41,6 @@ public class TrainingProgramSpecification {
 
             return predicate;
         };
-
-
     }
 
     public static Specification<TrainingProgram> hasParticipantCountBetween(long participantLower, long participantUpper) {
@@ -56,9 +67,8 @@ public class TrainingProgramSpecification {
     {
         return (Root<TrainingProgram> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             if (categories == null || categories.isEmpty()) {
-                return cb.conjunction(); // No filtering if the list is empty
+                return cb.conjunction();
             }
-            // Use a subquery to perform the reverse join from Category to Product
             Join<TrainingProgram, Category> categoryJoin = root.join("categories").join("category");
             return categoryJoin.get("name").in(categories);
         };

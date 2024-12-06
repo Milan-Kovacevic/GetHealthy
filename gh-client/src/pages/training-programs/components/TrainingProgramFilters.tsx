@@ -143,7 +143,8 @@ export function TrainingProgramFilters(props: FilterProps) {
                 categories,
                 difficulty,
                 ratingRange,
-                participantsRange
+                participantsRange,
+                sortBy
               )
             }
           >

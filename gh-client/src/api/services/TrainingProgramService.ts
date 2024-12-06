@@ -11,6 +11,7 @@ export default class TrainingProgramService {
   }
 
   public async getPage(
+    searchString: string = "",
     page: number = 0,
     categories: Category[] = [],
     difficulty: number = 0,
@@ -21,7 +22,7 @@ export default class TrainingProgramService {
     limit: number = 12
   ): Promise<Page<TrainingProgram>> {
     return this.client.get(
-      `training-programs/filter?page=${page}&size=${limit}&sortBy=${sortBy}&sortDir=${sortDir}&categories=${categories
+      `training-programs/filter?searchWord=${searchString}&page=${page}&size=${limit}&sortBy=${sortBy}&sortDir=${sortDir}&categories=${categories
         .map((c) => c.categoryName)
         .join(",")}&ratingUpper=${ratingRange[1]}&ratingLower=${
         ratingRange[0]
