@@ -1,9 +1,16 @@
 package dev.gethealthy.app.models.responses;
 
 import dev.gethealthy.app.models.entities.Trainer;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
+@Getter
+@Setter
+@Data
 public class TrainingProgramResponse {
     private Integer id;
 
@@ -18,6 +25,10 @@ public class TrainingProgramResponse {
     private String requirements;
 
     private LocalDate createdAt;
+
+    private List<TrainingProgramCategoryResponse> categories;
+
+    private double rating;
 
     private Trainer user;
 }

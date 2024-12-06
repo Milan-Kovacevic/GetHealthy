@@ -1,41 +1,10 @@
-export type Category = {
-  title: string;
-  id: number;
-};
+import { Category } from "@/entities/Category";
+import { GenericHttpClient } from "@/utils/http-client";
 
 export default class CategoryService {
-  private categories: Category[] = [
-    {
-      id: 0,
-      title: "All",
-    },
-    {
-      id: 1,
-      title: "JS",
-    },
-    {
-      id: 2,
-      title: "React",
-    },
-    {
-      id: 3,
-      title: "TS",
-    },
-    {
-      id: 4,
-      title: "CSS",
-    },
-    {
-      id: 5,
-      title: "HTML",
-    },
-    {
-      id: 6,
-      title: "Jest",
-    },
-  ];
+  client = new GenericHttpClient();
 
   public async get(): Promise<Category[]> {
-    return this.categories;
+    return await this.client.get("categories");
   }
 }

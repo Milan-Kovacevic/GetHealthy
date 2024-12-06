@@ -1,0 +1,1 @@
+export const BackendUrl = "http://localhost:8200/api/v1"
