@@ -7,9 +7,9 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import React, { ReactNode, useState, useCallback } from "react";
-import NotificationItem from "./components/NotificationItem";
+import React, { ReactNode, useState } from "react";
 import RequestItem from "./components/RequestItem";
+import NotificationList from "./components/NotificationList";
 
 type NotificationsPopoverProps = {
   children: ReactNode;
@@ -85,89 +85,9 @@ export default function NotificationsPopover({
   children,
   isTrainer,
 }: NotificationsPopoverProps) {
-  const [notifications, setNotifications] =
-    useState<Notification[]>(initialNotifications);
   const [requests, setRequests] = useState<Request[]>(initialRequests);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
 
-  const toggleReadStatus = (id: number) => {
-    setNotifications(
-      notifications.map((notif) =>
-        notif.id === id ? { ...notif, unread: !notif.unread } : notif
-      )
-    );
-  };
-
-  const markAllAsRead = () => {
-    setNotifications(
-      notifications.map((notif) => ({ ...notif, unread: false }))
-    );
-  };
-
-  const fetchMoreNotifications = useCallback(async () => {
-    if (loading) return;
-    setLoading(true);
-
-    setTimeout(() => {
-      const newNotifications = Array.from({ length: 5 }, (_, i) => ({
-        id: notifications.length + i + 1,
-        title: `New Notification ${notifications.length + i + 1}`,
-        description: "This is a new notification",
-        time: "Just now",
-        unread: true,
-      }));
-      setNotifications((prev) => [...prev, ...newNotifications]);
-      setPage((prevPage) => prevPage + 1);
-      setLoading(false);
-    }, 1000);
-  }, [loading, notifications.length]);
-
-  const handleScroll = useCallback(
-    (event: React.UIEvent<HTMLDivElement>) => {
-      const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
-      if (scrollHeight - scrollTop <= clientHeight * 1.2 && !loading) {
-        fetchMoreNotifications();
-      }
-    },
-    [fetchMoreNotifications, loading]
-  );
-
-  const unreadNotifications = notifications.filter((notif) => notif.unread);
-  const readNotifications = notifications.filter((notif) => !notif.unread);
-
-  const NotificationList = () => (
-    <>
-      {unreadNotifications.length > 0 && (
-        <div className="mb-4">
-          <h3 className="text-sm font-medium text-foreground/70 mb-1.5">
-            Unread
-          </h3>
-          {unreadNotifications.map((notification, index) => (
-            <NotificationItem
-              key={notification.id}
-              notification={notification}
-              toggleReadStatus={toggleReadStatus}
-              isLast={index === unreadNotifications.length - 1}
-            />
-          ))}
-        </div>
-      )}
-      {readNotifications.length > 0 && (
-        <div>
-          <h3 className="text-sm font-medium text-foreground/70 mb-1">Read</h3>
-          {readNotifications.map((notification, index) => (
-            <NotificationItem
-              key={notification.id}
-              notification={notification}
-              toggleReadStatus={toggleReadStatus}
-              isLast={index === readNotifications.length - 1}
-            />
-          ))}
-        </div>
-      )}
-    </>
-  );
+  const markAllAsRead = () => {};
 
   const TrainerView = () => (
     <>
@@ -187,13 +107,8 @@ export default function NotificationsPopover({
           <TabsTrigger value="inbox">Inbox</TabsTrigger>
           <TabsTrigger value="requests">Requests</TabsTrigger>
         </TabsList>
-        <TabsContent value="inbox">
-          <ScrollArea
-            className="h-[300px] pl-5 pr-4 mr-1"
-            onScrollCapture={handleScroll}
-          >
-            <NotificationList />
-          </ScrollArea>
+        <TabsContent value="inbox" className="">
+          <NotificationList />
         </TabsContent>
         <TabsContent value="requests">
           <ScrollArea className="h-[300px] px-5">
@@ -224,12 +139,7 @@ export default function NotificationsPopover({
           Mark all as read
         </Button>
       </div>
-      <ScrollArea className="h-[300px]" onScrollCapture={handleScroll}>
-        <div className="pl-5 pr-4 mr-1">
-          <NotificationList />
-          {loading && <div className="text-center py-2">Loading...</div>}
-        </div>
-      </ScrollArea>
+      <NotificationList />
     </>
   );
 
