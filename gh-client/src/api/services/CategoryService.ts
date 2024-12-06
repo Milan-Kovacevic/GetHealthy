@@ -1,9 +1,5 @@
+import { Category } from "@/entities/Category";
 import { GenericHttpClient } from "@/utils/http-client";
-
-export type Category = {
-  title: string;
-  id: number;
-};
 
 export default class CategoryService {
   client = new GenericHttpClient();

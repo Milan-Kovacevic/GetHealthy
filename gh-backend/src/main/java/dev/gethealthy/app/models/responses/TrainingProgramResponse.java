@@ -26,7 +26,7 @@ public class TrainingProgramResponse {
 
     private LocalDate createdAt;
 
-    private List<TrainingProgramCategoryResponse> trainingProgramCategoryList;
+    private List<TrainingProgramCategoryResponse> categories;
 
     private double rating;
 

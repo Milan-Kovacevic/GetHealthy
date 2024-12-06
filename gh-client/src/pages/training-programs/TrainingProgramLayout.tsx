@@ -12,16 +12,16 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { PlusIcon } from "lucide-react";
-import TrainingProgramService, {
-  TrainingProgram,
-} from "@/api/services/TrainingProgramService";
-import CategoryService, { Category } from "@/api/services/CategoryService";
+import TrainingProgramService from "@/api/services/TrainingProgramService";
+import CategoryService from "@/api/services/CategoryService";
 import { Separator } from "@/components/ui/separator";
 import FeaturedTrainingPrograms from "./components/FeaturedTrainingPrograms";
 import { TrainingProgramFilters } from "./components/TrainingProgramFilters";
 import { TrainingProgramsLoader } from "./components/TrainingProgramsLoaders";
 import { useNavigate } from "react-router-dom";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
+import { TrainingProgram } from "@/entities/TrainingProgram";
+import { Category } from "@/entities/Category";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -31,36 +31,14 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   const [myTrainingPrograms, setMyTrainingPrograms] = useState(false);
   const [programs, setPrograms] = useState<TrainingProgram[]>([]);
   const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState<Category[]>([]);
-
   const [searchString, setSearchString] = useState("");
-  const [filter, setFilter] = useState("All");
-  const [sort, setSort] = useState("asc");
 
   const service = new TrainingProgramService();
 
   useEffect(() => {
-    async function updateList() {
-      var list = await service.get();
-      console.log(list);
-      setPrograms(list);
-    }
-    updateList();
-  }, [searchString, filter, sort]);
-
-  useEffect(() => {
-    async function fetchCategories() {
-      let categoryService = new CategoryService();
-      const data = await categoryService.get();
-      setCategories(data);
-    }
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
     async function fetchTP() {
-      const data = await service.get();
-      setPrograms(data!);
+      const data = await service.getPage();
+      setPrograms(data.content);
     }
     // Mocked for now...
     new Promise((resolve) => setTimeout(resolve)).then(() =>
@@ -69,6 +47,29 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
       })
     );
   }, []);
+
+  async function setFilter(
+    categories: Category[],
+    difficulty: number,
+    ratingRange: number[],
+    participantsRange: number[],
+    sortBy:string,
+  ) {
+    var sortOpt = sortBy.split("-");
+    setPrograms(
+      (
+        await service.getPage(
+          0,
+          categories,
+          difficulty,
+          ratingRange,
+          participantsRange,
+          sortOpt[0],
+          sortOpt[1],
+        )
+      ).content
+    );
+  }
 
   useEffect(() => {
     setMyTrainingPrograms(props.myTrainingPrograms);
@@ -114,7 +115,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
               ></SearchBar>
 
               <h2 className="text-lg font-semibold mb-0 mt-6">Filters</h2>
-              <TrainingProgramFilters />
+              <TrainingProgramFilters setFilters={setFilter} />
             </div>
 
             {loading ? (
@@ -123,16 +124,18 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
               <div className="grid mt-5 gap-x-6 gap-y-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 flex-1">
                 {programs.map((item) => (
                   <TrainingProgramCard
-                    rating={4.4}
-                    categories={[item.category]}
+                    rating={item.rating}
+                    categories={item.categories.map(
+                      (c) => c.category.categoryName
+                    )}
                     key={item.id}
                     editable={props.myTrainingPrograms}
-                    title={item.title}
+                    title={item.name}
                     description={item.description}
                     id={item.id}
-                    difficulty={item.difficulty}
+                    difficulty={item.difficulty.toString()}
                     image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
-                    trainer="Bruce Wayne"
+                    trainer={`${item.user.user.firstName} ${item.user.user.lastName}`}
                   ></TrainingProgramCard>
                 ))}
               </div>

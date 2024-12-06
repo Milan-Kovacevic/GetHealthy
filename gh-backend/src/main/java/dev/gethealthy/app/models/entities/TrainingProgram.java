@@ -59,7 +59,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "ProgramId")
-    private List<TrainingProgramCategory> trainingProgramCategoryList;
+    private List<TrainingProgramCategory> categories;
 
     @Column(name = "Deleted")
     private Boolean deleted;

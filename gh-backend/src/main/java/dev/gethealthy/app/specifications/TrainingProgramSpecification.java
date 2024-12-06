@@ -59,7 +59,7 @@ public class TrainingProgramSpecification {
                 return cb.conjunction(); // No filtering if the list is empty
             }
             // Use a subquery to perform the reverse join from Category to Product
-            Join<TrainingProgram, Category> categoryJoin = root.join("trainingProgramCategoryList").join("category");
+            Join<TrainingProgram, Category> categoryJoin = root.join("categories").join("category");
             return categoryJoin.get("name").in(categories);
         };
     }
