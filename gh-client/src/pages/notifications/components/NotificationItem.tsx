@@ -15,7 +15,6 @@ interface NotificationItemProps {
   notification: NotificationDTO;
   onMarkRead: (id: number) => void;
   onDelete: (id: number) => void;
-  // markAsRead: (id: number) => void;
   isLast: boolean;
 }
 

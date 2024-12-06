@@ -10,18 +10,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React, { ReactNode, useState } from "react";
 import RequestItem from "./components/RequestItem";
 import NotificationList from "./components/NotificationList";
+import {
+  deleteUserNotification,
+  getPageableUserNotifications,
+  markAllUserNotificationsAsRead,
+  markUserNotificationAsRead,
+} from "@/api/services/notification-service";
+import { NotificationDTO } from "@/api/models/notification";
+import { toast } from "sonner";
+import ListItemSkeleton from "./components/ListItemSkeleton";
 
 type NotificationsPopoverProps = {
   children: ReactNode;
   isTrainer: boolean;
-};
-
-type Notification = {
-  id: number;
-  title: string;
-  description: string;
-  time: string;
-  unread: boolean;
 };
 
 type Request = {
@@ -31,38 +32,6 @@ type Request = {
   message: string;
   time: string;
 };
-
-// Mock data for notifications and requests
-const initialNotifications: Notification[] = [
-  {
-    id: 1,
-    title: "Order Shipped",
-    description: "Your order #12345 has been shipped",
-    time: "2 hours ago",
-    unread: true,
-  },
-  {
-    id: 2,
-    title: "New Feature",
-    description: "Check out our latest feature update",
-    time: "1 day ago",
-    unread: true,
-  },
-  {
-    id: 3,
-    title: "Subscription Expiring",
-    description: "Your subscription will expire in 3 days",
-    time: "3 days ago",
-    unread: false,
-  },
-  {
-    id: 4,
-    title: "Payment Received",
-    description: "We have received your payment",
-    time: "1 week ago",
-    unread: false,
-  },
-];
 
 const initialRequests: Request[] = [
   {
@@ -87,7 +56,82 @@ export default function NotificationsPopover({
 }: NotificationsPopoverProps) {
   const [requests, setRequests] = useState<Request[]>(initialRequests);
   const [activeTab, setActiveTab] = useState("inbox");
-  const handleMarkAllAsRead = () => {};
+
+  const [notifications, setNotifications] = useState<NotificationDTO[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
+  const [pending, setPending] = useState(false);
+
+  const handleOnNotificationPageChange = async () => {
+    if (!hasMore) return;
+    setIsLoading(true);
+
+    setTimeout(async () => {
+      const response = await getPageableUserNotifications({ page: page });
+
+      setNotifications((prev) => [...prev, ...response.content]);
+      setPage((prev) => prev + 1);
+
+      // Usually your response will tell you if there is no more data.
+      if (notifications.length > 10) {
+        setHasMore(false);
+      }
+      setIsLoading(false);
+    }, 800);
+  };
+
+  const handleMarkNotificationAsRead = async (id: number) => {
+    setPending(true);
+    markUserNotificationAsRead(id)
+      .then(() => {
+        setNotifications((prev) => [
+          ...prev.map((notif) =>
+            notif.id === id ? { ...notif, isRead: true } : notif
+          ),
+        ]);
+      })
+      .catch(() => {
+        toast.error("Unexpected error", {
+          description: "Unable to mark notification as read",
+        });
+      })
+      .finally(() => setPending(false));
+  };
+
+  const handleDeleteNotification = async (id: number) => {
+    setPending(true);
+    deleteUserNotification(id)
+      .then(() => {
+        setNotifications((prev) => [
+          ...prev.filter((notif) => notif.id !== id),
+        ]);
+      })
+      .catch(() => {
+        toast.error("Unexpected error", {
+          description: "Unable to delete given notification",
+        });
+      })
+      .finally(() => setPending(false));
+  };
+
+  const handleMarkAllAsRead = async () => {
+    setPending(true);
+    markAllUserNotificationsAsRead()
+      .then(() => {
+        setNotifications((prev) => [
+          ...prev.map((notif) => {
+            return { ...notif, isRead: true };
+          }),
+        ]);
+      })
+      .catch(() => {
+        toast.error("Unexpected error", {
+          description: "Unable to mark all notifications as read",
+        });
+      })
+      .finally(() => setPending(false));
+  };
 
   const TrainerView = () => (
     <>
@@ -96,18 +140,6 @@ export default function NotificationsPopover({
           showMarkAll={activeTab == "inbox"}
           onMarkAll={handleMarkAllAsRead}
         />
-
-        {/* <h2 className="text-lg font-semibold">Notifications</h2>
-        {activeTab == "inbox" && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-foreground hover:text-primary"
-            onClick={markAllAsRead}
-          >
-            Mark all as read
-          </Button>
-        )} */}
       </div>
       <Tabs defaultValue="inbox" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-2 mx-4">
@@ -115,19 +147,34 @@ export default function NotificationsPopover({
           <TabsTrigger value="requests">Requests</TabsTrigger>
         </TabsList>
         <TabsContent value="inbox" className="">
-          <NotificationList />
+          {pending ? (
+            <ListItemSkeleton />
+          ) : (
+            <NotificationList
+              notifications={notifications}
+              isLoading={isLoading}
+              hasMore={hasMore}
+              onPageChange={handleOnNotificationPageChange}
+              onDeleteNotification={handleDeleteNotification}
+              onMarkReadNotification={handleMarkNotificationAsRead}
+            />
+          )}
         </TabsContent>
         <TabsContent value="requests">
-          <ScrollArea className="h-[300px] px-5">
-            <div className="space-y-2">
-              {requests.map((request, index) => (
-                <React.Fragment key={request.id}>
-                  <RequestItem request={request} />
-                  {index < requests.length - 1 && <Separator />}
-                </React.Fragment>
-              ))}
-            </div>
-          </ScrollArea>
+          {pending ? (
+            <ListItemSkeleton />
+          ) : (
+            <ScrollArea className="h-[300px] px-5">
+              <div className="space-y-2">
+                {requests.map((request, index) => (
+                  <React.Fragment key={request.id}>
+                    <RequestItem request={request} />
+                    {index < requests.length - 1 && <Separator />}
+                  </React.Fragment>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
         </TabsContent>
       </Tabs>
     </>
@@ -136,7 +183,14 @@ export default function NotificationsPopover({
   const TraineeView = () => (
     <>
       <NotificationTitle showMarkAll={true} onMarkAll={handleMarkAllAsRead} />
-      <NotificationList />
+      <NotificationList
+        notifications={notifications}
+        isLoading={isLoading}
+        hasMore={hasMore}
+        onPageChange={handleOnNotificationPageChange}
+        onDeleteNotification={handleDeleteNotification}
+        onMarkReadNotification={handleMarkNotificationAsRead}
+      />
     </>
   );
 
@@ -148,9 +202,9 @@ export default function NotificationsPopover({
     showMarkAll: boolean;
   }) => {
     return (
-      <div className="flex items-center justify-between mb-2 mx-4 h-8">
-        <h2 className="text-lg font-semibold">Notifications</h2>
-        {onMarkAll && (
+      <div className="flex items-center justify-between h-8 w-full">
+        <h2 className="text-lg font-semibold ml-0.5">Notifications</h2>
+        {showMarkAll && (
           <Button
             variant="ghost"
             size="sm"

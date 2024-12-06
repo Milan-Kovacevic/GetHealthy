@@ -19,5 +19,5 @@ export const REFRESH_TOKEN_STORAGE_KEY = "gethealthy_refresh_token";
 
 const API_PREFIX = environments().apiResourcePrefix;
 export const ApiEndpoints = {
-  Notifications: `${API_PREFIX}/users/{userId}/notifications`,
+  UserNotifications: `${API_PREFIX}/users/{userId}/notifications`,
 };

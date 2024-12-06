@@ -1,49 +1,30 @@
 import { NotificationDTO } from "@/api/models/notification";
 import { getPageableUserNotifications } from "@/api/services/notification-service";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NotificationItem from "./NotificationItem";
 // import InfiniteScroll from "react-infinite-scroll-component";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import InfiniteScroll from "@/components/ui/infnite-scroll";
 import { Loader2Icon } from "lucide-react";
 
-export default function NotificationList() {
-  const [notifications, setNotifications] = useState<NotificationDTO[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [page, setPage] = useState(0);
+type NotificationListProps = {
+  notifications: NotificationDTO[];
+  isLoading: boolean;
+  hasMore: boolean;
+  onPageChange: () => void;
+  onDeleteNotification: (id: number) => void;
+  onMarkReadNotification: (id: number) => void;
+};
 
-  const handleOnPageChange = async () => {
-    setIsLoading(true);
-
-    /**
-     * Intentionally delay the search by 800ms before execution so that you can see the loading spinner.
-     * In your app, you can remove this setTimeout.
-     **/
-    setTimeout(async () => {
-      const response = await getPageableUserNotifications({ page: page });
-
-      setNotifications((prev) => [...prev, ...response.content]);
-      setPage((prev) => prev + 1);
-
-      // Usually your response will tell you if there is no more data.
-      if (response.content.length < 3) {
-        setHasMore(false);
-      }
-      setIsLoading(false);
-    }, 800);
-  };
-
-  const handleMarkReadNotification = (id: number) => {
-    console.log(id);
-    setNotifications(
-      notifications.map((notif) =>
-        notif.id === id ? { ...notif, isRead: !notif.isRead } : notif
-      )
-    );
-  };
-
-  const handleDeleteNotification = (id: number) => {};
+export default function NotificationList(props: NotificationListProps) {
+  const {
+    notifications,
+    isLoading,
+    hasMore,
+    onPageChange,
+    onMarkReadNotification,
+    onDeleteNotification,
+  } = props;
 
   const unreadNotifications = notifications.filter((notif) => !notif.isRead);
   const readNotifications = notifications.filter((notif) => notif.isRead);
@@ -61,8 +42,8 @@ export default function NotificationList() {
                 <NotificationItem
                   key={notification.id}
                   notification={notification}
-                  onMarkRead={handleMarkReadNotification}
-                  onDelete={handleDeleteNotification}
+                  onMarkRead={onMarkReadNotification}
+                  onDelete={onDeleteNotification}
                   isLast={index === unreadNotifications.length - 1}
                 />
               ))}
@@ -77,8 +58,8 @@ export default function NotificationList() {
                 <NotificationItem
                   key={notification.id}
                   notification={notification}
-                  onMarkRead={handleMarkReadNotification}
-                  onDelete={handleDeleteNotification}
+                  onMarkRead={onMarkReadNotification}
+                  onDelete={onDeleteNotification}
                   isLast={index === readNotifications.length - 1}
                 />
               ))}
@@ -87,7 +68,7 @@ export default function NotificationList() {
           <InfiniteScroll
             hasMore={hasMore}
             isLoading={isLoading}
-            next={handleOnPageChange}
+            next={onPageChange}
             threshold={1}
           >
             {hasMore && <Loader2Icon className="my-2 h-6 w-6 animate-spin" />}

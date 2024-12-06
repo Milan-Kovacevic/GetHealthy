@@ -8,7 +8,7 @@ const pageSize = 10;
 const getPageableUserNotifications = ({ page }: { page: number }) => {
   const userId = "1"; // Hardcoded for now
   // TODO: Obtain this information from jwt or session storage...
-  var url = ApiEndpoints.Notifications.replace("{userId}", userId);
+  var url = ApiEndpoints.UserNotifications.replace("{userId}", userId);
   url += `?page=${page}&pageSize=${pageSize}`;
   //   return sendAxiosRequest<void, PageableNotifications>({
   //     method: "GET",
@@ -47,4 +47,42 @@ const getPageableUserNotifications = ({ page }: { page: number }) => {
   });
 };
 
-export { getPageableUserNotifications };
+const markAllUserNotificationsAsRead = () => {
+  const userId = "1"; // Hardcoded for now
+  var url = ApiEndpoints.UserNotifications.replace("{userId}", userId);
+  url += "/mark-read";
+
+  return sendAxiosRequest<void, PageableNotifications>({
+    method: "POST",
+    url: url,
+  });
+};
+
+const markUserNotificationAsRead = (id: number) => {
+  const userId = "1"; // Hardcoded for now
+  var url = ApiEndpoints.UserNotifications.replace("{userId}", userId);
+  url += `/${id}/mark-read`;
+
+  return sendAxiosRequest<void, PageableNotifications>({
+    method: "POST",
+    url: url,
+  });
+};
+
+const deleteUserNotification = (id: number) => {
+  const userId = "1"; // Hardcoded for now
+  var url = ApiEndpoints.UserNotifications.replace("{userId}", userId);
+  url += `/${id}`;
+
+  return sendAxiosRequest<void, PageableNotifications>({
+    method: "DELETE",
+    url: url,
+  });
+};
+
+export {
+  getPageableUserNotifications,
+  markAllUserNotificationsAsRead,
+  markUserNotificationAsRead,
+  deleteUserNotification,
+};
