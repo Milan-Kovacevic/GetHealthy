@@ -34,7 +34,7 @@ export default function NotificationList() {
     }, 800);
   };
 
-  const toggleReadStatus = (id: number) => {
+  const handleMarkReadNotification = (id: number) => {
     console.log(id);
     setNotifications(
       notifications.map((notif) =>
@@ -42,6 +42,8 @@ export default function NotificationList() {
       )
     );
   };
+
+  const handleDeleteNotification = (id: number) => {};
 
   const unreadNotifications = notifications.filter((notif) => !notif.isRead);
   const readNotifications = notifications.filter((notif) => notif.isRead);
@@ -59,7 +61,8 @@ export default function NotificationList() {
                 <NotificationItem
                   key={notification.id}
                   notification={notification}
-                  toggleReadStatus={toggleReadStatus}
+                  onMarkRead={handleMarkReadNotification}
+                  onDelete={handleDeleteNotification}
                   isLast={index === unreadNotifications.length - 1}
                 />
               ))}
@@ -74,7 +77,8 @@ export default function NotificationList() {
                 <NotificationItem
                   key={notification.id}
                   notification={notification}
-                  toggleReadStatus={toggleReadStatus}
+                  onMarkRead={handleMarkReadNotification}
+                  onDelete={handleDeleteNotification}
                   isLast={index === readNotifications.length - 1}
                 />
               ))}
@@ -91,48 +95,5 @@ export default function NotificationList() {
         </div>
       </div>
     </ScrollArea>
-
-    // <InfiniteScroll
-    //   // dataLength={notifications.length}
-    //   isLoading={isLoading}
-    //   next={handleOnPageChange}
-    //   hasMore={hasMore}
-    //   // loader={<div>LOADING...</div>}
-    //   // className="h-[300px]"
-    //   // style={{ height: "300px" }}
-    // >
-    //   <ScrollArea>
-    //     {unreadNotifications.length > 0 && (
-    //       <div className="mb-4">
-    //         <h3 className="text-sm font-medium text-foreground/70 mb-1.5">
-    //           Unread
-    //         </h3>
-    //         {unreadNotifications.map((notification, index) => (
-    //           <NotificationItem
-    //             key={notification.id}
-    //             notification={notification}
-    //             toggleReadStatus={toggleReadStatus}
-    //             isLast={index === unreadNotifications.length - 1}
-    //           />
-    //         ))}
-    //       </div>
-    //     )}
-    //     {readNotifications.length > 0 && (
-    //       <div>
-    //         <h3 className="text-sm font-medium text-foreground/70 mb-1">
-    //           Read
-    //         </h3>
-    //         {readNotifications.map((notification, index) => (
-    //           <NotificationItem
-    //             key={notification.id}
-    //             notification={notification}
-    //             toggleReadStatus={toggleReadStatus}
-    //             isLast={index === readNotifications.length - 1}
-    //           />
-    //         ))}
-    //       </div>
-    //     )}
-    //   </ScrollArea>
-    // </InfiniteScroll>
   );
 }

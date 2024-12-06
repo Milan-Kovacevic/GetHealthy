@@ -13,14 +13,16 @@ import React from "react";
 
 interface NotificationItemProps {
   notification: NotificationDTO;
-  toggleReadStatus: (id: number) => void;
+  onMarkRead: (id: number) => void;
+  onDelete: (id: number) => void;
   // markAsRead: (id: number) => void;
   isLast: boolean;
 }
 
 export default function NotificationItem({
   notification,
-  toggleReadStatus,
+  onMarkRead,
+  onDelete,
   isLast,
 }: NotificationItemProps) {
   return (
@@ -54,20 +56,14 @@ export default function NotificationItem({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {!notification.isRead ? (
-              <DropdownMenuItem
-                onClick={() => toggleReadStatus(notification.id)}
-              >
+            {!notification.isRead && (
+              <DropdownMenuItem onClick={() => onMarkRead(notification.id)}>
                 Mark as read
               </DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem
-                onClick={() => toggleReadStatus(notification.id)}
-              >
-                Mark as unread
-              </DropdownMenuItem>
             )}
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(notification.id)}>
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -86,23 +86,30 @@ export default function NotificationsPopover({
   isTrainer,
 }: NotificationsPopoverProps) {
   const [requests, setRequests] = useState<Request[]>(initialRequests);
-
-  const markAllAsRead = () => {};
+  const [activeTab, setActiveTab] = useState("inbox");
+  const handleMarkAllAsRead = () => {};
 
   const TrainerView = () => (
     <>
-      <div className="flex items-center justify-between mb-2 mx-4">
-        <h2 className="text-lg font-semibold">Notifications</h2>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-foreground hover:text-primary"
-          onClick={markAllAsRead}
-        >
-          Mark all as read
-        </Button>
+      <div className="flex items-center justify-between mb-2 mx-4 h-8">
+        <NotificationTitle
+          showMarkAll={activeTab == "inbox"}
+          onMarkAll={handleMarkAllAsRead}
+        />
+
+        {/* <h2 className="text-lg font-semibold">Notifications</h2>
+        {activeTab == "inbox" && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-foreground hover:text-primary"
+            onClick={markAllAsRead}
+          >
+            Mark all as read
+          </Button>
+        )} */}
       </div>
-      <Tabs defaultValue="inbox">
+      <Tabs defaultValue="inbox" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-2 mx-4">
           <TabsTrigger value="inbox">Inbox</TabsTrigger>
           <TabsTrigger value="requests">Requests</TabsTrigger>
@@ -128,20 +135,34 @@ export default function NotificationsPopover({
 
   const TraineeView = () => (
     <>
-      <div className="flex items-center justify-between mb-2 mx-4">
-        <h2 className="text-lg font-semibold">Notifications</h2>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-foreground hover:text-primary"
-          onClick={markAllAsRead}
-        >
-          Mark all as read
-        </Button>
-      </div>
+      <NotificationTitle showMarkAll={true} onMarkAll={handleMarkAllAsRead} />
       <NotificationList />
     </>
   );
+
+  const NotificationTitle = ({
+    onMarkAll,
+    showMarkAll,
+  }: {
+    onMarkAll?: () => void;
+    showMarkAll: boolean;
+  }) => {
+    return (
+      <div className="flex items-center justify-between mb-2 mx-4 h-8">
+        <h2 className="text-lg font-semibold">Notifications</h2>
+        {onMarkAll && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-foreground hover:text-primary"
+            onClick={onMarkAll}
+          >
+            Mark all as read
+          </Button>
+        )}
+      </div>
+    );
+  };
 
   return (
     <Popover>
