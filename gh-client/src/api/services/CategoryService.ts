@@ -1,10 +1,10 @@
-import { Category } from "@/entities/Category";
-import { GenericHttpClient } from "@/utils/http-client";
+// import { Category } from "@/entities/Category";
+// import { GenericHttpClient } from "@/utils/http-client";
 
-export default class CategoryService {
-  client = new GenericHttpClient();
+// export default class CategoryService {
+//   client = new GenericHttpClient();
 
-  public async get(): Promise<Category[]> {
-    return await this.client.get("categories");
-  }
-}
+//   public async get(): Promise<Category[]> {
+//     return await this.client.get("categories");
+//   }
+// }

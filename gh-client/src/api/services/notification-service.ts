@@ -14,7 +14,7 @@ const getPageableUserNotifications = ({ page }: { page: number }) => {
   //     method: "GET",
   //     url: url,
   //   }).then((response) => {
-  //     return response.data;
+  //     return response.data as PageableNotificationsDTO;
   //   });
 
   // Mock response for now
@@ -42,8 +42,25 @@ const getPageableUserNotifications = ({ page }: { page: number }) => {
         time: "test",
       },
     ],
-    page: 1,
-    size: 5,
+    empty: false,
+    first: true,
+    last: true,
+    number: 1,
+    numberOfElements: 3,
+    pageable: {
+      offset: 0,
+      paged: true,
+      pageNumber: 1,
+      pageSize: 3,
+      sort: {
+        empty: true,
+        sorted: false,
+        unsorted: true,
+      },
+    },
+    size: 3,
+    totalElements: 3,
+    totalPages: 1,
   });
 };
 

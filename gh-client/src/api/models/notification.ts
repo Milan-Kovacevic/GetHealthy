@@ -1,3 +1,5 @@
+import { Page } from "../contracts/pageable-contract";
+
 export type NotificationDTO = {
   id: number;
   title: string;
@@ -6,8 +8,4 @@ export type NotificationDTO = {
   isRead: boolean;
 };
 
-export type PageableNotificationsDTO = {
-  content: NotificationDTO[];
-  page: number;
-  size: number;
-};
+export type PageableNotificationsDTO = Page<NotificationDTO>;

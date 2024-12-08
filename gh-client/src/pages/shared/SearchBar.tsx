@@ -3,7 +3,6 @@ import { Search } from "lucide-react";
 
 type SearchProps = {
   setData: any;
-  service: any;
 };
 
 export const SearchBar = (props: SearchProps) => {
