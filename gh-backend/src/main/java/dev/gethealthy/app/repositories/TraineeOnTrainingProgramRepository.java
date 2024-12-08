@@ -1,6 +1,7 @@
 package dev.gethealthy.app.repositories;
 
 import dev.gethealthy.app.models.entities.TraineeOnTrainingProgram;
+import dev.gethealthy.app.models.entities.TraineeOnTrainingProgramId;
 import dev.gethealthy.app.models.entities.TrainingProgram;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface TraineeOnTrainingProgramRepository extends JpaRepository<TraineeOnTrainingProgram, Integer> {
+public interface TraineeOnTrainingProgramRepository extends JpaRepository<TraineeOnTrainingProgram, TraineeOnTrainingProgramId> {
     List<TraineeOnTrainingProgram> findByUser_Id(Integer userId);
 
     List<TraineeOnTrainingProgram> findByProgram_Id(Integer programId);
