@@ -18,11 +18,20 @@ type FileInputFieldProps = {
   description?: string;
   formats?: string;
   className?: string;
+  onFileSelect?: (file: File | undefined) => void;
 };
 
 export const FileInputField = (props: FileInputFieldProps) => {
-  const { name, description, className, title, formats } = props;
+  const { name, description, className, title, formats, onFileSelect } = props;
   const [selectedFile, setSelectedFile] = useState<File>();
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target?.files?.[0];
+    setSelectedFile(file);
+    if (onFileSelect) {
+      onFileSelect(file);
+    }
+  };
 
   return (
     <FormItem className={cn("space-y-1 w-full flex flex-col", className)}>
@@ -59,11 +68,12 @@ export const FileInputField = (props: FileInputFieldProps) => {
             id={name}
             type="file"
             className="hidden"
-            onChange={(event) => {
-              if (event.target?.files) {
-                setSelectedFile(event.target?.files?.[0]);
-              }
-            }}
+            // onChange={(event) => {
+            //   if (event.target?.files) {
+            //     setSelectedFile(event.target?.files?.[0]);
+            //   }
+            // }}
+            onChange={handleFileChange}
           />
         </div>
       </FormControl>
