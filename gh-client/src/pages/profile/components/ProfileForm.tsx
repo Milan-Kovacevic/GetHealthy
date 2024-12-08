@@ -11,25 +11,35 @@ import SelectFormField from "@/components/primitives/SelectFormField";
 import TextareaFormField from "@/components/primitives/TextareaFormField";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
+import { useState } from "react";
 
-const profileFormSchema = z.object({
-  firstName: z
-    .string({ required_error: "First name is required." })
-    .min(1, "First name is required"),
-  lastName: z
-    .string({ required_error: "Last name is required." })
-    .min(1, "Last name is required"),
-  dob: z.date({
-    required_error: "A date of birth is required.",
-  }),
-  weight: z.number().min(0, "Weight must be positive numebr.").optional(),
-  height: z.number().min(0, "Height must be positive number.").optional(),
-  medicHistory: z.string().max(160).min(4).optional(),
-  phone: z.string().optional(),
-  bio: z.string().max(160).min(4).optional(),
-  gender: z.string({ required_error: "Gender is required" }),
+const sharedFields = {
+  firstName: z.string({ required_error: "First name is required." }).min(1),
+  lastName: z.string({ required_error: "Last name is reqiured." }).min(1),
+  dob: z.date({ required_error: "A date of birth is required." }),
+  gender: z.string({ required_error: "Gender is required." }),
+};
+
+const traineeScheme = z.object({
+  ...sharedFields,
+  weight: z.number().min(0, "Weight must be a positive number."),
+  height: z.number().min(0, "Height must be a positive number."),
+  medicHistory: z
+    .string()
+    .max(160, "Medical history must have less than 160 characters.")
+    .min(4, "Medical history must have at least 4 characters."),
 });
+
+const trainerScheme = z.object({
+  ...sharedFields,
+  phone: z.string().nonempty("Phone number is required."),
+  bio: z
+    .string()
+    .max(160, "Bio must have less than 160 characters.")
+    .min(4, "Bio must have at least 4 characters."),
+});
+
+const profileFormSchema = z.union([traineeScheme, trainerScheme]);
 
 const genders = [
   { label: "Male", value: "male" },
@@ -39,7 +49,7 @@ const genders = [
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 const defaultValues: Partial<ProfileFormValues> = {
-  bio: "I own a computer.",
+  bio: "",
   firstName: "",
   lastName: "",
   weight: 0,
@@ -51,6 +61,8 @@ type ProfileFormProps = {
 };
 
 export function ProfileForm(props: ProfileFormProps) {
+  const [selectedFile, setSelectedFile] = useState<File | undefined>();
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -58,15 +70,14 @@ export function ProfileForm(props: ProfileFormProps) {
   });
 
   function onSubmit(data: ProfileFormValues) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    console.log(data);
+    if (props.isTrainer) {
+      const trainerData = trainerScheme.parse(data);
+      console.log(trainerData);
+    } else {
+      const traineeData = traineeScheme.parse(data);
+      console.log(traineeData);
+    }
+    console.log(selectedFile);
   }
 
   return (
@@ -115,51 +126,6 @@ export function ProfileForm(props: ProfileFormProps) {
         {props.isTrainer === false ? (
           <>
             <div className="flex flex-wrap gap-4">
-              {/* <FormField
-                control={form.control}
-                name="weight"
-                render={({ field }) => (
-                  <FormItem className="flex-1 min-w-[200px]">
-                    <FormLabel>Weight</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="number"
-                        placeholder="Enter your weight"
-                        value={field.value ?? ""}
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormDescription className="text-xs ml-0.5">
-                      This is your weight in kg.
-                    </FormDescription>
-                    <FormMessage className="text-xs ml-0.5" />
-                  </FormItem>
-                )}
-              /> */}
-              {/* <FormField
-                control={form.control}
-                name="height"
-                render={({ field }) => (
-                  <FormItem className="flex-1 min-w-[200px]">
-                    <FormLabel>Height</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="number"
-                        placeholder="Enter your height"
-                        value={field.value ?? ""}
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormDescription className="text-xs ml-0.5">
-                      This is your height in cm.
-                    </FormDescription>
-                    <FormMessage className="text-xs ml-0.5" />
-                  </FormItem>
-                )}
-              /> */}
-
               <NumberInputFormField
                 control={form.control}
                 name="height"
@@ -214,9 +180,10 @@ export function ProfileForm(props: ProfileFormProps) {
 
         <FileInputField
           title="Profile image"
-          name="profileImage"
+          name={props.isTrainer ? "trainerProfileImage" : "traineeProfileImage"}
           description="You can set your profile image."
           formats=""
+          onFileSelect={setSelectedFile}
         />
 
         <Button variant="secondary" type="submit">
