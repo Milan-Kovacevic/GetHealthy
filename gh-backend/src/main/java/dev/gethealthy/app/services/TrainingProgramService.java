@@ -11,4 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 public interface TrainingProgramService extends CrudService<Integer> {
 
     Page<TrainingProgramResponse> findAll(Specification<TrainingProgram> spec, Sort sort, Pageable page);
+
+    @Override
+    void delete(Integer id);
 }

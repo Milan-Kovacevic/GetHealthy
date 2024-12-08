@@ -19,7 +19,7 @@ public class Trainer extends User implements BaseEntity<Integer> {
     private Integer id;
 
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "UserId", nullable = false)
     private User user;

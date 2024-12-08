@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { RangedSlider, Slider } from "@/components/ui/slider";
+import { useEffect, useState } from "react";
+import { RangedSlider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -12,28 +12,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import * as SliderPrimitive from "@radix-ui/react-slider";
 import { Button } from "@/components/ui/button";
 import { FilterIcon, XIcon } from "lucide-react";
+import CategoryService from "@/api/services/CategoryService";
+import { Category } from "@/entities/Category";
 
-// Hardcoded categories (these would typically come from an API)
-const categories = [
-  "Strength Training",
-  "Cardio",
-  "Flexibility",
-  "HIIT",
-  "Yoga",
-  "Pilates",
-  "Bodyweight",
-  "Weightlifting",
-];
+type FilterProps = {
+  setFilters: any;
+};
 
-export function TrainingProgramFilters() {
+export function TrainingProgramFilters(props: FilterProps) {
   const [sortBy, setSortBy] = useState("name-asc");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState("");
   const [ratingRange, setRatingRange] = useState([4, 5]);
   const [participantsRange, setParticipantsRange] = useState([0, 1000]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const categoryService = new CategoryService();
+      setCategories(await categoryService.get());
+    }
+    fetchCategories();
+  }, []);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategories((prev) =>
@@ -65,13 +67,17 @@ export function TrainingProgramFilters() {
           <h3 className="text-sm font-medium mb-2">Categories</h3>
           <div className="space-y-2">
             {categories.map((category) => (
-              <div key={category} className="flex items-center space-x-2">
+              <div key={category.id} className="flex items-center space-x-2">
                 <Checkbox
-                  id={category}
-                  checked={selectedCategories.includes(category)}
-                  onCheckedChange={() => handleCategoryChange(category)}
+                  id={category.id.toString()}
+                  checked={selectedCategories.includes(category.id.toString())}
+                  onCheckedChange={() =>
+                    handleCategoryChange(category.id.toString())
+                  }
                 />
-                <Label htmlFor={category}>{category}</Label>
+                <Label htmlFor={category.id.toString()}>
+                  {category.categoryName}
+                </Label>
               </div>
             ))}
           </div>
@@ -83,15 +89,15 @@ export function TrainingProgramFilters() {
           <h3 className="text-sm font-medium mb-2">Difficulty</h3>
           <RadioGroup value={difficulty} onValueChange={setDifficulty}>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="beginner" id="beginner" />
+              <RadioGroupItem value="1" id="1" />
               <Label htmlFor="beginner">Beginner</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="intermediate" id="intermediate" />
+              <RadioGroupItem value="2" id="2" />
               <Label htmlFor="intermediate">Intermediate</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="advanced" id="advanced" />
+              <RadioGroupItem value="3" id="3" />
               <Label htmlFor="advanced">Advanced</Label>
             </div>
           </RadioGroup>
@@ -129,7 +135,19 @@ export function TrainingProgramFilters() {
           </div>
         </div>
         <div className="flex gap-2 justify-end pt-3">
-          <Button variant="secondary" className="">
+          <Button
+            variant="secondary"
+            className=""
+            onClick={() =>
+              props.setFilters(
+                categories,
+                difficulty,
+                ratingRange,
+                participantsRange,
+                sortBy
+              )
+            }
+          >
             <FilterIcon />
             Apply
           </Button>
