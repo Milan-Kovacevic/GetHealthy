@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("${base-url}/categories")
+@RequestMapping("${gethealthy.base-url}/categories")
 public class CategoryController extends CrudController<Integer, CategoryRequest, CategoryResponse> {
     public CategoryController(CategoryService crudService) {
         super(crudService, CategoryResponse.class);

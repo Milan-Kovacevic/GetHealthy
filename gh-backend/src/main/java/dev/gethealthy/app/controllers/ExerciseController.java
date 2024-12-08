@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("${base-url}/exercises")
+@RequestMapping("${gethealthy.base-url}/exercises")
 public class ExerciseController extends CrudController<Integer, ExerciseRequest, ExerciseResponse> {
     public ExerciseController(ExerciseService crudService) {
         super(crudService, ExerciseResponse.class);

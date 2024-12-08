@@ -20,7 +20,7 @@ public class CrudJpaService<E extends BaseEntity<ID>, ID extends Serializable> i
 
     private final JpaRepository<E, ID> repository;
     private final Class<E> entityClass;
-    private final ModelMapper modelMapper;
+    protected final ModelMapper modelMapper;
     @PersistenceContext
     private EntityManager entityManager;
 

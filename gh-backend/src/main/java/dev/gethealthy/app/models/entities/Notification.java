@@ -1,6 +1,7 @@
 package dev.gethealthy.app.models.entities;
 
 import dev.gethealthy.app.base.BaseEntity;
+import dev.gethealthy.app.models.enums.NotificationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,8 +28,8 @@ public class Notification implements BaseEntity<Integer> {
 
     @Size(max = 128)
     @NotNull
-    @Column(name = "ProgramName", nullable = false, length = 128)
-    private String programName;
+    @Column(name = "Metadata", nullable = false, length = 128)
+    private String metadata;
 
     @NotNull
     @Column(name = "Date", nullable = false)
@@ -47,7 +48,8 @@ public class Notification implements BaseEntity<Integer> {
     private User sender;
 
     @NotNull
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "NotificationType", nullable = false)
-    private Byte notificationType;
+    private NotificationType notificationType;
 
 }

@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { FilterIcon, XIcon } from "lucide-react";
-import CategoryService from "@/api/services/CategoryService";
-import { Category } from "@/entities/Category";
+import { CategoryDTO } from "@/api/models/category";
+import { getAllCategories } from "@/api/services/category-service";
 
 type FilterProps = {
   setFilters: any;
@@ -25,14 +25,13 @@ export function TrainingProgramFilters(props: FilterProps) {
   const [sortBy, setSortBy] = useState("name-asc");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState("");
-  const [ratingRange, setRatingRange] = useState([4, 5]);
+  const [ratingRange, setRatingRange] = useState([0, 5]);
   const [participantsRange, setParticipantsRange] = useState([0, 1000]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategoryDTO[]>([]);
 
   useEffect(() => {
     async function fetchCategories() {
-      const categoryService = new CategoryService();
-      setCategories(await categoryService.get());
+      setCategories(await getAllCategories());
     }
     fetchCategories();
   }, []);

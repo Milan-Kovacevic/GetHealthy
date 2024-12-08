@@ -1,3 +1,4 @@
+import { NotificationDTO } from "@/api/models/notification";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,21 +12,16 @@ import { MoreVerticalIcon } from "lucide-react";
 import React from "react";
 
 interface NotificationItemProps {
-  notification: {
-    id: number;
-    title: string;
-    description: string;
-    time: string;
-    unread: boolean;
-  };
-  toggleReadStatus: (id: number) => void;
-  // markAsRead: (id: number) => void;
+  notification: NotificationDTO;
+  onMarkRead: (id: number) => void;
+  onDelete: (id: number) => void;
   isLast: boolean;
 }
 
 export default function NotificationItem({
   notification,
-  toggleReadStatus,
+  onMarkRead,
+  onDelete,
   isLast,
 }: NotificationItemProps) {
   return (
@@ -33,13 +29,13 @@ export default function NotificationItem({
       <div
         className={cn(
           "flex items-start space-x-4 py-2",
-          notification.unread && "bg-muted/50 pl-3.5 pr-1 rounded-md"
+          !notification.isRead && "bg-muted/50 pl-3.5 pr-1 rounded-md"
         )}
       >
         <div className="flex-1 space-y-1">
           <h3
             className={`text-sm font-medium ${
-              notification.unread ? "text-foreground" : "text-foreground/90"
+              !notification.isRead ? "text-foreground" : "text-foreground/90"
             }`}
           >
             {notification.title}
@@ -59,20 +55,14 @@ export default function NotificationItem({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {notification.unread ? (
-              <DropdownMenuItem
-                onClick={() => toggleReadStatus(notification.id)}
-              >
+            {!notification.isRead && (
+              <DropdownMenuItem onClick={() => onMarkRead(notification.id)}>
                 Mark as read
               </DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem
-                onClick={() => toggleReadStatus(notification.id)}
-              >
-                Mark as unread
-              </DropdownMenuItem>
             )}
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(notification.id)}>
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

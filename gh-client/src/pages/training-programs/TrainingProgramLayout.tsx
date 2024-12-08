@@ -12,15 +12,15 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { PlusIcon } from "lucide-react";
-import TrainingProgramService from "@/api/services/TrainingProgramService";
 import { Separator } from "@/components/ui/separator";
 import FeaturedTrainingPrograms from "./components/FeaturedTrainingPrograms";
 import { TrainingProgramFilters } from "./components/TrainingProgramFilters";
 import { TrainingProgramsLoader } from "./components/TrainingProgramsLoaders";
 import { useNavigate } from "react-router-dom";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
-import { TrainingProgram } from "@/entities/TrainingProgram";
 import { Category } from "@/entities/Category";
+import { getPageableTrainingPrograms } from "@/api/services/traning-program-service";
+import { TrainingProgramDTO } from "@/api/models/training-program";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -39,11 +39,9 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   const [totalPages, setTotalPages] = useState(1);
 
   const [myTrainingPrograms, setMyTrainingPrograms] = useState(false);
-  const [programs, setPrograms] = useState<TrainingProgram[]>([]);
+  const [programs, setPrograms] = useState<TrainingProgramDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchString, setSearchString] = useState("");
-
-  const service = new TrainingProgramService();
 
   const [filterParams, setFilterParams] = useState<ComplexState>({
     categories: [],
@@ -55,7 +53,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
 
   useEffect(() => {
     async function fetchTP() {
-      const data = await service.getPage();
+      const data = await getPageableTrainingPrograms(); //service.getPage();
       setPrograms(data.content);
     }
     // Mocked for now...
@@ -69,9 +67,9 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   useEffect(() => {
     async function fetchTP() {
       var sortOpt = filterParams.sortBy.split("-");
-      let response = await service.getPage(
+      let response = await getPageableTrainingPrograms(
         searchString,
-        currentPage-1,
+        currentPage - 1,
         filterParams.categories,
         filterParams.difficulty,
         filterParams.ratingRange,
@@ -101,7 +99,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
     });
   }
 
-  // nemam pojma sta ovo radi
+  // TODO: nemam pojma sta ovo radi
   useEffect(() => {
     setMyTrainingPrograms(props.myTrainingPrograms);
     return () => {};
@@ -139,10 +137,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
 
           <div className="flex lg:flex-row flex-col lg:gap-8 gap-2">
             <div className="flex flex-col my-6 pr-4 lg:border-r lg:border-b-0 border-b pb-4">
-              <SearchBar
-                setData={setSearchString}
-                service={service}
-              ></SearchBar>
+              <SearchBar setData={setSearchString}></SearchBar>
 
               <h2 className="text-lg font-semibold mb-0 mt-6">Filters</h2>
               <TrainingProgramFilters setFilters={setFilter} />
@@ -155,9 +150,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                 {programs.map((item) => (
                   <TrainingProgramCard
                     rating={item.rating}
-                    categories={item.categories.map(
-                      (c) => c.category.categoryName
-                    )}
+                    categories={item.categories.map((c) => c.categoryName)}
                     key={item.id}
                     editable={props.myTrainingPrograms}
                     title={item.name}
@@ -165,7 +158,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                     id={item.id}
                     difficulty={item.difficulty.toString()}
                     image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
-                    trainer={`${item.user.user.firstName} ${item.user.user.lastName}`}
+                    trainer={`${item.user.firstName} ${item.user.lastName}`}
                   ></TrainingProgramCard>
                 ))}
               </div>
