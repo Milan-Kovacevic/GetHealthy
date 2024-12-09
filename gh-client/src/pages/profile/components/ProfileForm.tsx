@@ -2,6 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import {
+  getTraineeProfile,
+  getTrainerProfile,
+  updateTraineeProfile,
+  updateTrainerProfile,
+} from "@/api/services/user-service";
 import DatePickerFormField from "@/components/primitives/DatePickerFormField";
 import { FileInputField } from "@/components/primitives/FileInputField";
 import InputFormField from "@/components/primitives/InputFormField";
@@ -11,20 +17,21 @@ import SelectFormField from "@/components/primitives/SelectFormField";
 import TextareaFormField from "@/components/primitives/TextareaFormField";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const sharedFields = {
   firstName: z.string({ required_error: "First name is required." }).min(1),
   lastName: z.string({ required_error: "Last name is reqiured." }).min(1),
-  dob: z.date({ required_error: "A date of birth is required." }),
+  dateOfBirth: z.date({ required_error: "A date of birth is required." }),
   gender: z.string({ required_error: "Gender is required." }),
+  profilePictureFilePath: z.string().optional(),
 };
 
 const traineeScheme = z.object({
   ...sharedFields,
   weight: z.number().min(0, "Weight must be a positive number."),
   height: z.number().min(0, "Height must be a positive number."),
-  medicHistory: z
+  medicalHistory: z
     .string()
     .max(160, "Medical history must have less than 160 characters.")
     .min(4, "Medical history must have at least 4 characters."),
@@ -32,8 +39,8 @@ const traineeScheme = z.object({
 
 const trainerScheme = z.object({
   ...sharedFields,
-  phone: z.string().nonempty("Phone number is required."),
-  bio: z
+  contactInfo: z.string().nonempty("Phone number is required."),
+  biography: z
     .string()
     .max(160, "Bio must have less than 160 characters.")
     .min(4, "Bio must have at least 4 characters."),
@@ -42,14 +49,14 @@ const trainerScheme = z.object({
 const profileFormSchema = z.union([traineeScheme, trainerScheme]);
 
 const genders = [
-  { label: "Male", value: "male" },
-  { label: "Female", value: "female" },
+  { label: "Male", value: "0" },
+  { label: "Female", value: "1" },
 ];
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 const defaultValues: Partial<ProfileFormValues> = {
-  bio: "",
+  biography: "",
   firstName: "",
   lastName: "",
   weight: 0,
@@ -61,7 +68,37 @@ type ProfileFormProps = {
 };
 
 export function ProfileForm(props: ProfileFormProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [initialValues, setInitialValues] = useState<ProfileFormValues | null>(
+    null
+  );
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      let data: ProfileFormValues | null = null;
+      if (props.isTrainer) {
+        const trainerProfile = await getTrainerProfile();
+        data = {
+          ...trainerProfile,
+          gender: trainerProfile.gender.toString(),
+        };
+      } else {
+        const traineeProfile = await getTraineeProfile();
+        data = {
+          ...traineeProfile,
+          gender: traineeProfile.gender.toString(),
+        };
+      }
+
+      if (data) {
+        setInitialValues(data);
+        form.reset(data);
+      }
+    };
+
+    fetchProfileData();
+  }, [props.isTrainer]);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -69,15 +106,62 @@ export function ProfileForm(props: ProfileFormProps) {
     mode: "onChange",
   });
 
-  function onSubmit(data: ProfileFormValues) {
-    if (props.isTrainer) {
-      const trainerData = trainerScheme.parse(data);
-      console.log(trainerData);
-    } else {
-      const traineeData = traineeScheme.parse(data);
-      console.log(traineeData);
+  const watchedValues = form.watch();
+
+  const hasUnsavedChanges = initialValues
+    ? JSON.stringify(initialValues) !== JSON.stringify(watchedValues)
+    : false;
+
+  const toggleEditMode = () => {
+    if (isEditing) {
+      form.reset(initialValues!);
     }
-    console.log(selectedFile);
+    setIsEditing(!isEditing);
+  };
+
+  const handleFileSelection = (file: File | undefined) => {
+    if (file) {
+      setSelectedFile(file);
+      form.setValue("profilePictureFilePath", file.name);
+    } else {
+      form.setValue("profilePictureFilePath", "");
+    }
+  };
+
+  async function onSubmit(data: ProfileFormValues) {
+    try {
+      let updateProfilePromise: Promise<void>;
+
+      if (props.isTrainer) {
+        const trainerData = trainerScheme.parse(data);
+        updateProfilePromise = updateTrainerProfile({
+          ...trainerData,
+          userId: 1,
+          gender: parseInt(trainerData.gender),
+        });
+        setInitialValues(trainerData);
+      } else {
+        const traineeData = traineeScheme.parse(data);
+        updateProfilePromise = updateTraineeProfile({
+          ...traineeData,
+          userId: 1,
+          gender: parseInt(traineeData.gender),
+        });
+        setInitialValues(traineeData);
+      }
+
+      await updateProfilePromise;
+      console.log("Profile updated successfully!");
+      setIsEditing(false);
+
+      // Update profile picture if selected
+      // if (selectedFile) {
+      //   await updateUserProfilePicture(1, selectedFile);
+      //   console.log("Profile picture updated successfully!");
+      // }
+    } catch (error) {
+      console.error("Error updating profile or profile picture:", error);
+    }
   }
 
   return (
@@ -92,6 +176,7 @@ export function ProfileForm(props: ProfileFormProps) {
             placeholder="Enter a first name "
             className="flex-1 min-w-[200px]"
             description="This is your first name."
+            disabled={!isEditing}
           />
           <InputFormField
             control={form.control}
@@ -101,6 +186,7 @@ export function ProfileForm(props: ProfileFormProps) {
             placeholder="Enter a last name "
             className="flex-1 min-w-[200px]"
             description="This is your last name."
+            disabled={!isEditing}
           />
         </div>
 
@@ -108,9 +194,10 @@ export function ProfileForm(props: ProfileFormProps) {
           <DatePickerFormField
             control={form.control}
             placeholder="Pick a date"
-            name="dob"
+            name="dateOfBirth"
             description="Your date of birth is used to calculate your age."
             label="Date of birth"
+            disabled={!isEditing}
           />
 
           <SelectFormField
@@ -120,6 +207,7 @@ export function ProfileForm(props: ProfileFormProps) {
             label="Gender"
             placeholder="Select a gender"
             description="You can choose your gender."
+            disabled={!isEditing}
           />
         </div>
 
@@ -134,6 +222,7 @@ export function ProfileForm(props: ProfileFormProps) {
                 min={0}
                 max={300}
                 description="Enter your height in cm."
+                disabled={!isEditing}
               />
               <NumberInputFormField
                 control={form.control}
@@ -143,24 +232,26 @@ export function ProfileForm(props: ProfileFormProps) {
                 max={300}
                 className="flex-1 min-w-[200px]"
                 description="Enter your weight in kg."
+                disabled={!isEditing}
               />
             </div>
 
             <TextareaFormField
               control={form.control}
-              name="medicHistory"
+              name="medicalHistory"
               label="Medical history"
               description="Share a brief summary about your medical history. 
                 This is important for the trainer to design a safe and effective training program."
               placeholder="Tell us a little bit about your medical history"
               className=""
+              disabled={!isEditing}
             />
           </>
         ) : (
           <>
             <PhoneInputFormField
               control={form.control}
-              name="phone"
+              name="contactInfo"
               label="Phone Number"
               placeholder="Enter a phone number"
               description="Enter a phone number"
@@ -169,11 +260,12 @@ export function ProfileForm(props: ProfileFormProps) {
 
             <TextareaFormField
               control={form.control}
-              name="bio"
+              name="biography"
               label="Bio"
               description="Share a brief summary about yourself."
               placeholder="Tell us a little bit about yourself"
               className=""
+              disabled={!isEditing}
             />
           </>
         )}
@@ -183,11 +275,21 @@ export function ProfileForm(props: ProfileFormProps) {
           name={props.isTrainer ? "trainerProfileImage" : "traineeProfileImage"}
           description="You can set your profile image."
           formats=""
-          onFileSelect={setSelectedFile}
+          onFileSelect={handleFileSelection}
+          disabled={!isEditing}
         />
 
-        <Button variant="secondary" type="submit">
-          Update profile
+        {isEditing && (
+          <Button type="submit" className="mr-4" disabled={!hasUnsavedChanges}>
+            Update Profile
+          </Button>
+        )}
+        <Button
+          variant={isEditing ? "outline" : "secondary"}
+          type="button"
+          onClick={toggleEditMode}
+        >
+          {isEditing ? "Cancel" : "Edit"}
         </Button>
       </form>
     </Form>

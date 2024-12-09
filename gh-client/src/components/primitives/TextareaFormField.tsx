@@ -15,6 +15,7 @@ type InputFormFieldProps = {
   label: string;
   display?: string;
   description?: string;
+  disabled?: boolean;
   placeholder?: string;
   className?: string;
 };
@@ -29,7 +30,12 @@ function TextareaFormField(props: InputFormFieldProps) {
           <FormLabel className="">{props.label}</FormLabel>
 
           <FormControl>
-            <Textarea className="" placeholder={props.placeholder} {...field} />
+            <Textarea
+              className=""
+              placeholder={props.placeholder}
+              {...field}
+              disabled={props.disabled}
+            />
           </FormControl>
           {props.description && (
             <FormDescription className="text-xs ml-0.5">

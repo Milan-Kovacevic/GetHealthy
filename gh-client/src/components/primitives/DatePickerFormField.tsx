@@ -24,6 +24,7 @@ type DatePickerFormFieldProps = {
   label: string;
   description?: string;
   placeholder?: string;
+  disabled?: boolean;
   type?: string;
   className?: string;
   onChange?: (e: any, field: any) => void;
@@ -35,12 +36,18 @@ const DatePickerFormField = (props: DatePickerFormFieldProps) => {
       control={props.control}
       name={props.name}
       render={({ field }) => (
-        <FormItem className="flex flex-col flex-1 min-w-[200px]">
+        <FormItem
+          className={cn(
+            "flex flex-col flex-1 min-w-[200px]",
+            props.disabled && "cursor-not-allowed"
+          )}
+        >
           <FormLabel>{props.label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
+                  disabled={props.disabled}
                   variant={"outline"}
                   className={cn(
                     "w-full pl-3 text-left font-normal",
