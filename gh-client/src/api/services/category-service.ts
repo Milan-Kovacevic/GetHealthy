@@ -5,12 +5,12 @@ import { Category } from "../contracts/category-contract";
 const getAllCategories = () => {
   var url = ApiEndpoints.Categories;
 
-  //   return sendAxiosRequest<void, Category[]>({
-  //     method: "GET",
-  //     url: url,
-  //   }).then((response) => {
-  //     return response.data as CategoryDTO[];
-  //   });
+  // return sendAxiosRequest<void, Category[]>({
+  //   method: "GET",
+  //   url: url,
+  // }).then((response) => {
+  //   return response.data as CategoryDTO[];
+  // });
 
   // Mock response for now
   return Promise.resolve<Category[]>([

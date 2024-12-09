@@ -10,12 +10,12 @@ const getPageableUserNotifications = ({ page }: { page: number }) => {
   // TODO: Obtain this information from jwt or session storage...
   var url = ApiEndpoints.UserNotifications.replace("{userId}", userId);
   url += `?page=${page}&pageSize=${pageSize}`;
-  //   return sendAxiosRequest<void, PageableNotifications>({
-  //     method: "GET",
-  //     url: url,
-  //   }).then((response) => {
-  //     return response.data as PageableNotificationsDTO;
-  //   });
+  // return sendAxiosRequest<void, PageableNotifications>({
+  //   method: "GET",
+  //   url: url,
+  // }).then((response) => {
+  //   return response.data as PageableNotificationsDTO;
+  // });
 
   // Mock response for now
   return Promise.resolve<PageableNotificationsDTO>({

@@ -20,14 +20,9 @@ public class ApplicationConfig {
         return mapper;
     }
 
-
-    /// TODO: ???
-    @Configuration
-    public class JsonConfiguration {
-        @Bean
-        public Module hibernateModule() {
-            return new Hibernate5Module();
-        }
+    @Bean
+    public Module hibernateModule() {
+        return new Hibernate5Module();
     }
 
 }

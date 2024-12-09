@@ -25,11 +25,11 @@ public class TrainingProgramApplicationController  {
 
     private final TrainingProgramApplicationService trainingProgramApplicationService;
 
-    @GetMapping("/training-programs/{programId}/applications") // TODO: ???
-    @ResponseStatus(HttpStatus.OK)
-    public List<TrainingProgramApplicationResponse> getAllApplicationsForTrainingProgram(@PathVariable(name = "programId") Integer programId) {
-        return trainingProgramApplicationService.getAllApplicationsForTrainingProgram(programId);
-    }
+//    @GetMapping("/training-programs/{programId}/applications") // TODO: ??? Ne treba
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<TrainingProgramApplicationResponse> getAllApplicationsForTrainingProgram(@PathVariable(name = "programId") Integer programId) {
+//        return trainingProgramApplicationService.getAllApplicationsForTrainingProgram(programId);
+//    }
 
     @GetMapping("/users/{userId}/applications")
     @ResponseStatus(HttpStatus.OK)
@@ -41,16 +41,16 @@ public class TrainingProgramApplicationController  {
             return trainingProgramApplicationService.getAllApplicationsForTrainerFiltered(userId, filter, page);
     }
 
-    @GetMapping("/{userId}/{programId}") // TODO: ???
-    @ResponseStatus(HttpStatus.OK)
-    public SingleTrainingProgramApplicationResponse getTrainingProgramApplication(
-            @PathVariable(name = "userId") Integer userId,
-            @PathVariable(name = "programId") Integer programId) {
-        TrainingProgramApplicationId id = new TrainingProgramApplicationId();
-        id.setUserId(userId);
-        id.setProgramId(programId);
-        return trainingProgramApplicationService.getProgramApplication(id);
-    }
+//    @GetMapping("/users/{userId}/programs/{programId}/application") // TODO: ???
+//    @ResponseStatus(HttpStatus.OK)
+//    public SingleTrainingProgramApplicationResponse getTrainingProgramApplication(
+//            @PathVariable(name = "userId") Integer userId,
+//            @PathVariable(name = "programId") Integer programId) {
+//        TrainingProgramApplicationId id = new TrainingProgramApplicationId();
+//        id.setUserId(userId);
+//        id.setProgramId(programId);
+//        return trainingProgramApplicationService.getProgramApplication(id);
+//    }
 
     @PostMapping("/training-program-applications")
     @ResponseStatus(HttpStatus.CREATED)
@@ -58,9 +58,9 @@ public class TrainingProgramApplicationController  {
         return trainingProgramApplicationService.insertTrainingProgramApplication(request);
     }
 
-    @PostMapping("/{userId}/{programId}/process") // TODO: ???
+    @PostMapping("/training-program-applications/process") // TODO: ???
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void processTrainingProgramApplication( @PathVariable Integer userId,
+    public void processTrainingProgramApplication( @PathVariable Integer userId, // U request body
                                                    @PathVariable Integer programId,
                                                    @RequestBody @Valid TrainingProgramApplicationProcessRequest request) {
         TrainingProgramApplicationId id = new TrainingProgramApplicationId();
@@ -69,10 +69,10 @@ public class TrainingProgramApplicationController  {
         trainingProgramApplicationService.processTrainingProgramApplication(id, request);
     }
 
-    @PostMapping("/{userId}/{programId}/mark-read") // TODO: ???
+    @PostMapping("/training-program-applications/mark-read") // TODO: ???
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void markTrainingProgramApplicationAsRead(
-            @PathVariable Integer userId,
+            @PathVariable Integer userId, // U request body
             @PathVariable Integer programId) {
         TrainingProgramApplicationId id = new TrainingProgramApplicationId();
         id.setUserId(userId);
