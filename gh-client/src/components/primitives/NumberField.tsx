@@ -10,6 +10,7 @@ type NumberFieldProps = {
   min?: number;
   max?: number;
   step?: number;
+  disabled?: boolean;
 };
 
 export const NumberField: React.FC<NumberFieldProps> = ({
@@ -19,25 +20,26 @@ export const NumberField: React.FC<NumberFieldProps> = ({
   min = Number.MIN_SAFE_INTEGER,
   max = Number.MAX_SAFE_INTEGER,
   step = 1,
+  disabled,
 }) => {
-  const [internalValue, setInternalValue] = useState<number>(value);
+  // const [internalValue, setInternalValue] = useState<number>(value);
 
   const handleIncrement = () => {
-    const newValue = Math.min(internalValue + step, max);
-    setInternalValue(newValue);
+    const newValue = Math.min(value + step, max);
+    // setInternalValue(newValue);
     onChange?.(newValue);
   };
 
   const handleDecrement = () => {
-    const newValue = Math.max(internalValue - step, min);
-    setInternalValue(newValue);
+    const newValue = Math.max(value - step, min);
+    // setInternalValue(newValue);
     onChange?.(newValue);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = parseFloat(e.target.value);
     if (!isNaN(inputValue) && inputValue >= min && inputValue <= max) {
-      setInternalValue(inputValue);
+      // setInternalValue(inputValue);
       onChange?.(inputValue);
     }
   };
@@ -55,16 +57,18 @@ export const NumberField: React.FC<NumberFieldProps> = ({
         onClick={handleDecrement}
         className={clsx(
           "absolute left-0 p-3 top-1/2 -translate-y-1/2 disabled:cursor-not-allowed disabled:opacity-20",
-          internalValue <= min && "disabled"
+          value <= min && "disabled"
         )}
+        disabled={disabled}
       >
         <Minus className="h-4 w-4" />
       </button>
 
       <input
+        disabled={disabled}
         type="number"
         data-slot="input"
-        value={internalValue}
+        value={value}
         onChange={handleInputChange}
         className="flex h-10 w-full rounded-md border border-input bg-background py-2 text-sm text-center ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance]:textfield"
       />
@@ -75,8 +79,9 @@ export const NumberField: React.FC<NumberFieldProps> = ({
         onClick={handleIncrement}
         className={clsx(
           "absolute right-0 p-3 top-1/2 -translate-y-1/2 disabled:cursor-not-allowed disabled:opacity-20",
-          internalValue >= max && "disabled"
+          value >= max && "disabled"
         )}
+        disabled={disabled}
       >
         <Plus className="h-4 w-4" />
       </button>

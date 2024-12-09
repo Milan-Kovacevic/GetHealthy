@@ -19,6 +19,7 @@ type NumberInputFormFieldProps = {
   min?: number;
   max?: number;
   step?: number;
+  disabled?: boolean;
 };
 
 const NumberInputFormField = (props: NumberInputFormFieldProps) => {
@@ -37,6 +38,7 @@ const NumberInputFormField = (props: NumberInputFormFieldProps) => {
               max={props.max ?? 100}
               step={props.step ?? 1}
               className="mt-2"
+              disabled={props.disabled}
             />
           </FormControl>
           {props.description && (
