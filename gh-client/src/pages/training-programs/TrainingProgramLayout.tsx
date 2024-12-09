@@ -19,7 +19,7 @@ import { TrainingProgramsLoader } from "./components/TrainingProgramsLoaders";
 import { useNavigate } from "react-router-dom";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
 import { Category } from "@/entities/Category";
-import { getPageableTrainingPrograms } from "@/api/services/traning-program-service";
+import { getPageableTrainingPrograms } from "@/api/services/training-program-service";
 import { TrainingProgramDTO } from "@/api/models/training-program";
 
 type TrainingProgramLayoutProps = {

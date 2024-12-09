@@ -25,7 +25,7 @@ public class TrainingProgramApplicationController  {
 
     private final TrainingProgramApplicationService trainingProgramApplicationService;
 
-    @GetMapping("/training-programs/{programId}/applications")
+    @GetMapping("/training-programs/{programId}/applications") // TODO: ???
     @ResponseStatus(HttpStatus.OK)
     public List<TrainingProgramApplicationResponse> getAllApplicationsForTrainingProgram(@PathVariable(name = "programId") Integer programId) {
         return trainingProgramApplicationService.getAllApplicationsForTrainingProgram(programId);
@@ -34,19 +34,14 @@ public class TrainingProgramApplicationController  {
     @GetMapping("/users/{userId}/applications")
     @ResponseStatus(HttpStatus.OK)
     public Page<TrainingProgramApplicationResponse> getAllApplicationsForTrainer(@RequestParam(name = "filter", required = false, defaultValue = "") String filter,
-                                                                                 @PathVariable(name = "userId") Integer userId, Pageable page, Authentication auth) {
-        if (auth == null)
-            throw new UnauthorizedException();
-        /*JWTUser jwtUser = (JWTUser) auth.getPrincipal();
-        if (!jwtUser.getUserId().equals(userId))
-            throw new ForbiddenException();*/
+                                                                                 @PathVariable(name = "userId") Integer userId, Pageable page) {
         if ("".equals(filter))
             return trainingProgramApplicationService.getAllApplicationsForTrainer(userId, page);
         else
             return trainingProgramApplicationService.getAllApplicationsForTrainerFiltered(userId, filter, page);
     }
 
-    @GetMapping("/{userId}/{programId}")
+    @GetMapping("/{userId}/{programId}") // TODO: ???
     @ResponseStatus(HttpStatus.OK)
     public SingleTrainingProgramApplicationResponse getTrainingProgramApplication(
             @PathVariable(name = "userId") Integer userId,
@@ -59,16 +54,11 @@ public class TrainingProgramApplicationController  {
 
     @PostMapping("/training-program-applications")
     @ResponseStatus(HttpStatus.CREATED)
-    public TrainingProgramApplicationResponse addTrainingProgramApplication(@RequestBody @Valid TrainingProgramApplicationRequest request, Authentication auth) {
-        if (auth == null)
-            throw new UnauthorizedException();
-        /*JWTUser jwtUser = (JWTUser) auth.getPrincipal();
-        if (!jwtUser.getUserId().equals(request.getTraineeId()))
-            throw new ForbiddenException();*/
+    public TrainingProgramApplicationResponse addTrainingProgramApplication(@RequestBody @Valid TrainingProgramApplicationRequest request) {
         return trainingProgramApplicationService.insertTrainingProgramApplication(request);
     }
 
-    @PostMapping("/{userId}/{programId}/process")
+    @PostMapping("/{userId}/{programId}/process") // TODO: ???
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void processTrainingProgramApplication( @PathVariable Integer userId,
                                                    @PathVariable Integer programId,
@@ -79,7 +69,7 @@ public class TrainingProgramApplicationController  {
         trainingProgramApplicationService.processTrainingProgramApplication(id, request);
     }
 
-    @PostMapping("/{userId}/{programId}/mark-read")
+    @PostMapping("/{userId}/{programId}/mark-read") // TODO: ???
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void markTrainingProgramApplicationAsRead(
             @PathVariable Integer userId,

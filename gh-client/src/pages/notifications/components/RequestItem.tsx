@@ -1,17 +1,10 @@
+import { ProgramRequestDTO } from "@/api/models/program-request";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CheckIcon, XIcon } from "lucide-react";
 
-type Request = {
-  id: number;
-  name: string;
-  avatar: string;
-  message: string;
-  time: string;
-};
-
 type RequestItemProps = {
-  request: Request;
+  request: ProgramRequestDTO;
 };
 
 export default function RequestItem(props: RequestItemProps) {
@@ -19,18 +12,20 @@ export default function RequestItem(props: RequestItemProps) {
   return (
     <div className="flex items-center space-x-3.5 p-2" key={request.id}>
       <Avatar className="self-start mt-1.5">
-        <AvatarImage src={request.avatar} alt={request.name} />
+        <AvatarImage src="" alt={request.traineeFirstName} />
         <AvatarFallback>
-          {request.name
-            .split(" ")
-            .map((n) => n[0])
-            .join("")}
+          {request.traineeFirstName[0]}
+          {request.traineeLastName[0]}
         </AvatarFallback>
       </Avatar>
       <div className="flex-1 space-y-1">
-        <p className="text-sm font-medium">{request.name}</p>
-        <p className="text-xs text-muted-foreground">{request.message}</p>
-        <p className="text-xs text-muted-foreground">{request.time}</p>
+        <p className="text-sm font-medium">
+          {request.traineeFirstName} {request.traineeLastName}
+        </p>
+        <p className="text-xs text-muted-foreground">{request.note}</p>
+        <p className="text-xs text-muted-foreground">
+          {request.submissionDate}
+        </p>
       </div>
       <div className="flex space-x-2 self-end">
         <Button size="icon" variant="ghost" className="h-8 w-8">

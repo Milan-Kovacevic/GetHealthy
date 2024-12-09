@@ -22,4 +22,5 @@ export const ApiEndpoints = {
   UserNotifications: `${API_PREFIX}/users/{userId}/notifications`,
   Categories: `${API_PREFIX}/categories`,
   TrainingPrograms: `${API_PREFIX}/training-programs`,
+  TrainerProgramApplications: `${API_PREFIX}/users/{userId}/applications`,
 };
