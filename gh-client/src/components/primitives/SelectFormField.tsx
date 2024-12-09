@@ -21,6 +21,7 @@ type SelectFormFieldProps = {
   label: string;
   display?: string;
   description?: string;
+  disabled?: boolean;
   placeholder?: string;
   options: { label: string; value: string }[];
   className?: string;
@@ -35,13 +36,18 @@ function SelectFormField(props: SelectFormFieldProps) {
       render={({ field }) => (
         <FormItem
           className={cn(
-            " flex flex-col flex-1 min-w-[200px] w-full ",
-            props.className
+            "flex flex-col flex-1 min-w-[200px] w-full ",
+            props.className,
+            props.disabled && "cursor-not-allowed"
           )}
         >
           <FormLabel>{props.label}</FormLabel>
 
-          <Select onValueChange={field.onChange} value={field.value || ""}>
+          <Select
+            onValueChange={field.onChange}
+            value={field.value || ""}
+            disabled={props.disabled}
+          >
             <FormControl>
               <SelectTrigger className="w-full">
                 {props.options.find((option) => option.value === field.value)

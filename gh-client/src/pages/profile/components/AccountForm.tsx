@@ -6,11 +6,11 @@ import { z } from "zod";
 
 import InputFormField from "@/components/primitives/InputFormField";
 import { Button } from "@/components/ui/button";
-import { Form, FormLabel } from "@/components/ui/form";
-import { useState } from "react";
+import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
 
 const emailSchema = z.object({
   email: z.string().email("Invalid email address"),

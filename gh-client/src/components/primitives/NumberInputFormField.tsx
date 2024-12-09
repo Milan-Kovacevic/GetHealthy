@@ -6,34 +6,38 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { NumberField } from "./NumberField";
 import { cn } from "@/lib/utils";
-import { Textarea } from "../ui/textarea";
 
-type InputFormFieldProps = {
+type NumberInputFormFieldProps = {
   control: any;
   name: string;
   label: string;
-  display?: string;
   description?: string;
-  disabled?: boolean;
   placeholder?: string;
   className?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  disabled?: boolean;
 };
 
-function TextareaFormField(props: InputFormFieldProps) {
+const NumberInputFormField = (props: NumberInputFormFieldProps) => {
   return (
     <FormField
-      control={props.control}
       name={props.name}
-      render={({ field }) => (
-        <FormItem className={cn("w-full space-y-0.5", props.className)}>
-          <FormLabel className="">{props.label}</FormLabel>
-
+      control={props.control}
+      render={({ field: { onChange, value } }) => (
+        <FormItem className={cn("", props.className)}>
+          <FormLabel>{props.label}</FormLabel>
           <FormControl>
-            <Textarea
-              className=""
-              placeholder={props.placeholder}
-              {...field}
+            <NumberField
+              value={value}
+              onChange={onChange}
+              min={props.min ?? 0}
+              max={props.max ?? 100}
+              step={props.step ?? 1}
+              className="mt-2"
               disabled={props.disabled}
             />
           </FormControl>
@@ -47,6 +51,6 @@ function TextareaFormField(props: InputFormFieldProps) {
       )}
     />
   );
-}
+};
 
-export default TextareaFormField;
+export default NumberInputFormField;
