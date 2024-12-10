@@ -1,24 +1,24 @@
 import { sendAxiosRequest } from "./base-service";
-import { PageableNotifications } from "../contracts/notification-contract";
+import { PageableNotificationsDTO } from "../contracts/notification-contract";
 import { ApiEndpoints } from "@/utils/constants";
-import { PageableNotificationsDTO } from "../models/notification";
+import { PageableNotifications } from "../models/notification";
 
 const pageSize = 10;
 
-const getPageableUserNotifications = ({ page }: { page: number }) => {
+const getPageableUserNotifications = async ({ page }: { page: number }) => {
   const userId = "1"; // Hardcoded for now
   // TODO: Obtain this information from jwt or session storage...
   var url = ApiEndpoints.UserNotifications.replace("{userId}", userId);
   url += `?page=${page}&pageSize=${pageSize}`;
-  // return sendAxiosRequest<void, PageableNotifications>({
+  // return sendAxiosRequest<void, PageableNotificationsDTO>({
   //   method: "GET",
   //   url: url,
   // }).then((response) => {
-  //   return response.data as PageableNotificationsDTO;
+  //   return response.data as PageableNotifications;
   // });
 
   // Mock response for now
-  return Promise.resolve<PageableNotificationsDTO>({
+  return Promise.resolve<PageableNotifications>({
     content: [
       {
         id: 1,

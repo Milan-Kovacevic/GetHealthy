@@ -25,4 +25,7 @@ export const ApiEndpoints = {
   TrainerProgramApplications: `${API_PREFIX}/users/{userId}/applications`,
   UserAccounts: `${API_PREFIX}/accounts`,
   Users: `${API_PREFIX}/users`,
+  TrainingProgramComments: `${API_PREFIX}/training-programs/{programId}/comments`,
+  TrainingProgramRatings: `${API_PREFIX}/training-programs/{programId}/ratings`,
+  TrainingProgramUserRating: `${API_PREFIX}/training-programs/{programId}/user-ratings/{userId}`,
 };

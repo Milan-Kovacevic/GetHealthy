@@ -59,7 +59,7 @@ const Navbar = () => {
   const trainingProgramSubMenuItems: NavbarSubMenuItem[] = [
     {
       title: "Overview",
-      description: "Browse training plans",
+      description: "Browse training programs",
       icon: <LayoutListIcon className="size-5 shrink-0 mt-1" />,
       link: "/programs",
     },
@@ -155,7 +155,10 @@ const DesktopNavbar = ({
                   );
                 } else {
                   return (
-                    <NavigationMenuItem className="text-muted-foreground">
+                    <NavigationMenuItem
+                      key={"nav-bar_" + index}
+                      className="text-muted-foreground"
+                    >
                       <NavigationMenuTrigger>
                         <span>{item.title}</span>
                       </NavigationMenuTrigger>
@@ -281,14 +284,18 @@ const MobileNavbar = ({
                     );
                   } else {
                     return (
-                      <AccordionItem value="products" className="border-b-0">
+                      <AccordionItem
+                        key={"mobile-nav-bar_" + index}
+                        value="products"
+                        className="border-b-0"
+                      >
                         <AccordionTrigger className="py-0 font-semibold hover:no-underline">
                           {item.title}
                         </AccordionTrigger>
                         <AccordionContent className="mt-2 space-y-1">
                           {item.submenu.map((item, idx) => (
                             <Link
-                              key={idx}
+                              key={"mobile-nav-bar_" + index + "_" + idx}
                               className={cn(
                                 "flex select-none gap-4 rounded-md p-3 leading-none outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                               )}

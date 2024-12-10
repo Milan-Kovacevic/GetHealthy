@@ -12,7 +12,7 @@ import NotFoundPage from "@/pages/not-found/NotFoundPage";
 import ProfilePageLayout from "@/pages/profile/ProfilePageLayout";
 import ProgramTrainerInfo from "@/pages/program-details/components/ProgramTrainerInfo";
 import TrainingProgramDetails from "@/pages/program-details/components/TrainingProgramDetails";
-import TrainingProgramReviews from "@/pages/program-details/components/TrainingProgramReviews";
+import TrainingProgramReviews from "@/pages/program-details/components/reviews/TrainingProgramReviews";
 import TrainingProgramTrainees from "@/pages/program-details/components/TrainingProgramTrainees";
 import RegisterPage from "@/pages/register/RegisterPage";
 import { ManageTrainingProgramsPage } from "@/pages/training-programs/ManageTrainingProgramsPage";

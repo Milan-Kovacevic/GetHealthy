@@ -4,21 +4,21 @@ import { useState } from "react";
 import { Star } from "lucide-react";
 
 interface StarRatingProps {
-  initialRating?: number;
+  rating: number;
   maxRating?: number;
   onRatingChange?: (rating: number) => void;
+  readonly?: boolean;
 }
 
 export default function StarRating({
-  initialRating = 0,
+  rating,
   maxRating = 5,
   onRatingChange,
+  readonly = false,
 }: StarRatingProps) {
-  const [rating, setRating] = useState(initialRating);
   const [hover, setHover] = useState(0);
 
   const handleRatingChange = (newRating: number) => {
-    setRating(newRating);
     if (onRatingChange) {
       onRatingChange(newRating);
     }
@@ -34,6 +34,7 @@ export default function StarRating({
         return (
           <button
             key={index}
+            disabled={readonly}
             className="p-px focus:outline-none focus:ring-2 focus:ring-blue-300 rounded"
             onClick={() => handleRatingChange(starValue)}
             onMouseEnter={() => setHover(starValue)}

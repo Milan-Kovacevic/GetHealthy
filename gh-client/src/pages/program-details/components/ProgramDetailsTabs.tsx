@@ -1,5 +1,3 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -20,13 +18,13 @@ export default function ProgramDetailsTabs({
 }: ProgramDetailsTabsProps) {
   const location = useLocation();
   const { pathname } = location;
-  console.log(pathname);
 
   return (
-    <div className="flex flex-col overflow-y-hidden">
+    <div className="flex flex-col overflow-y-hidden flex-1">
       <div className="flex md:flex-row flex-col relative">
-        {programDetailRoutes.map((item) => (
+        {programDetailRoutes.map((item, index) => (
           <Link
+            key={`link-${index}`}
             to={item.path}
             className={cn(
               "py-3 px-6 font-medium border-b z-10",
@@ -39,9 +37,8 @@ export default function ProgramDetailsTabs({
         ))}
         <span className="w-full h-0.5 bottom-0 z-0 bg-border absolute" />
       </div>
-      <ScrollArea className="flex-1">
-        <div className="">{children}</div>
-      </ScrollArea>
+
+      {children}
     </div>
   );
 }

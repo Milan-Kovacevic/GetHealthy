@@ -1,7 +1,6 @@
-import React from "react";
 import programImg from "@/assets/program-example.png";
 import { Badge } from "@/components/ui/badge";
-import { UserPlus, UserX, UserXIcon } from "lucide-react";
+import { UserPlus, UserXIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StarRating from "@/components/primitives/StarRating";
 
@@ -40,7 +39,7 @@ export default function TrainingProgramInfo() {
 
           <div className="flex flex-col items-end">
             <p className="text-xs mb-0.5">10 reviews</p>
-            <StarRating />
+            <StarRating readonly={true} rating={3} />
           </div>
         </div>
 

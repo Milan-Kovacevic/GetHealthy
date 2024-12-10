@@ -1,15 +1,16 @@
 import { ApiEndpoints } from "@/utils/constants";
 import { sendAxiosRequest } from "./base-service";
-import { Category } from "../contracts/category-contract";
+import { CategoryDTO } from "../contracts/category-contract";
+import { Category } from "../models/category";
 
-const getAllCategories = () => {
+const getAllCategories = async () => {
   var url = ApiEndpoints.Categories;
 
-  // return sendAxiosRequest<void, Category[]>({
+  // return sendAxiosRequest<void, CategoryDTO[]>({
   //   method: "GET",
   //   url: url,
   // }).then((response) => {
-  //   return response.data as CategoryDTO[];
+  //   return response.data as Category[];
   // });
 
   // Mock response for now

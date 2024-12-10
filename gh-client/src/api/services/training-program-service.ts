@@ -1,13 +1,13 @@
 import { ApiEndpoints } from "@/utils/constants";
-import { CategoryDTO } from "../models/category";
+import { Category } from "../models/category";
 import { sendAxiosRequest } from "./base-service";
-import { PageableTrainingPrograms } from "../contracts/training-program-contract";
-import { PageableTrainingProgramsDTO } from "../models/training-program";
+import { PageableTrainingProgramsDTO } from "../contracts/training-program-contract";
+import { PageableTrainingPrograms } from "../models/training-program";
 
 const getPageableTrainingPrograms = (
   searchString: string = "",
   page: number = 0,
-  categories: CategoryDTO[] = [],
+  categories: Category[] = [],
   difficulty: number = 0,
   ratingRange: number[] = [0.0, 5.0],
   participantsRange: number[] = [0, 1000],
@@ -24,12 +24,12 @@ const getPageableTrainingPrograms = (
     participantsRange[1]
   }&difficulty=${difficulty}`;
 
-  return sendAxiosRequest<void, PageableTrainingPrograms>({
+  return sendAxiosRequest<void, PageableTrainingProgramsDTO>({
     method: "GET",
     url: url,
   }).then((response) => {
     // Perform neccessary mappings etc...
-    return response.data as PageableTrainingProgramsDTO;
+    return response.data as PageableTrainingPrograms;
   });
 };
 

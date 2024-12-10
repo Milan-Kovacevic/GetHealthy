@@ -1,11 +1,11 @@
-import { UserAccount } from "./UserAccount";
+// import { UserAccount } from "./UserAccount";
 
-export type User = {
-  id: number;
-  userAccount?: UserAccount;
-  dateOfBirth: string;
-  firstName: string;
-  lastName: string;
-  gender: number;
-  profilePicturePath?: string;
-};
+// export type User = {
+//   id: number;
+//   userAccount?: UserAccount;
+//   dateOfBirth: string;
+//   firstName: string;
+//   lastName: string;
+//   gender: number;
+//   profilePicturePath?: string;
+// };

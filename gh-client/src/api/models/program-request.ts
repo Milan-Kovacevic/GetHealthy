@@ -12,4 +12,4 @@ export type ProgramRequest = {
   traineeGender: number;
 };
 
-export type PageableProgramRequest = Page<ProgramRequest>;
+export type PageableProgramRequests = Page<ProgramRequest>;

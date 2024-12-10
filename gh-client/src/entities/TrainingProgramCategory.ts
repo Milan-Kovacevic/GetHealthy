@@ -1,6 +1,6 @@
-import { Category } from "./Category"
+// import { Category } from "./Category"
 
-export type TrainingProgramCategory = 
-{
-    category:Category;
-}
+// export type TrainingProgramCategory =
+// {
+//     category:Category;
+// }

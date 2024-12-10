@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 export default function ProgramDetailsLayout() {
   return (
-    <div className="flex flex-col container mx-auto">
+    <div className="flex flex-col container mx-auto h-full">
       <TrainingProgramInfo />
       <ProgramDetailsTabs>
         <Outlet />
