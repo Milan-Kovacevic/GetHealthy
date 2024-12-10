@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
 import { Category } from "@/entities/Category";
 import { getPageableTrainingPrograms } from "@/api/services/training-program-service";
-import { TrainingProgramDTO } from "@/api/models/training-program";
+import { TrainingProgram } from "@/api/models/training-program";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -39,7 +39,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   const [totalPages, setTotalPages] = useState(1);
 
   const [myTrainingPrograms, setMyTrainingPrograms] = useState(false);
-  const [programs, setPrograms] = useState<TrainingProgramDTO[]>([]);
+  const [programs, setPrograms] = useState<TrainingProgram[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchString, setSearchString] = useState("");
 
@@ -53,7 +53,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
 
   useEffect(() => {
     async function fetchTP() {
-      const data = await getPageableTrainingPrograms(); //service.getPage();
+      const data = await getPageableTrainingPrograms();
       setPrograms(data.content);
     }
     // Mocked for now...

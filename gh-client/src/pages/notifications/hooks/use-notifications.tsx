@@ -1,4 +1,4 @@
-import { NotificationDTO } from "@/api/models/notification";
+import { Notification } from "@/api/models/notification";
 import {
   deleteUserNotification,
   getPageableUserNotifications,
@@ -21,7 +21,7 @@ export function useNotifications() {
     onPageChange: onNotificationPageChange,
     page: notificationsPage,
     setPage: setNotificationsPage,
-  } = usePagination<NotificationDTO>({
+  } = usePagination<Notification>({
     fetchData: (state) => {
       return getPageableUserNotifications({
         page: state.page,

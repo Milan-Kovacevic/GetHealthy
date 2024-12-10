@@ -1,4 +1,4 @@
-import { ProgramRequestDTO } from "@/api/models/program-request";
+import { ProgramRequest } from "@/api/models/program-request";
 import { getPageableTrainingProgramApplications } from "@/api/services/program-application-service";
 import { usePagination } from "@/hooks/use-pagination";
 import { useState } from "react";
@@ -15,7 +15,7 @@ export function useProgramRequests() {
     onPageChange: onRequestPageChange,
     page: requestsPage,
     setPage: setRequestsPage,
-  } = usePagination<ProgramRequestDTO>({
+  } = usePagination<ProgramRequest>({
     fetchData: (state) => {
       return getPageableTrainingProgramApplications("", state.page);
     },

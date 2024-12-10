@@ -29,6 +29,8 @@ export default function NotificationsPopover({
     isLoadingRequests,
     onRequestPageChange,
     pending: pendingRequests,
+    onRequestApprove,
+    onRequestReject,
   } = useProgramRequests();
 
   const {
@@ -78,6 +80,8 @@ export default function NotificationsPopover({
               isLoading={isLoadingRequests}
               hasMore={hasMoreRequests}
               onPageChange={onRequestPageChange}
+              onAcceptRequest={onRequestApprove}
+              onRejectRequest={onRequestReject}
             />
           )}
         </TabsContent>
@@ -87,7 +91,10 @@ export default function NotificationsPopover({
 
   const TraineeView = () => (
     <>
-      <NotificationTitle showMarkAll={true} onMarkAll={onMarkAllAsRead} />
+      <div className="flex items-center justify-between mb-2 mx-4 h-8">
+        <NotificationTitle showMarkAll={true} onMarkAll={onMarkAllAsRead} />
+      </div>
+
       <NotificationList
         notifications={notifications}
         isLoading={isLoadingNotifications}

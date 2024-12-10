@@ -1,14 +1,11 @@
-import { NotificationDTO } from "@/api/models/notification";
-import { getPageableUserNotifications } from "@/api/services/notification-service";
-import { useEffect, useState } from "react";
+import { Notification } from "@/api/models/notification";
 import NotificationItem from "./NotificationItem";
-// import InfiniteScroll from "react-infinite-scroll-component";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import InfiniteScroll from "@/components/ui/infnite-scroll";
 import { Loader2Icon } from "lucide-react";
 
 type NotificationListProps = {
-  notifications: NotificationDTO[];
+  notifications: Notification[];
   isLoading: boolean;
   hasMore: boolean;
   onPageChange: () => void;
@@ -33,6 +30,13 @@ export default function NotificationList(props: NotificationListProps) {
     <ScrollArea className="w-full overflow-y-auto pl-5 pr-4 mr-3">
       <div className="h-[300px]">
         <div className="flex w-full flex-col items-center">
+          {!isLoading && notifications.length == 0 && (
+            <div className="self-start mt-2">
+              <p className="text-muted-foreground text-sm italic">
+                There are no notifications to show now ...
+              </p>
+            </div>
+          )}
           {unreadNotifications.length > 0 && (
             <div className="mb-4 w-full">
               <h3 className="text-sm font-medium text-foreground/70 mb-1.5">

@@ -1,6 +1,6 @@
 import { Page } from "./pageable-contract";
 
-export type Notification = {
+export type NotificationDTO = {
   id: number;
   markRead: boolean;
   metadata: string;
@@ -17,4 +17,4 @@ export type NotificationType =
   | "PROGRAM_ADDED_ON_SCHEDULE"
   | "PROGRAM_REMOVED_FROM_SCHEDULE";
 
-export type PageableNotifications = Page<Notification>;
+export type PageableNotificationsDTO = Page<Notification>;

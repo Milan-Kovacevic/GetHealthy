@@ -33,7 +33,7 @@ export function usePagination<TData>(props: UsePaginationProps<TData>) {
         setData((prev) => [...prev, ...response.content]);
         setPage((prev) => prev + 1);
 
-        if (data.length > 10) {
+        if (data.length > 10 || response.content.length == 0) {
           setHasMore(false);
         }
       })

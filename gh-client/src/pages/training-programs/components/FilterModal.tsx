@@ -14,8 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import CategoryService, { Category } from "@/api/services/CategoryService";
 import { FilterIcon } from "lucide-react";
+import { Category } from "@/api/models/category";
+import { getAllCategories } from "@/api/services/category-service";
 
 type FilterProps = {
   setData: any;
@@ -28,8 +29,7 @@ export default function FilterModal(props: FilterProps) {
 
   useEffect(() => {
     async function fetchCategories() {
-      let categoryService = new CategoryService();
-      const data = await categoryService.get();
+      const data = await getAllCategories();
       setCategories(data);
     }
     fetchCategories();
@@ -59,8 +59,8 @@ export default function FilterModal(props: FilterProps) {
             <SelectContent>
               {categories.map((category) => {
                 return (
-                  <SelectItem key={category.id} value={category.title}>
-                    {category.title}
+                  <SelectItem key={category.id} value={category.categoryName}>
+                    {category.categoryName}
                   </SelectItem>
                 );
               })}

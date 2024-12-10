@@ -4,26 +4,46 @@ import RequestItem from "./RequestItem";
 import { Separator } from "@/components/ui/separator";
 import InfiniteScroll from "@/components/ui/infnite-scroll";
 import { Loader2Icon } from "lucide-react";
-import { ProgramRequestDTO } from "@/api/models/program-request";
+import { ProgramRequest } from "@/api/models/program-request";
 
 type RequestListProps = {
-  requests: ProgramRequestDTO[];
+  requests: ProgramRequest[];
   isLoading: boolean;
   hasMore: boolean;
   onPageChange: () => void;
+  onAcceptRequest: (id: number) => void;
+  onRejectRequest: (id: number) => void;
 };
 
 export default function RequestList(props: RequestListProps) {
-  const { requests, isLoading, hasMore, onPageChange } = props;
+  const {
+    requests,
+    isLoading,
+    hasMore,
+    onPageChange,
+    onAcceptRequest,
+    onRejectRequest,
+  } = props;
 
   return (
     <ScrollArea className="w-full overflow-y-auto pl-5 pr-4 mr-3">
       <div className="h-[300px]">
         <div className="flex w-full flex-col items-center">
+          {!isLoading && requests.length == 0 && (
+            <div className="self-start mt-2">
+              <p className="text-muted-foreground text-sm italic">
+                There are no requests to show now ...
+              </p>
+            </div>
+          )}
           <div className="space-y-2">
             {requests.map((request, index) => (
               <React.Fragment key={request.id}>
-                <RequestItem request={request} />
+                <RequestItem
+                  onAccept={onAcceptRequest}
+                  onReject={onRejectRequest}
+                  request={request}
+                />
                 {index < requests.length - 1 && <Separator />}
               </React.Fragment>
             ))}

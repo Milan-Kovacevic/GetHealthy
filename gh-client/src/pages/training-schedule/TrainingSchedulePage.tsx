@@ -1,26 +1,17 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   addDays,
   format,
-  getDay,
-  getDayOfYear,
   isPast,
   isSameDay,
   isWithinInterval,
   startOfWeek,
 } from "date-fns";
 import { useEffect, useState } from "react";
-import TrainingProgramCard from "./components/TrainingProgramCard";
-import { CalendarIcon, PlusIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
 import AddProgramToScheduleModal from "./components/AddProgramToScheduleModal";
 import { useNavigate } from "react-router-dom";
 import ProgramScheduleDay from "./components/ProgramScheduleDay";
-import {
-  CircleBackgroundBlob,
-  TopBackgroundBlob,
-} from "../shared/BackgroundBlobs";
+import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
 
 export interface TrainingProgram {
   id: number;

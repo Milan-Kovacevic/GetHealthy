@@ -1,4 +1,4 @@
-export type User = {
+export type UserDTO = {
   userId: number;
   firstName: string;
   lastName: string;
@@ -7,12 +7,12 @@ export type User = {
   profilePictureFilePath?: string;
 };
 
-export type Trainer = User & {
+export type TrainerDTO = UserDTO & {
   biography: string;
   contactInfo: string;
 };
 
-export type Trainee = User & {
+export type TraineeDTO = UserDTO & {
   height: number;
   weight: number;
   medicalHistory: string;

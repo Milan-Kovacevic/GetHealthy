@@ -1,7 +1,7 @@
 import { Page } from "../contracts/pageable-contract";
-import { CategoryDTO } from "./category";
+import { Category } from "./category";
 
-export type TrainingProgramDTO = {
+export type TrainingProgram = {
   id: number;
   name: string;
   difficulty: number;
@@ -9,12 +9,12 @@ export type TrainingProgramDTO = {
   description: string;
   requirements: string;
   createdAt: string;
-  categories: CategoryDTO[];
+  categories: Category[];
   rating: number;
-  user: ProgramTrainerDTO;
+  user: ProgramTrainer;
 };
 
-export type ProgramTrainerDTO = {
+export type ProgramTrainer = {
   id: number;
   firstName: string;
   lastName: string;
@@ -24,4 +24,4 @@ export type ProgramTrainerDTO = {
   /// ??? Only basic info ...
 };
 
-export type PageableTrainingProgramsDTO = Page<TrainingProgramDTO>;
+export type PageableTrainingPrograms = Page<TrainingProgram>;

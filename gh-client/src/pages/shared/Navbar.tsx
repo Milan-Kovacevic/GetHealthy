@@ -1,7 +1,16 @@
-import { Book, GlassWater, Menu, Sunset, Trees, Zap } from "lucide-react";
+import {
+  BellIcon,
+  Book,
+  DumbbellIcon,
+  LayoutListIcon,
+  Menu,
+  NotebookPenIcon,
+  Sunset,
+  Trees,
+  Zap,
+} from "lucide-react";
 
 import appIcon from "@/assets/applogo.png";
-import ThemeToggle from "@/components/primitives/ThemeToggle";
 import {
   Accordion,
   AccordionContent,
@@ -30,51 +39,67 @@ import { cn } from "@/lib/utils";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationsPopover from "../notifications/NotificationsPopover";
 
-const subMenuItemsOne = [
-  {
-    title: "Overview",
-    description: "Browse training plans",
-    icon: <GlassWater className="size-5 shrink-0" />,
-    link: "/programs",
-  },
-  {
-    title: "Management",
-    description: "Manage your training plans",
-    icon: <Trees className="size-5 shrink-0" />,
-    link: "/programs/manage",
-  },
-];
+type NavbarMenuItem = {
+  title: string;
+  link: string;
+  submenu?: NavbarSubMenuItem[];
+};
 
-const subMenuItemsTwo = [
-  {
-    title: "Help Center",
-    description: "Get all the answers you need right here",
-    icon: <Zap className="size-5 shrink-0" />,
-  },
-  {
-    title: "Contact Us",
-    description: "We are here to help you with any questions you have",
-    icon: <Sunset className="size-5 shrink-0" />,
-  },
-  {
-    title: "Status",
-    description: "Check the current status of our services and APIs",
-    icon: <Trees className="size-5 shrink-0" />,
-  },
-  {
-    title: "Terms of Service",
-    description: "Our terms and conditions for using our services",
-    icon: <Book className="size-5 shrink-0" />,
-  },
-];
+type NavbarSubMenuItem = {
+  title: string;
+  description: string;
+  icon: JSX.Element;
+  link: string;
+};
 
 const Navbar = () => {
+  // TODO: Hardcoded for now...
+  const isTrainer = true;
+
+  const trainingProgramSubMenuItems: NavbarSubMenuItem[] = [
+    {
+      title: "Overview",
+      description: "Browse training plans",
+      icon: <LayoutListIcon className="size-5 shrink-0 mt-1" />,
+      link: "/programs",
+    },
+    {
+      title: isTrainer ? "Manage" : "My programs",
+      description: isTrainer
+        ? "Manage your training programs"
+        : "Browse your training programs",
+      icon: isTrainer ? (
+        <NotebookPenIcon className="size-5 shrink-0 mt-1" />
+      ) : (
+        <DumbbellIcon className="size-5 shrink-0 mt-1" />
+      ),
+      link: "/programs/manage",
+    },
+  ];
+
+  const navBarMenu: NavbarMenuItem[] = [
+    {
+      title: "Schedule",
+      link: "/schedule",
+    },
+    {
+      title: "Training programs",
+
+      link: "/programs",
+      submenu: trainingProgramSubMenuItems,
+    },
+    {
+      title: "My profile",
+      link: "/profile",
+    },
+  ];
+
   return (
     <section className="py-3 shadow-md dark:shadow-white/15 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
       <div className="container mx-auto">
-        <DesktopNavbar />
+        <DesktopNavbar navbarMenuItems={navBarMenu} isTrainer={isTrainer} />
       </div>
-      <MobileNavbar />
+      <MobileNavbar navbarMenuItems={navBarMenu} />
     </section>
   );
 };
@@ -95,127 +120,104 @@ const AppBanner = () => {
     </Link>
   );
 };
-const DesktopNavbar = () => {
+const DesktopNavbar = ({
+  navbarMenuItems,
+  isTrainer,
+}: {
+  navbarMenuItems: NavbarMenuItem[];
+  isTrainer: boolean;
+}) => {
   const navigate = useNavigate();
 
   return (
     <nav className="hidden justify-between lg:flex">
       <div className="flex items-center gap-6">
         <AppBanner />
-        <div className="flex items-center">
-          <Link
-            className={cn(
-              "text-muted-foreground",
-              navigationMenuTriggerStyle,
-              buttonVariants({
-                variant: "ghost",
-              })
-            )}
-            to="/schedule"
-          >
-            Schedule
-          </Link>
+        <div className="flex items-center gap-1">
           <NavigationMenu>
             <NavigationMenuList>
-              <NavigationMenuItem className="text-muted-foreground">
-                <NavigationMenuTrigger>
-                  <span>Training Programs</span>
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="w-80 p-3">
-                    <NavigationMenuLink>
-                      {subMenuItemsOne.map((item, idx) => (
-                        <li key={idx}>
-                          <Link
-                            className={cn(
-                              "flex select-none gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                            )}
-                            to={item.link}
-                          >
-                            {item.icon}
-                            <div>
-                              <div className="text-sm font-semibold">
-                                {item.title}
-                              </div>
-                              <p className="text-sm leading-snug text-muted-foreground">
-                                {item.description}
-                              </p>
-                            </div>
-                          </Link>
-                        </li>
-                      ))}
-                    </NavigationMenuLink>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              <NavigationMenuItem className="text-muted-foreground">
-                <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="w-80 p-3">
-                    <NavigationMenuLink>
-                      {subMenuItemsTwo.map((item, idx) => (
-                        <li key={idx}>
-                          <Link
-                            className={cn(
-                              "flex select-none gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                            )}
-                            to="#"
-                          >
-                            {item.icon}
-                            <div>
-                              <div className="text-sm font-semibold">
-                                {item.title}
-                              </div>
-                              <p className="text-sm leading-snug text-muted-foreground">
-                                {item.description}
-                              </p>
-                            </div>
-                          </Link>
-                        </li>
-                      ))}
-                    </NavigationMenuLink>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
+              {navbarMenuItems.map((item, index) => {
+                if (!item.submenu) {
+                  return (
+                    <Link
+                      key={"nav-bar_" + index}
+                      className={cn(
+                        "text-muted-foreground",
+                        navigationMenuTriggerStyle,
+                        buttonVariants({
+                          variant: "ghost",
+                        })
+                      )}
+                      to={item.link}
+                    >
+                      {item.title}
+                    </Link>
+                  );
+                } else {
+                  return (
+                    <NavigationMenuItem className="text-muted-foreground">
+                      <NavigationMenuTrigger>
+                        <span>{item.title}</span>
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="w-80 p-3">
+                          <NavigationMenuLink>
+                            {item.submenu.map((item, idx) => (
+                              <li key={idx}>
+                                <Link
+                                  className={cn(
+                                    "flex select-none gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                  )}
+                                  to={item.link}
+                                >
+                                  {item.icon}
+                                  <div>
+                                    <div className="text-sm font-semibold">
+                                      {item.title}
+                                    </div>
+                                    <p className="text-sm leading-snug text-muted-foreground">
+                                      {item.description}
+                                    </p>
+                                  </div>
+                                </Link>
+                              </li>
+                            ))}
+                          </NavigationMenuLink>
+                        </ul>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  );
+                }
+              })}
             </NavigationMenuList>
           </NavigationMenu>
-
-          <NotificationsPopover isTrainer={true}>
-            <Button
-              variant="ghost"
-              className={cn(
-                "text-muted-foreground relative",
-                navigationMenuTriggerStyle,
-                buttonVariants({
-                  variant: "ghost",
-                })
-              )}
-            >
-              <Badge
-                variant="secondary"
-                className="absolute border-none top-0.5 -right-0.5 rounded-full pointer-events-none text-primary-foreground leading-none bg-primary text-[10px] px-1.5 py-1 h-auto"
-              >
-                <span className="font-semibold leading-none">4</span>
-              </Badge>
-              Notifications
-            </Button>
-          </NotificationsPopover>
-          <Link
-            className={cn(
-              "text-muted-foreground",
-              navigationMenuTriggerStyle,
-              buttonVariants({
-                variant: "ghost",
-              })
-            )}
-            to="/profile"
-          >
-            My Profile
-          </Link>
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <ThemeToggle />
+        {/* <ThemeToggle /> */}
+        <NotificationsPopover isTrainer={isTrainer}>
+          <Button
+            size="sm"
+            variant="ghost"
+            className={cn(
+              "relative",
+              navigationMenuTriggerStyle,
+              buttonVariants({
+                variant: "ghost",
+              }),
+              "h-auto mr-3 [&_svg]:h-5 [&_svg]:w-5"
+            )}
+          >
+            <Badge
+              variant="secondary"
+              className="absolute border-none top-0.5 -right-0.5 rounded-full pointer-events-none text-primary-foreground leading-none bg-primary text-[10px] px-1.5 py-1 h-auto"
+            >
+              <span className="font-semibold leading-none">4</span>
+            </Badge>
+            <BellIcon strokeWidth={2} className="w-full h-full" />
+          </Button>
+        </NotificationsPopover>
+
         <Button
           onClick={() => {
             navigate("/login");
@@ -237,7 +239,11 @@ const DesktopNavbar = () => {
     </nav>
   );
 };
-const MobileNavbar = () => {
+const MobileNavbar = ({
+  navbarMenuItems,
+}: {
+  navbarMenuItems: NavbarMenuItem[];
+}) => {
   const navigate = useNavigate();
 
   return (
@@ -257,69 +263,58 @@ const MobileNavbar = () => {
               </SheetTitle>
             </SheetHeader>
             <div className="my-8 flex flex-col gap-4">
-              <a href="#" className="font-semibold">
-                Home
-              </a>
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="products" className="border-b-0">
-                  <AccordionTrigger className="mb-4 py-0 font-semibold hover:no-underline">
-                    Training programs
-                  </AccordionTrigger>
-                  <AccordionContent className="mt-2">
-                    {subMenuItemsOne.map((item, idx) => (
-                      <a
-                        key={idx}
-                        className={cn(
-                          "flex select-none gap-4 rounded-md p-3 leading-none outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                        )}
-                        href="#"
+              <Accordion
+                type="single"
+                collapsible
+                className="w-full flex flex-col gap-4"
+              >
+                {navbarMenuItems.map((item, index) => {
+                  if (!item.submenu) {
+                    return (
+                      <Link
+                        key={"mobile-nav-bar_" + index}
+                        className={cn("font-semibold")}
+                        to={item.link}
                       >
-                        {item.icon}
-                        <div>
-                          <div className="text-sm font-semibold">
-                            {item.title}
-                          </div>
-                          <p className="text-sm leading-snug text-muted-foreground">
-                            {item.description}
-                          </p>
-                        </div>
-                      </a>
-                    ))}
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="resources" className="border-b-0">
-                  <AccordionTrigger className="py-0 font-semibold hover:no-underline">
-                    Resources
-                  </AccordionTrigger>
-                  <AccordionContent className="mt-2">
-                    {subMenuItemsTwo.map((item, idx) => (
-                      <a
-                        key={idx}
-                        className={cn(
-                          "flex select-none gap-4 rounded-md p-3 leading-none outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                        )}
-                        href="#"
-                      >
-                        {item.icon}
-                        <div>
-                          <div className="text-sm font-semibold">
-                            {item.title}
-                          </div>
-                          <p className="text-sm leading-snug text-muted-foreground">
-                            {item.description}
-                          </p>
-                        </div>
-                      </a>
-                    ))}
-                  </AccordionContent>
-                </AccordionItem>
+                        {item.title}
+                      </Link>
+                    );
+                  } else {
+                    return (
+                      <AccordionItem value="products" className="border-b-0">
+                        <AccordionTrigger className="py-0 font-semibold hover:no-underline">
+                          {item.title}
+                        </AccordionTrigger>
+                        <AccordionContent className="mt-2 space-y-1">
+                          {item.submenu.map((item, idx) => (
+                            <Link
+                              key={idx}
+                              className={cn(
+                                "flex select-none gap-4 rounded-md p-3 leading-none outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                              )}
+                              to={item.link}
+                            >
+                              {item.icon}
+                              <div>
+                                <div className="text-sm font-semibold">
+                                  {item.title}
+                                </div>
+                                <p className="text-sm leading-snug text-muted-foreground">
+                                  {item.description}
+                                </p>
+                              </div>
+                            </Link>
+                          ))}
+                        </AccordionContent>
+                      </AccordionItem>
+                    );
+                  }
+                })}
               </Accordion>
-              <a href="#" className="font-semibold">
-                Pricing
-              </a>
-              <a href="#" className="font-semibold">
-                Blog
-              </a>
+
+              <Link className={cn("font-semibold")} to="#">
+                Notifications
+              </Link>
             </div>
             <div className="">
               <div className="mt-2 flex flex-col gap-3">

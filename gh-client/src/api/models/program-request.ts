@@ -1,6 +1,6 @@
 import { Page } from "../contracts/pageable-contract";
 
-export type ProgramRequestDTO = {
+export type ProgramRequest = {
   id: number;
   markRead: boolean;
   submissionDate: string;
@@ -12,4 +12,4 @@ export type ProgramRequestDTO = {
   traineeGender: number;
 };
 
-export type PageableProgramRequestsDTO = Page<ProgramRequestDTO>;
+export type PageableProgramRequest = Page<ProgramRequest>;

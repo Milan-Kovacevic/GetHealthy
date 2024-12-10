@@ -1,6 +1,6 @@
 import { Page } from "../contracts/pageable-contract";
 
-export type NotificationDTO = {
+export type Notification = {
   id: number;
   title: string;
   description: string;
@@ -8,4 +8,4 @@ export type NotificationDTO = {
   isRead: boolean;
 };
 
-export type PageableNotificationsDTO = Page<NotificationDTO>;
+export type PageableNotifications = Page<Notification>;

@@ -1,4 +1,4 @@
-import { NotificationDTO } from "@/api/models/notification";
+import { Notification } from "@/api/models/notification";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,7 +12,7 @@ import { MoreVerticalIcon } from "lucide-react";
 import React from "react";
 
 interface NotificationItemProps {
-  notification: NotificationDTO;
+  notification: Notification;
   onMarkRead: (id: number) => void;
   onDelete: (id: number) => void;
   isLast: boolean;

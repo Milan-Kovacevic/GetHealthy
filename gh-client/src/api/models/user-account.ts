@@ -1,4 +1,4 @@
-export type UserAccountDTO = {
+export type UserAccount = {
   userId: number;
   username: string;
   email: string;
