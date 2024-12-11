@@ -30,5 +30,5 @@ public class TrainingProgramResponse {
 
     private double rating;
 
-    private Trainer user; // TODO: ????
+    private TrainerResponse user; // TODO: ????
 }

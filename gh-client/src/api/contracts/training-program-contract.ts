@@ -16,12 +16,16 @@ export type TrainingProgramDTO = {
 
 export type ProgramTrainerDTO = {
   id: number;
-  firstName: string;
-  lastName: string;
+  user: UserDTO;
   biography: string;
   contactInfo: string;
 
   /// ??? Only basic info ...
+};
+
+export type UserDTO = {
+  firstName: string;
+  lastName: string;
 };
 
 export type PageableTrainingProgramsDTO = Page<TrainingProgramDTO>;

@@ -18,9 +18,9 @@ import { TrainingProgramFilters } from "./components/TrainingProgramFilters";
 import { TrainingProgramsLoader } from "./components/TrainingProgramsLoaders";
 import { useNavigate } from "react-router-dom";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
-import { Category } from "@/entities/Category";
 import { getPageableTrainingPrograms } from "@/api/services/training-program-service";
 import { TrainingProgram } from "@/api/models/training-program";
+import { Category } from "@/api/models/category";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -147,7 +147,9 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
               <TrainingProgramsLoader />
             ) : (
               <div className="grid mt-5 gap-x-6 gap-y-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 flex-1">
-                {programs.map((item) => (
+                {programs.map((item) => {
+                  console.log(item);
+                  return (
                   <TrainingProgramCard
                     rating={item.rating}
                     categories={item.categories.map((c) => c.categoryName)}
@@ -158,9 +160,9 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                     id={item.id}
                     difficulty={item.difficulty.toString()}
                     image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
-                    trainer={`${item.user.firstName} ${item.user.lastName}`}
+                    trainer={`${item.user.user.firstName} ${item.user.user.lastName}`}
                   ></TrainingProgramCard>
-                ))}
+                )})}
               </div>
             )}
           </div>

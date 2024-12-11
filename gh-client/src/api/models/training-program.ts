@@ -16,12 +16,17 @@ export type TrainingProgram = {
 
 export type ProgramTrainer = {
   id: number;
-  firstName: string;
-  lastName: string;
   biography: string;
   contactInfo: string;
+  user:User;
 
   /// ??? Only basic info ...
 };
+
+export type User = 
+{
+  firstName: string;
+  lastName: string;
+}
 
 export type PageableTrainingPrograms = Page<TrainingProgram>;

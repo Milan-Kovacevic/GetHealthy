@@ -4,13 +4,6 @@ import TextareaFormField from "@/components/primitives/TextareaFormField";
 import { FileInputField } from "@/components/primitives/FileInputField";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormDescription,
@@ -32,6 +25,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CheckIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getAllCategories } from "@/api/services/category-service";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
@@ -50,6 +45,8 @@ export default function GeneralInformationForm({
   defaultValues?: z.infer<typeof formSchema>;
   isEdit?: boolean;
 }) {
+  const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
@@ -82,18 +79,21 @@ export default function GeneralInformationForm({
     }
   }
 
-  const categoryOptions = [
-    { label: "Technical", value: "technical" },
-    { label: "Soft Skills", value: "soft-skills" },
-    { label: "Leadership", value: "leadership" },
-    { label: "Project Management", value: "management" },
-    { label: "Design", value: "design" },
-  ];
+  useEffect(() => {
+    async function fetchCategories() {
+      setCategoryOptions(
+        (await getAllCategories()).map((item) => ({
+          label: item.categoryName,
+          value: item.id,   
+        })))
+    }
+    fetchCategories();
+  }, []);
 
   const difficultyOptions = [
-    { label: "Beginner", value: "beginner" },
-    { label: "Intermediate", value: "intermediate" },
-    { label: "Advanced", value: "advanced" },
+    { label: "Beginner", value: "1" },
+    { label: "Intermediate", value: "2" },
+    { label: "Advanced", value: "3" },
   ];
 
   return (

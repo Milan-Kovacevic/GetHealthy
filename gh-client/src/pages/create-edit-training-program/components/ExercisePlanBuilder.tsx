@@ -3,7 +3,7 @@ import { Form } from "@/components/ui/form";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, DumbbellIcon, HashIcon, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -17,18 +17,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import FormSectionTitle from "./FormSectionTitle";
+import { getAllExcercises } from "@/api/services/exercise-service";
 
-// mock data of exercises
-const exercises = [
-  { id: 1, value: "push-ups", label: "Push-ups", type: "bodyweight" },
-  { id: 2, value: "squats", label: "Squats", type: "bodyweight" },
-  { id: 3, value: "lat-pulldowns", label: "Lat Pulldowns", type: "weighted" },
-  { id: 4, value: "bench-press", label: "Bench Press", type: "weighted" },
-  { id: 5, value: "running", label: "Running", type: "cardio" },
-  { id: 6, value: "plank", label: "Plank", type: "timed" },
-];
 
-// mock data for edit
+
+// mock data for ed
 const validExercisePlan: ExercisePlanValues = {
   exercises: [
     {
@@ -90,6 +83,25 @@ type ExercisePlanBuilderProps = {
 };
 
 const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
+
+  const [exercises, setExercises] = useState<any[]>([]);
+  
+  useEffect(() => {
+    async function fetchExercises() {
+      setExercises(
+        (await getAllExcercises()).map((item) => ({
+          label: item.exerciseName,
+          value: item.id
+        })))
+    }
+    fetchExercises();
+  }, []);
+
+  useEffect(()=>
+  {
+    console.log(exercises);
+  }, [exercises])
+
   const [selectedExerciseIndex, setSelectedExerciseIndex] = useState<
     number | null
   >(null);
