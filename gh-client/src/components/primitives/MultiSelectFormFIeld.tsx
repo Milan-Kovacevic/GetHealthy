@@ -56,30 +56,40 @@ const multiSelectVariants = cva(
 /**
  * Props for MultiSelect component
  */
-interface MultiSelectProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof multiSelectVariants> {
+interface MultiSelectProps extends VariantProps<typeof multiSelectVariants> {
   /**
    * An array of option objects to be displayed in the multi-select component.
    * Each option object has a label, value, and an optional icon.
    */
-  options: {
-    /** The text to display for the option. */
-    label: string;
-    /** The unique value associated with the option. */
-    value: string;
-    /** Optional icon component to display alongside the option. */
-    icon?: React.ComponentType<{ className?: string }>;
-  }[];
+  // options: {
+  //   /** The text to display for the option. */
+  //   label: string;
+  //   /** The unique value associated with the option. */
+  //   value: string | number;
+  //   /** Optional icon component to display alongside the option. */
+  //   icon?: React.ComponentType<{ className?: string }>;
+  // }[];
+  options: Record<string, any>[];
+
+  /**
+   * Key for the name/label
+   */
+  itemNameKey: string;
+
+  /**
+   * Key for the value
+   */
+  itemValueKey: string;
 
   /**
    * Callback function triggered when the selected values change.
    * Receives an array of the new selected values.
    */
-  onValueChange: (value: string[]) => void;
+  onValueChange: (value: Record<string, any>[]) => void;
 
   /** The default selected values when the component mounts. */
-  defaultValue?: string[];
+  // defaultValue?: string[];
+  defaultValue?: Record<string, any>[];
 
   /**
    * Placeholder text to be displayed when no values are selected.
@@ -130,6 +140,8 @@ export const MultiSelect = React.forwardRef<
   (
     {
       options,
+      itemNameKey,
+      itemValueKey,
       onValueChange,
       variant,
       defaultValue = [],
@@ -145,7 +157,7 @@ export const MultiSelect = React.forwardRef<
     ref
   ) => {
     const [selectedValues, setSelectedValues] =
-      React.useState<string[]>(defaultValue);
+      React.useState<Record<string, any>[]>(defaultValue);
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
     const [isAnimating, setIsAnimating] = React.useState(false);
 
@@ -164,7 +176,7 @@ export const MultiSelect = React.forwardRef<
       }
     };
 
-    const toggleOption = (option: string) => {
+    const toggleOption = (option: Record<string, any>) => {
       const newSelectedValues = selectedValues.includes(option)
         ? selectedValues.filter((value) => value !== option)
         : [...selectedValues, option];
@@ -191,7 +203,8 @@ export const MultiSelect = React.forwardRef<
       if (selectedValues.length === options.length) {
         handleClear();
       } else {
-        const allValues = options.map((option) => option.value);
+        // const allValues = options.map((option) => option.value);
+        const allValues = options;
         setSelectedValues(allValues);
         onValueChange(allValues);
       }
@@ -217,12 +230,15 @@ export const MultiSelect = React.forwardRef<
             {selectedValues.length > 0 ? (
               <div className="flex justify-between items-center w-full">
                 <div className="flex flex-wrap items-center">
-                  {selectedValues.slice(0, maxCount).map((value) => {
-                    const option = options.find((o) => o.value === value);
+                  {selectedValues.slice(0, maxCount).map((item) => {
+                    console.log(item[itemValueKey]);
+                    const option = options.find(
+                      (o) => o[itemNameKey] === item[itemNameKey]
+                    );
                     const IconComponent = option?.icon;
                     return (
                       <Badge
-                        key={value}
+                        key={item[itemNameKey]}
                         className={cn(
                           "dark:bg-background",
                           isAnimating ? "animate-bounce" : "",
@@ -233,12 +249,13 @@ export const MultiSelect = React.forwardRef<
                         {IconComponent && (
                           <IconComponent className="h-4 w-4 mr-2" />
                         )}
-                        {option?.label}
+                        {/* {option?.label} */}
+                        {option?.[itemNameKey]}
                         <XCircle
                           className="ml-2 h-4 w-4 cursor-pointer"
                           onClick={(event) => {
                             event.stopPropagation();
-                            toggleOption(value);
+                            toggleOption(item);
                           }}
                         />
                       </Badge>
@@ -320,11 +337,16 @@ export const MultiSelect = React.forwardRef<
                   <span>(Select All)</span>
                 </CommandItem>
                 {options.map((option) => {
-                  const isSelected = selectedValues.includes(option.value);
+                  // const isSelected = selectedValues.includes(option);
+
+                  const isSelected = selectedValues.some(
+                    (selected) =>
+                      selected[itemValueKey] === option[itemValueKey]
+                  );
                   return (
                     <CommandItem
-                      key={option.value}
-                      onSelect={() => toggleOption(option.value)}
+                      key={option?.[itemValueKey]}
+                      onSelect={() => toggleOption(option)}
                       className="cursor-pointer"
                     >
                       <div
@@ -340,7 +362,7 @@ export const MultiSelect = React.forwardRef<
                       {option.icon && (
                         <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                       )}
-                      <span>{option.label}</span>
+                      <span>{option?.[itemNameKey]}</span>
                     </CommandItem>
                   );
                 })}
