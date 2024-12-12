@@ -4,7 +4,7 @@ import ExerciseList from "./ExerciseList";
 export default function TrainingProgramDetails() {
   return (
     <div className="my-4 mx-2 md:p-0 p-3">
-      <div className="flex flex-col gap-3 my-5">
+      <div className="flex flex-col gap-3 my-3">
         <div className="space-y-1">
           <div className="flex flex-row items-center gap-1.5">
             <CircleIcon className="h-2 w-2 mb-0.5" />
@@ -20,7 +20,10 @@ export default function TrainingProgramDetails() {
             pariatur.
           </p>
         </div>
-
+        <p className="mt-1 text-base text-foreground/80">
+          Estimated workout time:{" "}
+          <span className="text-foreground font-medium">20 minutes</span>
+        </p>
         <div className="mt-4">
           <ExerciseList />
         </div>

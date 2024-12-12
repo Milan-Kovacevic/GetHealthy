@@ -1,13 +1,13 @@
 import programImg from "@/assets/program-example.png";
 import { Badge } from "@/components/ui/badge";
-import { UserPlus, UserXIcon } from "lucide-react";
+import { ActivityIcon, UserPlus, UserXIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StarRating from "@/components/primitives/StarRating";
 
 export default function TrainingProgramInfo() {
   return (
-    <div className="my-4 flex flex-col lg:flex-row h-auto p-4 relative">
-      <div className="w-full lg:w-1/3 mb-4 lg:mb-0">
+    <div className="my-4 flex flex-col lg:flex-row h-auto py-4 lg:px-0 px-4 relative">
+      <div className="w-full lg:w-1/3 mb-4 lg:mb-0 lg:border-2 rounded-xl overflow-hidden">
         <img
           src={programImg}
           alt="Training Program"
@@ -16,24 +16,18 @@ export default function TrainingProgramInfo() {
       </div>
 
       <div className="w-full lg:w-2/3 pl-0 lg:pl-8 relative flex flex-col">
-        <div className="flex md:flex-row flex-col justify-between mt-6 gap-y-6">
+        <div className="flex md:flex-row flex-col justify-between mt-3 gap-y-6">
           <div className="relative flex items-center gap-5">
-            <h1 className="text-3xl font-semibold">Pilates Harmony</h1>
-            <div className="flex items-center flex-wrap gap-2">
-              <Button
-                variant="secondary"
-                className="h-auto flex items-center gap-2 flex-1"
-              >
-                <UserPlus className="h-5 w-5 text-primary" />
-                <span>Join</span>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-auto flex items-center gap-2 flex-1"
-              >
-                <UserXIcon className="h-5 w-5 text-destructive" />
-                <span>Leave</span>
-              </Button>
+            <div>
+              <h1 className="text-3xl font-semibold leading-tight">
+                Pilates Harmony
+              </h1>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <ActivityIcon className="h-4 w-4" />
+                <p className="text-base text-muted-foreground font-semibold">
+                  Intermediate
+                </p>
+              </div>
             </div>
           </div>
 
@@ -82,6 +76,16 @@ export default function TrainingProgramInfo() {
               Flexibility
             </Badge>
           </div>
+        </div>
+        <div className="flex items-center flex-wrap gap-2 lg:mt-auto mt-4 mb-0.5">
+          <Button variant="secondary" className="h-auto items-center min-w-32">
+            <UserPlus className="h-5 w-5 text-primary" />
+            <span>Join</span>
+          </Button>
+          <Button variant="outline" className="h-auto items-center min-w-32">
+            <UserXIcon className="h-5 w-5 text-destructive" />
+            <span>Leave</span>
+          </Button>
         </div>
       </div>
     </div>

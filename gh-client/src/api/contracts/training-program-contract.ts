@@ -20,8 +20,13 @@ export type ProgramTrainerDTO = {
   lastName: string;
   biography: string;
   contactInfo: string;
-
   /// ??? Only basic info ...
 };
 
 export type PageableTrainingProgramsDTO = Page<TrainingProgramDTO>;
+
+export type SingleTrainingProgramDTO = {
+  id: number;
+  name: string;
+  difficulty: number;
+};

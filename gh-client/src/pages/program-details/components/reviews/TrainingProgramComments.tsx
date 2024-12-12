@@ -19,7 +19,7 @@ const TrainingProgramComments = (props: TrainingProgramCommentsProps) => {
       <div className="max-h-[500px]">
         <div className="flex w-full flex-col items-center">
           {!isLoading && comments.length == 0 && (
-            <div className="self-start mb-16">
+            <div className="self-start mb-2">
               <p className="text-muted-foreground text-sm italic">
                 There are no comments on this training program ...
                 {/* <span className="font-semibold">
