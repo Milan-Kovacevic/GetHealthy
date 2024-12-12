@@ -1,8 +1,10 @@
 package dev.gethealthy.app.controllers;
 
 import dev.gethealthy.app.base.CrudController;
+import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
+import dev.gethealthy.app.models.responses.SingleProgramDetailsResponse;
 import dev.gethealthy.app.models.responses.TrainingProgramResponse;
 import dev.gethealthy.app.services.TrainingProgramService;
 import dev.gethealthy.app.specifications.TrainingProgramSpecification;
@@ -47,5 +49,11 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
         Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
 
         return trainingProgramService.findAll(spec, sort, page);
+    }
+
+    @GetMapping
+    @RequestMapping("/{id}/details")
+    public SingleProgramDetailsResponse getTrainingProgramDetails(@PathVariable(name = "id") Integer id){
+        return trainingProgramService.getTrainingProgramDetails(id);
     }
 }

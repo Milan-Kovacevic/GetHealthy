@@ -2,6 +2,7 @@ package dev.gethealthy.app.services;
 
 import dev.gethealthy.app.base.CrudService;
 import dev.gethealthy.app.models.entities.TrainingProgram;
+import dev.gethealthy.app.models.responses.SingleProgramDetailsResponse;
 import dev.gethealthy.app.models.responses.TrainingProgramResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,4 +15,6 @@ public interface TrainingProgramService extends CrudService<Integer> {
 
     @Override
     void delete(Integer id);
+
+    SingleProgramDetailsResponse getTrainingProgramDetails(Integer id);
 }

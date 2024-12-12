@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DumbbellIcon, PlayCircle } from "lucide-react";
+import { ProgramExercise } from "@/api/models/exercise";
 
 // Mock data for exercises
 const exercises = [
@@ -73,7 +74,13 @@ const exercises = [
   },
 ];
 
-export default function ExerciseList() {
+type ExerciseListProps = {
+  exercises: ProgramExercise[];
+};
+
+export default function ExerciseList(props: ExerciseListProps) {
+  const { exercises } = props;
+
   return (
     <div className="space-y-3">
       <div className="flex flex-row items-center gap-1.5 ml-1">
