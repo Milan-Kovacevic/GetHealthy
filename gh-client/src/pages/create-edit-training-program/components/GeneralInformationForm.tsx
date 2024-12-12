@@ -27,6 +27,11 @@ import {
 import { CheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getAllCategories } from "@/api/services/category-service";
+import { ProgramTrainer, TrainingProgram, User } from "@/api/models/training-program";
+import { Category } from "@/api/models/category";
+import { createUpdateTrainingProgram } from "@/api/services/training-program-service";
+import { TrainingProgramDTO } from "@/api/contracts/training-program-contract";
+import { CategoryDTO } from "@/api/contracts/category-contract";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
@@ -58,10 +63,11 @@ export default function GeneralInformationForm({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (!isEdit) {
         console.log(values);
+        console.log(categoryOptions);
         toast(
           <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
             <code className="text-white">
@@ -69,6 +75,26 @@ export default function GeneralInformationForm({
             </code>
           </pre>
         );
+        console.log(typeof(values));
+        const categories : CategoryDTO[] = values.categories.map(
+          c =>  { return {
+            trainingProgramCategoryId: categoryOptions.find(e => e.value === c).id
+          }
+          }
+        );
+
+        const program : TrainingProgramDTO = 
+        {
+          rating: 0,
+          name: values.name,
+          difficulty: Number.parseInt(values.difficulty),
+          trainingDuration: 0,
+          description: values.info,
+          requirements: values.requirements,
+          categories: categories,
+          userId: 3
+        }
+        await createUpdateTrainingProgram(program, false);
       } else {
         console.log("Updated values:", values);
         toast.success("Changes saved successfully.");
@@ -84,7 +110,8 @@ export default function GeneralInformationForm({
       setCategoryOptions(
         (await getAllCategories()).map((item) => ({
           label: item.categoryName,
-          value: item.id,   
+          value: item.categoryName,
+          id: item.id
         })))
     }
     fetchCategories();

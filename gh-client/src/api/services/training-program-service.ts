@@ -1,8 +1,11 @@
 import { ApiEndpoints } from "@/utils/constants";
 import { Category } from "../models/category";
 import { sendAxiosRequest } from "./base-service";
-import { PageableTrainingProgramsDTO } from "../contracts/training-program-contract";
-import { PageableTrainingPrograms } from "../models/training-program";
+import { PageableTrainingProgramsDTO, TrainingProgramDTO } from "../contracts/training-program-contract";
+import {
+  PageableTrainingPrograms,
+  TrainingProgram,
+} from "../models/training-program";
 
 const getPageableTrainingPrograms = (
   searchString: string = "",
@@ -34,3 +37,17 @@ const getPageableTrainingPrograms = (
 };
 
 export { getPageableTrainingPrograms };
+
+export const createUpdateTrainingProgram = (
+  trainingProgram: TrainingProgramDTO,
+  isUpdate: boolean
+) => {
+  var url = ApiEndpoints.TrainingPrograms;
+  return sendAxiosRequest<TrainingProgramDTO, void>({
+    method: !isUpdate ? "POST" : "PUT",
+    url: url,
+    data: trainingProgram,
+  }).then((response) => {
+    return response.data as void;
+  });
+};
