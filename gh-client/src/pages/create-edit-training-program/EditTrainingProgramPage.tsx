@@ -6,7 +6,10 @@ export default function EditTrainingProgramPage() {
   const mockData = {
     name: "Leadership Program",
     info: "Enhance your leadership skills through practical sessions.",
-    categories: ["technical", "soft-skills"],
+    categories: [
+      { name: "Technical", categoryId: "1" },
+      { name: "Soft Skills", categoryId: "2" },
+    ],
     requirements: "At least 3 years of management experience.",
     difficulty: "advanced",
     //files:"https://example"
