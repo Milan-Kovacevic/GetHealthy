@@ -18,9 +18,9 @@ import { TrainingProgramFilters } from "./components/TrainingProgramFilters";
 import { TrainingProgramsLoader } from "./components/TrainingProgramsLoaders";
 import { useNavigate } from "react-router-dom";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
-import { Category } from "@/entities/Category";
 import { getPageableTrainingPrograms } from "@/api/services/training-program-service";
 import { TrainingProgram } from "@/api/models/training-program";
+import { Category } from "@/api/models/category";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;

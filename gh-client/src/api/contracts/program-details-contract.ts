@@ -1,5 +1,6 @@
 import { CategoryDTO } from "./category-contract";
 import { ProgramExerciseDTO } from "./exercise-contract";
+import { Page } from "./pageable-contract";
 import { ProgramDifficultyDTO } from "./training-program-contract";
 
 export type SingleTrainingProgramDTO = {
@@ -33,4 +34,17 @@ export type SingleProgramTrainerDTO = {
   contactInfo?: string;
   biography?: string;
 };
-export type ProgramParticipantDTO = {};
+
+export type SingleProgramParticipantDTO = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  gender?: number;
+  dateOfBirth?: string;
+  profilePictureFilePath?: string;
+  height?: number;
+  weight?: number;
+  medicalHistory?: string;
+  joinDate: string;
+};
+export type PageableProgramParticipantsDTO = Page<SingleProgramParticipantDTO>;

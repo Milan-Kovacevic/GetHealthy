@@ -1,6 +1,5 @@
 export type ProgramExercise = {
   id: number;
-  position: number;
   name: string;
   description: string;
   videoLink: string;

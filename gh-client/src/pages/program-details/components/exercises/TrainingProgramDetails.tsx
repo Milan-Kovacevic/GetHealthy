@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { SingleProgramDetails } from "@/api/models/program-details";
 import { useParams } from "react-router-dom";
 import { getSingleTrainingProgramDetails } from "@/api/services/program-details-service";
+import ProgramDetailsSkeletonLoader from "./ProgramDetailsSkeletonLoader";
 
 export default function TrainingProgramDetails() {
+  const [loading, setLoading] = useState(false);
   const [programDetails, setProgramDetails] = useState<SingleProgramDetails>();
   const params = useParams();
 
@@ -13,14 +15,22 @@ export default function TrainingProgramDetails() {
     const programId = params["id"];
     if (!programId) return; // Handle this situation
 
-    getSingleTrainingProgramDetails(parseInt(programId)).then((response) => {
-      setProgramDetails(response);
-    });
-  });
+    setLoading(true);
+    setTimeout(() => {
+      getSingleTrainingProgramDetails(parseInt(programId))
+        .then((response) => {
+          setProgramDetails(response);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 3000);
+  }, []);
 
   return (
     <div className="my-4 mx-2 md:p-0 p-3">
-      {programDetails && (
+      {loading && <ProgramDetailsSkeletonLoader />}
+      {!loading && programDetails && (
         <div className="flex flex-col gap-3 my-3">
           <div className="space-y-1">
             <div className="flex flex-row items-center gap-1.5">
@@ -39,7 +49,7 @@ export default function TrainingProgramDetails() {
             </span>
           </p>
           <div className="mt-4">
-            <ExerciseList />
+            <ExerciseList exercises={programDetails.exercises} />
           </div>
         </div>
       )}

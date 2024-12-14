@@ -5,6 +5,7 @@ import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.SingleProgramDetailsResponse;
+import dev.gethealthy.app.models.responses.SingleProgramParticipantResponse;
 import dev.gethealthy.app.models.responses.TrainingProgramResponse;
 import dev.gethealthy.app.services.TrainingProgramService;
 import dev.gethealthy.app.specifications.TrainingProgramSpecification;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${gethealthy.base-url}/training-programs")
-public class TrainingProgramController extends CrudController<Integer, TrainingProgramRequest, TrainingProgramResponse>{
+public class TrainingProgramController extends CrudController<Integer, TrainingProgramRequest, TrainingProgramResponse> {
     private final TrainingProgramService trainingProgramService;
 
     public TrainingProgramController(TrainingProgramService crudService) {
@@ -53,7 +54,15 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
 
     @GetMapping
     @RequestMapping("/{id}/details")
-    public SingleProgramDetailsResponse getTrainingProgramDetails(@PathVariable(name = "id") Integer id){
+    public SingleProgramDetailsResponse getTrainingProgramDetails(@PathVariable(name = "id") Integer id) {
         return trainingProgramService.getTrainingProgramDetails(id);
+    }
+
+    @GetMapping
+    @RequestMapping("/{id}/participants")
+    public Page<SingleProgramParticipantResponse> getTrainingProgramParticipants(@PathVariable(name = "id") Integer id,
+                                                                                 @RequestParam(defaultValue = "") String filter,
+                                                                                 Pageable page) {
+        return trainingProgramService.getTrainingProgramParticipants(id, filter, page);
     }
 }

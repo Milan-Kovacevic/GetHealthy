@@ -1,22 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import {
   Select,
   SelectContent,
@@ -24,15 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserX, UserPlus, FileText } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { SearchIcon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -40,265 +15,147 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { SingleProgramParticipant } from "@/api/models/program-details";
+import { Input } from "@/components/ui/input";
+import { usePagination } from "@/hooks/use-pagination";
+import { getPageableTrainingProgramParticipants } from "@/api/services/program-details-service";
+import ProgramParticipantItem from "./ProgramParticipantItem";
+import MoveParticipantDialog from "./MoveParticipantDialog";
+import ParticipantsListSkeletonLoader from "./ParticipantsListSkeletonLoader";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
-type Trainee = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  age: number;
-  gender: string;
-  medicalHistory: string;
+type ProgramParticipantsListProps = {
+  programId: number;
 };
 
-const initialTrainees: Trainee[] = [
-  {
-    id: 1,
-    firstName: "John",
-    lastName: "Doe",
-    age: 25,
-    gender: "Male",
-    medicalHistory: "No significant medical history.",
-  },
-  {
-    id: 2,
-    firstName: "Jane",
-    lastName: "Smith",
-    age: 30,
-    gender: "Female",
-    medicalHistory: "Mild asthma, controlled with inhaler.",
-  },
-  {
-    id: 3,
-    firstName: "Mike",
-    lastName: "Johnson",
-    age: 28,
-    gender: "Male",
-    medicalHistory: "Previous knee injury, fully recovered.",
-  },
-];
+export default function ProgramParticipantsList(
+  props: ProgramParticipantsListProps
+) {
+  const { programId } = props;
 
-const programs = [
-  "Strength Training",
-  "Cardio Fitness",
-  "Flexibility and Yoga",
-  "High-Intensity Interval Training",
-];
+  const {
+    data: participants,
+    setData: setParticipants,
+    hasMore: hasMoreParticipants,
+    setHasMore: setHasMoreParticipants,
+    isLoading: isLoadingParticipants,
+    setIsLoading: setIsLoadingParticipants,
+    onPageChange: onParticipantPageChange,
+    page: participantsPage,
+    setPage: setParticipantsPage,
+  } = usePagination<SingleProgramParticipant>({
+    fetchData: (state) => {
+      return getPageableTrainingProgramParticipants(programId, state.page);
+    },
+  });
 
-export default function ProgramParticipantsList() {
-  const [trainees, setTrainees] = useState<Trainee[]>(initialTrainees);
-  const [moveParticipant, setMoveParticipant] = useState<Trainee | null>(null);
-  const [selectedTrainee, setSelectedTrainee] = useState<Trainee | null>(null);
-  const [selectedProgram, setSelectedProgram] = useState<string | undefined>();
+  useEffect(() => {
+    onParticipantPageChange();
+  }, []);
 
-  const removeTrainee = (id: number) => {
-    setTrainees(trainees.filter((trainee) => trainee.id !== id));
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [selectedParticipant, setSelectedParticipant] =
+    useState<SingleProgramParticipant | null>(null);
+
+  const onRemoveProgramParticipant = (id: number) => {
+    console.log("removed");
   };
 
-  const moveTrainee = (id: number) => {
-    removeTrainee(id);
-    setMoveParticipant(null);
-    setSelectedTrainee(null);
+  const onMoveProgramParticipant = (id: number) => {
+    const participant = participants.find((x) => x.id == id) ?? null;
+    setSelectedParticipant(participant);
   };
-
-  const handleSubmit = () => {
-    if (selectedProgram && selectedTrainee) {
-      moveTrainee(selectedTrainee.id);
-    }
+  const onCancelMoveParticipant = () => {
+    setSelectedParticipant(null);
+  };
+  const handleMoveProgramParticipant = (newProgramId: string) => {
+    setSelectedParticipant(null);
   };
 
   return (
     <div className="container mx-auto w-full">
-      <ScrollArea className="w-full">
-        <div className="flex xl:flex-row flex-col-reverse justify-between w-full md:gap-8 gap-4">
-          <div className="hidden md:block w-full">
-            {/* Table view for medium screens and up */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Age</TableHead>
-                  <TableHead>Gender</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {trainees.map((trainee) => (
-                  <TableRow key={trainee.id}>
-                    <TableCell>
-                      {trainee.firstName} {trainee.lastName}
-                    </TableCell>
-                    <TableCell>{trainee.age}</TableCell>
-                    <TableCell>{trainee.gender}</TableCell>
-                    <TableCell>
-                      <div className="flex space-x-2">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button
-                              variant="outline"
-                              onClick={() => setSelectedTrainee(trainee)}
-                              className="transition-none"
-                            >
-                              View Medical History
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Medical History</DialogTitle>
-                              <DialogDescription>
-                                {selectedTrainee?.medicalHistory}
-                              </DialogDescription>
-                            </DialogHeader>
-                          </DialogContent>
-                        </Dialog>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setMoveParticipant(trainee);
-                            setSelectedTrainee(trainee);
-                          }}
-                          className="transition-none"
-                        >
-                          <UserPlus className="w-4 h-4 mr-2" />
-                          Move
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => removeTrainee(trainee.id)}
-                          className="transition-none"
-                        >
-                          <UserX className="w-4 h-4 mr-2" />
-                          Remove
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+      <div className="flex xl:flex-row flex-col-reverse justify-between w-full md:gap-8 gap-4 md:pb-4">
+        {isLoadingParticipants && <ParticipantsListSkeletonLoader />}
+        {!isLoadingParticipants && (
+          <div className="p-1 w-full max-w-3xl xl:max-w-4xl">
+            <div className="mb-4 max-w-xl">
+              <div className="relative">
+                <SearchIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search participants"
+                  className="pl-8"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="space-y-3">
+              {participants.map((participant) => (
+                <ProgramParticipantItem
+                  participant={participant}
+                  key={participant.id}
+                  onRemove={onRemoveProgramParticipant}
+                  onMove={onMoveProgramParticipant}
+                />
+              ))}
+            </div>
+
+            <Pagination className="mt-5">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    // onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    className={
+                      participantsPage === 1
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+                {[...Array(participantsPage)].map((_, index) => (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      href="#"
+                      // onClick={() => setCurrentPage(index + 1)}
+                      isActive={participantsPage === index + 1}
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
                 ))}
-              </TableBody>
-            </Table>
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    // onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    className={
+                      hasMoreParticipants
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
-          <div className="md:hidden space-y-4">
-            {/* Card view for small screens */}
-            {trainees.map((trainee) => (
-              <Card key={trainee.id} className="w-auto">
-                <CardHeader>
-                  <CardTitle>
-                    {trainee.firstName} {trainee.lastName}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>Age: {trainee.age}</p>
-                  <p>Gender: {trainee.gender}</p>
-                  <div className="mt-4 space-y-2">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="outline"
-                          onClick={() => setSelectedTrainee(trainee)}
-                          className="w-full transition-none"
-                        >
-                          View Medical History
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Medical History</DialogTitle>
-                          <DialogDescription>
-                            {selectedTrainee?.medicalHistory}
-                          </DialogDescription>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setMoveParticipant(trainee);
-                        setSelectedTrainee(trainee);
-                      }}
-                      className="w-full transition-none"
-                    >
-                      <UserPlus className="w-4 h-4 mr-2" />
-                      Move
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      onClick={() => removeTrainee(trainee.id)}
-                      className="w-full transition-none"
-                    >
-                      <UserX className="w-4 h-4 mr-2" />
-                      Remove
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          {moveParticipant && selectedTrainee && (
-            <Card className="md:w-[550px] w-auto shadow-md dark:shadow-sm dark:shadow-white/15 md:mx-2 md:my-2 bg-card/30">
-              <CardHeader>
-                <CardTitle className="text-xl">
-                  Change Training Program
-                </CardTitle>
-                <p className="text-muted-foreground text-sm">
-                  You are about to move this trainee from the current training
-                  program
-                </p>
-              </CardHeader>
-              <CardContent>
-                <form>
-                  <div className="grid w-full items-center gap-4">
-                    <div className="flex flex-col space-y-1.5">
-                      <label htmlFor="program">
-                        Select training program for{" "}
-                        <span className="font-semibold">
-                          {selectedTrainee.firstName} {selectedTrainee.lastName}
-                        </span>
-                      </label>
-                      <Select
-                        value={selectedProgram}
-                        onValueChange={setSelectedProgram}
-                      >
-                        <SelectTrigger id="program">
-                          <SelectValue placeholder="Select a program" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {programs.map((program) => (
-                            <SelectItem key={program} value={program}>
-                              {program}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </form>
-              </CardContent>
-              <CardFooter className="flex justify-between gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setMoveParticipant(null);
-                    setSelectedTrainee(null);
-                  }}
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  size="sm"
-                  className="flex-1"
-                  onClick={handleSubmit}
-                  disabled={!selectedProgram}
-                >
-                  Move to program
-                </Button>
-              </CardFooter>
-            </Card>
-          )}
-        </div>
-      </ScrollArea>
+        )}
+
+        {selectedParticipant && (
+          <MoveParticipantDialog
+            onCancel={onCancelMoveParticipant}
+            onSubmit={handleMoveProgramParticipant}
+            participant={selectedParticipant}
+          />
+        )}
+      </div>
     </div>
   );
 }
