@@ -27,7 +27,7 @@ type WorkoutProgram = {
   categories: string[];
   difficulty: string;
   exercises: Exercise[];
-  estimatedTime: number;
+  trainingDuration: number;
   trainer: string;
 };
 
@@ -81,7 +81,7 @@ const sampleProgram: WorkoutProgram = {
       videoLink: "https://example.com/bench-press-video",
     },
   ],
-  estimatedTime: 45,
+  trainingDuration: 45,
   trainer: "Anja Mirkovic",
 };
 

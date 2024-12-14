@@ -24,6 +24,14 @@ const metrics: ExerciseMetric[] = [
     unit: "kg",
   },
 ];
+import {
+  SingleTrainingProgramDTO,
+  SingleProgramTrainerDTO,
+} from "../contracts/program-details-contract";
+import {
+  SingleTrainingProgram,
+  SingleProgramTrainer,
+} from "../models/program-details";
 
 const exercises: ProgramExercise[] = [
   {
@@ -33,9 +41,30 @@ const exercises: ProgramExercise[] = [
       "A compound exercise that primarily targets the chest muscles.",
     videoLink: "https://example.com/bench-press",
     exerciseSets: [
-      { id: 1, firstMetricValue: "10", secondMetricValue: "135", restTime: 90 },
-      { id: 2, firstMetricValue: "8", secondMetricValue: "155", restTime: 120 },
-      { id: 3, firstMetricValue: "6", secondMetricValue: "175", restTime: 150 },
+      {
+        id: 1,
+        firstMetricValue: "10",
+        secondMetricValue: "135",
+        reps: 20,
+        weight: 0,
+        restTime: 90,
+      },
+      {
+        id: 2,
+        firstMetricValue: "8",
+        secondMetricValue: "155",
+        reps: 10,
+        weight: 10,
+        restTime: 120,
+      },
+      {
+        id: 3,
+        firstMetricValue: "6",
+        secondMetricValue: "175",
+        reps: 10,
+        weight: 15,
+        restTime: 150,
+      },
     ],
     firstMetric: metrics[0],
     secondMetric: metrics[1],
@@ -47,8 +76,22 @@ const exercises: ProgramExercise[] = [
       "A compound exercise that primarily targets the chest muscles. A compound exercise that primarily targets the chest muscles. A compound exercise that primarily targets the chest muscles.",
     videoLink: "https://example.com/bench-press",
     exerciseSets: [
-      { id: 4, firstMetricValue: "10", secondMetricValue: "135", restTime: 90 },
-      { id: 5, firstMetricValue: "8", secondMetricValue: "155", restTime: 120 },
+      {
+        id: 4,
+        firstMetricValue: "10",
+        secondMetricValue: "135",
+        reps: 10,
+        weight: 10,
+        restTime: 90,
+      },
+      {
+        id: 5,
+        firstMetricValue: "8",
+        secondMetricValue: "155",
+        reps: 15,
+        weight: 10,
+        restTime: 120,
+      },
     ],
     firstMetric: metrics[0],
     secondMetric: metrics[1],
@@ -75,25 +118,50 @@ const exercises: ProgramExercise[] = [
   },
 ];
 
+const getSingleTrainingProgram = async (programId: number) => {
+  var url = ApiEndpoints.SingleTrainingProgram.replace(
+    "{programId}",
+    `${programId}`
+  );
+  return sendAxiosRequest<void, SingleTrainingProgramDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => response.data as SingleTrainingProgram);
+};
+
+const getSingleProgramTrainer = async (programId: number) => {
+  var url = ApiEndpoints.SingleTrainingProgram.replace(
+    "{programId}",
+    `${programId}`
+  );
+  url += `/trainer-info`;
+
+  return sendAxiosRequest<void, SingleProgramTrainerDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => response.data as SingleProgramTrainer);
+};
+
 const getSingleTrainingProgramDetails = (id: number) => {
   var url = ApiEndpoints.SingleTrainingProgram.replace("{programId}", `${id}`);
   url += "/details";
 
-  //   return sendAxiosRequest<void, SingleProgramDetailsDTO>({
-  //     method: "GET",
-  //     url: url,
-  //   }).then((response) => {
-  //     // Perform neccessary mappings etc...
-  //     return response.data as SingleProgramDetails;
-  //   });
-
-  return Promise.resolve<SingleProgramDetails>({
-    requirements:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim  ad minim veniam, quis nostrud exercitation ullamco laboris nisi utaliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-    trainingDuration: 90,
-    exercises: exercises,
+  return sendAxiosRequest<void, SingleProgramDetailsDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    // Perform neccessary mappings etc...
+    return response.data as SingleProgramDetails;
   });
 };
+
+//   return Promise.resolve<SingleProgramDetails>({
+//     requirements:
+//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim  ad minim veniam, quis nostrud exercitation ullamco laboris nisi utaliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+//     trainingDuration: 90,
+//     exercises: exercises,
+//   });
+// };
 
 const mockParticipants: SingleProgramParticipant[] = [
   {
@@ -216,4 +284,6 @@ const getPageableTrainingProgramParticipants = async (
 export {
   getSingleTrainingProgramDetails,
   getPageableTrainingProgramParticipants,
+  getSingleTrainingProgram,
+  getSingleProgramTrainer,
 };

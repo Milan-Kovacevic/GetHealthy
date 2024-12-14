@@ -2,14 +2,8 @@ package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.exceptions.NotFoundException;
-import dev.gethealthy.app.models.entities.ProgramRating;
-import dev.gethealthy.app.models.entities.TrainingProgram;
-import dev.gethealthy.app.models.entities.TrainingProgramExercise;
-import dev.gethealthy.app.models.responses.ProgramExerciseResponse;
-import dev.gethealthy.app.models.responses.SingleProgramDetailsResponse;
-import dev.gethealthy.app.models.responses.SingleProgramParticipantResponse;
-import dev.gethealthy.app.models.responses.TrainingProgramResponse;
-import dev.gethealthy.app.repositories.RatingRepository;
+import dev.gethealthy.app.models.entities.*;
+import dev.gethealthy.app.models.responses.*;
 import dev.gethealthy.app.repositories.TraineeOnTrainingProgramRepository;
 import dev.gethealthy.app.repositories.TrainingProgramExerciseRepository;
 import dev.gethealthy.app.repositories.TrainingProgramRepository;
@@ -22,9 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,6 +57,44 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
     }
 
     @Override
+    public SingleTrainingProgramResponse getSingleTrainingProgram(Integer programId) {
+        TrainingProgram program = trainingProgramRepository.findById(programId)
+                .orElseThrow(NotFoundException::new);
+
+        SingleTrainingProgramResponse programResponse = modelMapper.map(program, SingleTrainingProgramResponse.class);
+
+        programResponse.setCurrentlyEnrolled(getTrainingProgramCurrentlyEnrolled(programId));
+        programResponse.setTotalRates(getTrainingProgramTotalRates(programId));
+        programResponse.setAverageRate(getTrainingProgramAverageRate(programId));
+
+        return programResponse;
+    }
+
+    private int getTrainingProgramCurrentlyEnrolled(Integer programId) {
+        return trainingProgramRepository.calculateNumberOfTrainingProgramTrainees(programId);
+    }
+
+    private int getTrainingProgramTotalRates(Integer programId) {
+        return trainingProgramRepository.calculateNumberOfTrainingProgramRatings(programId);
+    }
+
+    private Double getTrainingProgramAverageRate(Integer programId) {
+        return trainingProgramRepository.calculateTrainingProgramAverageRate(programId);
+    }
+
+    @Override
+    public TrainerResponse getTrainerByProgramId(Integer programId) {
+        TrainingProgram trainingProgram = trainingProgramRepository.findById(programId)
+                .orElseThrow(NotFoundException::new);
+
+        Trainer trainer = trainingProgram.getTrainer();
+        UserAccount userAccount = trainer.getUserAccount();
+        TrainerResponse response = modelMapper.map(trainer, TrainerResponse.class);
+        response.setEmail(userAccount.getEmail());
+
+        return response;
+    }
+
     public SingleProgramDetailsResponse getTrainingProgramDetails(Integer id) {
         TrainingProgram trainingProgram = trainingProgramRepository.findById(id).orElseThrow(NotFoundException::new);
 

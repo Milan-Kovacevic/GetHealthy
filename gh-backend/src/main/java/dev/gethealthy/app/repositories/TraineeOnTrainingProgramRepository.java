@@ -22,6 +22,6 @@ public interface TraineeOnTrainingProgramRepository extends JpaRepository<Traine
     Page<TraineeOnTrainingProgram> getAllTraineesOnTrainingProgramFiltered(Integer programId, String filter, Pageable page);
 
     @Query("SELECT e.program from TraineeOnTrainingProgram e WHERE e.user.id = :traineeId and " +
-            "(e.program.name like %:filter% or e.program.user.firstName like %:filter% or e.program.user.lastName like %:filter%)")
+            "(e.program.name like %:filter% or e.program.trainer.firstName like %:filter% or e.program.trainer.lastName like %:filter%)")
     Page<TrainingProgram> getAllTraineeProgramsFiltered(Integer traineeId, String filter, Pageable page);
 }

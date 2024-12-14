@@ -1,8 +1,5 @@
 package dev.gethealthy.app.controllers;
 
-import dev.gethealthy.app.base.CrudController;
-import dev.gethealthy.app.exceptions.NotFoundException;
-import dev.gethealthy.app.exceptions.UnauthorizedException;
 import dev.gethealthy.app.models.requests.CommentRequest;
 import dev.gethealthy.app.models.responses.CommentResponse;
 import dev.gethealthy.app.services.CommentService;
@@ -10,7 +7,6 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

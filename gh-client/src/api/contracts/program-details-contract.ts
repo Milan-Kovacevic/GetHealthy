@@ -6,7 +6,7 @@ import { ProgramDifficultyDTO } from "./training-program-contract";
 export type SingleTrainingProgramDTO = {
   id: number;
   name: string;
-  programPictureFilePath: string; // ???
+  imageFilePath: string; // ?
   difficulty: ProgramDifficultyDTO;
   averageRate: number;
   totalRates: number;
@@ -14,7 +14,7 @@ export type SingleTrainingProgramDTO = {
   trainerFirstName: string;
   trainerLastName: string;
   categories: CategoryDTO[];
-  enrolled: number;
+  currentlyEnrolled: number;
 };
 
 export type SingleProgramDetailsDTO = {

@@ -20,8 +20,11 @@ export type ProgramTrainer = {
   lastName: string;
   biography: string;
   contactInfo: string;
-
+  email: string;
+  profilePictureFilePath: string;
   /// ??? Only basic info ...
 };
 
 export type PageableTrainingPrograms = Page<TrainingProgram>;
+
+export type ProgramDifficulty = "Beginner" | "Intermediate" | "Advanced";
