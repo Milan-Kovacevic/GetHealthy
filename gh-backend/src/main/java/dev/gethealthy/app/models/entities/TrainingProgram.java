@@ -1,7 +1,7 @@
 package dev.gethealthy.app.models.entities;
 
 import dev.gethealthy.app.base.BaseEntity;
-import dev.gethealthy.app.models.enums.Difficulty;
+import dev.gethealthy.app.models.enums.TrainingProgramDifficulty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -31,7 +31,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "Difficulty", nullable = false)
-    private Difficulty difficulty;
+    private TrainingProgramDifficulty difficulty;
 
     @NotNull
     @Column(name = "TrainingDuration", nullable = false)

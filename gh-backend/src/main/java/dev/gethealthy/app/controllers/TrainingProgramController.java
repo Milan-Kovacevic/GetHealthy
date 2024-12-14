@@ -1,10 +1,12 @@
 package dev.gethealthy.app.controllers;
 
 import dev.gethealthy.app.base.CrudController;
+import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.SingleTrainingProgramResponse;
 import dev.gethealthy.app.models.responses.TrainerResponse;
+import dev.gethealthy.app.models.responses.SingleProgramDetailsResponse;
 import dev.gethealthy.app.models.responses.TrainingProgramResponse;
 import dev.gethealthy.app.services.TrainingProgramService;
 import dev.gethealthy.app.specifications.TrainingProgramSpecification;
@@ -59,5 +61,9 @@ public class TrainingProgramController {//extends CrudController<Integer, Traini
     @GetMapping("/{programId}/trainer-info")
     public TrainerResponse getTrainerByProgramId(@PathVariable Integer programId) {
         return trainingProgramService.getTrainerByProgramId(programId);
+    @GetMapping
+    @RequestMapping("/{id}/details")
+    public SingleProgramDetailsResponse getTrainingProgramDetails(@PathVariable(name = "id") Integer id){
+        return trainingProgramService.getTrainingProgramDetails(id);
     }
 }

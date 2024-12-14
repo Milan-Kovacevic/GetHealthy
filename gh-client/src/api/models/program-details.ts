@@ -18,7 +18,7 @@ export type SingleTrainingProgram = {
 
   export type SingleProgramDetails = {
     requirements: string;
-    estimatedWorkoutTime: number;
+    estimatedWorkoutTime: number; //trainingDuration
     exercises: ProgramExercise[];
   };
   
