@@ -19,9 +19,6 @@ public interface TrainingProgramService extends CrudService<Integer> {
     void delete(Integer id);
     SingleTrainingProgramResponse getSingleTrainingProgram(Integer programId);
     TrainerResponse getTrainerByProgramId(Integer programId);
-
-
     SingleProgramDetailsResponse getTrainingProgramDetails(Integer id);
-
     Page<SingleProgramParticipantResponse> getTrainingProgramParticipants(Integer programId, String filter, Pageable page);
 }

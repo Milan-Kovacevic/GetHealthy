@@ -123,6 +123,7 @@ const getSingleTrainingProgram = async (programId: number) => {
     "{programId}",
     `${programId}`
   );
+  await delay(2000);
   return sendAxiosRequest<void, SingleTrainingProgramDTO>({
     method: "GET",
     url: url,
@@ -135,7 +136,7 @@ const getSingleProgramTrainer = async (programId: number) => {
     `${programId}`
   );
   url += `/trainer-info`;
-
+  await delay(2000);
   return sendAxiosRequest<void, SingleProgramTrainerDTO>({
     method: "GET",
     url: url,
@@ -153,15 +154,14 @@ const getSingleTrainingProgramDetails = (id: number) => {
     // Perform neccessary mappings etc...
     return response.data as SingleProgramDetails;
   });
-};
 
-//   return Promise.resolve<SingleProgramDetails>({
-//     requirements:
-//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim  ad minim veniam, quis nostrud exercitation ullamco laboris nisi utaliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-//     trainingDuration: 90,
-//     exercises: exercises,
-//   });
-// };
+  // return Promise.resolve<SingleProgramDetails>({
+  //   requirements:
+  //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim  ad minim veniam, quis nostrud exercitation ullamco laboris nisi utaliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+  //   trainingDuration: 90,
+  //   exercises: exercises,
+  // });
+};
 
 const mockParticipants: SingleProgramParticipant[] = [
   {
@@ -247,38 +247,38 @@ const getPageableTrainingProgramParticipants = async (
     "{programId}",
     `${programId}`
   );
-  url += `/participants?filter=${filter}page=${page}&pageSize=${pageSize}`;
+  url += `/participants?filter=${filter}&page=${page}&pageSize=${pageSize}`;
 
-  // return sendAxiosRequest<void, PageableProgramParticipantsDTO>({
-  //   method: "GET",
-  //   url: url,
-  // }).then((response) => {
-  //   // Perform neccessary mappings etc...
-  //   return response.data as PageableProgramParticipants;
-  // });
-  await delay(2000);
-  return Promise.resolve<PageableProgramParticipants>({
-    content: mockParticipants,
-    empty: false,
-    first: true,
-    last: true,
-    number: 1,
-    numberOfElements: 3,
-    pageable: {
-      offset: 0,
-      paged: true,
-      pageNumber: 1,
-      pageSize: 10,
-      sort: {
-        empty: true,
-        sorted: false,
-        unsorted: true,
-      },
-    },
-    size: 3,
-    totalElements: 3,
-    totalPages: 1,
+  return sendAxiosRequest<void, PageableProgramParticipantsDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    // Perform neccessary mappings etc...
+    return response.data as PageableProgramParticipants;
   });
+  await delay(2000);
+  // return Promise.resolve<PageableProgramParticipants>({
+  //   content: mockParticipants,
+  //   empty: false,
+  //   first: true,
+  //   last: true,
+  //   number: 1,
+  //   numberOfElements: 3,
+  //   pageable: {
+  //     offset: 0,
+  //     paged: true,
+  //     pageNumber: 1,
+  //     pageSize: 10,
+  //     sort: {
+  //       empty: true,
+  //       sorted: false,
+  //       unsorted: true,
+  //     },
+  //   },
+  //   size: 3,
+  //   totalElements: 3,
+  //   totalPages: 1,
+  // });
 };
 
 export {

@@ -1,17 +1,22 @@
 use get_healthy;
 
-INSERT INTO category VALUES (1,'Flexibility'),(2,'Cardio'),(3,'Strength');
-delete from category where CategoryId between 1 and 11;
+-- delete from category where CategoryId between 1 and 11;
+-- delete from user_account where UserId between 1 and 11;
+-- delete from user where UserId between 1 and 11;
+-- delete from trainer where UserId between 1 and 11;
+-- delete from training_program where ProgramId between 1 and 11;
+
+INSERT INTO category (CategoryId, Name) VALUES (1,'Flexibility'),(2,'Cardio'),(3,'Strength');
 INSERT INTO user_account(UserId, Username, `Password`, Email, Enabled, `Role`, CreatedAt) VALUES (1, 'anjam', 'anja', 'anjam@mail.com', 1, 1,'2024-12-13 18:55:37');
 
 INSERT INTO user (UserId, FirstName, LastName, DateOfBirth, Gender, ProfilePictureFilePath) 
 VALUES (1, 'Anja', 'Mirković', '1995-08-03', 1, 'images/female.jpg');
 
-INSERT INTO trainer VALUES (1,'Magistar sporta i tjelesnog odgoja sa dugogodišnjim iskustvom personal trenera u fitness centrima. Nekoliko godina je radila kao trener plivanja u klubu „Adriatic“ na olimpijskom bazenu Otoka. Rad se bazirao na radu sa neplivačima i djecom predškolskog uzrasta i mladje.', '065/111-222'); 
+INSERT INTO trainer(UserId, Biography, ContactInfo) VALUES (1,'Magistar sporta i tjelesnog odgoja sa dugogodišnjim iskustvom personal trenera u fitness centrima. Nekoliko godina je radila kao trener plivanja u klubu „Adriatic“ na olimpijskom bazenu Otoka. Rad se bazirao na radu sa neplivačima i djecom predškolskog uzrasta i mladje.', '065/111-222'); 
 
 INSERT INTO training_program(ProgramId, `Name`, Difficulty, TrainingDuration, `Description`, Requirements, CreatedAt, UserId) VALUES (1,'Pilates Harmony', 1, 45, '\"Pilates Harmony\" je holistički program vježbanja koji se fokusira na razvoj snage, fleksibilnosti, stabilnosti i koordinacije tijela. Ovaj program takođe promoviše unutrašnji mir i mentalni fokus kroz tehnike disanja i svijesti o tijelu. Vježbe u \"Pilates Harmony\" se obično izvode polako i kontrolisano, sa naglaskom na pravilnoj tehnici izvođenja. Ovaj program može biti prilagođen različitim nivoima vježbača, od početnika do naprednih.','Preporučuje se nošenje udobne sportske odjeće koja omogućava slobodno kretanje. \nTrebaće Vam udobna podloga (npr. yoga mat) na kojoj ćete izvoditi vježbe.','2023-12-13',1);
 
-INSERT INTO training_program_category values(1, 1), (1, 2), (1, 3);
+INSERT INTO training_program_category(ProgramId, CategoryId) values(1, 1), (1, 2), (1, 3);
 
 INSERT INTO user_account(UserId, Username, `Password`, Email, Enabled, `Role`, CreatedAt) VALUES (2, 'milam', 'mila', 'mila@mail.com', 1, 2,'2024-12-13 18:55:37');
 INSERT INTO user_account(UserId, Username, `Password`, Email, Enabled, `Role`, CreatedAt) VALUES (3, 'markov', 'marko', 'markov@mail.com', 1, 2,'2024-12-13 18:40:37');

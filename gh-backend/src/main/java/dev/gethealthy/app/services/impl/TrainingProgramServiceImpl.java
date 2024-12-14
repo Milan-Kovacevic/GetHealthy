@@ -39,16 +39,14 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
         var dbResponse = trainingProgramRepository.findAll(spec, pageableWithSort);
         var result = dbResponse.map(e -> modelMapper.map(e, TrainingProgramResponse.class));
-        for(int i=0;i< result.getContent().size();i++)
-        {
+        for (int i = 0; i < result.getContent().size(); i++) {
             result.getContent().get(i).setRating(dbResponse.getContent().get(i).getTrainingProgramRatings().stream().mapToDouble(ProgramRating::getRate).average().orElse(0.0));
         }
         return result;
     }
 
     @Override
-    public void delete(Integer id)
-    {
+    public void delete(Integer id) {
         var trainingProgram = trainingProgramRepository.findById(id).orElse(null);
         if (trainingProgram == null)
             throw new NotFoundException();
@@ -79,7 +77,7 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
     }
 
     private Double getTrainingProgramAverageRate(Integer programId) {
-        return trainingProgramRepository.calculateTrainingProgramAverageRate(programId);
+        return trainingProgramRepository.calculateTrainingProgramAverageRate(programId).orElse(0.0);
     }
 
     @Override
@@ -111,8 +109,13 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
 
     @Override
     public Page<SingleProgramParticipantResponse> getTrainingProgramParticipants(Integer programId, String filter, Pageable page) {
-    var programParticipants = traineeOnTrainingProgramRepository.getAllTraineesOnTrainingProgramFiltered(programId, filter, page);
+        var programParticipants = traineeOnTrainingProgramRepository.getAllTraineesOnTrainingProgramFiltered(programId, filter, page);
 
-    return programParticipants.map(e -> modelMapper.map(e, SingleProgramParticipantResponse.class));
+        return programParticipants.map(e -> {
+            var model = modelMapper.map(e, SingleProgramParticipantResponse.class);
+            modelMapper.map(e.getUser(), model);
+            modelMapper.map(e.getUser().getUser(), model);
+            return model;
+        });
     }
 }
