@@ -6,14 +6,17 @@ import { Category } from "../models/category";
 const getAllCategories = async () => {
   var url = ApiEndpoints.Categories;
 
-  // return sendAxiosRequest<void, CategoryDTO[]>({
-  //   method: "GET",
-  //   url: url,
-  // }).then((response) => {
-  //   return response.data as Category[];
-  // });
+  return sendAxiosRequest<void, CategoryDTO[]>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    return response.data as Category[];
+  });
+}
 
-  // Mock response for now
+export {getAllCategories};
+
+  /*// Mock response for now
   return Promise.resolve<Category[]>([
     {
       id: 1,
@@ -28,6 +31,4 @@ const getAllCategories = async () => {
       categoryName: "Strength",
     },
   ]);
-};
-
-export { getAllCategories };
+};*/

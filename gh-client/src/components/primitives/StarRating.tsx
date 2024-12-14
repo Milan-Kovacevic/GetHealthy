@@ -51,7 +51,7 @@ export default function StarRating({
           </button>
         );
       })}
-      <span className="ml-2 text-sm font-medium">{rating.toFixed(1)}</span>
+      <span className="ml-2 text-sm font-medium">{rating}</span>
     </div>
   );
 }

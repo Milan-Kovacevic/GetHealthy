@@ -63,7 +63,7 @@ public class TrainingProgramApplicationServiceImpl extends CrudJpaService<Traini
     @Override
     public Page<TrainingProgramApplicationResponse> getAllApplicationsForTrainer(Integer trainerId, Pageable page) {
         return trainingProgramApplicationRepository
-                .findByProgram_User_IdOrderByMarkReadAsc(trainerId, page)
+                .findByProgram_Trainer_IdOrderByMarkReadAsc(trainerId, page)
                 .map(e -> modelMapper.map(e, TrainingProgramApplicationResponse.class));
     }
 
@@ -129,7 +129,7 @@ public class TrainingProgramApplicationServiceImpl extends CrudJpaService<Traini
 
             notificationService.createNotification(
                     application.getUser(),
-                    application.getProgram().getUser(),
+                    application.getProgram().getTrainer(),
                     application.getProgram().getName(),
                     NotificationType.PROGRAM_APPLICATION_ACCEPTED,
                     application.getNote()
@@ -137,7 +137,7 @@ public class TrainingProgramApplicationServiceImpl extends CrudJpaService<Traini
         } else {
             notificationService.createNotification(
                     application.getUser(),
-                    application.getProgram().getUser(),
+                    application.getProgram().getTrainer(),
                     application.getProgram().getName(),
                     NotificationType.PROGRAM_APPLICATION_ACCEPTED,
                     application.getNote()

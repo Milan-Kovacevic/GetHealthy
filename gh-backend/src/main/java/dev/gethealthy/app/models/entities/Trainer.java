@@ -28,8 +28,7 @@ public class Trainer extends User implements BaseEntity<Integer> {
     @Column(name = "Biography", length = 512)
     private String biography;
 
-    @Size(max = 128)
-    @Column(name = "ContactInfo", length = 128)
+    @Size(max = 32)
+    @Column(name = "ContactInfo", length = 32)
     private String contactInfo;
-
 }

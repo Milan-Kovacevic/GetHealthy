@@ -1,6 +1,7 @@
 package dev.gethealthy.app.models.responses;
 
 import dev.gethealthy.app.models.entities.Trainer;
+import dev.gethealthy.app.models.enums.Difficulty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,7 @@ public class TrainingProgramResponse {
 
     private String name;
 
-    private Byte difficulty;
+    private Difficulty difficulty;
 
     private Integer trainingDuration;
 
@@ -30,5 +31,10 @@ public class TrainingProgramResponse {
 
     private double rating;
 
-    private Trainer user; // TODO: ????
+    //private Trainer user; // TODO: ????
+    private String trainerFirstName;
+
+    private String trainerLastName;
+
+    private String imageFilePath;
 }

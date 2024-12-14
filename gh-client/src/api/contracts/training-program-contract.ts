@@ -20,6 +20,8 @@ export type ProgramTrainerDTO = {
   lastName: string;
   biography: string;
   contactInfo: string;
+  email: string;
+  profilePictureFilePath: string;
   /// ??? Only basic info ...
 };
 
