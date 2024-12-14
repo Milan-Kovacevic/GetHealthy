@@ -102,7 +102,7 @@ export default function ExerciseList(props: ExerciseListProps) {
                 <p className="text-sm text-muted-foreground mb-2">
                   Number of sets:
                   <span className="text-foreground/85 ml-1 font-medium">
-                    {exercise.sets}
+                    {exercise.exerciseSets.length} {/*exercese.sets*/}
                   </span>
                 </p>
               </CardHeader>
@@ -112,7 +112,8 @@ export default function ExerciseList(props: ExerciseListProps) {
                     <AccordionTrigger>View Set Details</AccordionTrigger>
                     <AccordionContent>
                       <ul className="space-y-2 dark:text-foreground/80 text-foreground/85">
-                        {exercise.setDetails.map((set, index) => (
+                        {/* {exercise.setDetails.map((set, index) => ( */}
+                        {exercise.exerciseSets.map((set, index) => (
                           <li
                             key={index}
                             className="bg-muted/50 p-2 px-4 rounded-md"

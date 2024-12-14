@@ -13,3 +13,12 @@ export type ExerciseMetricDTO = {
   name: string;
   unit: string;
 };
+
+export type ExerciseSetDTO = {
+  id: number;
+  restTime: number;
+  reps?: number; //dodala
+  weight?: number; //dodala
+  firstMetricValue: string;
+  secondMetricValue: string;
+};

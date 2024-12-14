@@ -20,6 +20,5 @@ public interface TrainingProgramService extends CrudService<Integer> {
     TrainerResponse getTrainerByProgramId(Integer programId);
 
 
-
     SingleProgramDetailsResponse getTrainingProgramDetails(Integer id);
 }

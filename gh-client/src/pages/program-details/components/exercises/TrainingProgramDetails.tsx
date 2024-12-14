@@ -3,7 +3,10 @@ import ExerciseList from "./ExerciseList";
 import { useEffect, useState } from "react";
 import { SingleProgramDetails } from "@/api/models/program-details";
 import { useParams } from "react-router-dom";
-import { getSingleTrainingProgramDetails } from "@/api/services/program-details-service";
+import {
+  exercises,
+  getSingleTrainingProgramDetails,
+} from "@/api/services/program-details-service";
 
 export default function TrainingProgramDetails() {
   const [programDetails, setProgramDetails] = useState<SingleProgramDetails>();
@@ -39,7 +42,8 @@ export default function TrainingProgramDetails() {
             </span>
           </p>
           <div className="mt-4">
-            <ExerciseList />
+            <ExerciseList exercises={exercises} />{" "}
+            {/*greska da nedostaje props*/}
           </div>
         </div>
       )}

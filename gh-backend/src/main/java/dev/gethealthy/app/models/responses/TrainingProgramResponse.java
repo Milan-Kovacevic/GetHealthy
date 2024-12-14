@@ -1,7 +1,6 @@
 package dev.gethealthy.app.models.responses;
 
-import dev.gethealthy.app.models.entities.Trainer;
-import dev.gethealthy.app.models.enums.Difficulty;
+import dev.gethealthy.app.models.enums.TrainingProgramDifficulty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +16,7 @@ public class TrainingProgramResponse {
 
     private String name;
 
-    private Difficulty difficulty;
+    private TrainingProgramDifficulty difficulty;
 
     private Integer trainingDuration;
 

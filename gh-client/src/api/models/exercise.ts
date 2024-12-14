@@ -18,6 +18,8 @@ export type ExerciseMetric = {
 export type ExerciseSet = {
   id: number;
   restTime: number;
+  reps?: number;
+  weight?: number;
   firstMetricValue: string;
   secondMetricValue: string;
 };

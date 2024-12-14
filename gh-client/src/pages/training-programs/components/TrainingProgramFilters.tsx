@@ -66,16 +66,21 @@ export function TrainingProgramFilters(props: FilterProps) {
           <h3 className="text-sm font-medium mb-2">Categories</h3>
           <div className="space-y-2">
             {categories.map((category) => (
-              <div key={category.id} className="flex items-center space-x-2">
+              <div
+                key={category.category.id}
+                className="flex items-center space-x-2"
+              >
                 <Checkbox
-                  id={category.id.toString()}
-                  checked={selectedCategories.includes(category.id.toString())}
+                  id={category.category.id.toString()}
+                  checked={selectedCategories.includes(
+                    category.category.id.toString()
+                  )}
                   onCheckedChange={() =>
-                    handleCategoryChange(category.id.toString())
+                    handleCategoryChange(category.category.id.toString())
                   }
                 />
-                <Label htmlFor={category.id.toString()}>
-                  {category.categoryName}
+                <Label htmlFor={category.category.id.toString()}>
+                  {category.category.categoryName}
                 </Label>
               </div>
             ))}

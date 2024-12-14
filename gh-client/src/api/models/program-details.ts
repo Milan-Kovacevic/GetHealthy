@@ -5,7 +5,7 @@ import { ProgramDifficulty } from "./training-program";
 export type SingleTrainingProgram = {
     id: number;
     name: string;
-    imageFilePath: string; //?
+    imageFilePath: string; 
     difficulty: ProgramDifficulty;
     averageRate: number;
     totalRates: number;
@@ -18,7 +18,7 @@ export type SingleTrainingProgram = {
 
   export type SingleProgramDetails = {
     requirements: string;
-    estimatedWorkoutTime: number; //trainingDuration
+    trainingDuration: number;
     exercises: ProgramExercise[];
   };
   

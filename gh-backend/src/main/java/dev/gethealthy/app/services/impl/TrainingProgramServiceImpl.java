@@ -93,12 +93,16 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
                 .orElseThrow(NotFoundException::new);
 
         Trainer trainer = trainingProgram.getTrainer();
-        UserAccount userAccount=trainer.getUserAccount();
+        UserAccount userAccount = trainer.getUserAccount();
         if (trainer == null) {
             throw new NotFoundException();
         }
-        TrainerResponse response=modelMapper.map(trainer, TrainerResponse.class);
+        TrainerResponse response = modelMapper.map(trainer, TrainerResponse.class);
         response.setEmail(userAccount.getEmail());
+
+        return response;
+    }
+
     public SingleProgramDetailsResponse getTrainingProgramDetails(Integer id) {
         TrainingProgram trainingProgram = trainingProgramRepository.findById(id).orElseThrow(NotFoundException::new);
 
