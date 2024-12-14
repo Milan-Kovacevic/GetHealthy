@@ -17,13 +17,17 @@ public interface TrainingProgramApplicationService extends CrudService<TrainingP
 
     Page<TrainingProgramApplicationResponse> getAllApplicationsForTrainer(Integer trainerId, Pageable page);
 
-    Page<TrainingProgramApplicationResponse> getAllApplicationsForTrainerFiltered(Integer userId, String filter, Pageable page);
+    Page<TrainingProgramApplicationResponse> getAllApplicationsForTrainerFiltered(Integer userId, String filter,
+            Pageable page);
 
     SingleTrainingProgramApplicationResponse getProgramApplication(TrainingProgramApplicationId id);
 
     TrainingProgramApplicationResponse insertTrainingProgramApplication(TrainingProgramApplicationRequest request);
 
-    void processTrainingProgramApplication(TrainingProgramApplicationId id, TrainingProgramApplicationProcessRequest request);
+    void processTrainingProgramApplication(TrainingProgramApplicationId id,
+            TrainingProgramApplicationProcessRequest request);
 
     void markTrainingProgramApplicationAsRead(TrainingProgramApplicationId id);
+
+    void joinProgram(TrainingProgramApplicationRequest request);
 }

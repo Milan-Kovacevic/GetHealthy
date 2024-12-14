@@ -23,35 +23,45 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class TrainingProgramApplicationServiceImpl extends CrudJpaService<TrainingProgramApplication, TrainingProgramApplicationId> implements TrainingProgramApplicationService {
+public class TrainingProgramApplicationServiceImpl
+        extends CrudJpaService<TrainingProgramApplication, TrainingProgramApplicationId>
+        implements TrainingProgramApplicationService {
     private final TrainingProgramApplicationRepository trainingProgramApplicationRepository;
     private final TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository;
     private final TrainingProgramRepository trainingProgramRepository;
     private final TraineeRepository traineeRepository;
     private final NotificationService notificationService;
 
-    public TrainingProgramApplicationServiceImpl(TrainingProgramApplicationRepository trainingProgramApplicationRepository, ModelMapper modelMapper, TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository, TrainingProgramRepository trainingProgramRepository, TraineeRepository traineeRepository, NotificationService notificationService) {
+    public TrainingProgramApplicationServiceImpl(
+            TrainingProgramApplicationRepository trainingProgramApplicationRepository, ModelMapper modelMapper,
+            TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository,
+            TrainingProgramRepository trainingProgramRepository, TraineeRepository traineeRepository,
+            NotificationService notificationService) {
         super(trainingProgramApplicationRepository, modelMapper, TrainingProgramApplication.class);
-        this.trainingProgramApplicationRepository=trainingProgramApplicationRepository;
-        this.traineeOnTrainingProgramRepository=traineeOnTrainingProgramRepository;
-        this.trainingProgramRepository=trainingProgramRepository;
-        this.traineeRepository=traineeRepository;
-        this.notificationService=notificationService;
+        this.trainingProgramApplicationRepository = trainingProgramApplicationRepository;
+        this.traineeOnTrainingProgramRepository = traineeOnTrainingProgramRepository;
+        this.trainingProgramRepository = trainingProgramRepository;
+        this.traineeRepository = traineeRepository;
+        this.notificationService = notificationService;
     }
 
     @Override
     public List<TrainingProgramApplicationResponse> getAllApplicationsForTrainingProgram(Integer programId) {
-        TrainingProgram trainingProgram = trainingProgramRepository.findById(programId).orElseThrow(NotFoundException::new);
-        /*JWTUser user = Utility.getJwtUser();
-        if (user == null)
-            throw new UnauthorizedException();
-        if (!user.getUserId().equals(trainingProgram.getTrainer().getUserId()))
-            throw new ForbiddenException(); */
+        TrainingProgram trainingProgram = trainingProgramRepository.findById(programId)
+                .orElseThrow(NotFoundException::new);
+        /*
+         * JWTUser user = Utility.getJwtUser();
+         * if (user == null)
+         * throw new UnauthorizedException();
+         * if (!user.getUserId().equals(trainingProgram.getTrainer().getUserId()))
+         * throw new ForbiddenException();
+         */
 
         return trainingProgramApplicationRepository
                 .findByProgram_IdOrderByMarkReadAsc(programId)
@@ -68,7 +78,8 @@ public class TrainingProgramApplicationServiceImpl extends CrudJpaService<Traini
     }
 
     @Override
-    public Page<TrainingProgramApplicationResponse> getAllApplicationsForTrainerFiltered(Integer userId, String filter, Pageable page) {
+    public Page<TrainingProgramApplicationResponse> getAllApplicationsForTrainerFiltered(Integer userId, String filter,
+            Pageable page) {
         return trainingProgramApplicationRepository
                 .findAllTrainerApplicationsFiltered(userId, filter, page)
                 .map(e -> modelMapper.map(e, TrainingProgramApplicationResponse.class));
@@ -79,21 +90,27 @@ public class TrainingProgramApplicationServiceImpl extends CrudJpaService<Traini
         TrainingProgramApplication entity = trainingProgramApplicationRepository
                 .findById((id))
                 .orElseThrow(NotFoundException::new);
-        /*JWTUser user = Utility.getJwtUser();
-        if (user == null)
-            throw new UnauthorizedException();
-        if (!user.getUserId().equals(entity.getTrainingProgram().getTrainer().getUserId()))
-            throw new ForbiddenException();*/
+        /*
+         * JWTUser user = Utility.getJwtUser();
+         * if (user == null)
+         * throw new UnauthorizedException();
+         * if
+         * (!user.getUserId().equals(entity.getTrainingProgram().getTrainer().getUserId(
+         * )))
+         * throw new ForbiddenException();
+         */
 
         return modelMapper.map(entity, SingleTrainingProgramApplicationResponse.class);
     }
 
     @Override
-    public TrainingProgramApplicationResponse insertTrainingProgramApplication(TrainingProgramApplicationRequest request) {
+    public TrainingProgramApplicationResponse insertTrainingProgramApplication(
+            TrainingProgramApplicationRequest request) {
         TrainingProgramApplication entity = modelMapper.map(request, TrainingProgramApplication.class);
         entity.setMarkRead(false);
         entity.setSubmissionDate(Utility.getInstantCurrentDate());
-        TrainingProgram trainingProgram = trainingProgramRepository.findById(request.getProgramId()).orElseThrow(NotFoundException::new);
+        TrainingProgram trainingProgram = trainingProgramRepository.findById(request.getProgramId())
+                .orElseThrow(NotFoundException::new);
         Trainee trainee = traineeRepository.findById(request.getTraineeId()).orElseThrow(NotFoundException::new);
 
         if (traineeOnTrainingProgramRepository.existsByProgram_IdAndUser_Id(trainingProgram.getId(), trainee.getId()))
@@ -110,15 +127,19 @@ public class TrainingProgramApplicationServiceImpl extends CrudJpaService<Traini
     }
 
     @Override
-    public void processTrainingProgramApplication(TrainingProgramApplicationId id, TrainingProgramApplicationProcessRequest request) {
+    public void processTrainingProgramApplication(TrainingProgramApplicationId id,
+            TrainingProgramApplicationProcessRequest request) {
         TrainingProgramApplication application = trainingProgramApplicationRepository
                 .findById(id)
                 .orElseThrow(NotFoundException::new);
-        /*JWTUser user = Utility.getJwtUser();
-        if (user == null)
-            throw new UnauthorizedException();
-        if (!user.getUserId().equals(application.getTrainingProgram().getTrainer().getUserId()))
-            throw new ForbiddenException();*/
+        /*
+         * JWTUser user = Utility.getJwtUser();
+         * if (user == null)
+         * throw new UnauthorizedException();
+         * if (!user.getUserId().equals(application.getTrainingProgram().getTrainer().
+         * getUserId()))
+         * throw new ForbiddenException();
+         */
 
         if (request.getApprove()) {
             TraineeOnTrainingProgram entity = new TraineeOnTrainingProgram();
@@ -132,16 +153,14 @@ public class TrainingProgramApplicationServiceImpl extends CrudJpaService<Traini
                     application.getProgram().getUser(),
                     application.getProgram().getName(),
                     NotificationType.PROGRAM_APPLICATION_ACCEPTED,
-                    application.getNote()
-            );
+                    application.getNote());
         } else {
             notificationService.createNotification(
                     application.getUser(),
                     application.getProgram().getUser(),
                     application.getProgram().getName(),
                     NotificationType.PROGRAM_APPLICATION_ACCEPTED,
-                    application.getNote()
-            );
+                    application.getNote());
         }
         trainingProgramApplicationRepository.deleteById(id);
     }
@@ -151,14 +170,34 @@ public class TrainingProgramApplicationServiceImpl extends CrudJpaService<Traini
         TrainingProgramApplication application = trainingProgramApplicationRepository
                 .findById(id)
                 .orElseThrow(NotFoundException::new);
-        /*JWTUser user = Utility.getJwtUser();
-        if (user == null)
-            throw new UnauthorizedException();
-        if (!user.getUserId().equals(application.getTrainingProgram().getTrainer().getUserId()))
-            throw new ForbiddenException(); */
+        /*
+         * JWTUser user = Utility.getJwtUser();
+         * if (user == null)
+         * throw new UnauthorizedException();
+         * if (!user.getUserId().equals(application.getTrainingProgram().getTrainer().
+         * getUserId()))
+         * throw new ForbiddenException();
+         */
 
         application.setMarkRead(true);
         trainingProgramApplicationRepository.saveAndFlush(application);
 
+    }
+
+    @Override
+    public void joinProgram(TrainingProgramApplicationRequest request) {
+        TrainingProgramApplication trainingProgramApplication = new TrainingProgramApplication();
+        TrainingProgram trainingProgram = trainingProgramRepository.findById(request.getProgramId())
+                .orElseThrow(NotFoundException::new);
+        Trainee trainee = traineeRepository.findById(request.getTraineeId()).orElseThrow(NotFoundException::new);
+        TrainingProgramApplicationId trainingProgramApplicationId = new TrainingProgramApplicationId();
+        trainingProgramApplicationId.setProgramId(request.getProgramId());
+        trainingProgramApplicationId.setUserId(request.getTraineeId());
+        trainingProgramApplication.setNote(request.getNote());
+        trainingProgramApplication.setProgram(trainingProgram);
+        trainingProgramApplication.setUser(trainee);
+        trainingProgramApplication.setSubmissionDate(Instant.now());
+        trainingProgramApplication.setId(trainingProgramApplicationId);
+        trainingProgramApplicationRepository.save(trainingProgramApplication);
     }
 }

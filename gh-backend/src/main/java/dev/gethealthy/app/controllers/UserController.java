@@ -5,24 +5,29 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.gethealthy.app.exceptions.BadRequestException;
 import dev.gethealthy.app.models.requests.TraineeRequest;
 import dev.gethealthy.app.models.requests.TrainerRequest;
+import dev.gethealthy.app.models.requests.TrainingProgramApplicationRequest;
 import dev.gethealthy.app.models.responses.TraineeResponse;
 import dev.gethealthy.app.models.responses.TrainerResponse;
+import dev.gethealthy.app.services.TrainingProgramApplicationService;
 import dev.gethealthy.app.services.UserService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${gethealthy.base-url}/users")
 public class UserController {
     private final UserService userService;
+    private final TrainingProgramApplicationService trainingProgramApplicationService;
 
     @GetMapping("/{trainerId}/trainer")
     @ResponseStatus(HttpStatus.OK)
@@ -51,4 +56,14 @@ public class UserController {
 
         userService.updateTrainee(request);
     }
+
+    @PostMapping("/join-program")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void joinProgram(@RequestBody @Valid TrainingProgramApplicationRequest request) {
+        if (request != null)
+            trainingProgramApplicationService.joinProgram(request);
+        else
+            throw new BadRequestException();
+    }
+
 }
