@@ -30,12 +30,12 @@ public class TrainingProgramResponse {
 
     private double rating;
 
-    private TrainerResponse user; // TODO: ????
+    private TrainerResponse trainer; // TODO: ????
     //private Trainer user; // TODO: ????
-    private String trainerFirstName;
+   // private String trainerFirstName;
 
-    private String trainerLastName;
+   // private String trainerLastName;
 
-    private String imageFilePath;
+   // private String imageFilePath;
 
 }

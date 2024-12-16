@@ -162,7 +162,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                     id={item.id}
                     difficulty={item.difficulty.toString()}
                     image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
-                    trainer={`${item.user.user.firstName} ${item.user.user.lastName}`}
+                    trainer={`${item.trainer.firstName} ${item.trainer.lastName}`}
                   ></TrainingProgramCard>
                 )})}
               </div>

@@ -23,7 +23,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getAllCategories } from "@/api/services/category-service";
-import { ProgramTrainer, TrainingProgram, User } from "@/api/models/training-program";
+import {
+  ProgramTrainer,
+  TrainingProgram,
+  User,
+} from "@/api/models/training-program";
 import { Category } from "@/api/models/category";
 import { createUpdateTrainingProgram } from "@/api/services/training-program-service";
 import { TrainingProgramDTO } from "@/api/contracts/training-program-contract";
@@ -32,7 +36,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import FormSectionTitle from "./FormSectionTitle";
-
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
@@ -81,16 +84,16 @@ export default function GeneralInformationForm({
             </code>
           </pre>
         );
-        console.log(typeof(values));
-        const categories : CategoryDTO[] = values.categories.map(
-          c =>  { return {
-            trainingProgramCategoryId: categoryOptions.find(e => e.value === c).id
-          }
-          }
-        );
+        console.log(typeof values);
+        const categories: CategoryDTO[] = values.categories.map((c) => {
+          return {
+            trainingProgramCategoryId: categoryOptions.find(
+              (e) => e.value === c
+            ).id,
+          };
+        });
 
-        const program : TrainingProgramDTO = 
-        {
+        const program: TrainingProgramDTO = {
           rating: 0,
           name: values.name,
           difficulty: Number.parseInt(values.difficulty),
@@ -98,8 +101,8 @@ export default function GeneralInformationForm({
           description: values.info,
           requirements: values.requirements,
           categories: categories,
-          userId: 3
-        }
+          userId: 3,
+        };
         await createUpdateTrainingProgram(program, false);
       } else {
         console.log("Updated values:", values);
@@ -111,27 +114,12 @@ export default function GeneralInformationForm({
     }
   }
 
-
   useEffect(() => {
     async function fetchCategories() {
-      setCategoryOptions(
-        (await getAllCategories()).map((item) => ({
-          label: item.categoryName,
-          value: item.categoryName,
-          id: item.id
-        })))
+      setCategoryOptions(await getAllCategories());
     }
     fetchCategories();
   }, []);
-  
-
-  const categoryOptions = [
-    { name: "Technical", categoryId: "1" },
-    { name: "Soft Skills", categoryId: "2" },
-    { name: "Leadership", categoryId: "3" },
-    { name: "Project Management", categoryId: "4" },
-    { name: "Design", categoryId: "5" },
-  ];
 
   const difficultyOptions = [
     { label: "Beginner", value: "1" },
@@ -208,8 +196,8 @@ export default function GeneralInformationForm({
                           }
                           maxCount={3}
                           minCount={1}
-                          itemNameKey="name"
-                          itemValueKey="categoryId"
+                          itemNameKey="categoryName"
+                          itemValueKey="id"
                         />
                       </FormControl>
                       <FormDescription className="text-xs ml-0.5">
