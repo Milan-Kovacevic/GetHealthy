@@ -43,8 +43,10 @@ const formSchema = z.object({
   categories: z
     .array(
       z.z.object({
-        categoryId: z.string().min(1, { message: "Category ID is required." }),
-        name: z.string().min(1, { message: "Category name is required." }),
+        id: z.number().min(1, { message: "Category ID is required." }),
+        categoryName: z
+          .string()
+          .min(1, { message: "Category name is required." }),
       })
     )
     .min(1, { message: "At least one category is required." }),
@@ -75,8 +77,6 @@ export default function GeneralInformationForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (!isEdit) {
-        console.log(values);
-        console.log(categoryOptions);
         toast(
           <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
             <code className="text-white">
@@ -84,15 +84,6 @@ export default function GeneralInformationForm({
             </code>
           </pre>
         );
-        console.log(typeof values);
-        const categories: CategoryDTO[] = values.categories.map((c) => {
-          return {
-            trainingProgramCategoryId: categoryOptions.find(
-              (e) => e.value === c
-            ).id,
-          };
-        });
-
         const program: TrainingProgramDTO = {
           rating: 0,
           name: values.name,
@@ -100,8 +91,10 @@ export default function GeneralInformationForm({
           trainingDuration: 0,
           description: values.info,
           requirements: values.requirements,
-          categories: categories,
-          userId: 3,
+          categories: values.categories.map((c) => ({
+            trainingProgramCategoryId: c.id,
+          })),
+          trainerId: 3,
         };
         await createUpdateTrainingProgram(program, false);
       } else {

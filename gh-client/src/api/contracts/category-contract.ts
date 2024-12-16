@@ -4,7 +4,7 @@ export type CategoryDTO = {
   categoryName?:string;
 };
 // export type CategoryDTO = {
-//   category: {
+//   : {
 //     id: number;
 //     categoryName: string;
 //   };

@@ -3,6 +3,7 @@ package dev.gethealthy.app.models.entities;
 import dev.gethealthy.app.base.BaseEntity;
 import dev.gethealthy.app.models.enums.TrainingProgramDifficulty;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -59,10 +60,26 @@ public class TrainingProgram implements BaseEntity<Integer> {
     @JoinColumn(name = "ProgramId")
     private List<ProgramRating> trainingProgramRatings;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "ProgramId")
-    private List<TrainingProgramCategory> categories;
+
+    //@OnDelete(action = OnDeleteAction.CASCADE)
+    //@JoinColumn(name = "CategoryId", nullable = false)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "training_program_category",
+            joinColumns = @JoinColumn(name = "ProgramId"),
+            inverseJoinColumns = @JoinColumn(name = "CategoryId")
+    )
+    private List<Category> categories;
+
+    //@OnDelete(action = OnDeleteAction.CASCADE)
+    //@JoinColumn(name = "ExerciseId", nullable = false)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "training_program_exercise",
+            joinColumns = @JoinColumn(name = "ProgramId"),
+            inverseJoinColumns = @JoinColumn(name = "ExerciseId")
+    )
+    private List<Exercise> exercises;
 
     @Column(name = "Deleted")
     private Boolean deleted;

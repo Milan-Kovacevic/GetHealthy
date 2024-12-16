@@ -1,5 +1,6 @@
 package dev.gethealthy.app.models.requests;
 
+import dev.gethealthy.app.models.enums.TrainingProgramDifficulty;
 import dev.gethealthy.app.models.responses.TrainingProgramCategoryResponse;
 import lombok.Data;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.List;
 public class TrainingProgramRequest {
     private String name;
 
-    private Byte difficulty;
+    private TrainingProgramDifficulty difficulty;
 
     private Integer trainingDuration;
 
@@ -22,6 +23,8 @@ public class TrainingProgramRequest {
     private String requirements;
 
     private List<TrainingProgramCategoryRequest> categories;
+
+    private List<TrainingProgramExerciseRequest> exercises;
 
     private Integer trainerId;
 

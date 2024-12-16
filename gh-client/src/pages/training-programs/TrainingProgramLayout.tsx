@@ -153,14 +153,14 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                   <TrainingProgramCard
                     rating={item.rating}
                     categories={item.categories.map(
-                      (c) => c.category.categoryName
+                      (c) => c.categoryName
                     )}
                     key={item.id}
                     editable={props.myTrainingPrograms}
                     title={item.name}
                     description={item.description}
                     id={item.id}
-                    difficulty={item.difficulty.toString()}
+                    difficulty={item.difficulty}
                     image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
                     trainer={`${item.trainer.firstName} ${item.trainer.lastName}`}
                   ></TrainingProgramCard>

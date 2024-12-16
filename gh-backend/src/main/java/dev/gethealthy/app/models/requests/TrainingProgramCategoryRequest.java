@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TrainingProgramCategoryRequest {
-    private Integer trainingProgramCategoryId;
+    private Integer categoryId;
 }
