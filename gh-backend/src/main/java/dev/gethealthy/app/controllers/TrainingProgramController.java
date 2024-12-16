@@ -1,8 +1,10 @@
 package dev.gethealthy.app.controllers;
 
-import dev.gethealthy.app.base.CrudController;
 import dev.gethealthy.app.models.entities.TrainingProgram;
-import dev.gethealthy.app.models.requests.TrainingProgramRequest;
+import dev.gethealthy.app.models.responses.SingleTrainingProgramResponse;
+import dev.gethealthy.app.models.responses.TrainerResponse;
+import dev.gethealthy.app.models.responses.SingleProgramDetailsResponse;
+import dev.gethealthy.app.models.responses.SingleProgramParticipantResponse;
 import dev.gethealthy.app.models.responses.TrainingProgramResponse;
 import dev.gethealthy.app.services.TrainingProgramService;
 import dev.gethealthy.app.specifications.TrainingProgramSpecification;
@@ -16,11 +18,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${gethealthy.base-url}/training-programs")
-public class TrainingProgramController extends CrudController<Integer, TrainingProgramRequest, TrainingProgramResponse>{
+
+//public class TrainingProgramController extends CrudController<Integer, TrainingProgramRequest, TrainingProgramResponse> {
+
+public class TrainingProgramController {
+
     private final TrainingProgramService trainingProgramService;
 
     public TrainingProgramController(TrainingProgramService crudService) {
-        super(crudService, TrainingProgramResponse.class);
+        //super(crudService, TrainingProgramResponse.class);
         this.trainingProgramService = crudService;
     }
 
@@ -47,5 +53,29 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
         Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
 
         return trainingProgramService.findAll(spec, sort, page);
+    }
+
+    @GetMapping("/{programId}")
+    public SingleTrainingProgramResponse getSingleTrainingProgram(@PathVariable Integer programId) {
+        return trainingProgramService.getSingleTrainingProgram(programId);
+    }
+
+    @GetMapping("/{programId}/trainer-info")
+    public TrainerResponse getTrainerByProgramId(@PathVariable Integer programId) {
+        return trainingProgramService.getTrainerByProgramId(programId);
+    }
+
+    @GetMapping
+    @RequestMapping("/{id}/details")
+    public SingleProgramDetailsResponse getTrainingProgramDetails(@PathVariable(name = "id") Integer id) {
+        return trainingProgramService.getTrainingProgramDetails(id);
+    }
+
+    @GetMapping
+    @RequestMapping("/{id}/participants")
+    public Page<SingleProgramParticipantResponse> getTrainingProgramParticipants(@PathVariable(name = "id") Integer id,
+                                                                                 @RequestParam(defaultValue = "") String filter,
+                                                                                 Pageable page) {
+        return trainingProgramService.getTrainingProgramParticipants(id, filter, page);
     }
 }

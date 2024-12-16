@@ -25,12 +25,6 @@ public class TrainingProgramApplicationController  {
 
     private final TrainingProgramApplicationService trainingProgramApplicationService;
 
-//    @GetMapping("/training-programs/{programId}/applications") // TODO: ??? Ne treba
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<TrainingProgramApplicationResponse> getAllApplicationsForTrainingProgram(@PathVariable(name = "programId") Integer programId) {
-//        return trainingProgramApplicationService.getAllApplicationsForTrainingProgram(programId);
-//    }
-
     @GetMapping("/users/{userId}/applications")
     @ResponseStatus(HttpStatus.OK)
     public Page<TrainingProgramApplicationResponse> getAllApplicationsForTrainer(@RequestParam(name = "filter", required = false, defaultValue = "") String filter,

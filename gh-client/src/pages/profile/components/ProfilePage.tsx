@@ -11,7 +11,7 @@ const ProfilePage = () => {
             This is how others will see you on the site.
           </p>
           <Separator className="my-6" />
-          <ProfileForm isTrainer={false} />
+          <ProfileForm isTrainer={true} />
         </div>
       </div>
     </div>

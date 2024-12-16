@@ -8,4 +8,5 @@ public class TrainerRequest {
     private UserRequest user;
     private String biography;
     private String contactInfo;
+    private String email;
 }

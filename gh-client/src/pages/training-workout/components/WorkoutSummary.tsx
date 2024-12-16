@@ -25,7 +25,7 @@ type WorkoutSummaryProps = {
     categories: string[];
     difficulty: string;
     exercises: Exercise[];
-    estimatedTime: number;
+    trainingDuration: number;
     trainer: string;
   };
   // onStart: (feedback: boolean) => void;

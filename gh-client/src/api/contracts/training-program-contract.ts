@@ -20,8 +20,11 @@ export type ProgramTrainerDTO = {
   lastName: string;
   biography: string;
   contactInfo: string;
-
+  email: string;
+  profilePictureFilePath: string;
   /// ??? Only basic info ...
 };
 
 export type PageableTrainingProgramsDTO = Page<TrainingProgramDTO>;
+
+export type ProgramDifficultyDTO = "Beginner" | "Intermediate" | "Advanced";
