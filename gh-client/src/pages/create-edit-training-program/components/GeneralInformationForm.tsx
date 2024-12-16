@@ -1,15 +1,8 @@
+import { FileInputField } from "@/components/primitives/FileInputField";
 import InputFormField from "@/components/primitives/InputFormField";
 import { MultiSelect } from "@/components/primitives/MultiSelectFormFIeld";
 import TextareaFormField from "@/components/primitives/TextareaFormField";
-import { FileInputField } from "@/components/primitives/FileInputField";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -19,11 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
-import FormSectionTitle from "./FormSectionTitle";
 import {
   Select,
   SelectContent,
@@ -31,13 +19,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
+import FormSectionTitle from "./FormSectionTitle";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
   info: z.string().min(1, { message: "Description is required." }),
   categories: z
-    .array(z.string())
+    .array(
+      z.z.object({
+        categoryId: z.string().min(1, { message: "Category ID is required." }),
+        name: z.string().min(1, { message: "Category name is required." }),
+      })
+    )
     .min(1, { message: "At least one category is required." }),
   requirements: z.string().optional(),
   difficulty: z.string().min(1, { message: "Program difficulty is required." }),
@@ -83,11 +81,11 @@ export default function GeneralInformationForm({
   }
 
   const categoryOptions = [
-    { label: "Technical", value: "technical" },
-    { label: "Soft Skills", value: "soft-skills" },
-    { label: "Leadership", value: "leadership" },
-    { label: "Project Management", value: "management" },
-    { label: "Design", value: "design" },
+    { name: "Technical", categoryId: "1" },
+    { name: "Soft Skills", categoryId: "2" },
+    { name: "Leadership", categoryId: "3" },
+    { name: "Project Management", categoryId: "4" },
+    { name: "Design", categoryId: "5" },
   ];
 
   const difficultyOptions = [
@@ -133,7 +131,7 @@ export default function GeneralInformationForm({
                           </FormControl>
                           <SelectContent>
                             {difficultyOptions.map((item) => (
-                              <SelectItem value={item.value}>
+                              <SelectItem key={item.value} value={item.value}>
                                 {item.label}
                               </SelectItem>
                             ))}
@@ -158,13 +156,15 @@ export default function GeneralInformationForm({
                         <MultiSelect
                           className=""
                           options={categoryOptions}
-                          value={field.value || []}
+                          // value={field.value || []}
                           defaultValue={defaultValues?.categories}
                           onValueChange={(categories) =>
                             field.onChange(categories)
                           }
                           maxCount={3}
                           minCount={1}
+                          itemNameKey="name"
+                          itemValueKey="categoryId"
                         />
                       </FormControl>
                       <FormDescription className="text-xs ml-0.5">
