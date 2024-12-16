@@ -34,4 +34,7 @@ public class TrainingProgramExercise implements BaseEntity<Integer> {
     @JoinColumn(name = "ProgramId", nullable = false)
     private TrainingProgram program;
 
+
+    // TODO: Add Exercise sets mappings
+
 }

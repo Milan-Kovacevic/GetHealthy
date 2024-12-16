@@ -1,6 +1,7 @@
 package dev.gethealthy.app.models.entities;
 
 import dev.gethealthy.app.base.BaseEntity;
+import dev.gethealthy.app.models.enums.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -44,8 +45,9 @@ public class User implements BaseEntity<Integer> {
     private LocalDate dateOfBirth;
 
     @NotNull
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "Gender", nullable = false)
-    private Byte gender;
+    private Gender gender;
 
     @Size(max = 192)
     @Column(name = "ProfilePictureFilePath", length = 192)

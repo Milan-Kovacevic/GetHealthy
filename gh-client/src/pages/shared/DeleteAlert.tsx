@@ -9,28 +9,39 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Trash } from "lucide-react";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 type AlertDialogProps = {
   description: string;
   title: string;
   children: ReactNode;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  cancelText?: string;
+  submitText?: string;
 };
 
 export const DeleteAlert = (props: AlertDialogProps) => {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>{props.children}</AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogTrigger className="w-full">
+        {props.children}
+      </AlertDialogTrigger>
+      <AlertDialogContent className="max-w-[460px]">
         <AlertDialogHeader>
           <AlertDialogTitle>{props.title}</AlertDialogTitle>
           <AlertDialogDescription>{props.description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogCancel onClick={props.onCancel}>
+            {props.cancelText ?? "Cancel"}
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={props.onConfirm}
+            className="bg-destructive/95 hover:bg-destructive"
+          >
+            {props.submitText ?? "Continue"}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

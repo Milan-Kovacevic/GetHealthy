@@ -16,3 +16,21 @@ const getAllCategories = async () => {
 };
 
 export { getAllCategories };
+
+
+  /*// Mock response for now
+  return Promise.resolve<Category[]>([
+    {
+      id: 1,
+      categoryName: "HIIT",
+    },
+    {
+      id: 2,
+      categoryName: "Cardio",
+    },
+    {
+      id: 3,
+      categoryName: "Strength",
+    },
+  ]);
+};*/

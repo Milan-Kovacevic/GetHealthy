@@ -2,10 +2,10 @@ package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.exceptions.NotFoundException;
-import dev.gethealthy.app.models.entities.ProgramRating;
-import dev.gethealthy.app.models.entities.TrainingProgram;
-import dev.gethealthy.app.models.responses.TrainingProgramResponse;
-import dev.gethealthy.app.repositories.RatingRepository;
+import dev.gethealthy.app.models.entities.*;
+import dev.gethealthy.app.models.responses.*;
+import dev.gethealthy.app.repositories.TraineeOnTrainingProgramRepository;
+import dev.gethealthy.app.repositories.TrainingProgramExerciseRepository;
 import dev.gethealthy.app.repositories.TrainingProgramRepository;
 import dev.gethealthy.app.services.TrainingProgramService;
 import org.modelmapper.ModelMapper;
@@ -16,14 +16,21 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
 @Service
 public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, Integer> implements TrainingProgramService {
     private final TrainingProgramRepository trainingProgramRepository;
+    private final TrainingProgramExerciseRepository trainingProgramExerciseRepository;
+    private final TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository;
     private final ModelMapper modelMapper;
 
-    public TrainingProgramServiceImpl(TrainingProgramRepository repository, RatingRepository ratingRepository , ModelMapper modelMapper) {
-        super(repository, modelMapper, TrainingProgram.class);
-        trainingProgramRepository = repository;
+    public TrainingProgramServiceImpl(TrainingProgramRepository trainingProgramRepository, TrainingProgramExerciseRepository trainingProgramExerciseRepository, TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository, ModelMapper modelMapper) {
+        super(trainingProgramRepository, modelMapper, TrainingProgram.class);
+        this.trainingProgramRepository = trainingProgramRepository;
+        this.trainingProgramExerciseRepository = trainingProgramExerciseRepository;
+        this.traineeOnTrainingProgramRepository = traineeOnTrainingProgramRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -32,20 +39,83 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
         var dbResponse = trainingProgramRepository.findAll(spec, pageableWithSort);
         var result = dbResponse.map(e -> modelMapper.map(e, TrainingProgramResponse.class));
-        for(int i=0;i< result.getContent().size();i++)
-        {
+        for (int i = 0; i < result.getContent().size(); i++) {
             result.getContent().get(i).setRating(dbResponse.getContent().get(i).getTrainingProgramRatings().stream().mapToDouble(ProgramRating::getRate).average().orElse(0.0));
         }
         return result;
     }
 
     @Override
-    public void delete(Integer id)
-    {
+    public void delete(Integer id) {
         var trainingProgram = trainingProgramRepository.findById(id).orElse(null);
         if (trainingProgram == null)
             throw new NotFoundException();
         trainingProgram.setDeleted(true);
         trainingProgramRepository.save(trainingProgram);
+    }
+
+    @Override
+    public SingleTrainingProgramResponse getSingleTrainingProgram(Integer programId) {
+        TrainingProgram program = trainingProgramRepository.findById(programId)
+                .orElseThrow(NotFoundException::new);
+
+        SingleTrainingProgramResponse programResponse = modelMapper.map(program, SingleTrainingProgramResponse.class);
+
+        programResponse.setCurrentlyEnrolled(getTrainingProgramCurrentlyEnrolled(programId));
+        programResponse.setTotalRates(getTrainingProgramTotalRates(programId));
+        programResponse.setAverageRate(getTrainingProgramAverageRate(programId));
+
+        return programResponse;
+    }
+
+    private int getTrainingProgramCurrentlyEnrolled(Integer programId) {
+        return trainingProgramRepository.calculateNumberOfTrainingProgramTrainees(programId);
+    }
+
+    private int getTrainingProgramTotalRates(Integer programId) {
+        return trainingProgramRepository.calculateNumberOfTrainingProgramRatings(programId);
+    }
+
+    private Double getTrainingProgramAverageRate(Integer programId) {
+        return trainingProgramRepository.calculateTrainingProgramAverageRate(programId).orElse(0.0);
+    }
+
+    @Override
+    public TrainerResponse getTrainerByProgramId(Integer programId) {
+        TrainingProgram trainingProgram = trainingProgramRepository.findById(programId)
+                .orElseThrow(NotFoundException::new);
+
+        Trainer trainer = trainingProgram.getTrainer();
+        UserAccount userAccount = trainer.getUserAccount();
+        TrainerResponse response = modelMapper.map(trainer, TrainerResponse.class);
+        response.setEmail(userAccount.getEmail());
+
+        return response;
+    }
+
+    public SingleProgramDetailsResponse getTrainingProgramDetails(Integer id) {
+        TrainingProgram trainingProgram = trainingProgramRepository.findById(id).orElseThrow(NotFoundException::new);
+
+        var response = modelMapper.map(trainingProgram, SingleProgramDetailsResponse.class);
+        var exercises = trainingProgramExerciseRepository
+                .findAllByProgram_Id(id)
+                .stream()
+                .sorted(Comparator.comparingInt(TrainingProgramExercise::getPosition))
+                .map(e -> modelMapper.map(e, ProgramExerciseResponse.class))
+                .collect(Collectors.toList());
+        response.setExercises(exercises);
+        return response;
+    }
+
+    @Override
+    public Page<SingleProgramParticipantResponse> getTrainingProgramParticipants(Integer programId, String filter, Pageable page) {
+        var programParticipants = traineeOnTrainingProgramRepository.getAllTraineesOnTrainingProgramFiltered(programId, filter, page);
+
+        return programParticipants.map(e -> {
+            var model = modelMapper.map(e, SingleProgramParticipantResponse.class);
+            modelMapper.map(e.getUser(), model);
+            modelMapper.map(e.getUser().getUser(), model);
+            return model;
+        });
     }
 }

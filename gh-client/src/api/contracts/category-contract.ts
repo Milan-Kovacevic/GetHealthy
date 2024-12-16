@@ -3,3 +3,9 @@ export type CategoryDTO = {
   trainingProgramCategoryId?: number;
   categoryName?:string;
 };
+// export type CategoryDTO = {
+//   category: {
+//     id: number;
+//     categoryName: string;
+//   };
+// };

@@ -23,5 +23,7 @@ public class TrainingProgramRequest {
 
     private List<TrainingProgramCategoryRequest> categories;
 
-    private Integer userId;
+    private Integer trainerId;
+
+    private String imageFilePath;
 }

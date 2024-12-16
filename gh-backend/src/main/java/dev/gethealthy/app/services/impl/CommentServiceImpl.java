@@ -61,7 +61,7 @@ public class CommentServiceImpl extends CrudJpaService<Comment, Integer> impleme
         comment.setAuthorId(trainee.getId());
 
         notificationService.createNotification(
-                trainingProgram.getUser(),
+                trainingProgram.getTrainer(),
                 trainee,
                 trainingProgram.getName(),
                 NotificationType.NEW_COMMENT_ON_PROGRAM,

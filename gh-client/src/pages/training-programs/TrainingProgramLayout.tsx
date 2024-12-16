@@ -152,7 +152,9 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                   return (
                   <TrainingProgramCard
                     rating={item.rating}
-                    categories={item.categories.map((c) => c.categoryName)}
+                    categories={item.categories.map(
+                      (c) => c.category.categoryName
+                    )}
                     key={item.id}
                     editable={props.myTrainingPrograms}
                     title={item.name}

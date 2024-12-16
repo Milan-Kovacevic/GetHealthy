@@ -20,6 +20,8 @@ export type ProgramTrainer = {
   contactInfo: string;
   user:User;
 
+  email: string;
+  profilePictureFilePath: string;
   /// ??? Only basic info ...
 };
 
@@ -30,3 +32,5 @@ export type User =
 }
 
 export type PageableTrainingPrograms = Page<TrainingProgram>;
+
+export type ProgramDifficulty = "Beginner" | "Intermediate" | "Advanced";

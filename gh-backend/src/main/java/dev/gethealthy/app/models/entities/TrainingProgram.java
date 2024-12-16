@@ -1,6 +1,7 @@
 package dev.gethealthy.app.models.entities;
 
 import dev.gethealthy.app.base.BaseEntity;
+import dev.gethealthy.app.models.enums.TrainingProgramDifficulty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -28,8 +29,9 @@ public class TrainingProgram implements BaseEntity<Integer> {
     private String name;
 
     @NotNull
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "Difficulty", nullable = false)
-    private Byte difficulty;
+    private TrainingProgramDifficulty difficulty;
 
     @NotNull
     @Column(name = "TrainingDuration", nullable = false)
@@ -51,7 +53,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "UserId", nullable = false)
-    private Trainer user;
+    private Trainer trainer;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "ProgramId")
@@ -64,4 +66,8 @@ public class TrainingProgram implements BaseEntity<Integer> {
 
     @Column(name = "Deleted")
     private Boolean deleted;
+
+    @Size(max = 192)
+    @Column(name = "ImageFilePath", length = 192)
+    private String imageFilePath;
 }
