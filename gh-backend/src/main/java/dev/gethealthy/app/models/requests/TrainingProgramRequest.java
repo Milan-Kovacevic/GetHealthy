@@ -24,8 +24,6 @@ public class TrainingProgramRequest {
 
     private List<TrainingProgramCategoryRequest> categories;
 
-    private List<TrainingProgramExerciseRequest> trainingProgramExercises;
-
     private Integer trainerId;
 
     private String imageFilePath;
