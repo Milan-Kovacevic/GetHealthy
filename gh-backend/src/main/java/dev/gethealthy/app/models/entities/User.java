@@ -1,23 +1,22 @@
 package dev.gethealthy.app.models.entities;
 
+import java.time.LocalDate;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import dev.gethealthy.app.base.BaseEntity;
 import dev.gethealthy.app.models.enums.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import java.time.LocalDate;
 
 @Data
 @Entity
 @Table(name = "user")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User implements BaseEntity<Integer> {
+public class User implements BaseEntity<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserId", nullable = false)
@@ -42,6 +41,10 @@ public abstract class User implements BaseEntity<Integer> {
     @NotNull
     @Column(name = "DateOfBirth", nullable = false)
     private LocalDate dateOfBirth;
+
+    // @NotNull
+    // @Column(name = "Gender", nullable = false)
+    // private Byte gender;
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)

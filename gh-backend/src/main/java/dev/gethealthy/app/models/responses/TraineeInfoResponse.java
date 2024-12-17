@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TraineeResponse extends SingleUserResponse {
+public class TraineeInfoResponse extends UserInfoResponse {
     private Integer height;
     private BigDecimal weight;
     private String medicalHistory;

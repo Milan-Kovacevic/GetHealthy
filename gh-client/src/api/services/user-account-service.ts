@@ -1,24 +1,39 @@
 import { ApiEndpoints } from "@/utils/constants";
 import { sendAxiosRequest } from "./base-service";
+import {
+  EmailChangeDTO,
+  PasswordChangeDTO,
+} from "../contracts/user-account-contract";
 
-const changePassword = () => {
-  var url = `${ApiEndpoints.UserAccounts}/change-password`;
+const getUserAccount = (userId: number = 0): Promise<any> => {
+  var url = `${ApiEndpoints.UserAccounts}/${userId}`;
 
-  // return sendAxiosRequest<void, Trainer>({
-  //   method: "PUT",
-  //   url: url,
-  // }).then((response) => {
-  //   return response.data as TrainerDTO;
-  // });
+  return sendAxiosRequest<void, any>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    return response.data;
+  });
 };
 
-const changeEmail = () => {
-  var url = `${ApiEndpoints.UserAccounts}/change-email`;
+const changePassword = (request: PasswordChangeDTO, userId: number) => {
+  var url = `${ApiEndpoints.UserAccounts}/${userId}/change-password`;
 
-  // return sendAxiosRequest<void, Trainer>({
-  //   method: "PUT",
-  //   url: url,
-  // }).then((response) => {
-  //   return response.data as TrainerDTO;
-  // });
+  return sendAxiosRequest<PasswordChangeDTO, void>({
+    method: "POST",
+    url: url,
+    data: request,
+  }).then();
 };
+
+const changeEmail = (request: EmailChangeDTO, userId: number) => {
+  var url = `${ApiEndpoints.UserAccounts}/${userId}/change-email`;
+
+  return sendAxiosRequest<EmailChangeDTO, void>({
+    method: "POST",
+    url: url,
+    data: request,
+  }).then();
+};
+
+export { changePassword, changeEmail, getUserAccount };

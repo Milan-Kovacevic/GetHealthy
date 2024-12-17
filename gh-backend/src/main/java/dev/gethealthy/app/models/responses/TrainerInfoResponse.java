@@ -2,13 +2,10 @@ package dev.gethealthy.app.models.responses;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class TrainerResponse extends SingleUserResponse {
+public class TrainerInfoResponse extends UserInfoResponse {
     private String biography;
     private String contactInfo;
-    private String email;
 }
