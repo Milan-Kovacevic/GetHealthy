@@ -31,8 +31,7 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
         this.trainingProgramService = crudService;
     }
 
-    @GetMapping
-    @RequestMapping("/filter")
+    @GetMapping("/filter")
     public Page<TrainingProgramResponse> getAll(Pageable page,
                                                 @RequestParam(defaultValue = "") String searchWord,
                                                 @RequestParam(defaultValue = "name") String sortBy,
@@ -66,14 +65,12 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
         return trainingProgramService.getTrainerByProgramId(programId);
     }
 
-    @GetMapping
-    @RequestMapping("/{id}/details")
+    @GetMapping("/{id}/details")
     public SingleProgramDetailsResponse getTrainingProgramDetails(@PathVariable(name = "id") Integer id) {
         return trainingProgramService.getTrainingProgramDetails(id);
     }
 
-    @GetMapping
-    @RequestMapping("/{id}/participants")
+    @GetMapping("/{id}/participants")
     public Page<SingleProgramParticipantResponse> getTrainingProgramParticipants(@PathVariable(name = "id") Integer id,
                                                                                  @RequestParam(defaultValue = "") String filter,
                                                                                  Pageable page) {

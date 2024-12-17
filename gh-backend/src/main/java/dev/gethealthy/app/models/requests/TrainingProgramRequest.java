@@ -24,7 +24,7 @@ public class TrainingProgramRequest {
 
     private List<TrainingProgramCategoryRequest> categories;
 
-    private List<TrainingProgramExerciseRequest> exercises;
+    private List<TrainingProgramExerciseRequest> trainingProgramExercises;
 
     private Integer trainerId;
 

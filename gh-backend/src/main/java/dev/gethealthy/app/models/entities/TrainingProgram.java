@@ -61,9 +61,9 @@ public class TrainingProgram implements BaseEntity<Integer> {
     private List<ProgramRating> trainingProgramRatings;
 
 
-    //@OnDelete(action = OnDeleteAction.CASCADE)
-    //@JoinColumn(name = "CategoryId", nullable = false)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "CategoryId", nullable = false)
     @JoinTable(
             name = "training_program_category",
             joinColumns = @JoinColumn(name = "ProgramId"),
@@ -73,13 +73,17 @@ public class TrainingProgram implements BaseEntity<Integer> {
 
     //@OnDelete(action = OnDeleteAction.CASCADE)
     //@JoinColumn(name = "ExerciseId", nullable = false)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "training_program_exercise",
             joinColumns = @JoinColumn(name = "ProgramId"),
             inverseJoinColumns = @JoinColumn(name = "ExerciseId")
     )
     private List<Exercise> exercises;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ProgramId")
+    private List<TrainingProgramExercise> trainingProgramExercises;
 
     @Column(name = "Deleted")
     private Boolean deleted;

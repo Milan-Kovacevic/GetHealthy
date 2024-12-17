@@ -28,6 +28,8 @@ public class TrainingProgramResponse {
 
     private List<CategoryResponse> categories; // TODO: ???? CategoryResponse
 
+    private List<ExerciseResponse> exercises;
+
     private double rating;
 
     private TrainerResponse trainer; // TODO: ????
