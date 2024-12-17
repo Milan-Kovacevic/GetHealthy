@@ -1,13 +1,14 @@
 import { ApiEndpoints } from "@/utils/constants";
 import { sendAxiosRequest } from "./base-service";
 import {
+  MoveProgramParticipantDTO,
   PageableProgramParticipantsDTO,
   SingleProgramDetailsDTO,
 } from "../contracts/program-details-contract";
 import {
+  MoveProgramParticipant,
   PageableProgramParticipants,
   SingleProgramDetails,
-  SingleProgramParticipant,
 } from "../models/program-details";
 import { ExerciseMetric, ProgramExercise } from "../models/exercise";
 import { delay } from "@/lib/utils";
@@ -163,92 +164,92 @@ const getSingleTrainingProgramDetails = (id: number) => {
   // });
 };
 
-const mockParticipants: SingleProgramParticipant[] = [
-  {
-    id: 1,
-    profilePictureFilePath: "/placeholder.svg?height=40&width=40",
-    firstName: "John",
-    lastName: "Doe",
-    dateOfBirth: "1999-12-14",
-    gender: "Male",
-    joinDate: "2023-01-15",
-    height: 180,
-    weight: 75,
-  },
-  {
-    id: 2,
-    profilePictureFilePath:
-      "https://cdn.nba.com/headshots/nba/latest/1040x760/201566.png",
-    firstName: "Jane",
-    lastName: "Smith",
-    dateOfBirth: "1998-12-14",
-    gender: "Female",
-    joinDate: "2023-02-20",
-    height: 165,
-    weight: 60,
-    medicalHistory:
-      "Mild asthma Mild asthma Mild asthmaMild asthmaMild asthmaMild asthmaMild asthmaMild asthmavMild asthmaMild asthmaMild asthmaMild asthmaMild asthmaMild asthmaMild asthma",
-  },
-  {
-    id: 3,
-    profilePictureFilePath:
-      "https://b.fssta.com/uploads/application/nba/headshots/1937.vresize.350.350.medium.5.png",
-    firstName: "Mike",
-    lastName: "Johnson",
-    dateOfBirth: "2001-12-14",
-    gender: "Male",
-    joinDate: "2023-03-10",
-    height: 175,
-    weight: 80,
-    medicalHistory: "High blood pressure, controlled with medication",
-  },
-  {
-    id: 4,
-    profilePictureFilePath: "/placeholder.svg?height=40&width=40",
-    firstName: "Emily",
-    lastName: "Brown",
-    dateOfBirth: "2002-12-14",
-    gender: "Female",
-    joinDate: "2023-04-05",
-    height: 170,
-    weight: 65,
-  },
-  {
-    id: 5,
-    profilePictureFilePath: "/placeholder.svg?height=40&width=40",
-    firstName: "Sarah",
-    lastName: "Taylor",
-    dateOfBirth: "2001-12-14",
-    gender: "Female",
-    joinDate: "2023-04-07",
-    height: 172,
-    weight: 68,
-  },
-  {
-    id: 6,
-    profilePictureFilePath: "/placeholder.svg?height=40&width=40",
-    firstName: "Emily",
-    lastName: "Smith",
-    dateOfBirth: "2000-11-14",
-    gender: "Female",
-    joinDate: "2023-03-14",
-    height: 165,
-    weight: 60,
-  },
-];
+// const mockParticipants: SingleProgramParticipant[] = [
+//   {
+//     id: 1,
+//     profilePictureFilePath: "/placeholder.svg?height=40&width=40",
+//     firstName: "John",
+//     lastName: "Doe",
+//     dateOfBirth: "1999-12-14",
+//     gender: "Male",
+//     joinDate: "2023-01-15",
+//     height: 180,
+//     weight: 75,
+//   },
+//   {
+//     id: 2,
+//     profilePictureFilePath:
+//       "https://cdn.nba.com/headshots/nba/latest/1040x760/201566.png",
+//     firstName: "Jane",
+//     lastName: "Smith",
+//     dateOfBirth: "1998-12-14",
+//     gender: "Female",
+//     joinDate: "2023-02-20",
+//     height: 165,
+//     weight: 60,
+//     medicalHistory:
+//       "Mild asthma Mild asthma Mild asthmaMild asthmaMild asthmaMild asthmaMild asthmaMild asthmavMild asthmaMild asthmaMild asthmaMild asthmaMild asthmaMild asthmaMild asthma",
+//   },
+//   {
+//     id: 3,
+//     profilePictureFilePath:
+//       "https://b.fssta.com/uploads/application/nba/headshots/1937.vresize.350.350.medium.5.png",
+//     firstName: "Mike",
+//     lastName: "Johnson",
+//     dateOfBirth: "2001-12-14",
+//     gender: "Male",
+//     joinDate: "2023-03-10",
+//     height: 175,
+//     weight: 80,
+//     medicalHistory: "High blood pressure, controlled with medication",
+//   },
+//   {
+//     id: 4,
+//     profilePictureFilePath: "/placeholder.svg?height=40&width=40",
+//     firstName: "Emily",
+//     lastName: "Brown",
+//     dateOfBirth: "2002-12-14",
+//     gender: "Female",
+//     joinDate: "2023-04-05",
+//     height: 170,
+//     weight: 65,
+//   },
+//   {
+//     id: 5,
+//     profilePictureFilePath: "/placeholder.svg?height=40&width=40",
+//     firstName: "Sarah",
+//     lastName: "Taylor",
+//     dateOfBirth: "2001-12-14",
+//     gender: "Female",
+//     joinDate: "2023-04-07",
+//     height: 172,
+//     weight: 68,
+//   },
+//   {
+//     id: 6,
+//     profilePictureFilePath: "/placeholder.svg?height=40&width=40",
+//     firstName: "Emily",
+//     lastName: "Smith",
+//     dateOfBirth: "2000-11-14",
+//     gender: "Female",
+//     joinDate: "2023-03-14",
+//     height: 165,
+//     weight: 60,
+//   },
+// ];
 
 const getPageableTrainingProgramParticipants = async (
   programId: number,
   page: number = 0,
   filter: string = "",
-  pageSize: number = 10
+  pageSize: number = 5
 ) => {
-  var url = ApiEndpoints.SingleTrainingProgram.replace(
+  var url = ApiEndpoints.SingleTrainingProgramParticipants.replace(
     "{programId}",
     `${programId}`
   );
-  url += `/participants?filter=${filter}&page=${page}&pageSize=${pageSize}`;
-
+  url += `?filter=${filter}&page=${page}&size=${pageSize}`;
+  await delay(2000);
   return sendAxiosRequest<void, PageableProgramParticipantsDTO>({
     method: "GET",
     url: url,
@@ -256,29 +257,40 @@ const getPageableTrainingProgramParticipants = async (
     // Perform neccessary mappings etc...
     return response.data as PageableProgramParticipants;
   });
+};
+
+const removeParticipantFromTrainingProgram = async (
+  programId: number,
+  traineeId: number
+) => {
+  var url = ApiEndpoints.SingleTrainingProgramParticipants.replace(
+    "{programId}",
+    `${programId}`
+  );
+  url += `/${traineeId}`;
+
   await delay(2000);
-  // return Promise.resolve<PageableProgramParticipants>({
-  //   content: mockParticipants,
-  //   empty: false,
-  //   first: true,
-  //   last: true,
-  //   number: 1,
-  //   numberOfElements: 3,
-  //   pageable: {
-  //     offset: 0,
-  //     paged: true,
-  //     pageNumber: 1,
-  //     pageSize: 10,
-  //     sort: {
-  //       empty: true,
-  //       sorted: false,
-  //       unsorted: true,
-  //     },
-  //   },
-  //   size: 3,
-  //   totalElements: 3,
-  //   totalPages: 1,
-  // });
+  return sendAxiosRequest<void, void>({
+    method: "DELETE",
+    url: url,
+  });
+};
+
+const moveParticipantToAnotherTrainingProgram = async (
+  model: MoveProgramParticipant
+) => {
+  var url = ApiEndpoints.SingleTrainingProgramParticipants.replace(
+    "{programId}",
+    `${model.programId}`
+  );
+  url += `/${model.traineeId}/move`;
+
+  await delay(2000);
+  return sendAxiosRequest<MoveProgramParticipantDTO, void>({
+    method: "PUT",
+    url: url,
+    data: model as MoveProgramParticipantDTO,
+  });
 };
 
 export {
@@ -286,4 +298,6 @@ export {
   getPageableTrainingProgramParticipants,
   getSingleTrainingProgram,
   getSingleProgramTrainer,
+  removeParticipantFromTrainingProgram,
+  moveParticipantToAnotherTrainingProgram,
 };

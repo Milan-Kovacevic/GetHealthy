@@ -1,24 +1,11 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { SearchIcon } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { SingleProgramParticipant } from "@/api/models/program-details";
-import { Input } from "@/components/ui/input";
 import { usePagination } from "@/hooks/use-pagination";
-import { getPageableTrainingProgramParticipants } from "@/api/services/program-details-service";
+import {
+  getPageableTrainingProgramParticipants,
+  moveParticipantToAnotherTrainingProgram,
+  removeParticipantFromTrainingProgram,
+} from "@/api/services/program-details-service";
 import ProgramParticipantItem from "./ProgramParticipantItem";
 import MoveParticipantDialog from "./MoveParticipantDialog";
 import ParticipantsListSkeletonLoader from "./ParticipantsListSkeletonLoader";
@@ -30,6 +17,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { SearchBar } from "@/components/primitives/SearchBar";
+import { TrainerProgram } from "@/api/models/training-program";
+import { getAllTrainingProgramsForTrainer } from "@/api/services/training-program-service";
 
 type ProgramParticipantsListProps = {
   programId: number;
@@ -38,95 +28,130 @@ type ProgramParticipantsListProps = {
 export default function ProgramParticipantsList(
   props: ProgramParticipantsListProps
 ) {
+  const userId = 1; // TODO: Hardcoded for now...
   const { programId } = props;
-
-  const {
-    data: participants,
-    setData: setParticipants,
-    hasMore: hasMoreParticipants,
-    setHasMore: setHasMoreParticipants,
-    isLoading: isLoadingParticipants,
-    setIsLoading: setIsLoadingParticipants,
-    onPageChange: onParticipantPageChange,
-    page: participantsPage,
-    setPage: setParticipantsPage,
-  } = usePagination<SingleProgramParticipant>({
-    fetchData: (state) => {
-      return getPageableTrainingProgramParticipants(programId, state.page);
-    },
-  });
-
-  useEffect(() => {
-    onParticipantPageChange();
-  }, []);
-
   const [searchQuery, setSearchQuery] = useState("");
-
   const [selectedParticipant, setSelectedParticipant] =
     useState<SingleProgramParticipant | null>(null);
+  const {
+    data: participants,
+    isLoading: isLoadingParticipants,
+    setIsLoading: setIsLoadingParticipants,
+    page: participantsPage,
+    setPage: setParticipantsPage,
+    first: isFirstPage,
+    last: isLastPage,
+    totalPages: totalParticipantPages,
+    onLoadMoreData,
+  } = usePagination<SingleProgramParticipant>({
+    fetchData: (state) => {
+      return getPageableTrainingProgramParticipants(
+        programId,
+        state.page,
+        searchQuery
+      );
+    },
+  });
+  const [trainerPrograms, setTrainerPrograms] = useState<TrainerProgram[]>([]);
+  const selectablePrograms = trainerPrograms.filter((p) => p.id != programId);
+  useEffect(() => {
+    getAllTrainingProgramsForTrainer(userId).then((programs) => {
+      setTrainerPrograms(programs);
+    });
+  }, []);
 
-  const onRemoveProgramParticipant = (id: number) => {
-    console.log("removed");
+  const handleSearchParticipants = () => {
+    onLoadMoreData();
   };
 
-  const onMoveProgramParticipant = (id: number) => {
+  const handleRemoveProgramParticipant = (traineeId: number) => {
+    setIsLoadingParticipants(true);
+    removeParticipantFromTrainingProgram(programId, traineeId)
+      .then(() => {
+        onLoadMoreData();
+      })
+      .finally(() => setIsLoadingParticipants(false));
+  };
+
+  const handleMoveProgramParticipant = (newProgramId: number) => {
+    if (!selectedParticipant) return;
+    setIsLoadingParticipants(true);
+    moveParticipantToAnotherTrainingProgram({
+      newProgramId: newProgramId,
+      programId: programId,
+      traineeId: selectedParticipant?.id,
+      trainerId: userId,
+    })
+      .then(() => {
+        setSelectedParticipant(null);
+        onLoadMoreData();
+      })
+      .finally(() => setIsLoadingParticipants(false));
+  };
+
+  const onMoveProgramParticipantClicked = (id: number) => {
     const participant = participants.find((x) => x.id == id) ?? null;
     setSelectedParticipant(participant);
   };
+
   const onCancelMoveParticipant = () => {
-    setSelectedParticipant(null);
-  };
-  const handleMoveProgramParticipant = (newProgramId: string) => {
     setSelectedParticipant(null);
   };
 
   return (
     <div className="container mx-auto w-full">
       <div className="flex xl:flex-row flex-col-reverse justify-between w-full md:gap-8 gap-4 md:pb-4">
-        {isLoadingParticipants && <ParticipantsListSkeletonLoader />}
-        {!isLoadingParticipants && (
-          <div className="p-1 w-full max-w-3xl xl:max-w-4xl">
-            <div className="mb-4 max-w-xl">
-              <div className="relative">
-                <SearchIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search participants"
-                  className="pl-8"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
+        <div className="p-1 w-full max-w-3xl xl:max-w-4xl">
+          <div className="mb-4 max-w-xl">
+            <SearchBar
+              setQuery={setSearchQuery}
+              onSearch={handleSearchParticipants}
+              query={searchQuery}
+              className="max-w-none"
+              disabled={isLoadingParticipants || participants.length == 0}
+            />
+          </div>
+          {!isLoadingParticipants ? (
             <div className="space-y-3">
               {participants.map((participant) => (
                 <ProgramParticipantItem
                   participant={participant}
                   key={participant.id}
-                  onRemove={onRemoveProgramParticipant}
-                  onMove={onMoveProgramParticipant}
+                  onRemove={handleRemoveProgramParticipant}
+                  onMove={onMoveProgramParticipantClicked}
                 />
               ))}
             </div>
+          ) : (
+            <ParticipantsListSkeletonLoader />
+          )}
 
-            <Pagination className="mt-5">
+          {!isLoadingParticipants && participants.length == 0 && (
+            <p className="py-4 px-0 text-start text-sm text-muted-foreground italic">
+              There is no participants on this training program.
+            </p>
+          )}
+
+          {!isLoadingParticipants && participants.length > 0 && (
+            <Pagination className="mt-6">
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
                     href="#"
-                    // onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    onClick={() =>
+                      setParticipantsPage((prev) => Math.max(prev - 1, 0))
+                    }
                     className={
-                      participantsPage === 1
-                        ? "pointer-events-none opacity-50"
-                        : ""
+                      isFirstPage ? "pointer-events-none opacity-50" : ""
                     }
                   />
                 </PaginationItem>
-                {[...Array(participantsPage)].map((_, index) => (
+                {[...Array(totalParticipantPages)].map((_, index) => (
                   <PaginationItem key={index}>
                     <PaginationLink
                       href="#"
-                      // onClick={() => setCurrentPage(index + 1)}
-                      isActive={participantsPage === index + 1}
+                      onClick={() => setParticipantsPage(index)}
+                      isActive={participantsPage === index}
                     >
                       {index + 1}
                     </PaginationLink>
@@ -135,24 +160,27 @@ export default function ProgramParticipantsList(
                 <PaginationItem>
                   <PaginationNext
                     href="#"
-                    // onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    onClick={() =>
+                      setParticipantsPage((prev) =>
+                        Math.min(prev + 1, totalParticipantPages)
+                      )
+                    }
                     className={
-                      hasMoreParticipants
-                        ? "pointer-events-none opacity-50"
-                        : ""
+                      isLastPage ? "pointer-events-none opacity-50" : ""
                     }
                   />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
-          </div>
-        )}
+          )}
+        </div>
 
         {selectedParticipant && (
           <MoveParticipantDialog
             onCancel={onCancelMoveParticipant}
             onSubmit={handleMoveProgramParticipant}
             participant={selectedParticipant}
+            programs={selectablePrograms}
           />
         )}
       </div>

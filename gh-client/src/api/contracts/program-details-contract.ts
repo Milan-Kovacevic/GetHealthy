@@ -48,3 +48,8 @@ export type SingleProgramParticipantDTO = {
   joinDate: string;
 };
 export type PageableProgramParticipantsDTO = Page<SingleProgramParticipantDTO>;
+
+export type MoveProgramParticipantDTO = {
+  newProgramId: number;
+  trainerId: number;
+};

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { SearchBar } from "../shared/SearchBar";
 import { TrainingProgramCard } from "./components/TrainingProgramCard";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +20,7 @@ import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
 import { getPageableTrainingPrograms } from "@/api/services/training-program-service";
 import { TrainingProgram } from "@/api/models/training-program";
 import { Category } from "@/api/models/category";
+import { SearchBar } from "@/components/primitives/SearchBar";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -137,7 +137,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
 
           <div className="flex lg:flex-row flex-col lg:gap-8 gap-2">
             <div className="flex flex-col my-6 pr-4 lg:border-r lg:border-b-0 border-b pb-4">
-              <SearchBar setData={setSearchString}></SearchBar>
+              <SearchBar query={searchString} setQuery={setSearchString} />
 
               <h2 className="text-lg font-semibold mb-0 mt-6">Filters</h2>
               <TrainingProgramFilters setFilters={setFilter} />

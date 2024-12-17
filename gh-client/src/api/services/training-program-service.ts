@@ -1,8 +1,14 @@
 import { ApiEndpoints } from "@/utils/constants";
 import { Category } from "../models/category";
 import { sendAxiosRequest } from "./base-service";
-import { PageableTrainingProgramsDTO } from "../contracts/training-program-contract";
-import { PageableTrainingPrograms } from "../models/training-program";
+import {
+  PageableTrainingProgramsDTO,
+  TrainerProgramDTO,
+} from "../contracts/training-program-contract";
+import {
+  PageableTrainingPrograms,
+  TrainerProgram,
+} from "../models/training-program";
 
 const getPageableTrainingPrograms = (
   searchString: string = "",
@@ -33,4 +39,18 @@ const getPageableTrainingPrograms = (
   });
 };
 
-export { getPageableTrainingPrograms };
+const getAllTrainingProgramsForTrainer = (trainerId: number) => {
+  var url = ApiEndpoints.UserTrainingPrograms.replace(
+    "{userId}",
+    `${trainerId}`
+  );
+
+  return sendAxiosRequest<void, TrainerProgramDTO[]>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    return response.data as TrainerProgram[];
+  });
+};
+
+export { getPageableTrainingPrograms, getAllTrainingProgramsForTrainer };

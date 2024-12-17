@@ -27,6 +27,14 @@ export default function TrainingProgramDetails() {
     }, 3000);
   }, []);
 
+  if (!loading && !programDetails) {
+    return (
+      <p className="my-8 text-center text-sm text-muted-foreground italic">
+        There is no detail information available for this program.
+      </p>
+    );
+  }
+
   return (
     <div className="my-4 mx-2 md:p-0 p-3">
       {loading && <ProgramDetailsSkeletonLoader />}

@@ -6,7 +6,7 @@ import {
   getPageableProgramComments,
   sendTrainingProgramComment,
 } from "@/api/services/program-review-service";
-import { usePagination } from "@/hooks/use-pagination";
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -27,7 +27,7 @@ export function useProgramComments(props: UseProgramCommentsProps) {
     onPageChange: onCommentPageChange,
     page: commentsPage,
     setPage: setCommentsPage,
-  } = usePagination<ProgramComment>({
+  } = useInfiniteScroll<ProgramComment>({
     fetchData: (state) => {
       return getPageableProgramComments(programId, state.page);
     },

@@ -45,7 +45,7 @@ export default function TrainingProgramInfo() {
 
   if (!program) {
     return (
-      <p className="mt-4 text-center text-sm text-muted-foreground">
+      <p className="my-8 text-center text-sm text-muted-foreground italic">
         There is no data available to display for this program.
       </p>
     );

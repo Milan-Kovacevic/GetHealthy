@@ -5,7 +5,7 @@ import {
   markAllUserNotificationsAsRead,
   markUserNotificationAsRead,
 } from "@/api/services/notification-service";
-import { usePagination } from "@/hooks/use-pagination";
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -21,7 +21,7 @@ export function useNotifications() {
     onPageChange: onNotificationPageChange,
     page: notificationsPage,
     setPage: setNotificationsPage,
-  } = usePagination<Notification>({
+  } = useInfiniteScroll<Notification>({
     fetchData: (state) => {
       return getPageableUserNotifications({
         page: state.page,

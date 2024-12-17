@@ -28,3 +28,9 @@ export type ProgramTrainerDTO = {
 export type PageableTrainingProgramsDTO = Page<TrainingProgramDTO>;
 
 export type ProgramDifficultyDTO = "Beginner" | "Intermediate" | "Advanced";
+
+export type TrainerProgramDTO = {
+  id: number;
+  name: string;
+  createdAt: string;
+};

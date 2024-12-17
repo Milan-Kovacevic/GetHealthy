@@ -1,6 +1,6 @@
 import { ProgramRequest } from "@/api/models/program-request";
 import { getPageableTrainingProgramApplications } from "@/api/services/program-application-service";
-import { usePagination } from "@/hooks/use-pagination";
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { useState } from "react";
 
 export function useProgramRequests() {
@@ -15,7 +15,7 @@ export function useProgramRequests() {
     onPageChange: onRequestPageChange,
     page: requestsPage,
     setPage: setRequestsPage,
-  } = usePagination<ProgramRequest>({
+  } = useInfiniteScroll<ProgramRequest>({
     fetchData: (state) => {
       return getPageableTrainingProgramApplications("", state.page);
     },

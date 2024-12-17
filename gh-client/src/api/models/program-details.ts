@@ -23,6 +23,7 @@ export type SingleProgramParticipant = {
 };
 
 export type PageableProgramParticipants = Page<SingleProgramParticipant>;
+
 export type SingleTrainingProgram = {
   id: number;
   name: string;
@@ -49,4 +50,9 @@ export type SingleProgramTrainer = {
   biography?: string;
 };
 
-export type ProgramParticipant = {};
+export type MoveProgramParticipant = {
+  programId: number;
+  newProgramId: number;
+  traineeId: number;
+  trainerId: number;
+};
