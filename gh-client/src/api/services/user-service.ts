@@ -31,7 +31,7 @@ const updateUserProfile = (
 const joinTrainingProgram = (
   request: TrainingProgramApplicationDTO
 ): Promise<void> => {
-  const url = "http://localhost:8200/api/v1/users/join-program";
+  const url = `${ApiEndpoints.Users}/join-program`;
 
   return sendAxiosRequest<TrainingProgramApplicationDTO, void>({
     method: "POST",
