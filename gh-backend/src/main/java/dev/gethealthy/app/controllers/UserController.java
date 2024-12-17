@@ -4,23 +4,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import dev.gethealthy.app.exceptions.BadRequestException;
-import dev.gethealthy.app.models.requests.TraineeRequest;
-import dev.gethealthy.app.models.requests.TrainerRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramApplicationRequest;
-import dev.gethealthy.app.models.responses.TraineeResponse;
-import dev.gethealthy.app.models.responses.TrainerResponse;
+import dev.gethealthy.app.models.requests.UserUpdateRequest;
+import dev.gethealthy.app.models.responses.SingleUserResponse;
+import dev.gethealthy.app.models.responses.UserInfoResponse;
 import dev.gethealthy.app.services.TrainingProgramApplicationService;
 import dev.gethealthy.app.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,32 +30,32 @@ public class UserController {
     private final UserService userService;
     private final TrainingProgramApplicationService trainingProgramApplicationService;
 
-    @GetMapping("/{trainerId}/trainer")
-    @ResponseStatus(HttpStatus.OK)
-    public TrainerResponse getTrainer(@PathVariable("trainerId") Integer trainerId, Authentication auth) {
-
-        return userService.getTrainer(trainerId);
+    @GetMapping("/{userId}")
+    public SingleUserResponse getUser(@PathVariable(name = "userId") Integer userId, Authentication auth) {
+        return userService.getUser(userId);
     }
 
-    @GetMapping("/{traineeId}/trainee")
-    @ResponseStatus(HttpStatus.OK)
-    public TraineeResponse getTrainee(@PathVariable("traineeId") Integer traineeId, Authentication auth) {
-
-        return userService.getTrainee(traineeId);
+    @GetMapping("/{userId}/userInfo")
+    public UserInfoResponse getUserInfo(@PathVariable(name = "userId") Integer userId, Authentication auth) {
+        return userService.getUserInfo(userId);
     }
 
-    @PutMapping("/{trainerId}/update-trainer")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateTrainer(@RequestBody @Valid TrainerRequest request, Authentication auth) {
+    @PostMapping(path = "/{userId}/update", consumes = "multipart/form-data")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateUserInfo(
+            @PathVariable(name = "userId") Integer userId,
+            @RequestPart(name = "request") @Valid UserUpdateRequest request,
+            @RequestPart(name = "file", required = false) MultipartFile file,
+            Authentication auth) {
 
-        userService.updateTrainer(request);
+        // Pass both the request and file to the service layer
+        userService.updateUser(userId, request, file);
     }
 
-    @PutMapping("/{trainerId}/update-trainee")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateTrainee(@RequestBody @Valid TraineeRequest request, Authentication auth) {
-
-        userService.updateTrainee(request);
+    @PostMapping(path = "/{userId}/updateProfilePicture", consumes = "multipart/form-data")
+    public String updateProfilePicture(@PathVariable(name = "userId") Integer userId,
+            @RequestParam(name = "file", required = true) MultipartFile file) {
+        return userService.updateProfilePicture(userId, file);
     }
 
     @PostMapping("/join-program")
@@ -65,5 +66,4 @@ public class UserController {
         else
             throw new BadRequestException();
     }
-
 }

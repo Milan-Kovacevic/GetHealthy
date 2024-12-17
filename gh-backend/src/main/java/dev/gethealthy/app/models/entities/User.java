@@ -1,22 +1,35 @@
 package dev.gethealthy.app.models.entities;
 
-import dev.gethealthy.app.base.BaseEntity;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDate;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.LocalDate;
+import dev.gethealthy.app.base.BaseEntity;
+import dev.gethealthy.app.models.enums.Gender;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "user")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User implements BaseEntity<Integer> {
+public class User implements BaseEntity<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserId", nullable = false)
@@ -42,9 +55,14 @@ public abstract class User implements BaseEntity<Integer> {
     @Column(name = "DateOfBirth", nullable = false)
     private LocalDate dateOfBirth;
 
+    // @NotNull
+    // @Column(name = "Gender", nullable = false)
+    // private Byte gender;
+
     @NotNull
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "Gender", nullable = false)
-    private Byte gender;
+    private Gender gender;
 
     @Size(max = 192)
     @Column(name = "ProfilePictureFilePath", length = 192)

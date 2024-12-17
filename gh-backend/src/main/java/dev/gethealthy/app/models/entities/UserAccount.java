@@ -1,13 +1,21 @@
 package dev.gethealthy.app.models.entities;
 
+import java.time.Instant;
+
 import dev.gethealthy.app.base.BaseEntity;
-import jakarta.persistence.*;
+import dev.gethealthy.app.models.enums.Role;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.Instant;
 
 @Getter
 @Setter
@@ -38,9 +46,14 @@ public class UserAccount implements BaseEntity<Integer> {
     @Column(name = "Enabled", nullable = false)
     private Boolean enabled = false;
 
+    // @NotNull
+    // @Column(name = "Role", nullable = false)
+    // private Byte role;
+
     @NotNull
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "Role", nullable = false)
-    private Byte role;
+    private Role role;
 
     @NotNull
     @Column(name = "CreatedAt", nullable = false)

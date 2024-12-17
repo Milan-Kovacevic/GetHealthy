@@ -7,6 +7,7 @@ type SendAxiosRequestParams<TData, TResponse> = {
   requireAuth?: boolean;
   data?: TData | null;
   queryParams?: any;
+  headers?: any;
   onRespond?: (data: TResponse) => void;
   onError?: (error: AxiosError) => void;
 };
@@ -24,6 +25,7 @@ const sendAxiosRequest = async <TData, TResponse>(
       url: params.url,
       data: params.data,
       params: params.queryParams,
+      headers: params.headers,
     })
     .then((response) => {
       if (params.onRespond) params.onRespond(response.data);
