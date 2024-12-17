@@ -1,16 +1,18 @@
 package dev.gethealthy.app.services;
 
-import dev.gethealthy.app.models.requests.TraineeRequest;
-import dev.gethealthy.app.models.requests.TrainerRequest;
-import dev.gethealthy.app.models.responses.TraineeResponse;
-import dev.gethealthy.app.models.responses.TrainerResponse;
+import org.springframework.web.multipart.MultipartFile;
+
+import dev.gethealthy.app.models.requests.UserUpdateRequest;
+import dev.gethealthy.app.models.responses.SingleUserResponse;
+import dev.gethealthy.app.models.responses.UserInfoResponse;
 
 public interface UserService {
-    TrainerResponse getTrainer(Integer trainerId);
 
-    TraineeResponse getTrainee(Integer traineeId);
+    SingleUserResponse getUser(Integer userId);
 
-    void updateTrainer(TrainerRequest request);
+    UserInfoResponse getUserInfo(Integer userId);
 
-    void updateTrainee(TraineeRequest request);
+    void updateUser(Integer userId, UserUpdateRequest request, MultipartFile file);
+
+    String updateProfilePicture(Integer userId, MultipartFile file);
 }

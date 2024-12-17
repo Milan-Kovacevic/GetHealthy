@@ -16,3 +16,8 @@ export type Trainee = User & {
   weight: number;
   medicalHistory: string;
 };
+
+export enum UserRole {
+  TRAINER = "TRAINER",
+  TRAINEE = "TRAINEE",
+}

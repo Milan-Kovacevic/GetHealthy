@@ -45,15 +45,19 @@ export default {
     const axiosInstance = axios.create(axiosConfiguration);
     axiosInstance.defaults.headers.common["Content-Type"] = "application/json";
     const token = localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
-    if (!useAuthentication || token === null) return axiosInstance;
-
     axiosInstance.interceptors.request.use(
       (requestConfig) => {
+        if (requestConfig.data instanceof FormData)
+          delete requestConfig.headers["Content-Type"];
+
         requestConfig.headers.Authorization = `Bearer ${token}`;
         return requestConfig;
       },
       (error) => Promise.reject(error)
     );
+
+    if (!useAuthentication || token === null) return axiosInstance;
+
     axiosInstance.interceptors.response.use(
       (response: AxiosResponse) => response,
       async (error: AxiosError) => {
