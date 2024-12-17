@@ -1,5 +1,5 @@
 import { Page } from "@/api/contracts/pageable-contract";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type UsePaginationProps<TData> = {
   fetchData: (state: UsePaginationState<TData>) => Promise<Page<TData>>;
@@ -8,7 +8,7 @@ type UsePaginationState<TData> = {
   data: TData[];
   isLoading: boolean;
   page: number;
-  hasMore: boolean;
+  totalPages: number;
 };
 
 export function usePagination<TData>(props: UsePaginationProps<TData>) {
@@ -16,42 +16,36 @@ export function usePagination<TData>(props: UsePaginationProps<TData>) {
 
   const [data, setData] = useState<TData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [page, setPage] = useState(0);
+  const [first, setFirst] = useState(true);
+  const [last, setLast] = useState(false);
 
-  const onPageChange = async () => {
-    if (!hasMore) return;
+  useEffect(() => {
+    onLoadMoreData();
+  }, [page]);
+
+  const onLoadMoreData = () => {
     setIsLoading(true);
-
-    fetchData({
-      data,
-      isLoading,
-      hasMore,
-      page,
-    })
+    fetchData({ data, isLoading, totalPages, page })
       .then((response) => {
-        setData((prev) => [...prev, ...response.content]);
-        setPage((prev) => prev + 1);
-
-        if (data.length > 10 || response.content.length == 0) {
-          setHasMore(false);
-        }
-      })
-      .catch(() => {
-        setHasMore(false);
+        setData(response.content);
+        setTotalPages(response.totalPages);
+        setFirst(response.first);
+        setLast(response.last);
       })
       .finally(() => setIsLoading(false));
   };
 
   return {
     data,
-    setData,
     isLoading,
     setIsLoading,
-    hasMore,
-    setHasMore,
+    first,
+    last,
     page,
+    totalPages,
     setPage,
-    onPageChange,
+    onLoadMoreData,
   };
 }

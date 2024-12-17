@@ -17,20 +17,19 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, Integer> implements TrainingProgramService {
     private final TrainingProgramRepository trainingProgramRepository;
     private final TrainingProgramExerciseRepository trainingProgramExerciseRepository;
-    private final TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository;
     private final ModelMapper modelMapper;
 
     public TrainingProgramServiceImpl(TrainingProgramRepository trainingProgramRepository, TrainingProgramExerciseRepository trainingProgramExerciseRepository, TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository, ModelMapper modelMapper) {
         super(trainingProgramRepository, modelMapper, TrainingProgram.class);
         this.trainingProgramRepository = trainingProgramRepository;
         this.trainingProgramExerciseRepository = trainingProgramExerciseRepository;
-        this.traineeOnTrainingProgramRepository = traineeOnTrainingProgramRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -52,6 +51,15 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
             throw new NotFoundException();
         trainingProgram.setDeleted(true);
         trainingProgramRepository.save(trainingProgram);
+    }
+
+    @Override
+    public List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(Integer userId) {
+        return trainingProgramRepository
+                .findAllByTrainer_Id(userId)
+                .stream()
+                .map(e -> modelMapper.map(e, TrainerProgramResponse.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -107,15 +115,4 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
         return response;
     }
 
-    @Override
-    public Page<SingleProgramParticipantResponse> getTrainingProgramParticipants(Integer programId, String filter, Pageable page) {
-        var programParticipants = traineeOnTrainingProgramRepository.getAllTraineesOnTrainingProgramFiltered(programId, filter, page);
-
-        return programParticipants.map(e -> {
-            var model = modelMapper.map(e, SingleProgramParticipantResponse.class);
-            modelMapper.map(e.getUser(), model);
-            modelMapper.map(e.getUser().getUser(), model);
-            return model;
-        });
-    }
 }

@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TrainerInfoLoader() {
   return (
-    <div className="my-6 mt-5 relative p-4">
+    <div className="my-6 mt-4 relative p-4">
       <div className="flex flex-col md:flex-row md:gap-6 gap-3">
         <Skeleton className="w-24 h-24 md:w-32 md:h-32 rounded-full" />
         <div>

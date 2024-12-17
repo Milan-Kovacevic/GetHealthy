@@ -34,3 +34,9 @@ export type User =
 export type PageableTrainingPrograms = Page<TrainingProgram>;
 
 export type ProgramDifficulty = "Beginner" | "Intermediate" | "Advanced";
+
+export type TrainerProgram = {
+  id: number;
+  name: string;
+  createdAt: string;
+};

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TrainingProgramRepository extends JpaRepository<TrainingProgram, Integer>, JpaSpecificationExecutor<TrainingProgram>{
@@ -16,4 +17,6 @@ public interface TrainingProgramRepository extends JpaRepository<TrainingProgram
 
     @Query("SELECT ROUND(AVG(e.rate), 1) FROM ProgramRating e WHERE e.program.id = ?1")
     Optional<Double> calculateTrainingProgramAverageRate(Integer programId);
+
+    List<TrainingProgram> findAllByTrainer_Id(Integer trainerId);
 }

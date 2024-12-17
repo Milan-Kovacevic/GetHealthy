@@ -1,4 +1,5 @@
 import { SingleProgramParticipant } from "@/api/models/program-details";
+import { TrainerProgram } from "@/api/models/training-program";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,6 +9,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -16,26 +25,19 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { useState } from "react";
-
-const programs = [
-  "Strength Training",
-  "Cardio Fitness",
-  "Flexibility and Yoga",
-  "High-Intensity Interval Training",
-];
+import { ChevronsDownIcon, ChevronsUpDown } from "lucide-react";
+import { useEffect, useState } from "react";
 
 type MoveParticipantDialogProps = {
+  programs: TrainerProgram[];
   participant: SingleProgramParticipant;
   onCancel: () => void;
-  onSubmit: (newProgramId: string) => void;
+  onSubmit: (newProgramId: number) => void;
 };
 
 const BREAKPOINT_XL = 1280;
@@ -43,12 +45,14 @@ const BREAKPOINT_XL = 1280;
 export default function MoveParticipantDialog(
   props: MoveParticipantDialogProps
 ) {
-  const { participant, onCancel, onSubmit } = props;
-  const [selectedProgram, setSelectedProgram] = useState<string | undefined>();
+  const userId = 1; // TODO: Hardcoded for now...
+  const { participant, onCancel, onSubmit, programs } = props;
+  const [selectedProgram, setSelectedProgram] = useState<TrainerProgram>();
   const showDialog = useMediaQuery(BREAKPOINT_XL);
+
   const handleSubmit = () => {
     if (selectedProgram) {
-      onSubmit(selectedProgram);
+      onSubmit(selectedProgram.id);
     }
   };
 
@@ -80,18 +84,56 @@ export default function MoveParticipantDialog(
                 {participant.firstName} {participant.lastName}
               </span>
             </label>
-            <Select value={selectedProgram} onValueChange={setSelectedProgram}>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className="w-full justify-between font-normal"
+                >
+                  {selectedProgram ? selectedProgram.name : "Select program"}
+                  <ChevronsDownIcon className="opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0">
+                <Command className="">
+                  {programs.length > 0 && (
+                    <CommandInput placeholder="Search for programs ..." />
+                  )}
+                  <CommandList className="w-[300px]">
+                    <CommandEmpty className="text-sm font-mediun italic text-muted-foreground p-3 px-4">
+                      No training programs to show.
+                    </CommandEmpty>
+                    <CommandGroup>
+                      {programs.map((program: any) => (
+                        <CommandItem
+                          key={program.id}
+                          value={`${program.name}`}
+                          onSelect={() => {
+                            setSelectedProgram(program);
+                          }}
+                        >
+                          {program.name}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+            {/* <Select value={selectedProgram} onValueChange={setSelectedProgram}>
               <SelectTrigger id="program">
                 <SelectValue placeholder="Select a program" />
               </SelectTrigger>
               <SelectContent>
                 {programs.map((program) => (
-                  <SelectItem key={program} value={program}>
-                    {program}
+                  <SelectItem key={program.id} value={`${program.id}`}>
+                    {program.name}
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
         </div>
       </form>
