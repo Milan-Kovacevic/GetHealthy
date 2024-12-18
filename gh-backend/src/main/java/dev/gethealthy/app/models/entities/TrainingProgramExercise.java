@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -34,7 +36,6 @@ public class TrainingProgramExercise implements BaseEntity<Integer> {
     @JoinColumn(name = "ProgramId", nullable = false)
     private TrainingProgram program;
 
-
-    // TODO: Add Exercise sets mappings
-
+    @OneToMany(mappedBy = "programExericse", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ExerciseSet> exerciseSets;
 }

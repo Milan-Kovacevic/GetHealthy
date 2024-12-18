@@ -45,12 +45,12 @@ export const createUpdateTrainingProgram = (
   isUpdate: boolean
 ) => {
   var url = ApiEndpoints.TrainingPrograms;
-  return sendAxiosRequest<TrainingProgramDTO, void>({
+  return sendAxiosRequest<TrainingProgramDTO, object>({
     method: !isUpdate ? "POST" : "PUT",
     url: url,
     data: trainingProgram,
   }).then((response) => {
-    return response.data as void;
+    return response.data as object;
   });
 };
 const getAllTrainingProgramsForTrainer = (trainerId: number) => {

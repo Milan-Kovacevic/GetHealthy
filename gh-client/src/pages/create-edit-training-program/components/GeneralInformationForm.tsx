@@ -56,13 +56,14 @@ const formSchema = z.object({
 
 export default function GeneralInformationForm({
   defaultValues,
+  setProgramId,
   isEdit = false,
 }: {
   defaultValues?: z.infer<typeof formSchema>;
-  isEdit?: boolean;
+  isEdit?: boolean,
+  setProgramId: (value: number) => void;
 }) {
   const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
@@ -85,18 +86,21 @@ export default function GeneralInformationForm({
           </pre>
         );
         const program: TrainingProgramDTO = {
-          rating: 0,
+          //rating: 0,
           name: values.name,
           difficulty: Number.parseInt(values.difficulty),
           trainingDuration: 0,
           description: values.info,
           requirements: values.requirements,
           categories: values.categories.map((c) => ({
-            trainingProgramCategoryId: c.id,
+            categoryId: c.id,
           })),
           trainerId: 3,
         };
-        await createUpdateTrainingProgram(program, false);
+        var response = await createUpdateTrainingProgram(program, false);
+        // da bi radilo potrebno je ovaj id propagirati u roditeljsku komponentu koja ce dalje raditi sa ExercisePlanBuilderom
+        console.log(response.id);
+        setProgramId(response.id);
       } else {
         console.log("Updated values:", values);
         toast.success("Changes saved successfully.");

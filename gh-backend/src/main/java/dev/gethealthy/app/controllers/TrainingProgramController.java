@@ -71,8 +71,7 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
         return trainingProgramService.getTrainerByProgramId(programId);
     }
 
-    @GetMapping
-    @RequestMapping("{programId}/details")
+    @GetMapping("{programId}/details")
     public SingleProgramDetailsResponse getTrainingProgramDetails(@PathVariable(name = "programId") Integer programId) {
         return trainingProgramService.getTrainingProgramDetails(programId);
     }

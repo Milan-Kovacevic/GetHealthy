@@ -79,7 +79,8 @@ const exercisePlanSchema = z.object({
 type ExercisePlanValues = z.infer<typeof exercisePlanSchema>;
 
 type ExercisePlanBuilderProps = {
-  isEdit?: boolean;
+  isEdit?: boolean,
+  programId: number
 };
 
 const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
