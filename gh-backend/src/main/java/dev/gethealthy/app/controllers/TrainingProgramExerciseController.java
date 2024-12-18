@@ -7,6 +7,7 @@ import dev.gethealthy.app.models.entities.TrainingProgramExercise;
 import dev.gethealthy.app.models.requests.TrainingProgramExerciseRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.TrainingProgramResponse;
+import dev.gethealthy.app.services.ExerciseSetService;
 import dev.gethealthy.app.services.TrainingProgramExerciseService;
 import dev.gethealthy.app.services.ExerciseSetService;
 import org.springframework.web.bind.annotation.*;
@@ -30,14 +31,10 @@ public class TrainingProgramExerciseController  {
         for (var request : requests)
         {
             var programExercise = crudService.insert(request, TrainingProgramExercise.class);
-            for (var set : request.getExerciseSets())
-            {
-                ExerciseSet exerciseSet = new ExerciseSet();
-                exerciseSet.setProgramExericse(programExercise);
-                exerciseSet.setRestTime(set.getRestTime());
-                exerciseSet.setFirstMetricValue(set.getFirstMetricValue());
-                exerciseSet.setSecondMetricValue(set.getSecondMetricValue());
-                exerciseSetService.insert(exerciseSet, ExerciseSet.class);
+
+            for (var set : request.getProgramExericses()) {
+                set.setProgramExericseId(programExercise.getId());
+                exerciseSetService.insert(set, ExerciseSet.class);
             }
         }
     }

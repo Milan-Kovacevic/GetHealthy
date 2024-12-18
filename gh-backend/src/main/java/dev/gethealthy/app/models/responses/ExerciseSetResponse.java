@@ -1,21 +1,8 @@
 package dev.gethealthy.app.models.responses;
 
-import dev.gethealthy.app.repositories.MetricsRepository;
 import lombok.Data;
 
 @Data
-public class ExerciseResponse {
-    private Integer id;
+public class ExerciseSetResponse {
 
-    private String exerciseName;
-
-    private String description;
-
-    private String videoLink;
-
-    private Integer userId;
-
-    private MetricsResponse firstExerciseMetric;
-
-    private MetricsResponse secondExerciseMetric;
 }

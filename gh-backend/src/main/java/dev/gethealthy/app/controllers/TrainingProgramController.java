@@ -22,12 +22,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${gethealthy.base-url}/training-programs")
-public class TrainingProgramController extends CrudController<Integer, TrainingProgramRequest, TrainingProgramResponse> {
+public class TrainingProgramController {//} extends CrudController<Integer, TrainingProgramRequest, TrainingProgramResponse> {
 
     private final TrainingProgramService trainingProgramService;
 
     public TrainingProgramController(TrainingProgramService crudService) {
-        super(crudService, TrainingProgramResponse.class);
+        //super(crudService, TrainingProgramResponse.class);
         //super(crudService, TrainingProgramResponse.class);
         this.trainingProgramService = crudService;
     }

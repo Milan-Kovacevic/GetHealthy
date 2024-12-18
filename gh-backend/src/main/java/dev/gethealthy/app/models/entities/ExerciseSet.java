@@ -35,4 +35,5 @@ public class ExerciseSet implements BaseEntity<Integer> {
     @Column(name = "SecondMetricValue", length = 128)
     private String secondMetricValue;
 
+
 }

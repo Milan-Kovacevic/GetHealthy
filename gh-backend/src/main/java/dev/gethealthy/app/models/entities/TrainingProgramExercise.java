@@ -36,6 +36,6 @@ public class TrainingProgramExercise implements BaseEntity<Integer> {
     @JoinColumn(name = "ProgramId", nullable = false)
     private TrainingProgram program;
 
-    @OneToMany(mappedBy = "programExericse", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<ExerciseSet> exerciseSets;
+    @OneToMany(mappedBy = "programExericse")
+    private List<ExerciseSet> programExericses;
 }

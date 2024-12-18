@@ -1,6 +1,7 @@
 package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.base.CrudJpaService;
+
 import dev.gethealthy.app.models.entities.ExerciseSet;
 import dev.gethealthy.app.services.ExerciseSetService;
 import jakarta.transaction.Transactional;
