@@ -20,18 +20,4 @@ public class TrainingProgramExerciseServiceImpl extends CrudJpaService<TrainingP
         super(repository, modelMapper, TrainingProgramExercise.class);
         this.exerciseSetRepository = exerciseSetRepository;
     }
-
-    @Override
-    public void insertExerciseToProgram(TrainingProgramExerciseRequest request) {
-        var programExercise = getModelMapper().map(request, TrainingProgramExercise.class);
-        programExercise.setId(null);
-        programExercise = getRepository().saveAndFlush(programExercise);
-        getEntityManager().refresh(programExercise);
-        for (var req : request.getExerciseSets()) {
-            var mapped = getModelMapper().map(req, dev.gethealthy.app.models.entities.ExerciseSet.class);
-            //mapped.setProgramExericse(programExercise);
-            exerciseSetRepository.save(mapped);
-        }
-        getRepository().flush();
-    }
 }
