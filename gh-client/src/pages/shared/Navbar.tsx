@@ -112,7 +112,7 @@ const Navbar = () => {
       submenu: resourcesSubMenuItems,
     },
     {
-      title: "My profile",
+      title: "Settings",
       link: "/profile",
     },
   ];

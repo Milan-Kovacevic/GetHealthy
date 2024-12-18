@@ -113,7 +113,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
         className="left-auto -right-56 w-80 h-96 top-44"
       />
       <CircleBackgroundBlob
-        variant="lighter"
+        variant="lightest"
         className="-left-72 w-1/4 h-96 top-44"
       />
       <CircleBackgroundBlob variant="lightest" />
@@ -126,14 +126,14 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
           <TrainingProgramsPageTitle showCreate={myTrainingPrograms} />
           <Separator className="my-4" />
           {!myTrainingPrograms && <FeaturedTrainingPrograms />}
-          {!myTrainingPrograms && (
+          {/* {!myTrainingPrograms && (
             <>
               <div className="space-y-0.5">
                 <h2 className="text-2xl font-medium">Training programs</h2>
               </div>
               <Separator className="my-4" />
             </>
-          )}
+          )} */}
 
           <div className="flex lg:flex-row flex-col lg:gap-8 gap-2">
             <div className="flex flex-col my-6 pr-4 lg:border-r lg:border-b-0 border-b pb-4">

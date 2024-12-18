@@ -5,7 +5,6 @@ import RootLayout from "@/layouts/RootLayout";
 import AboutUsPage from "@/pages/about/AboutUsPage";
 import CreateTrainingProgramPage from "@/pages/create-edit-training-program/CreateTrainingProgramPage";
 import EditTrainingProgramPage from "@/pages/create-edit-training-program/EditTrainingProgramPage";
-import GeneralInformationForm from "@/pages/create-edit-training-program/components/GeneralInformationForm";
 import LandingPage from "@/pages/landing/LandingPage";
 import LoginPage from "@/pages/login/LoginPage";
 import NotFoundPage from "@/pages/not-found/NotFoundPage";
@@ -22,6 +21,7 @@ import ProfilePage from "@/pages/profile/components/ProfilePage";
 import AppearancePage from "@/pages/profile/components/AppearancePage";
 import AccountPage from "@/pages/profile/components/AccountPage";
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import ExercisesPage from "@/pages/exercises/ExercisesPage";
 
 const router = createBrowserRouter([
   {
@@ -58,10 +58,8 @@ const router = createBrowserRouter([
             element: <ProgramDetailsLayout />,
             children: [
               { path: "", element: <Navigate replace={true} to="details" /> },
-
               {
                 path: "details",
-
                 element: <TrainingProgramDetails />,
               },
               {
@@ -77,6 +75,10 @@ const router = createBrowserRouter([
                 element: <TrainingProgramTrainees />,
               },
             ],
+          },
+          {
+            path: "/exercises",
+            element: <ExercisesPage />,
           },
           {
             path: "profile",
@@ -97,10 +99,6 @@ const router = createBrowserRouter([
             ],
           },
           // Routes for trainers only
-          {
-            path: "generalInfo",
-            element: <GeneralInformationForm />,
-          },
           {
             path: "create-training-program",
             element: <CreateTrainingProgramPage />,
