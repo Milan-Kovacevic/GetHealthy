@@ -273,6 +273,7 @@ export function ProfileForm(props: ProfileFormProps) {
         <Button
           variant={isEditing ? "outline" : "secondary"}
           type="button"
+          className="min-w-24"
           onClick={toggleEditMode}
         >
           {isEditing ? "Cancel" : "Edit"}
