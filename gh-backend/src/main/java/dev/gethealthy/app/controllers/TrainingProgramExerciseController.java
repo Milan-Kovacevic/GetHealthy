@@ -32,7 +32,7 @@ public class TrainingProgramExerciseController  {
         {
             var programExercise = crudService.insert(request, TrainingProgramExercise.class);
 
-            for (var set : request.getProgramExericses()) {
+            for (var set : request.getExerciseSets()) {
                 set.setProgramExericseId(programExercise.getId());
                 exerciseSetService.insert(set, ExerciseSet.class);
             }

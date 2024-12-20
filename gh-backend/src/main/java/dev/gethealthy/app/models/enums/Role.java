@@ -1,7 +1,7 @@
 package dev.gethealthy.app.models.enums;
 
 public enum Role {
-    ADMIN((byte) 1), TRAINEE((byte) 2), TRAINER((byte) 3);
+    ADMIN((byte) 1), TRAINEE((byte) 2), TRAINER((byte) 3), PATIENT((byte) 4);
 
     private final byte value;
 

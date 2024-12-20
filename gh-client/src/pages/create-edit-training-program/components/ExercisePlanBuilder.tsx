@@ -18,8 +18,7 @@ import {
 } from "@/components/ui/tooltip";
 import FormSectionTitle from "./FormSectionTitle";
 import { getAllExcercises } from "@/api/services/exercise-service";
-
-
+import { sendExercises } from "@/api/services/training-program-exercise-service";
 
 // mock data for ed
 const validExercisePlan: ExercisePlanValues = {
@@ -79,29 +78,28 @@ const exercisePlanSchema = z.object({
 type ExercisePlanValues = z.infer<typeof exercisePlanSchema>;
 
 type ExercisePlanBuilderProps = {
-  isEdit?: boolean,
-  programId: number
+  isEdit?: boolean;
+  programId: number;
 };
 
 const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
-
   const [exercises, setExercises] = useState<any[]>([]);
-  
+
   useEffect(() => {
     async function fetchExercises() {
       setExercises(
         (await getAllExcercises()).map((item) => ({
           label: item.exerciseName,
-          value: item.id
-        })))
+          value: item.id,
+        }))
+      );
     }
     fetchExercises();
   }, []);
 
-  useEffect(()=>
-  {
+  useEffect(() => {
     console.log(exercises);
-  }, [exercises])
+  }, [exercises]);
 
   const [selectedExerciseIndex, setSelectedExerciseIndex] = useState<
     number | null
@@ -164,14 +162,31 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
     e.preventDefault();
   };
 
-  const onSubmit = (data: ExercisePlanValues) => {
+  async function onSubmit(data: ExercisePlanValues) {
+    // fix with data from form
+    await sendExercises([
+      {
+        exerciseId: 1,
+        position: 1,
+        programId: 1,
+        exerciseSets: [
+          {
+            restTime: 30,
+            firstMetricValue: "string",
+            secondMetricValue: "string",
+          },
+        ],
+      },
+    ]);
+
     toast(
       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
       </pre>
     );
     console.log(data);
-  };
+    console.log(form.getValues("exercises"));
+  }
 
   return (
     <div className="mt-8 w-full">

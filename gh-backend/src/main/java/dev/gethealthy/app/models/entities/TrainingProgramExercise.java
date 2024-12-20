@@ -37,5 +37,5 @@ public class TrainingProgramExercise implements BaseEntity<Integer> {
     private TrainingProgram program;
 
     @OneToMany(mappedBy = "programExericse")
-    private List<ExerciseSet> programExericses;
+    private List<ExerciseSet> exerciseSets;
 }
