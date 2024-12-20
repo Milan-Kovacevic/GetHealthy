@@ -17,6 +17,14 @@ const formSchema = z.object({
     .max(32, {
       message: "Maximum username length is 32",
     }),
+  email: z
+    .string()
+    .min(1, {
+      message: "Email is required.",
+    })
+    .max(128, {
+      message: "Maximum email length is 128",
+    }),
   password: z
     .string()
     .min(1, {
@@ -47,6 +55,7 @@ export default function AccountInfoForm(props: AccountInfoFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
+      email: "",
       password: "",
       repeatPassword: "",
     },
@@ -73,6 +82,14 @@ export default function AccountInfoForm(props: AccountInfoFormProps) {
           description="Enter your username"
           display="Username *"
           placeholder="ex. user1"
+        />
+        <InputFormField
+          control={form.control}
+          name="email"
+          type="text"
+          description="Enter your email"
+          display="Email *"
+          placeholder="user1@example.com"
         />
         <div>
           <div className="grid grid-cols-12 gap-4">

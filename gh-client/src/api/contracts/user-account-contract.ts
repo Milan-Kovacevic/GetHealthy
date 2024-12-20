@@ -5,15 +5,13 @@ export type UserAccountDTO = {
   password: string;
 };
 
-export type UpdatePasswordDTO = {
-  userId: number;
+export type PasswordChangeDTO = {
   currentPassword: string;
   newPassword: string;
   confirmedNewPassword: string;
 };
 
-export type UpdateEmailDTO = {
-  userId: number;
-  newEmail: string;
+export type EmailChangeDTO = {
+  email: string;
   confirmedPassword: string;
 };

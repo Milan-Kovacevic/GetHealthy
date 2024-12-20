@@ -1,6 +1,7 @@
 import {
   BellIcon,
   Book,
+  ChartBarIcon,
   DumbbellIcon,
   LayoutListIcon,
   Menu,
@@ -67,13 +68,30 @@ const Navbar = () => {
       title: isTrainer ? "Manage" : "My programs",
       description: isTrainer
         ? "Manage your training programs"
-        : "Browse your training programs",
+        : "View your training programs",
       icon: isTrainer ? (
         <NotebookPenIcon className="size-5 shrink-0 mt-1" />
       ) : (
         <DumbbellIcon className="size-5 shrink-0 mt-1" />
       ),
       link: "/programs/manage",
+    },
+  ];
+
+  const resourcesSubMenuItems: NavbarSubMenuItem[] = [
+    {
+      title: "Exercises",
+      description: "Browse available exercises",
+      icon: <DumbbellIcon className="size-5 shrink-0 mt-1" />,
+      link: "/exercises",
+    },
+    {
+      title: "Statistics",
+      description: isTrainer
+        ? "Track program engagement"
+        : "Track your progress",
+      icon: <ChartBarIcon className="size-5 shrink-0 mt-1" />,
+      link: "/statistics",
     },
   ];
 
@@ -89,7 +107,12 @@ const Navbar = () => {
       submenu: trainingProgramSubMenuItems,
     },
     {
-      title: "My profile",
+      title: "Resources & Analytics",
+      link: "/resources",
+      submenu: resourcesSubMenuItems,
+    },
+    {
+      title: "Settings",
       link: "/profile",
     },
   ];
@@ -163,7 +186,7 @@ const DesktopNavbar = ({
                         <span>{item.title}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className="w-80 p-3">
+                        <ul className="w-[360px] p-3">
                           <NavigationMenuLink>
                             {item.submenu.map((item, idx) => (
                               <li key={idx}>

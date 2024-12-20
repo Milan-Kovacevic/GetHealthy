@@ -10,11 +10,18 @@ import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  changeEmail,
+  changePassword,
+  getUserAccount,
+} from "@/api/services/user-account-service";
 
 const emailSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmedPassword: z
+    .string()
+    .min(8, "Password must be at least 8 characters"),
 });
 
 const passwordSchema = z
@@ -23,13 +30,13 @@ const passwordSchema = z
       .string()
       .min(8, "Password must be at least 8 characters"),
     newPassword: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z
+    confirmedNewPassword: z
       .string()
       .min(8, "Password must be at least 8 characters"),
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmedNewPassword, {
     message: "Passwords don't match",
-    path: ["confirmPassword"],
+    path: ["confirmedNewPassword"],
   });
 
 type EmailFormValues = z.infer<typeof emailSchema>;
@@ -41,17 +48,27 @@ interface UserData {
 
 export default function AccountForm() {
   const [userData, setUserData] = useState<UserData>({
-    username: "johndoe",
-    email: "johndoe@example.com",
+    email: "",
+    username: "",
   });
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      const data = await getUserAccount(1);
+
+      setUserData({ email: data.email, username: data.username });
+    };
+
+    fetchProfileData();
+  }, []);
 
   const emailForm = useForm<EmailFormValues>({
     resolver: zodResolver(emailSchema),
     defaultValues: {
       email: "",
-      password: "",
+      confirmedPassword: "",
     },
   });
 
@@ -60,7 +77,7 @@ export default function AccountForm() {
     defaultValues: {
       currentPassword: "",
       newPassword: "",
-      confirmPassword: "",
+      confirmedNewPassword: "",
     },
   });
 
@@ -69,12 +86,18 @@ export default function AccountForm() {
     setIsEditingEmail(false);
     setUserData({ ...userData, email: values.email });
     emailForm.reset();
+    changeEmail(values, 1) // userId hardcoded
+      .then()
+      .catch(() => console.log("Could not change email!"));
   }
 
   function onPasswordSubmit(values: PasswordFormValues) {
     console.log(values);
     setIsChangingPassword(false);
     passwordForm.reset();
+    changePassword(values, 1) // userId hardcoded
+      .then()
+      .catch(() => console.log("Could not change password!"));
   }
 
   return (
@@ -127,7 +150,7 @@ export default function AccountForm() {
 
               <InputFormField
                 control={emailForm.control}
-                name="password"
+                name="confirmedPassword"
                 type="password"
                 display="Confirm password *"
                 placeholder="Enter your password"
@@ -176,7 +199,7 @@ export default function AccountForm() {
 
               <InputFormField
                 control={passwordForm.control}
-                name="confirmPassword"
+                name="confirmedNewPassword"
                 type="password"
                 display="Confirm new password *"
                 placeholder="Confirm your new password"

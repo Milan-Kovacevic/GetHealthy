@@ -1,10 +1,20 @@
-export type UserDTO = {
+export type UserAccountDTO = {
   userId: number;
+  username: string;
+  email: string;
+  enabled: boolean;
+  role: string;
+  createdAt: Date;
+  lastAccessed: Date;
+};
+
+export type UserDTO = {
   firstName: string;
   lastName: string;
   dateOfBirth: Date;
   gender: number;
   profilePictureFilePath?: string;
+  userAccount?: UserAccountDTO;
 };
 
 export type TrainerDTO = UserDTO & {

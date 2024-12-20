@@ -1,5 +1,7 @@
 package dev.gethealthy.app.models.entities;
 
+import java.time.Instant;
+
 import dev.gethealthy.app.base.BaseEntity;
 import dev.gethealthy.app.models.enums.Role;
 import jakarta.persistence.*;
@@ -7,8 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.Instant;
 
 @Getter
 @Setter
@@ -39,6 +39,11 @@ public class UserAccount implements BaseEntity<Integer> {
     @Column(name = "Enabled", nullable = false)
     private Boolean enabled = false;
 
+    // @NotNull
+    // @Column(name = "Role", nullable = false)
+    // private Byte role;
+
+    @NotNull
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "Role", nullable = false)
     private Role role;

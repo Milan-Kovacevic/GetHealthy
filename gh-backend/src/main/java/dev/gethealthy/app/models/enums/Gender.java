@@ -3,16 +3,30 @@ package dev.gethealthy.app.models.enums;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Gender {
-    MALE("Male"),
-    FEMALE("Female");
+    MALE((byte) 1),
+    FEMALE((byte) 2);
 
-    private final String name;
+    private final byte value;
 
-    private Gender(String name) {
-        this.name = name;
+    Gender(byte value) {
+        this.value = value;
     }
-    @JsonValue
-    public String getName() {
-        return name;
+
+    public byte getValue() {
+        return value;
+    }
+
+    public static Gender fromValue(String value) {
+        for (Gender gender : Gender.values()) {
+            if (gender.name().equals(value)) {
+                return gender;
+            }
+        }
+        throw new IllegalArgumentException("Unknown Gender value: " + value);
+    }
+
+    @Override
+    public String toString() {
+        return name();
     }
 }

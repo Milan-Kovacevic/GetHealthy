@@ -2,12 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import {
-  getTraineeProfile,
-  getTrainerProfile,
-  updateTraineeProfile,
-  updateTrainerProfile,
-} from "@/api/services/user-service";
+import { getProfile, updateUserProfile } from "@/api/services/user-service";
 import DatePickerFormField from "@/components/primitives/DatePickerFormField";
 import { FileInputField } from "@/components/primitives/FileInputField";
 import InputFormField from "@/components/primitives/InputFormField";
@@ -18,6 +13,7 @@ import TextareaFormField from "@/components/primitives/TextareaFormField";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
+import { UserRole } from "@/api/models/user";
 
 const sharedFields = {
   firstName: z.string({ required_error: "First name is required." }).min(1),
@@ -49,8 +45,8 @@ const trainerScheme = z.object({
 const profileFormSchema = z.union([traineeScheme, trainerScheme]);
 
 const genders = [
-  { label: "Male", value: "0" },
-  { label: "Female", value: "1" },
+  { label: "Male", value: "MALE" },
+  { label: "Female", value: "FEMALE" },
 ];
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -77,19 +73,9 @@ export function ProfileForm(props: ProfileFormProps) {
   useEffect(() => {
     const fetchProfileData = async () => {
       let data: ProfileFormValues | null = null;
-      if (props.isTrainer) {
-        const trainerProfile = await getTrainerProfile();
-        data = {
-          ...trainerProfile,
-          gender: trainerProfile.gender.toString(),
-        };
-      } else {
-        const traineeProfile = await getTraineeProfile();
-        data = {
-          ...traineeProfile,
-          gender: traineeProfile.gender.toString(),
-        };
-      }
+      const pdata = await getProfile(1);
+
+      data = pdata;
 
       if (data) {
         setInitialValues(data);
@@ -124,41 +110,41 @@ export function ProfileForm(props: ProfileFormProps) {
       setSelectedFile(file);
       form.setValue("profilePictureFilePath", file.name);
     } else {
+      setSelectedFile(undefined);
       form.setValue("profilePictureFilePath", "");
     }
   };
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      let updateProfilePromise: Promise<void>;
-
+      let requestData: any;
       if (props.isTrainer) {
-        const trainerData = trainerScheme.parse(data);
-        updateProfilePromise = updateTrainerProfile({
-          ...trainerData,
-          userId: 1,
-          gender: parseInt(trainerData.gender),
-        });
-        setInitialValues(trainerData);
+        const pom = trainerScheme.parse(data);
+        requestData = { ...pom, role: UserRole.TRAINER };
+        setInitialValues(requestData);
       } else {
-        const traineeData = traineeScheme.parse(data);
-        updateProfilePromise = updateTraineeProfile({
-          ...traineeData,
-          userId: 1,
-          gender: parseInt(traineeData.gender),
-        });
-        setInitialValues(traineeData);
+        const pom = traineeScheme.parse(data);
+        requestData = { ...pom, role: UserRole.TRAINEE };
+
+        setInitialValues(requestData);
       }
 
-      await updateProfilePromise;
-      console.log("Profile updated successfully!");
-      setIsEditing(false);
+      const formData = new FormData();
 
-      // Update profile picture if selected
-      // if (selectedFile) {
-      //   await updateUserProfilePicture(1, selectedFile);
-      //   console.log("Profile picture updated successfully!");
-      // }
+      if (selectedFile) {
+        formData.append("file", selectedFile);
+      }
+
+      formData.append(
+        "request",
+        new Blob([JSON.stringify(requestData)], { type: "application/json" })
+      );
+
+      await updateUserProfile(1, formData).catch(() =>
+        console.log("Some error happened!")
+      );
+
+      setIsEditing(false);
     } catch (error) {
       console.error("Error updating profile or profile picture:", error);
     }
@@ -287,6 +273,7 @@ export function ProfileForm(props: ProfileFormProps) {
         <Button
           variant={isEditing ? "outline" : "secondary"}
           type="button"
+          className="min-w-24"
           onClick={toggleEditMode}
         >
           {isEditing ? "Cancel" : "Edit"}

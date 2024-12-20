@@ -15,10 +15,6 @@ const sidebarNavItems = [
     title: "Appearance",
     href: "/profile/appearance",
   },
-  {
-    title: "Statistics",
-    href: "/profile/statistics",
-  },
 ];
 
 const ProfilePageLayout = () => {
@@ -26,9 +22,9 @@ const ProfilePageLayout = () => {
     <section className="overflow-hidden relative sm:px-5 px-4 pt-8 pb-10">
       <div className=" container mx-auto space-y-5">
         <div className="space-y-0.5">
-          <h2 className="text-2xl font-bold tracking-tight">Profile</h2>
+          <h2 className="text-2xl font-bold tracking-tight">My settings</h2>
           <p className="text-muted-foreground">
-            Manage your details, account, appearance and view statistics
+            Manage your profile details, account and appearance
           </p>
         </div>
         <Separator className="my-6" />
