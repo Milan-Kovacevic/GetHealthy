@@ -4,6 +4,7 @@ import { sendAxiosRequest } from "./base-service";
 import {
   PageableTrainingProgramsDTO,
   TrainerProgramDTO,
+  TrainingProgramDTO,
 } from "../contracts/training-program-contract";
 import {
   PageableTrainingPrograms,
@@ -39,6 +40,19 @@ const getPageableTrainingPrograms = (
   });
 };
 
+export const createUpdateTrainingProgram = (
+  trainingProgram: TrainingProgramDTO,
+  isUpdate: boolean
+) => {
+  var url = ApiEndpoints.TrainingPrograms;
+  return sendAxiosRequest<TrainingProgramDTO, object>({
+    method: !isUpdate ? "POST" : "PUT",
+    url: url,
+    data: trainingProgram,
+  }).then((response) => {
+    return response.data as object;
+  });
+};
 const getAllTrainingProgramsForTrainer = (trainerId: number) => {
   var url = ApiEndpoints.UserTrainingPrograms.replace(
     "{userId}",

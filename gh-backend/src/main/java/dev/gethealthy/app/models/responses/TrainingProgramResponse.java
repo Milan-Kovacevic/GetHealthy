@@ -26,14 +26,18 @@ public class TrainingProgramResponse {
 
     private LocalDate createdAt;
 
-    private List<TrainingProgramCategoryResponse> categories; // TODO: ???? CategoryResponse
+    private List<CategoryResponse> categories; // TODO: ???? CategoryResponse
+
+    private List<ExerciseResponse> exercises;
 
     private double rating;
 
+    private TrainerResponse trainer; // TODO: ????
     //private Trainer user; // TODO: ????
-    private String trainerFirstName;
+   // private String trainerFirstName;
 
-    private String trainerLastName;
+   // private String trainerLastName;
 
-    private String imageFilePath;
+   // private String imageFilePath;
+
 }

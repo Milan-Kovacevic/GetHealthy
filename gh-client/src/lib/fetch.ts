@@ -60,7 +60,7 @@ function buildUrl(
 ): string {
   const baseUrl = environments().baseApiPath;
 
-  const url = new URL(`${baseUrl}/${endpoint}`);
+  const url = new URL(`${baseUrl}${endpoint}`);
   if (params) {
     Object.entries(params).forEach(([key, value]) =>
       url.searchParams.append(key, value.toString())

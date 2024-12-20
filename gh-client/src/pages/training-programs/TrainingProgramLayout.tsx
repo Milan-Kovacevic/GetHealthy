@@ -147,22 +147,24 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
               <TrainingProgramsLoader />
             ) : (
               <div className="grid mt-5 gap-x-6 gap-y-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 flex-1">
-                {programs.map((item) => (
+                {programs.map((item) => {
+                  console.log(item);
+                  return (
                   <TrainingProgramCard
                     rating={item.rating}
                     categories={item.categories.map(
-                      (c) => c.category.categoryName
+                      (c) => c.categoryName
                     )}
                     key={item.id}
                     editable={props.myTrainingPrograms}
                     title={item.name}
                     description={item.description}
                     id={item.id}
-                    difficulty={item.difficulty.toString()}
+                    difficulty={item.difficulty}
                     image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
-                    trainer={`${item.user.firstName} ${item.user.lastName}`}
+                    trainer={`${item.trainer.firstName} ${item.trainer.lastName}`}
                   ></TrainingProgramCard>
-                ))}
+                )})}
               </div>
             )}
           </div>

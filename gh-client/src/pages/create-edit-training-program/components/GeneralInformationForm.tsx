@@ -21,6 +21,17 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getAllCategories } from "@/api/services/category-service";
+import {
+  ProgramTrainer,
+  TrainingProgram,
+  User,
+} from "@/api/models/training-program";
+import { Category } from "@/api/models/category";
+import { createUpdateTrainingProgram } from "@/api/services/training-program-service";
+import { TrainingProgramDTO } from "@/api/contracts/training-program-contract";
+import { CategoryDTO } from "@/api/contracts/category-contract";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -32,8 +43,10 @@ const formSchema = z.object({
   categories: z
     .array(
       z.z.object({
-        categoryId: z.string().min(1, { message: "Category ID is required." }),
-        name: z.string().min(1, { message: "Category name is required." }),
+        id: z.number().min(1, { message: "Category ID is required." }),
+        categoryName: z
+          .string()
+          .min(1, { message: "Category name is required." }),
       })
     )
     .min(1, { message: "At least one category is required." }),
@@ -43,11 +56,14 @@ const formSchema = z.object({
 
 export default function GeneralInformationForm({
   defaultValues,
+  setProgramId,
   isEdit = false,
 }: {
   defaultValues?: z.infer<typeof formSchema>;
-  isEdit?: boolean;
+  isEdit?: boolean,
+  setProgramId: (value: number) => void;
 }) {
+  const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
@@ -59,10 +75,9 @@ export default function GeneralInformationForm({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (!isEdit) {
-        console.log(values);
         toast(
           <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
             <code className="text-white">
@@ -70,6 +85,22 @@ export default function GeneralInformationForm({
             </code>
           </pre>
         );
+        const program: TrainingProgramDTO = {
+          //rating: 0,
+          name: values.name,
+          difficulty: Number.parseInt(values.difficulty),
+          trainingDuration: 0,
+          description: values.info,
+          requirements: values.requirements,
+          categories: values.categories.map((c) => ({
+            categoryId: c.id,
+          })),
+          trainerId: 3,
+        };
+        var response = await createUpdateTrainingProgram(program, false);
+        // da bi radilo potrebno je ovaj id propagirati u roditeljsku komponentu koja ce dalje raditi sa ExercisePlanBuilderom
+        console.log(response.id);
+        setProgramId(response.id);
       } else {
         console.log("Updated values:", values);
         toast.success("Changes saved successfully.");
@@ -80,18 +111,17 @@ export default function GeneralInformationForm({
     }
   }
 
-  const categoryOptions = [
-    { name: "Technical", categoryId: "1" },
-    { name: "Soft Skills", categoryId: "2" },
-    { name: "Leadership", categoryId: "3" },
-    { name: "Project Management", categoryId: "4" },
-    { name: "Design", categoryId: "5" },
-  ];
+  useEffect(() => {
+    async function fetchCategories() {
+      setCategoryOptions(await getAllCategories());
+    }
+    fetchCategories();
+  }, []);
 
   const difficultyOptions = [
-    { label: "Beginner", value: "beginner" },
-    { label: "Intermediate", value: "intermediate" },
-    { label: "Advanced", value: "advanced" },
+    { label: "Beginner", value: "1" },
+    { label: "Intermediate", value: "2" },
+    { label: "Advanced", value: "3" },
   ];
 
   return (
@@ -163,8 +193,8 @@ export default function GeneralInformationForm({
                           }
                           maxCount={3}
                           minCount={1}
-                          itemNameKey="name"
-                          itemValueKey="categoryId"
+                          itemNameKey="categoryName"
+                          itemValueKey="id"
                         />
                       </FormControl>
                       <FormDescription className="text-xs ml-0.5">

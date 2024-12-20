@@ -3,7 +3,7 @@ import { Form } from "@/components/ui/form";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, DumbbellIcon, HashIcon, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -17,18 +17,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import FormSectionTitle from "./FormSectionTitle";
+import { getAllExcercises } from "@/api/services/exercise-service";
+import { sendExercises } from "@/api/services/training-program-exercise-service";
 
-// mock data of exercises
-const exercises = [
-  { id: 1, value: "push-ups", label: "Push-ups", type: "bodyweight" },
-  { id: 2, value: "squats", label: "Squats", type: "bodyweight" },
-  { id: 3, value: "lat-pulldowns", label: "Lat Pulldowns", type: "weighted" },
-  { id: 4, value: "bench-press", label: "Bench Press", type: "weighted" },
-  { id: 5, value: "running", label: "Running", type: "cardio" },
-  { id: 6, value: "plank", label: "Plank", type: "timed" },
-];
-
-// mock data for edit
+// mock data for ed
 const validExercisePlan: ExercisePlanValues = {
   exercises: [
     {
@@ -87,9 +79,28 @@ type ExercisePlanValues = z.infer<typeof exercisePlanSchema>;
 
 type ExercisePlanBuilderProps = {
   isEdit?: boolean;
+  programId: number;
 };
 
 const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
+  const [exercises, setExercises] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function fetchExercises() {
+      setExercises(
+        (await getAllExcercises()).map((item) => ({
+          label: item.exerciseName,
+          value: item.id,
+        }))
+      );
+    }
+    fetchExercises();
+  }, []);
+
+  useEffect(() => {
+    console.log(exercises);
+  }, [exercises]);
+
   const [selectedExerciseIndex, setSelectedExerciseIndex] = useState<
     number | null
   >(null);
@@ -151,14 +162,31 @@ const ExercisePlanBuilder = ({ isEdit = false }: ExercisePlanBuilderProps) => {
     e.preventDefault();
   };
 
-  const onSubmit = (data: ExercisePlanValues) => {
+  async function onSubmit(data: ExercisePlanValues) {
+    // fix with data from form
+    await sendExercises([
+      {
+        exerciseId: 1,
+        position: 1,
+        programId: 1,
+        exerciseSets: [
+          {
+            restTime: 30,
+            firstMetricValue: "string",
+            secondMetricValue: "string",
+          },
+        ],
+      },
+    ]);
+
     toast(
       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
       </pre>
     );
     console.log(data);
-  };
+    console.log(form.getValues("exercises"));
+  }
 
   return (
     <div className="mt-8 w-full">

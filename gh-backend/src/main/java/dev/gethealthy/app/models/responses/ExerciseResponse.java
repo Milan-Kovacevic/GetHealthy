@@ -1,5 +1,6 @@
 package dev.gethealthy.app.models.responses;
 
+import dev.gethealthy.app.repositories.MetricsRepository;
 import lombok.Data;
 
 @Data
@@ -14,7 +15,7 @@ public class ExerciseResponse {
 
     private Integer userId;
 
-    private Integer metricType1Id;
+    private MetricsResponse firstExerciseMetric;
 
-    private Integer matricType2Id;
+    private MetricsResponse secondExerciseMetric;
 }

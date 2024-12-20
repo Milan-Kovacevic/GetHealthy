@@ -1,9 +1,10 @@
 export type CategoryDTO = {
-  id: number;
-  categoryName: string;
+  id?:number;
+  trainingProgramCategoryId?: number;
+  categoryName?:string;
 };
 // export type CategoryDTO = {
-//   category: {
+//   : {
 //     id: number;
 //     categoryName: string;
 //   };
