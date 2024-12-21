@@ -50,7 +50,7 @@ const ExercisesTitleSection = (props: ExercisesTitleSectionProps) => {
 
           {/* End Form */}
           {/* SVG Element */}
-          <div className="hidden md:block absolute top-0 end-0 -translate-y-12 translate-x-20">
+          <div className="hidden md:block absolute top-0 end-0 -translate-y-12 translate-x-20 z-0">
             <svg
               className="w-16 h-auto text-primary/50"
               width={121}
@@ -81,7 +81,7 @@ const ExercisesTitleSection = (props: ExercisesTitleSectionProps) => {
           </div>
           {/* End SVG Element */}
           {/* SVG Element */}
-          <div className="hidden md:block absolute bottom-0 start-0 translate-y-10 -translate-x-32">
+          <div className="hidden md:block absolute bottom-0 start-0 translate-y-10 -translate-x-32 z-0">
             <svg
               className="w-40 h-auto text-primary/20"
               width={347}
@@ -100,7 +100,7 @@ const ExercisesTitleSection = (props: ExercisesTitleSectionProps) => {
           </div>
           {/* End SVG Element */}
         </div>
-        <div className="flex space-x-2 mt-5 mx-auto max-w-xl">
+        <div className="flex space-x-2 mt-5 mx-auto max-w-xl z-10 relative">
           <Checkbox
             id="show-demo"
             checked={showVideos}
