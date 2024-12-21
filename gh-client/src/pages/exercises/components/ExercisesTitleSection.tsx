@@ -114,8 +114,8 @@ const ExercisesTitleSection = (props: ExercisesTitleSectionProps) => {
               Show demo videos
             </label>
             <p className="text-[11px] text-muted-foreground text-start">
-              You can choose to watch demonstration videos directly here or
-              click the link to the source.
+              You can choose to watch demonstration videos directly here or by
+              clicking the link to the source.
             </p>
           </div>
         </div>

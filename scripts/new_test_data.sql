@@ -31,3 +31,20 @@ INSERT INTO trainee(UserId, Height, Weight, MedicalHistory) VALUES (2, 170, 65, 
 (3, 180, 70, 'No medical history'), (4, 165, 60, 'No medical history');
 
 INSERT INTO trainee_on_training_program(UserId, ProgramId, JoinDate) VALUES (2, 1, '2024-12-13'), (3, 1, '2024-12-13'), (4, 1, '2024-12-13');
+
+INSERT INTO exercise_metric (id, name, unit) VALUES
+(1, 'Reps', ''),
+(2, 'Weight', 'kg'),
+(3, 'Time', 'seconds');
+
+INSERT INTO exercise (ExerciseId, Name, Description, VideoLink, FirstExerciseMetricId, SecondExerciseMetricId) VALUES
+(1, 'Push-ups', 'Basic chest exercise', 'https://www.youtube.com/embed/IODxDxX7oi4', 1, 2),
+(2, 'Squats', 'Lower body exercise', 'https://www.youtube.com/embed/YaXPRqUwItQ', 1, NULL),
+(3, 'Plank', 'Core strength exercise', 'https://www.youtube.com/embed/pSHjTRCQxIw', 3, NULL),
+(4, 'Lunges', 'Exercise for legs and glutes', 'https://www.youtube.com/embed/QOVaHwm-Q6U', 1, NULL),
+(5, 'Deadlifts', 'Full-body strength exercise', 'https://www.youtube.com/embed/r4MzxtBKyNE', 1, 2),
+(6, 'Bicep Curls', 'Exercise for arm strength', 'https://www.youtube.com/embed/ykJmrZ5v0Oo', 1, 2),
+(7, 'Pull-ups', 'Upper body strength exercise', 'https://www.youtube.com/embed/eGo4IYlbE5g', 1, NULL),
+(8, 'Bench Press', 'Chest and triceps exercise', 'https://www.youtube.com/embed/gRVjAtPip0Y', 1, 2),
+(9, 'Burpees', 'Full-body cardio exercise', 'https://www.youtube.com/embed/TU8QYVW0gDU', 1, NULL),
+(10, 'Mountain Climbers', 'Cardio and core workout', 'https://www.youtube.com/embed/cnyTQDSE884', 3, NULL);

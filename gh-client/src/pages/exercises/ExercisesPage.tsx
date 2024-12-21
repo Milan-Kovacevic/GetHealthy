@@ -5,7 +5,7 @@ import ExercisesTitleSection from "./components/ExercisesTitleSection";
 import useExercises from "./hooks/use-exercises";
 
 export default function ExercisesPage() {
-  const [showVideos, setShowVideos] = useState(true);
+  const [showVideos, setShowVideos] = useState(false);
   const {
     exercises,
     loadingExercises,
@@ -30,7 +30,7 @@ export default function ExercisesPage() {
         <div className="mt-8 flex flex-col gap-6">
           <ExerciseMetricsSection />
           <ExerciseList
-            showVideoEmbed={showVideos}
+            showVideoEmbedded={showVideos}
             exercises={exercises}
             loading={loadingExercises}
             isFirstPage={firstExercisePage}
