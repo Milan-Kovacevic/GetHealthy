@@ -1,14 +1,15 @@
 import { MetricDTO } from "./metric-contract";
+import { Page } from "./pageable-contract";
 
 export type ExerciseDTO = {
-    id: number;
-    exerciseName: string;
-    description: string;
-    videoLink: string;
-    firstExerciseMetric: MetricDTO;
-    secondExerciseMetric: MetricDTO;
-  };
-  
+  id: number;
+  exerciseName: string;
+  description: string;
+  videoLink: string;
+  firstExerciseMetric: MetricDTO;
+  secondExerciseMetric: MetricDTO;
+};
+
 export type ProgramExerciseDTO = {
   id: number;
   name: string;
@@ -32,3 +33,5 @@ export type ExerciseSetDTO = {
   firstMetricValue: string;
   secondMetricValue: string;
 };
+
+export type PageableExercisesDTO = Page<ExerciseDTO>;

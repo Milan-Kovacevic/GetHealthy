@@ -9,7 +9,7 @@ const getPageableUserNotifications = async ({ page }: { page: number }) => {
   const userId = "1"; // Hardcoded for now
   // TODO: Obtain this information from jwt or session storage...
   var url = ApiEndpoints.UserNotifications.replace("{userId}", userId);
-  url += `?page=${page}&pageSize=${pageSize}`;
+  url += `?page=${page}&size=${pageSize}`;
   // return sendAxiosRequest<void, PageableNotificationsDTO>({
   //   method: "GET",
   //   url: url,

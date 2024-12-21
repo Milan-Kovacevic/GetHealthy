@@ -1,3 +1,4 @@
+import { Page } from "../contracts/pageable-contract";
 import { Metric } from "./metric";
 
 export type Exercise = {
@@ -33,3 +34,5 @@ export type ExerciseSet = {
   firstMetricValue: string;
   secondMetricValue: string;
 };
+
+export type PageableExercises = Page<Exercise>;

@@ -1,34 +1,23 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
 
-const ExercisesTitleSection = () => {
+type ExercisesTitleSectionProps = {
+  onSearchExercises: (query: string) => void;
+  showVideos: boolean;
+  setShowVideos: (value: boolean) => void;
+};
+
+const ExercisesTitleSection = (props: ExercisesTitleSectionProps) => {
+  const { setShowVideos, onSearchExercises, showVideos } = props;
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log(searchQuery);
+    onSearchExercises(searchQuery);
   };
-
-  const metrics = [
-    {
-      id: 1,
-      name: "Weight",
-      unit: "kg",
-    },
-    {
-      id: 2,
-      name: "Reps",
-      unit: "",
-    },
-    {
-      id: 3,
-      name: "Distance",
-      unit: "km",
-    },
-  ];
 
   return (
     <div className="relative overflow-hidden">
@@ -58,6 +47,7 @@ const ExercisesTitleSection = () => {
               </div>
             </div>
           </form>
+
           {/* End Form */}
           {/* SVG Element */}
           <div className="hidden md:block absolute top-0 end-0 -translate-y-12 translate-x-20">
@@ -110,29 +100,23 @@ const ExercisesTitleSection = () => {
           </div>
           {/* End SVG Element */}
         </div>
-        <div className="mt-6 flex w-full flex-col gap-3">
-          <p className="text-muted-foreground text-sm font-normal">
-            Available exercise metrics are
-          </p>
-
-          <div className="flex flex-wrap gap-2 justify-center">
-            {metrics.map((item) => (
-              <Badge
-                key={item.id}
-                className="font-medium flex gap-2 px-4 h-auto py-1.5 border-muted-foreground/20"
-                variant="secondary"
-              >
-                <span className="text-sm">{item.name}</span>
-                {item.unit && (
-                  <>
-                    <span className="bg-muted-foreground/90 h-full w-px"></span>
-                    <span className="text-muted-foreground font-medium">
-                      {item.unit}
-                    </span>
-                  </>
-                )}
-              </Badge>
-            ))}
+        <div className="flex space-x-2 mt-5 mx-auto max-w-xl">
+          <Checkbox
+            id="show-demo"
+            checked={showVideos}
+            onCheckedChange={(value) => setShowVideos(!!value)}
+          />
+          <div className="grid gap-1 leading-none">
+            <label
+              htmlFor="show-demo"
+              className="text-sm text-start font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Show demo videos
+            </label>
+            <p className="text-[11px] text-muted-foreground text-start">
+              You can choose to watch demonstration videos directly here or
+              click the link to the source.
+            </p>
           </div>
         </div>
       </div>
