@@ -150,21 +150,20 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                 {programs.map((item) => {
                   console.log(item);
                   return (
-                  <TrainingProgramCard
-                    rating={item.rating}
-                    categories={item.categories.map(
-                      (c) => c.categoryName
-                    )}
-                    key={item.id}
-                    editable={props.myTrainingPrograms}
-                    title={item.name}
-                    description={item.description}
-                    id={item.id}
-                    difficulty={item.difficulty}
-                    image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
-                    trainer={`${item.trainer.firstName} ${item.trainer.lastName}`}
-                  ></TrainingProgramCard>
-                )})}
+                    <TrainingProgramCard
+                      rating={item.rating}
+                      categories={item.categories.map((c) => c.categoryName)}
+                      key={item.id}
+                      editable={props.myTrainingPrograms}
+                      title={item.name}
+                      description={item.description}
+                      id={item.id}
+                      difficulty={item.difficulty}
+                      image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
+                      trainer={`${item.trainer.firstName} ${item.trainer.lastName}`}
+                    ></TrainingProgramCard>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -222,7 +221,7 @@ const TrainingProgramsPageTitle = ({ showCreate }: { showCreate: boolean }) => {
   const navigate = useNavigate();
 
   const handleCreateProgram = () => {
-    navigate("/create-training-program");
+    navigate("/programs/create");
   };
 
   return (

@@ -31,6 +31,10 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
     navigate(`/programs/${props.id}`);
   };
 
+  const handleEditProgramClicked = () => {
+    navigate(`/programs/${props.id}/edit`);
+  };
+
   return (
     <Card
       key={props.id}
@@ -75,7 +79,11 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
                     <TrashIcon />
                   </Button>
                 </DeleteAlert>
-                <Button size="sm" variant="ghost">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleEditProgramClicked()}
+                >
                   <Edit2Icon></Edit2Icon>
                 </Button>
               </>

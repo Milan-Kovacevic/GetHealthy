@@ -22,6 +22,7 @@ import AppearancePage from "@/pages/profile/components/AppearancePage";
 import AccountPage from "@/pages/profile/components/AccountPage";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import ExercisesPage from "@/pages/exercises/ExercisesPage";
+import AnalyticsPage from "@/pages/analytics/AnalyticsPage";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,14 @@ const router = createBrowserRouter([
               {
                 path: "manage",
                 element: <ManageTrainingProgramsPage />,
+              },
+              {
+                path: "create",
+                element: <CreateTrainingProgramPage />,
+              },
+              {
+                path: ":id/edit",
+                element: <EditTrainingProgramPage />,
               },
             ],
           },
@@ -81,6 +90,10 @@ const router = createBrowserRouter([
             element: <ExercisesPage />,
           },
           {
+            path: "/statistics",
+            element: <AnalyticsPage />,
+          },
+          {
             path: "profile",
             element: <ProfilePageLayout />,
             children: [
@@ -99,14 +112,7 @@ const router = createBrowserRouter([
             ],
           },
           // Routes for trainers only
-          {
-            path: "create-training-program",
-            element: <CreateTrainingProgramPage />,
-          },
-          {
-            path: "edit-training-program/:id",
-            element: <EditTrainingProgramPage />,
-          },
+
           // Routes for trainees only
           {},
         ],
