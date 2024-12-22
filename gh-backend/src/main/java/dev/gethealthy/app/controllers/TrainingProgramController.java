@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("${gethealthy.base-url}/training-programs")
 public class TrainingProgramController extends CrudController<Integer, TrainingProgramRequest, TrainingProgramResponse> {
-
+    // TODO: Cannot inherit CRUD Controller ...
     private final TrainingProgramService trainingProgramService;
 
     public TrainingProgramController(TrainingProgramService crudService) {

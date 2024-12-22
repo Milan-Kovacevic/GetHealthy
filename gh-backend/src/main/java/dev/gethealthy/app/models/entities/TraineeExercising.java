@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,5 +32,8 @@ public class TraineeExercising implements BaseEntity<Integer> {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "UserId", nullable = false)
     private Trainee user;
+
+    @OneToMany(mappedBy = "traineeExercising")
+    private List<ExerciseFeedback> exercisesFeedback;
 
 }

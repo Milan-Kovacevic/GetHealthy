@@ -5,6 +5,7 @@ import dev.gethealthy.app.models.enums.NotificationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -26,9 +27,9 @@ public class Notification implements BaseEntity<Integer> {
     @Column(name = "MarkRead", nullable = false)
     private Boolean markRead = false;
 
-    @Size(max = 128)
+    @Size(max = 255)
     @NotNull
-    @Column(name = "Metadata", nullable = false, length = 128)
+    @Column(name = "Metadata")
     private String metadata;
 
     @NotNull

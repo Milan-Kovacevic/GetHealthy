@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -16,7 +18,7 @@ public class ExerciseFeedback implements BaseEntity<Integer> {
     @Column(name = "Id", nullable = false)
     private Integer id;
 
-    @Column(name = "Skipped")
+    @Column(name = "Skipped", nullable = false)
     private Boolean skipped;
 
     @NotNull
@@ -32,5 +34,8 @@ public class ExerciseFeedback implements BaseEntity<Integer> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ProgramExerciseId")
     private TrainingProgramExercise programExercise;
+
+    @OneToMany(mappedBy = "exerciseFeedback")
+    private List<ExerciseSetFeedback> exerciseSetsFeedback;
 
 }

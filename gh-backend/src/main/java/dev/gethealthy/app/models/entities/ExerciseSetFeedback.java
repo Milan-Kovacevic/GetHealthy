@@ -22,10 +22,10 @@ public class ExerciseSetFeedback implements BaseEntity<Integer> {
     @JoinColumn(name = "ExerciseFeedbackId", nullable = false)
     private ExerciseFeedback exerciseFeedback;
 
-    @Column(name = "Skipped")
+    @Column(name = "Skipped", nullable = false)
     private Boolean skipped;
 
-    @Column(name = "Completed")
+    @Column(name = "Completed", nullable = false)
     private Boolean completed;
 
     @Size(max = 128)

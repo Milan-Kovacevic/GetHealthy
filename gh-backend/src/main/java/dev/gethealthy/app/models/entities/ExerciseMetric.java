@@ -4,6 +4,7 @@ import dev.gethealthy.app.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +25,7 @@ public class ExerciseMetric implements BaseEntity<Integer> {
 
     @Size(max = 128)
     @NotNull
-    @Column(name = "Unit", nullable = false, length = 128)
+    @Column(name = "Unit", length = 128)
     private String unit;
 
 }

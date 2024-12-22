@@ -2,6 +2,7 @@ package dev.gethealthy.app.models.entities;
 
 import dev.gethealthy.app.base.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;

@@ -36,6 +36,6 @@ public class TrainingProgramExercise implements BaseEntity<Integer> {
     @JoinColumn(name = "ProgramId", nullable = false)
     private TrainingProgram program;
 
-    @OneToMany(mappedBy = "programExericse")
+    @OneToMany(mappedBy = "programExercise")
     private List<ExerciseSet> exerciseSets;
 }

@@ -4,6 +4,7 @@ import { ProgramExercise } from "./exercise";
 import { ProgramDifficulty } from "./training-program";
 
 export type SingleProgramDetails = {
+  id: number;
   requirements: string;
   trainingDuration: number;
   exercises: ProgramExercise[];

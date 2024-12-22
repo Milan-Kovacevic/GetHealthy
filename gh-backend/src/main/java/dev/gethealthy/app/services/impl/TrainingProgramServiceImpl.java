@@ -109,7 +109,12 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
                 .findAllByProgram_Id(id)
                 .stream()
                 .sorted(Comparator.comparingInt(TrainingProgramExercise::getPosition))
-                .map(e -> modelMapper.map(e, ProgramExerciseResponse.class))
+                .map(e -> {
+                    var respObj = modelMapper.map(e, ProgramExerciseResponse.class);
+                    modelMapper.map(e.getExercise(), respObj);
+                    modelMapper.map(e.getExerciseSets(), respObj);
+                    return respObj;
+                })
                 .collect(Collectors.toList());
         response.setExercises(exercises);
         return response;

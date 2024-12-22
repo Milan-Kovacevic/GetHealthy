@@ -33,5 +33,4 @@ public class TraineeOnTrainingProgram implements BaseEntity<TraineeOnTrainingPro
     @NotNull
     @Column(name = "JoinDate", nullable = false)
     private Instant joinDate;
-
 }

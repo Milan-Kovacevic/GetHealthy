@@ -1,7 +1,8 @@
 package dev.gethealthy.app.models.enums;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 
+@Getter
 public enum Gender {
     MALE((byte) 1),
     FEMALE((byte) 2);
@@ -10,10 +11,6 @@ public enum Gender {
 
     Gender(byte value) {
         this.value = value;
-    }
-
-    public byte getValue() {
-        return value;
     }
 
     public static Gender fromValue(String value) {

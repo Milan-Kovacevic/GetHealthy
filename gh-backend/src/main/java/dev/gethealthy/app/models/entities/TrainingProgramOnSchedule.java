@@ -1,6 +1,7 @@
 package dev.gethealthy.app.models.entities;
 
 import dev.gethealthy.app.base.BaseEntity;
+import dev.gethealthy.app.models.enums.DayOfWeek;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -25,8 +26,9 @@ public class TrainingProgramOnSchedule implements BaseEntity<Integer> {
     private LocalTime startTime;
 
     @NotNull
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "DayOfWeek", nullable = false)
-    private Byte dayOfWeek;
+    private DayOfWeek dayOfWeek;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

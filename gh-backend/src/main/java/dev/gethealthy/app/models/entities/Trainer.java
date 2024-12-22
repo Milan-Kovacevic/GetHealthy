@@ -5,24 +5,27 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "trainer")
 public class Trainer extends User implements BaseEntity<Integer> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UserId", nullable = false)
-    private Integer id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "UserId", nullable = false)
+//    private Integer id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "UserId", nullable = false)
-    private User user;
+//    @MapsId
+//    @OneToOne(fetch = FetchType.EAGER, optional = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JoinColumn(name = "UserId", nullable = false)
+//    private User user;
 
     @Size(max = 512)
     @Column(name = "Biography", length = 512)
@@ -31,4 +34,10 @@ public class Trainer extends User implements BaseEntity<Integer> {
     @Size(max = 32)
     @Column(name = "ContactInfo", length = 32)
     private String contactInfo;
+
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "UserId", nullable = false)
+    private Qualification qualification;
 }
