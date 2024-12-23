@@ -26,6 +26,8 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
         this.trainingProgramService = crudService;
     }
 
+    //TODO: Endpoint for featured training programs...
+
     @GetMapping("filter")
     public Page<TrainingProgramResponse> getAll(Pageable page,
                                                 @RequestParam(defaultValue = "") String searchWord,
