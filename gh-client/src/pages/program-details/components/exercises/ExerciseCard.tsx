@@ -51,16 +51,16 @@ export default function ExerciseCard(props: ExerciseCardProps) {
                     <li key={index} className="bg-muted/50 p-2 px-4 rounded-md">
                       <p className="font-medium text-base">Set {index + 1}</p>
                       <p>
-                        {exercise.firstMetric.name}:
+                        {exercise.firstExerciseMetric.name}:
                         <span className="font-medium">
-                          {` ${set.firstMetricValue} ${exercise.firstMetric.unit}`}
+                          {` ${set.firstMetricValue} ${exercise.firstExerciseMetric.unit}`}
                         </span>
                       </p>
-                      {exercise.secondMetric && (
+                      {exercise.secondExerciseMetric && (
                         <p>
-                          {exercise.secondMetric.name}:
+                          {exercise.secondExerciseMetric.name}:
                           <span className="font-medium">
-                            {` ${set.secondMetricValue} ${exercise.secondMetric.unit}`}
+                            {` ${set.secondMetricValue} ${exercise.secondExerciseMetric.unit}`}
                           </span>
                         </p>
                       )}

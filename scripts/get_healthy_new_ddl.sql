@@ -53,9 +53,9 @@ CREATE TABLE IF NOT EXISTS `get_healthy`.`USER` (
   `UserId` INT NOT NULL,
   `FirstName` VARCHAR(96) NOT NULL,
   `LastName` VARCHAR(96) NOT NULL,
-  `DateOfBirth` DATE NOT NULL,
-  `Gender` TINYINT(4) NOT NULL,
-  `ProfilePictureFilePath` VARCHAR(192) NULL,
+  `DateOfBirth` DATE NULL,
+  `Gender` TINYINT(4) NULL,
+  `ProfilePictureFilePath` VARCHAR(255) NULL,
   PRIMARY KEY (`UserId`),
   INDEX `fk_USER_USER_ACCOUNT_idx` (`UserId` ASC) INVISIBLE,
   CONSTRAINT `fk_USER_USER_ACCOUNT`
@@ -72,7 +72,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `get_healthy`.`REGISTRATION_REQUEST` (
   `UserId` INT NOT NULL,
   `IssueDate` DATETIME NOT NULL,
-  `CertificationFilePath` VARCHAR(192) NOT NULL,
+  `CertificationFilePath` VARCHAR(255) NOT NULL,
   `Description` VARCHAR(512) NULL,
   `FirstName` VARCHAR(96) NOT NULL,
   `LastName` VARCHAR(96) NOT NULL,
@@ -122,7 +122,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `get_healthy`.`NOTIFICATION` (
   `NotificationId` INT NOT NULL AUTO_INCREMENT,
   `MarkRead` TINYINT(1) NOT NULL,
-  `ProgramName` VARCHAR(128) NOT NULL,
+  `Metadata` VARCHAR(255) NULL,
   `Date` DATETIME NOT NULL,
   `UserId` INT NOT NULL,
   `SenderId` INT NOT NULL,
@@ -147,7 +147,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `get_healthy`.`TRAINEE` (
   `UserId` INT NOT NULL,
-  `Height` INT NULL,
+  `Height` DECIMAL(6,2) NULL,
   `Weight` DECIMAL(6,2) NULL,
   `MedicalHistory` VARCHAR(512) NULL,
   PRIMARY KEY (`UserId`),
@@ -165,7 +165,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `get_healthy`.`EXERCISE_METRIC` (
   `Id` INT NOT NULL AUTO_INCREMENT,
   `Name` VARCHAR(128) NOT NULL,
-  `Unit` VARCHAR(128) NOT NULL,
+  `Unit` VARCHAR(128) NULL,
   PRIMARY KEY (`Id`))
 ENGINE = InnoDB;
 
@@ -177,8 +177,8 @@ CREATE TABLE IF NOT EXISTS `get_healthy`.`EXERCISE` (
   `ExerciseId` INT NOT NULL AUTO_INCREMENT,
   `Name` VARCHAR(128) NOT NULL,
   `Description` VARCHAR(512) NULL,
-  `VideoLink` VARCHAR(192) NULL,
-  `FirstExerciseMetricId` INT NULL,
+  `VideoLink` VARCHAR(255) NULL,
+  `FirstExerciseMetricId` INT NOT NULL,
   `SecondExerciseMetricId` INT NULL,
   PRIMARY KEY (`ExerciseId`),
   INDEX `fk_EXERCISE_EXERCISE_METRIC1_idx` (`FirstExerciseMetricId` ASC) VISIBLE,
@@ -204,12 +204,12 @@ CREATE TABLE IF NOT EXISTS `get_healthy`.`TRAINING_PROGRAM` (
   `Name` VARCHAR(128) NOT NULL,
   `Difficulty` TINYINT(4) NOT NULL,
   `TrainingDuration` INT NOT NULL,
-  `Description` VARCHAR(512) NULL,
+  `Description` VARCHAR(512) NOT NULL,
   `Requirements` VARCHAR(512) NULL,
   `CreatedAt` DATE NOT NULL,
   `UserId` INT NOT NULL,
   `Deleted` TINYINT(1) NULL,
-  `ImageFilePath` VARCHAR(192) NULL,
+  `ImageFilePath` VARCHAR(255) NULL,
   PRIMARY KEY (`ProgramId`),
   INDEX `fk_TRAINING_PROGRAM_TRAINER_idx` (`UserId` ASC) VISIBLE,
   CONSTRAINT `fk_TRAINING_PROGRAM_TRAINER`
@@ -331,14 +331,13 @@ ENGINE = InnoDB;
 -- Table `get_healthy`.`PROGRAM_RATING`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `get_healthy`.`PROGRAM_RATING` (
-  `RatingId` INT NOT NULL AUTO_INCREMENT,
   `Rate` INT NOT NULL,
   `ProgramId` INT NOT NULL,
   `UserId` INT NOT NULL,
-  PRIMARY KEY (`RatingId`),
   INDEX `fk_PROGRAM_RATING_TRAINING_PROGRAM_idx` (`ProgramId` ASC) INVISIBLE,
   INDEX `fk_PROGRAM_RATING_TRAINEE_idx` (`UserId` ASC) VISIBLE,
   UNIQUE INDEX `UserId_ProgramId_UNIQUE` (`UserId` ASC, `ProgramId` ASC) VISIBLE,
+  PRIMARY KEY (`UserId`, `ProgramId`),
   CONSTRAINT `fk_PROGRAM_RATING_TRAINING_PROGRAM`
     FOREIGN KEY (`ProgramId`)
     REFERENCES `get_healthy`.`TRAINING_PROGRAM` (`ProgramId`)
@@ -442,7 +441,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `get_healthy`.`EXERCISE_FEEDBACK` (
   `Id` INT NOT NULL AUTO_INCREMENT,
-  `Skipped` TINYINT(1) NULL,
+  `Skipped` TINYINT(1) NOT NULL,
   `TraineeExercisingId` INT NOT NULL,
   `ExerciseId` INT NOT NULL,
   `ProgramExerciseId` INT NULL,
@@ -474,8 +473,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `get_healthy`.`EXERCISE_SET_FEEDBACK` (
   `Id` INT NOT NULL AUTO_INCREMENT,
   `ExerciseFeedbackId` INT NOT NULL,
-  `Skipped` TINYINT(1) NULL,
-  `Completed` TINYINT(1) NULL,
+  `Skipped` TINYINT(1) NOT NULL,
+  `Completed` TINYINT(1) NOT NULL,
   `FirstMetricValueFeedback` VARCHAR(128) NULL,
   `SecondMetricValueFeedback` VARCHAR(128) NULL,
   PRIMARY KEY (`Id`),

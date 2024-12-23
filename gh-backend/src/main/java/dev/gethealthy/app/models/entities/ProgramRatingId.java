@@ -9,35 +9,33 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
 @Setter
 @Embeddable
-@NoArgsConstructor
 @AllArgsConstructor
-public class TrainingProgramCategoryId implements java.io.Serializable {
-    private static final long serialVersionUID = -39041558448567269L;
-    @NotNull
-    @Column(name = "CategoryId", nullable = false)
-    private Integer categoryId;
-
+@NoArgsConstructor
+public class ProgramRatingId implements Serializable {
     @NotNull
     @Column(name = "ProgramId", nullable = false)
     private Integer programId;
+    @NotNull
+    @Column(name = "UserId", nullable = false)
+    private Integer userId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        TrainingProgramCategoryId entity = (TrainingProgramCategoryId) o;
-        return Objects.equals(this.categoryId, entity.categoryId) &&
+        ProgramRatingId entity = (ProgramRatingId) o;
+        return Objects.equals(this.userId, entity.userId) &&
                 Objects.equals(this.programId, entity.programId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(categoryId, programId);
+        return Objects.hash(userId, programId);
     }
-
 }

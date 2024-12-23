@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
@@ -13,8 +15,7 @@ import java.util.Objects;
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
-public class TraineeOnTrainingProgramId implements java.io.Serializable {
-    private static final long serialVersionUID = -547660691073628407L;
+public class TraineeOnTrainingProgramId implements Serializable {
     @NotNull
     @Column(name = "UserId", nullable = false)
     private Integer userId;

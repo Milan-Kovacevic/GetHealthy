@@ -15,8 +15,8 @@ export type ProgramExercise = {
   name: string;
   description: string;
   videoLink: string;
-  firstMetric: ExerciseMetric;
-  secondMetric?: ExerciseMetric;
+  firstExerciseMetric: ExerciseMetric;
+  secondExerciseMetric?: ExerciseMetric;
   exerciseSets: ExerciseSet[];
 };
 
@@ -29,8 +29,6 @@ export type ExerciseMetric = {
 export type ExerciseSet = {
   id: number;
   restTime: number;
-  reps?: number;
-  weight?: number;
   firstMetricValue: string;
   secondMetricValue: string;
 };

@@ -4,8 +4,11 @@ import dev.gethealthy.app.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
@@ -26,12 +29,12 @@ public class Exercise implements BaseEntity<Integer> {
     @Column(name = "Description", length = 512)
     private String description;
 
-    @Size(max = 192)
-    @Column(name = "VideoLink", length = 192)
+    @Size(max = 255)
+    @Column(name = "VideoLink")
     private String videoLink;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FirstExerciseMetricId")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "FirstExerciseMetricId", nullable = false)
     private ExerciseMetric firstExerciseMetric;
 
     @ManyToOne(fetch = FetchType.LAZY)

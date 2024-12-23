@@ -4,6 +4,7 @@ import dev.gethealthy.app.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -25,9 +26,9 @@ public class Qualification implements BaseEntity<Integer> {
     @JoinColumn(name = "UserId", nullable = false)
     private Trainer trainer;
 
-    @Size(max = 192)
+    @Size(max = 255)
     @NotNull
-    @Column(name = "CertificationFilePath", nullable = false, length = 192)
+    @Column(name = "CertificationFilePath", nullable = false)
     private String certificationFilePath;
 
 }

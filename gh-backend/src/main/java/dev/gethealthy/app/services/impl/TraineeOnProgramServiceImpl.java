@@ -32,7 +32,7 @@ public class TraineeOnProgramServiceImpl implements TraineeOnProgramService {
         return programParticipants.map(e -> {
             var model = modelMapper.map(e, SingleProgramParticipantResponse.class);
             modelMapper.map(e.getUser(), model);
-            modelMapper.map(e.getUser().getUser(), model);
+//            modelMapper.map(e.getUser().getUser(), model);
             return model;
         });
     }

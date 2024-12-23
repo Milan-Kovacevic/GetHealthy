@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -39,7 +40,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
     private Integer trainingDuration;
 
     @Size(max = 512)
-    @Column(name = "Description", length = 512)
+    @Column(name = "Description", length = 512, nullable = false)
     private String description;
 
     @Size(max = 512)
@@ -48,7 +49,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
 
     @NotNull
     @Column(name = "CreatedAt", nullable = false)
-    private LocalDate createdAt = LocalDate.now();
+    private LocalDate createdAt;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -56,10 +57,9 @@ public class TrainingProgram implements BaseEntity<Integer> {
     @JoinColumn(name = "UserId", nullable = false)
     private Trainer trainer;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER) // TODO: LAZY??
     @JoinColumn(name = "ProgramId")
     private List<ProgramRating> trainingProgramRatings;
-
 
     @OneToMany(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -73,7 +73,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
 
     //@OnDelete(action = OnDeleteAction.CASCADE)
     //@JoinColumn(name = "ExerciseId", nullable = false)
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }) // TODO: ???
     @JoinTable(
             name = "training_program_exercise",
             joinColumns = @JoinColumn(name = "ProgramId"),
@@ -88,7 +88,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
     @Column(name = "Deleted")
     private Boolean deleted;
 
-    @Size(max = 192)
-    @Column(name = "ImageFilePath", length = 192)
+    @Size(max = 255)
+    @Column(name = "ImageFilePath")
     private String imageFilePath;
 }

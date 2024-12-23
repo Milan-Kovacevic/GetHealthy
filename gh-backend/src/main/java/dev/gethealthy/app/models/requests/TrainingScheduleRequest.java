@@ -1,5 +1,6 @@
 package dev.gethealthy.app.models.requests;
 
+import dev.gethealthy.app.models.enums.DayOfWeek;
 import lombok.Data;
 
 import java.time.LocalTime;
@@ -11,7 +12,7 @@ public class TrainingScheduleRequest {
 
     private LocalTime endTime;
 
-    private Byte dayOfWeek;
+    private DayOfWeek dayOfWeek;
 
     private Integer programId;
 

@@ -3,6 +3,7 @@ package dev.gethealthy.app.models.entities;
 import dev.gethealthy.app.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -12,26 +13,23 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Entity
 @Table(name = "program_rating")
-public class ProgramRating implements BaseEntity<Integer> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "RatingId", nullable = false)
-    private Integer id;
+public class ProgramRating implements BaseEntity<ProgramRatingId> {
+    @EmbeddedId
+    private ProgramRatingId id;
 
-    @NotNull
-    @Column(name = "Rate", nullable = false)
-    private Integer rate;
-
-    @NotNull
+    @MapsId("programId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "ProgramId", nullable = false)
     private TrainingProgram program;
 
-    @NotNull
+    @MapsId("userId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "UserId", nullable = false)
     private Trainee user;
 
+    @NotNull
+    @Column(name = "Rate", nullable = false)
+    private Integer rate;
 }

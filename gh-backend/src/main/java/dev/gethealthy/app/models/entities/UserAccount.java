@@ -7,6 +7,7 @@ import dev.gethealthy.app.models.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,7 +23,7 @@ public class UserAccount implements BaseEntity<Integer> {
 
     @Size(max = 64)
     @NotNull
-    @Column(name = "Username", nullable = false, length = 64)
+    @Column(name = "Username", nullable = false, length = 64, unique = true)
     private String username;
 
     @Size(max = 512)
@@ -32,16 +33,12 @@ public class UserAccount implements BaseEntity<Integer> {
 
     @Size(max = 128)
     @NotNull
-    @Column(name = "Email", nullable = false, length = 128)
+    @Column(name = "Email", nullable = false, length = 128, unique = true)
     private String email;
 
     @NotNull
     @Column(name = "Enabled", nullable = false)
     private Boolean enabled = false;
-
-    // @NotNull
-    // @Column(name = "Role", nullable = false)
-    // private Byte role;
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)

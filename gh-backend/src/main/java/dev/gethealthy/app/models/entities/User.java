@@ -6,31 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import dev.gethealthy.app.base.BaseEntity;
-import dev.gethealthy.app.models.enums.Gender;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
 
 import java.time.LocalDate;
 
@@ -61,20 +38,16 @@ public class User implements BaseEntity<Integer> {
     private String lastName;
 
     @NotNull
-    @Column(name = "DateOfBirth", nullable = false)
+    @Column(name = "DateOfBirth")
     private LocalDate dateOfBirth;
-
-    // @NotNull
-    // @Column(name = "Gender", nullable = false)
-    // private Byte gender;
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "Gender", nullable = false)
+    @Column(name = "Gender")
     private Gender gender;
 
-    @Size(max = 192)
-    @Column(name = "ProfilePictureFilePath", length = 192)
+    @Size(max = 255)
+    @Column(name = "ProfilePictureFilePath")
     private String profilePictureFilePath;
 
 }

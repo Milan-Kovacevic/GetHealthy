@@ -20,7 +20,7 @@ public class ExerciseSet implements BaseEntity<Integer> {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ProgramExericseId", nullable = false)
-    private TrainingProgramExercise programExericse;
+    private TrainingProgramExercise programExercise;
 
     @NotNull
     @Column(name = "RestTime", nullable = false)
