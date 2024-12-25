@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
 
 @Configuration
 @RequiredArgsConstructor
@@ -26,5 +27,7 @@ public class ApplicationConfig {
     public Module hibernateModule() {
         return new Hibernate5Module();
     }
+
+
 
 }
