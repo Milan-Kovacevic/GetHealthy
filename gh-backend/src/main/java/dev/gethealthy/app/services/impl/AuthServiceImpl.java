@@ -64,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
                             )
                     );
             JwtUser user = (JwtUser) authenticate.getPrincipal();
-            response = modelMapper.map(userAccountRepository.findById(user.getId()), LoginResponse.class)   ;
+            response = modelMapper.map(userAccountRepository.findById(user.getId()), LoginResponse.class);
             response.setToken(generateJwt(user));
         } catch (Exception ex) {
             throw new UnauthorizedException();

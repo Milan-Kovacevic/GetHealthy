@@ -9,7 +9,5 @@ import dev.gethealthy.app.models.entities.UserAccount;
 import java.util.Optional;
 
 public interface UserAccountRepository extends JpaRepository<UserAccount, Integer> {
-    public UserAccount findByUsernameOrEmailAndEnabled(@Size(max = 64) @NotNull String username, @Size(max = 128) @NotNull String email, @NotNull Boolean enabled);
-
-    Optional<UserAccount> findById(Integer id);
+    public UserAccount findByUsernameOrEmail(@Size(max = 64) @NotNull String username, @Size(max = 128) @NotNull String email);
 }

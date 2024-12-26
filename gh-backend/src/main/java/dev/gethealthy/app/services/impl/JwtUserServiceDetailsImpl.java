@@ -1,5 +1,6 @@
 package dev.gethealthy.app.services.impl;
 
+import dev.gethealthy.app.exceptions.UnauthorizedException;
 import dev.gethealthy.app.repositories.UserAccountRepository;
 import dev.gethealthy.app.security.models.JwtUser;
 import dev.gethealthy.app.services.JwtUserDetailsService;
@@ -15,6 +16,10 @@ public class JwtUserServiceDetailsImpl implements JwtUserDetailsService {
     private final ModelMapper modelMapper;
     @Override
     public JwtUser loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        return modelMapper.map(userAccountRepository.findByUsernameOrEmailAndEnabled(usernameOrEmail, usernameOrEmail, true), JwtUser.class);
+        var userAccount = userAccountRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        if (userAccount.getEnabled())
+            return modelMapper.map(userAccount, JwtUser.class);
+        else
+            throw new UnauthorizedException();
     }
 }
