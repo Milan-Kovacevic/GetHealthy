@@ -44,7 +44,7 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-/*
+/* not done
     private void createRules(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry interceptor) {
         AuthorizationRules authorizationRules;
         try {

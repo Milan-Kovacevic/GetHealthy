@@ -7,10 +7,10 @@ import dev.gethealthy.app.models.requests.RegistrationRequest;
 import dev.gethealthy.app.models.responses.LoginResponse;
 import dev.gethealthy.app.services.AuthService;
 import jakarta.validation.Valid;
-import jdk.jfr.ContentType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(path="register")
-    public void register(@ModelAttribute @Valid RegistrationRequest registrationRequest) {
+    public void register(@ModelAttribute @Valid RegistrationRequest registrationRequest) throws IOException {
         if (registrationRequest.getRole() == Role.TRAINER && registrationRequest.getFile()==null)
             throw new BadRequestException();
         authService.register(registrationRequest);
