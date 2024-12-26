@@ -26,7 +26,7 @@ public class TraineeExercising implements BaseEntity<Integer> {
 
     @NotNull
     @Column(name = "DateTaken", nullable = false)
-    private Instant dateTaken;
+    private Instant dateTaken = Instant.now();
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
