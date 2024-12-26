@@ -16,16 +16,18 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "trainer")
 public class Trainer extends User implements BaseEntity<Integer> {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "UserId", nullable = false)
-//    private Integer id;
 
-//    @MapsId
-//    @OneToOne(fetch = FetchType.EAGER, optional = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JoinColumn(name = "UserId", nullable = false)
-//    private User user;
+    /*
+    @Column(name = "UserId", nullable = false)
+    private Integer trainerId;
+    */
+    /*
+    @MapsId
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "UserId", nullable = false)
+    private User user;
+     */
 
     @Size(max = 512)
     @Column(name = "Biography", length = 512)
