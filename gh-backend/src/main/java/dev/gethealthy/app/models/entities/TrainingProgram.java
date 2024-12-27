@@ -51,7 +51,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
     @NotNull
     @Column(name = "CreatedAt", nullable = false)
     private Instant createdAt;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

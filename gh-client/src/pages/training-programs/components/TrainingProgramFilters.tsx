@@ -107,11 +107,11 @@ export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
             {categories.map((category) => (
               <div key={category.id} className="flex items-center space-x-2">
                 <Checkbox
-                  id={category.id.toString()}
+                  id={`category-${category.id.toString()}`}
                   checked={selectedCategories.includes(category)}
                   onCheckedChange={() => handleCategoryChange(category.id)}
                 />
-                <Label htmlFor={category.id.toString()}>
+                <Label htmlFor={`category-${category.id.toString()}`}>
                   {category.categoryName}
                 </Label>
               </div>
@@ -125,15 +125,15 @@ export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
           <h3 className="text-sm font-medium mb-2">Difficulty</h3>
           <RadioGroup value={difficulty} onValueChange={setDifficulty}>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="0" id="0" />
+              <RadioGroupItem value="0" id="beginner" />
               <Label htmlFor="beginner">Beginner</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="1" id="1" />
+              <RadioGroupItem value="1" id="intermediate" />
               <Label htmlFor="intermediate">Intermediate</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="2" id="2" />
+              <RadioGroupItem value="2" id="advanced" />
               <Label htmlFor="advanced">Advanced</Label>
             </div>
           </RadioGroup>

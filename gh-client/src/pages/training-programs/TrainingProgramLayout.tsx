@@ -45,43 +45,41 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
 
   const [filterParams, setFilterParams] = useState<FilterProps>({
     categories: [],
-    difficulty: 0,
+    difficulty: -1,
     ratingRange: [0, 5],
     participantsRange: [0, 1000],
     sortBy: "name-asc",
   });
 
   useEffect(() => {
-    async function fetchTP() {
-      const data = await getPageableTrainingPrograms();
-      setPrograms(data.content);
-    }
-    // Mocked for now...
-    new Promise((resolve) => setTimeout(resolve)).then(() =>
-      fetchTP().then(() => {
-        setLoading(false);
-      })
-    );
-  }, []);
+    filterPrograms();
+  }, [currentPage, filterParams]);
 
-  useEffect(() => {
-    async function fetchTP() {
-      var sortOpt = filterParams.sortBy.split("-");
-      let response = await getPageableTrainingPrograms(
-        searchString,
-        currentPage - 1,
-        filterParams.categories,
-        filterParams.difficulty,
-        filterParams.ratingRange,
-        filterParams.participantsRange,
-        sortOpt[0],
-        sortOpt[1]
-      );
-      setPrograms(response.content);
-      setTotalPages(response.totalPages);
-    }
-    fetchTP();
-  }, [currentPage, filterParams, searchString]);
+  const filterPrograms = () => {
+    const sortOpt = filterParams.sortBy.split("-");
+    setLoading(true);
+    getPageableTrainingPrograms(
+      searchString,
+      currentPage - 1,
+      filterParams.categories,
+      filterParams.difficulty,
+      filterParams.ratingRange,
+      filterParams.participantsRange,
+      sortOpt[0],
+      sortOpt[1]
+    )
+      .then((response) => {
+        setPrograms(response.content);
+        setTotalPages(response.totalPages);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const handleSearchPrograms = () => {
+    filterPrograms();
+  };
 
   // TODO: nemam pojma sta ovo radi
   useEffect(() => {
@@ -112,7 +110,11 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
           {!myTrainingPrograms && <FeaturedTrainingPrograms />}
           <div className="flex lg:flex-row flex-col lg:gap-8 gap-2">
             <div className="flex flex-col my-6 pr-4 lg:border-r lg:border-b-0 border-b pb-4">
-              <SearchBar query={searchString} setQuery={setSearchString} />
+              <SearchBar
+                query={searchString}
+                setQuery={setSearchString}
+                onSearch={handleSearchPrograms}
+              />
 
               <h2 className="text-lg font-semibold mb-0 mt-6">Filters</h2>
               <TrainingProgramFilters onFilterApply={setFilterParams} />
