@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,31 +14,18 @@ import java.util.List;
 @Data
 public class TrainingProgramResponse {
     private Integer id;
-
     private String name;
-
     private TrainingProgramDifficulty difficulty;
-
     private Integer trainingDuration;
-
     private String description;
-
     private String requirements;
-
-    private LocalDate createdAt;
-
-    private List<CategoryResponse> categories; // TODO: ???? CategoryResponse
-
-    private List<ExerciseResponse> exercises;
-
+    private Instant createdAt;
+    private String imageFilePath;
     private double rating;
+    private List<CategoryResponse> categories;
+    private Integer trainerId;
+    private String trainerFirstName;
+    private String trainerLastName;
 
-    private TrainerResponse trainer; // TODO: ????
-    //private Trainer user; // TODO: ????
-   // private String trainerFirstName;
-
-   // private String trainerLastName;
-
-   // private String imageFilePath;
 
 }

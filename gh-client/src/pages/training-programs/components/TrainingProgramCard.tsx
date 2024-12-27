@@ -5,11 +5,10 @@ import {
   CardContent,
   CardDescription,
   CardFooter,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { DeleteAlert } from "@/pages/shared/DeleteAlert";
-import { Edit2Icon, Star, StarHalf, TrashIcon } from "lucide-react";
+import { Edit2Icon, Star, StarOffIcon, TrashIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type TrainingProgramCardProps = {
@@ -18,7 +17,7 @@ type TrainingProgramCardProps = {
   trainer: string;
   description: string;
   image: string;
-  rating: number;
+  rating?: number;
   categories: string[];
   difficulty: string;
   editable: boolean;
@@ -39,7 +38,7 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
     <Card
       key={props.id}
       onClick={handleCardClicked}
-      className="group transform hover:cursor-pointer max-w-xl rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-all duration-200 relative"
+      className="group transform hover:cursor-pointer max-h-[400px] max-w-xl rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-all duration-200 relative"
     >
       <div className="border-b">
         <div className="z-10">
@@ -53,16 +52,23 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
             variant="secondary"
             className="absolute top-3 z-10 right-3 font-semibold px-2 py-1 pointer-events-none"
           >
-            <Star className="w-4 h-4 text-primary/80 mr-1 fill-primary" />
-            <span className="font-medium text-sm">
-              {props.rating.toFixed(1)}
-            </span>
+            {props.rating == 0 && (
+              <StarOffIcon className="w-4 h-4 text-primary/80 mr-1" />
+            )}
+            {props.rating && props.rating != 0 && (
+              <>
+                <Star className="w-4 h-4 text-primary/80 mr-1 fill-primary/80" />
+                <span className="font-medium text-sm">
+                  {props.rating.toFixed(1)}
+                </span>
+              </>
+            )}
           </Badge>
         </div>
 
         <img
           src={props.image}
-          className="w-full h-48 object-cover opacity-75 group-hover:opacity-100"
+          className="w-full h-48 object-cover opacity-90 group-hover:opacity-100"
         ></img>
       </div>
 
@@ -101,7 +107,7 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
             </Badge>
           ))}
         </div>
-        <CardDescription className="line-clamp-2 text-xs">
+        <CardDescription className="line-clamp-3 text-xs">
           {props.description}
         </CardDescription>
       </CardContent>

@@ -21,7 +21,7 @@ export default function FeaturedProgramCard(props: FeatureProgramCardProps) {
 
   return (
     <Card
-      className="shadow-md  rounded-lg overflow-hidden md:hover:scale-105 hover:cursor-pointer transition-all duration-200 self-stretch mr-0 h-full"
+      className="shadow-md rounded-lg overflow-hidden md:hover:scale-105 hover:cursor-pointer transition-all duration-200 self-stretch mr-0 h-full"
       onClick={handleCardClicked}
     >
       <CardContent className="p-0">

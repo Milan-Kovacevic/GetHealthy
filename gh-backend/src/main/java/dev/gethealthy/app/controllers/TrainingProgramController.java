@@ -6,6 +6,7 @@ import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.*;
 import dev.gethealthy.app.services.TrainingProgramService;
 import dev.gethealthy.app.specifications.TrainingProgramSpecification;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,42 +17,63 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${gethealthy.base-url}/training-programs")
-public class TrainingProgramController extends CrudController<Integer, TrainingProgramRequest, TrainingProgramResponse> {
-    // TODO: Cannot inherit CRUD Controller ...
+@RequiredArgsConstructor
+public class TrainingProgramController {
     private final TrainingProgramService trainingProgramService;
 
-    public TrainingProgramController(TrainingProgramService crudService) {
-        super(crudService, TrainingProgramResponse.class);
-        //super(crudService, TrainingProgramResponse.class);
-        this.trainingProgramService = crudService;
-    }
-
-    //TODO: Endpoint for featured training programs...
-
-    @GetMapping("filter")
-    public Page<TrainingProgramResponse> getAll(Pageable page,
-                                                @RequestParam(defaultValue = "") String searchWord,
-                                                @RequestParam(defaultValue = "name") String sortBy,
-                                                @RequestParam(defaultValue = "asc") String sortDir,
-                                                @RequestParam(required = false) List<String> categories,
-                                                @RequestParam(required = false, defaultValue = "5.0") double ratingUpper,
-                                                @RequestParam(required = false, defaultValue = "0.0") double ratingLower,
-                                                @RequestParam(required = false, defaultValue = "1000") long participantsUpper,
-                                                @RequestParam(required = false, defaultValue = "0") long participantsLower,
-                                                @RequestParam(required = false, defaultValue = "0") int difficulty) {
-        Specification<TrainingProgram> spec = Specification
-                .where(TrainingProgramSpecification.nameContains(searchWord))
-                .and(TrainingProgramSpecification.hasRatingBetween(ratingLower, ratingUpper))
-                .and(TrainingProgramSpecification.hasParticipantCountBetween(participantsLower, participantsUpper))
-                .and(TrainingProgramSpecification.belongsToCategories(categories))
-                .and(TrainingProgramSpecification.hasDifficulty(difficulty))
-                .and(TrainingProgramSpecification.isNotDeleted());
-
+    @GetMapping
+    public Page<TrainingProgramResponse> getPageableTrainingPrograms(Pageable page,
+                                                                     @RequestParam(defaultValue = "") String searchWord,
+                                                                     @RequestParam(defaultValue = "name") String sortBy,
+                                                                     @RequestParam(defaultValue = "asc") String sortDir,
+                                                                     @RequestParam(required = false) List<String> categories,
+                                                                     @RequestParam(required = false, defaultValue = "5.0") double ratingUpper,
+                                                                     @RequestParam(required = false, defaultValue = "0.0") double ratingLower,
+                                                                     @RequestParam(required = false, defaultValue = "1000") long participantsUpper,
+                                                                     @RequestParam(required = false, defaultValue = "0") long participantsLower,
+                                                                     @RequestParam(required = false, defaultValue = "0") int difficulty) {
+        Specification<TrainingProgram> spec = constructSpecification(searchWord, categories, ratingUpper,
+                ratingLower, participantsUpper, participantsLower, difficulty);
         Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
 
-        return trainingProgramService.findAll(spec, sort, page);
+        return trainingProgramService.getFilteredTrainingPrograms(spec, sort, page);
     }
 
+    //TODO: Implementation required
+    @GetMapping("featured")
+    public Page<TrainingProgramResponse> getFeaturedTrainingPrograms(Pageable page,
+                                                                     @RequestParam(defaultValue = "") String searchWord,
+                                                                     @RequestParam(defaultValue = "name") String sortBy,
+                                                                     @RequestParam(defaultValue = "asc") String sortDir,
+                                                                     @RequestParam(required = false) List<String> categories,
+                                                                     @RequestParam(required = false, defaultValue = "5.0") double ratingUpper,
+                                                                     @RequestParam(required = false, defaultValue = "0.0") double ratingLower,
+                                                                     @RequestParam(required = false, defaultValue = "1000") long participantsUpper,
+                                                                     @RequestParam(required = false, defaultValue = "0") long participantsLower,
+                                                                     @RequestParam(required = false, defaultValue = "-1") int difficulty) {
+        Specification<TrainingProgram> spec = constructSpecification(searchWord, categories, ratingUpper,
+                ratingLower, participantsUpper, participantsLower, difficulty);
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
+
+        return trainingProgramService.getFilteredTrainingPrograms(spec, sort, page);
+    }
+
+    @PostMapping
+    public TrainingProgramResponse createTrainingProgram(@RequestBody TrainingProgramRequest request) {
+        return trainingProgramService.insert(request, TrainingProgramResponse.class);
+    }
+
+    @PutMapping("{programId}")
+    public TrainingProgramResponse updateTrainingProgram(@PathVariable Integer programId, @RequestBody TrainingProgramRequest request) {
+        return trainingProgramService.update(programId, request, TrainingProgramResponse.class);
+    }
+
+    @DeleteMapping("{programId}")
+    public void removeTrainingProgram(@PathVariable Integer programId){
+        trainingProgramService.delete(programId);
+    }
+
+    // Program details endpoints
     @GetMapping("/users/{userId}/training-programs")
     public List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(@PathVariable Integer userId) {
         return trainingProgramService.getAllTrainingProgramsForTrainer(userId);
@@ -70,5 +92,16 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
     @GetMapping("{programId}/details")
     public SingleProgramDetailsResponse getTrainingProgramDetails(@PathVariable(name = "programId") Integer programId) {
         return trainingProgramService.getTrainingProgramDetails(programId);
+    }
+
+    private static Specification<TrainingProgram> constructSpecification(String searchWord, List<String> categories, double ratingUpper,
+                                                                  double ratingLower, long participantsUpper, long participantsLower, int difficulty) {
+        return Specification
+                .where(TrainingProgramSpecification.nameContains(searchWord))
+                .and(TrainingProgramSpecification.hasRatingBetween(ratingLower, ratingUpper))
+                .and(TrainingProgramSpecification.hasParticipantCountBetween(participantsLower, participantsUpper))
+                .and(TrainingProgramSpecification.belongsToCategories(categories))
+                .and(TrainingProgramSpecification.hasDifficulty(difficulty))
+                .and(TrainingProgramSpecification.isNotDeleted());
     }
 }

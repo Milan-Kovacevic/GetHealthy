@@ -17,14 +17,22 @@ import { FilterIcon, XIcon } from "lucide-react";
 import { Category } from "@/api/models/category";
 import { getAllCategories } from "@/api/services/category-service";
 
-type FilterProps = {
-  setFilters: any;
+type TrainingProgramFiltersProps = {
+  onFilterApply: (filter: FilterProps) => void;
 };
 
-export function TrainingProgramFilters(props: FilterProps) {
+type FilterProps = {
+  categories: Category[];
+  difficulty: number;
+  ratingRange: number[];
+  participantsRange: number[];
+  sortBy: string;
+};
+
+export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
   const [sortBy, setSortBy] = useState("name-asc");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [difficulty, setDifficulty] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [difficulty, setDifficulty] = useState<string>();
   const [ratingRange, setRatingRange] = useState([0, 5]);
   const [participantsRange, setParticipantsRange] = useState([0, 1000]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -36,12 +44,41 @@ export function TrainingProgramFilters(props: FilterProps) {
     fetchCategories();
   }, []);
 
-  const handleCategoryChange = (category: string) => {
+  const handleCategoryChange = (categoryId: number) => {
+    const category = categories.find((c) => c.id == categoryId);
+    if (!category) return;
+
     setSelectedCategories((prev) =>
       prev.includes(category)
-        ? prev.filter((c) => c !== category)
+        ? prev.filter((c) => c.id !== category?.id)
         : [...prev, category]
     );
+  };
+
+  const onFilterApply = () => {
+    props.onFilterApply({
+      categories: selectedCategories,
+      difficulty: difficulty ? parseInt(difficulty) : -1,
+      ratingRange,
+      participantsRange,
+      sortBy: sortBy,
+    });
+  };
+
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setDifficulty("");
+    setRatingRange([0, 5]);
+    setParticipantsRange([0, 1000]);
+    setSortBy("name-asc");
+
+    props.onFilterApply({
+      categories: [],
+      difficulty: -1,
+      ratingRange: [0, 5],
+      participantsRange: [0, 1000],
+      sortBy: "name-asc",
+    });
   };
 
   return (
@@ -56,8 +93,10 @@ export function TrainingProgramFilters(props: FilterProps) {
             <SelectContent>
               <SelectItem value="name-asc">Name (A-Z)</SelectItem>
               <SelectItem value="name-desc">Name (Z-A)</SelectItem>
-              <SelectItem value="date-asc">Date (Oldest first)</SelectItem>
-              <SelectItem value="date-desc">Date (Newest first)</SelectItem>
+              <SelectItem value="createdAt-asc">Date (Oldest first)</SelectItem>
+              <SelectItem value="createdAt-desc">
+                Date (Newest first)
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -69,10 +108,8 @@ export function TrainingProgramFilters(props: FilterProps) {
               <div key={category.id} className="flex items-center space-x-2">
                 <Checkbox
                   id={category.id.toString()}
-                  checked={selectedCategories.includes(category.id.toString())}
-                  onCheckedChange={() =>
-                    handleCategoryChange(category.id.toString())
-                  }
+                  checked={selectedCategories.includes(category)}
+                  onCheckedChange={() => handleCategoryChange(category.id)}
                 />
                 <Label htmlFor={category.id.toString()}>
                   {category.categoryName}
@@ -88,15 +125,15 @@ export function TrainingProgramFilters(props: FilterProps) {
           <h3 className="text-sm font-medium mb-2">Difficulty</h3>
           <RadioGroup value={difficulty} onValueChange={setDifficulty}>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="1" id="1" />
+              <RadioGroupItem value="0" id="0" />
               <Label htmlFor="beginner">Beginner</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="2" id="2" />
+              <RadioGroupItem value="1" id="1" />
               <Label htmlFor="intermediate">Intermediate</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="3" id="3" />
+              <RadioGroupItem value="2" id="2" />
               <Label htmlFor="advanced">Advanced</Label>
             </div>
           </RadioGroup>
@@ -134,23 +171,11 @@ export function TrainingProgramFilters(props: FilterProps) {
           </div>
         </div>
         <div className="flex gap-2 justify-end pt-3">
-          <Button
-            variant="secondary"
-            className=""
-            onClick={() =>
-              props.setFilters(
-                categories,
-                difficulty,
-                ratingRange,
-                participantsRange,
-                sortBy
-              )
-            }
-          >
+          <Button variant="secondary" className="" onClick={onFilterApply}>
             <FilterIcon />
             Apply
           </Button>
-          <Button variant="outline" className="">
+          <Button variant="outline" className="" onClick={clearFilters}>
             <XIcon />
             Clear
           </Button>

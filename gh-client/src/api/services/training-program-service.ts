@@ -23,8 +23,8 @@ const getPageableTrainingPrograms = (
   limit: number = 12
 ) => {
   var url = ApiEndpoints.TrainingPrograms;
-  url += `/filter?searchWord=${searchString}&page=${page}&size=${limit}&sortBy=${sortBy}&sortDir=${sortDir}&categories=${categories
-    .map((c) => c.category.categoryName)
+  url += `?searchWord=${searchString}&page=${page}&size=${limit}&sortBy=${sortBy}&sortDir=${sortDir}&categories=${categories
+    .map((c) => c.categoryName)
     .join(",")}&ratingUpper=${ratingRange[1]}&ratingLower=${
     ratingRange[0]
   }&participantsLower=${participantsRange[0]}&participantsUpper=${

@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
 
     @NotNull
     @Column(name = "CreatedAt", nullable = false)
-    private LocalDate createdAt;
+    private Instant createdAt;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

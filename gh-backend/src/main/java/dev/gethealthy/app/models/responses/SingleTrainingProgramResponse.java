@@ -7,7 +7,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SingleTrainingProgramResponse extends TrainingProgramResponse{
+public class SingleTrainingProgramResponse extends TrainingProgramResponse {
     private int currentlyEnrolled;
     private int totalRates;
     private double averageRate;

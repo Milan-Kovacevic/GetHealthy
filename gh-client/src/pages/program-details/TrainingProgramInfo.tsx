@@ -120,11 +120,11 @@ export default function TrainingProgramInfo() {
               {program.categories?.length > 0 ? (
                 program.categories.map((item) => (
                   <Badge
-                    key={item.category.id}
+                    key={item.id}
                     variant="secondary"
                     className="text-sm px-3 border-foreground/30 font-normal py-0.5 h-auto transition-none"
                   >
-                    {item.category.categoryName}
+                    {item.categoryName}
                   </Badge>
                 ))
               ) : (

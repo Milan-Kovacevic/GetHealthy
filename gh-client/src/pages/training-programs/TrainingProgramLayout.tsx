@@ -26,13 +26,13 @@ type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
 };
 
-interface ComplexState {
-  categories: Category[]; // Replace with the actual Category type
+type FilterProps = {
+  categories: Category[];
   difficulty: number;
   ratingRange: number[];
   participantsRange: number[];
   sortBy: string;
-}
+};
 
 export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,7 +43,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   const [loading, setLoading] = useState(true);
   const [searchString, setSearchString] = useState("");
 
-  const [filterParams, setFilterParams] = useState<ComplexState>({
+  const [filterParams, setFilterParams] = useState<FilterProps>({
     categories: [],
     difficulty: 0,
     ratingRange: [0, 5],
@@ -81,23 +81,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
       setTotalPages(response.totalPages);
     }
     fetchTP();
-  }, [currentPage, filterParams]);
-
-  async function setFilter(
-    categories: Category[],
-    difficulty: number,
-    ratingRange: number[],
-    participantsRange: number[],
-    sortBy: string
-  ) {
-    setFilterParams({
-      categories,
-      difficulty,
-      ratingRange,
-      participantsRange,
-      sortBy,
-    });
-  }
+  }, [currentPage, filterParams, searchString]);
 
   // TODO: nemam pojma sta ovo radi
   useEffect(() => {
@@ -126,44 +110,35 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
           <TrainingProgramsPageTitle showCreate={myTrainingPrograms} />
           <Separator className="my-4" />
           {!myTrainingPrograms && <FeaturedTrainingPrograms />}
-          {/* {!myTrainingPrograms && (
-            <>
-              <div className="space-y-0.5">
-                <h2 className="text-2xl font-medium">Training programs</h2>
-              </div>
-              <Separator className="my-4" />
-            </>
-          )} */}
-
           <div className="flex lg:flex-row flex-col lg:gap-8 gap-2">
             <div className="flex flex-col my-6 pr-4 lg:border-r lg:border-b-0 border-b pb-4">
               <SearchBar query={searchString} setQuery={setSearchString} />
 
               <h2 className="text-lg font-semibold mb-0 mt-6">Filters</h2>
-              <TrainingProgramFilters setFilters={setFilter} />
+              <TrainingProgramFilters onFilterApply={setFilterParams} />
             </div>
 
             {loading ? (
               <TrainingProgramsLoader />
             ) : (
               <div className="grid mt-5 gap-x-6 gap-y-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 flex-1">
-                {programs.map((item) => {
-                  console.log(item);
-                  return (
-                    <TrainingProgramCard
-                      rating={item.rating}
-                      categories={item.categories.map((c) => c.categoryName)}
-                      key={item.id}
-                      editable={props.myTrainingPrograms}
-                      title={item.name}
-                      description={item.description}
-                      id={item.id}
-                      difficulty={item.difficulty}
-                      image="https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
-                      trainer={`${item.trainer.firstName} ${item.trainer.lastName}`}
-                    ></TrainingProgramCard>
-                  );
-                })}
+                {programs.map((item) => (
+                  <TrainingProgramCard
+                    rating={item.rating}
+                    categories={item.categories.map((c) => c.categoryName)}
+                    key={item.id}
+                    editable={props.myTrainingPrograms}
+                    title={item.name}
+                    description={item.description}
+                    id={item.id}
+                    difficulty={item.difficulty}
+                    image={
+                      item.imageFilePath ??
+                      "https://cdn-icons-png.flaticon.com/512/9584/9584876.png"
+                    }
+                    trainer={`${item.trainerFirstName} ${item.trainerLastName}`}
+                  ></TrainingProgramCard>
+                ))}
               </div>
             )}
           </div>

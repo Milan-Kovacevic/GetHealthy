@@ -2,32 +2,19 @@ import { CategoryDTO } from "./category-contract";
 import { Page } from "./pageable-contract";
 
 export type TrainingProgramDTO = {
-  id?: number;
+  id: number;
   name: string;
-  difficulty: number;
+  difficulty: ProgramDifficultyDTO;
   trainingDuration: number;
   description: string;
-  requirements: string | undefined;
-  createdAt?: string;
+  requirements?: string;
+  createdAt: string;
   categories: CategoryDTO[];
   rating?: number;
-  user?: ProgramTrainerDTO;
-  userId?:number;
-};
-
-export type ProgramTrainerDTO = {
-  id: number;
-  user: UserDTO;
-  biography: string;
-  contactInfo: string;
-  email: string;
-  profilePictureFilePath: string;
-  /// ??? Only basic info ...
-};
-
-export type UserDTO = {
-  firstName: string;
-  lastName: string;
+  imageFilePath?: string;
+  trinerId: number;
+  trainerFirstName: string;
+  trainerLastName: string;
 };
 
 export type PageableTrainingProgramsDTO = Page<TrainingProgramDTO>;

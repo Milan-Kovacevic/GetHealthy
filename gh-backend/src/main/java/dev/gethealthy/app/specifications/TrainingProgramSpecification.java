@@ -11,7 +11,7 @@ public class TrainingProgramSpecification {
 
     public static Specification<TrainingProgram> isNotDeleted() {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.isFalse(root.get("deleted"));
+                criteriaBuilder.isFalse(root.get("deleted")).isNotNull();
     }
 
     public static Specification<TrainingProgram> nameContains(String keyword) {
@@ -69,7 +69,8 @@ public class TrainingProgramSpecification {
             if (categories == null || categories.isEmpty()) {
                 return cb.conjunction();
             }
-            Join<TrainingProgram, Category> categoryJoin = root.join("categories").join("category");
+            Join<TrainingProgram, Category> categoryJoin = root.join("categories");
+//            Join<TrainingProgram, Category> categoryJoin = root.join("categories").join("category");
             return categoryJoin.get("name").in(categories);
         };
     }
@@ -77,7 +78,7 @@ public class TrainingProgramSpecification {
     public static Specification<TrainingProgram> hasDifficulty(int difficulty)
     {
         return (root, query, criteriaBuilder) ->
-                difficulty == 0 ? criteriaBuilder.conjunction() :
+                difficulty == -1 ? criteriaBuilder.conjunction() :
                         criteriaBuilder.equal(root.get("difficulty"), difficulty);
     }
 }

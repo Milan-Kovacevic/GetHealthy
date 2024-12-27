@@ -11,12 +11,12 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 
 public interface TrainingProgramService extends CrudService<Integer> {
-    Page<TrainingProgramResponse> findAll(Specification<TrainingProgram> spec, Sort sort, Pageable page);
-
-    @Override
-    void delete(Integer id);
+    Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort, Pageable page);
     List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(Integer userId);
     SingleTrainingProgramResponse getSingleTrainingProgram(Integer programId);
     TrainerResponse getTrainerByProgramId(Integer programId);
     SingleProgramDetailsResponse getTrainingProgramDetails(Integer id);
+    @Override
+    void delete(Integer id);
+
 }

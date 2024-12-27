@@ -34,7 +34,7 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
     }
 
     @Override
-    public Page<TrainingProgramResponse> findAll(Specification<TrainingProgram> spec, Sort sort, Pageable page) {
+    public Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort, Pageable page) {
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
         var dbResponse = trainingProgramRepository.findAll(spec, pageableWithSort);
         var result = dbResponse.map(e -> modelMapper.map(e, TrainingProgramResponse.class));
