@@ -49,7 +49,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
 
     @NotNull
     @Column(name = "CreatedAt", nullable = false)
-    private LocalDate createdAt;
+    private LocalDate createdAt = LocalDate.now();
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -86,7 +86,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
     private List<TrainingProgramExercise> trainingProgramExercises;
 
     @Column(name = "Deleted")
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     @Size(max = 255)
     @Column(name = "ImageFilePath")
