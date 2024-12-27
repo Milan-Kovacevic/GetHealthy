@@ -19,4 +19,6 @@ public interface TrainingProgramRepository extends JpaRepository<TrainingProgram
     Optional<Double> calculateTrainingProgramAverageRate(Integer programId);
 
     List<TrainingProgram> findAllByTrainer_Id(Integer trainerId);
+
+    List<TrainingProgram> findTop10ByOrderByCreatedAtDesc();
 }

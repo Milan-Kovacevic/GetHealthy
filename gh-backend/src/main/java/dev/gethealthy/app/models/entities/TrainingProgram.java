@@ -51,7 +51,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
     @NotNull
     @Column(name = "CreatedAt", nullable = false)
     private Instant createdAt;
-
+    
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -87,7 +87,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
     private List<TrainingProgramExercise> trainingProgramExercises;
 
     @Column(name = "Deleted")
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     @Size(max = 255)
     @Column(name = "ImageFilePath")

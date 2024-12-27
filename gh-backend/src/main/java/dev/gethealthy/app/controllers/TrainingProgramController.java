@@ -34,28 +34,15 @@ public class TrainingProgramController {
                                                                      @RequestParam(required = false, defaultValue = "0") int difficulty) {
         Specification<TrainingProgram> spec = constructSpecification(searchWord, categories, ratingUpper,
                 ratingLower, participantsUpper, participantsLower, difficulty);
+
         Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
 
         return trainingProgramService.getFilteredTrainingPrograms(spec, sort, page);
     }
 
-    //TODO: Implementation required
     @GetMapping("featured")
-    public Page<TrainingProgramResponse> getFeaturedTrainingPrograms(Pageable page,
-                                                                     @RequestParam(defaultValue = "") String searchWord,
-                                                                     @RequestParam(defaultValue = "name") String sortBy,
-                                                                     @RequestParam(defaultValue = "asc") String sortDir,
-                                                                     @RequestParam(required = false) List<String> categories,
-                                                                     @RequestParam(required = false, defaultValue = "5.0") double ratingUpper,
-                                                                     @RequestParam(required = false, defaultValue = "0.0") double ratingLower,
-                                                                     @RequestParam(required = false, defaultValue = "1000") long participantsUpper,
-                                                                     @RequestParam(required = false, defaultValue = "0") long participantsLower,
-                                                                     @RequestParam(required = false, defaultValue = "-1") int difficulty) {
-        Specification<TrainingProgram> spec = constructSpecification(searchWord, categories, ratingUpper,
-                ratingLower, participantsUpper, participantsLower, difficulty);
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
-
-        return trainingProgramService.getFilteredTrainingPrograms(spec, sort, page);
+    public List<TrainingProgramResponse> getFeaturedTrainingPrograms() {
+        return trainingProgramService.getFeaturedTrainingPrograms();
     }
 
     @PostMapping
@@ -74,6 +61,7 @@ public class TrainingProgramController {
     }
 
     // Program details endpoints
+
     @GetMapping("/users/{userId}/training-programs")
     public List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(@PathVariable Integer userId) {
         return trainingProgramService.getAllTrainingProgramsForTrainer(userId);

@@ -26,7 +26,9 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
     private final TrainingProgramExerciseRepository trainingProgramExerciseRepository;
     private final ModelMapper modelMapper;
 
-    public TrainingProgramServiceImpl(TrainingProgramRepository trainingProgramRepository, TrainingProgramExerciseRepository trainingProgramExerciseRepository, TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository, ModelMapper modelMapper) {
+    public TrainingProgramServiceImpl(TrainingProgramRepository trainingProgramRepository,
+                                      TrainingProgramExerciseRepository trainingProgramExerciseRepository,
+                                      ModelMapper modelMapper) {
         super(trainingProgramRepository, modelMapper, TrainingProgram.class);
         this.trainingProgramRepository = trainingProgramRepository;
         this.trainingProgramExerciseRepository = trainingProgramExerciseRepository;
@@ -118,6 +120,15 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
                 .collect(Collectors.toList());
         response.setExercises(exercises);
         return response;
+    }
+
+    @Override
+    public List<TrainingProgramResponse> getFeatured() {
+        return trainingProgramRepository
+                .findTop10ByOrderByCreatedAtDesc()
+                .stream()
+                .map(e->modelMapper.map(e, TrainingProgramResponse.class))
+                .collect(Collectors.toList());
     }
 
 }
