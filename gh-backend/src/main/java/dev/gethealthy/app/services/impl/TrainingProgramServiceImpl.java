@@ -123,7 +123,7 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
     }
 
     @Override
-    public List<TrainingProgramResponse> getFeatured() {
+    public List<TrainingProgramResponse> getFeaturedTrainingPrograms() {
         return trainingProgramRepository
                 .findTop10ByOrderByCreatedAtDesc()
                 .stream()
