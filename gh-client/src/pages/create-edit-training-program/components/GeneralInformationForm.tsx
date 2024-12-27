@@ -95,7 +95,7 @@ export default function GeneralInformationForm({
           categories: values.categories.map((c) => ({
             categoryId: c.id,
           })),
-          trainerId: 3,
+          trainerId: 2,
         };
         var response = await createUpdateTrainingProgram(program, false);
         // da bi radilo potrebno je ovaj id propagirati u roditeljsku komponentu koja ce dalje raditi sa ExercisePlanBuilderom

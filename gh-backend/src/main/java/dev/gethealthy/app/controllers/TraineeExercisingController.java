@@ -34,8 +34,8 @@ public class TraineeExercisingController {
     }
 
     @PostMapping("exercise-set-feedback")
-    public Void exerciseSetFeedback(ExerciseSetFeedbackRequest request)
+    public void exerciseSetFeedback(ExerciseSetFeedbackRequest request)
     {
-       return exerciseSetFeedbackService.insert(request, Void.class);
+        exerciseSetFeedbackService.insert(request, Object.class);
     }
 }

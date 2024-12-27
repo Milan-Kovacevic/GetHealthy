@@ -6,6 +6,7 @@ import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.*;
 import dev.gethealthy.app.services.TrainingProgramService;
 import dev.gethealthy.app.specifications.TrainingProgramSpecification;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,19 +17,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${gethealthy.base-url}/training-programs")
-public class TrainingProgramController extends CrudController<Integer, TrainingProgramRequest, TrainingProgramResponse> {
-    // TODO: Cannot inherit CRUD Controller ...
+@RequiredArgsConstructor
+public class TrainingProgramController {
     private final TrainingProgramService trainingProgramService;
 
-    public TrainingProgramController(TrainingProgramService crudService) {
-        super(crudService, TrainingProgramResponse.class);
-        //super(crudService, TrainingProgramResponse.class);
-        this.trainingProgramService = crudService;
-    }
-
-    //TODO: Endpoint for featured training programs...
-
-    @GetMapping("filter")
+    @GetMapping
     public Page<TrainingProgramResponse> getAll(Pageable page,
                                                 @RequestParam(defaultValue = "") String searchWord,
                                                 @RequestParam(defaultValue = "name") String sortBy,
@@ -50,6 +43,17 @@ public class TrainingProgramController extends CrudController<Integer, TrainingP
         Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
 
         return trainingProgramService.findAll(spec, sort, page);
+    }
+
+    @PostMapping
+    public TrainingProgramResponse create(@RequestBody TrainingProgramRequest trainingProgramRequest)
+    {
+        return trainingProgramService.insert(trainingProgramRequest, TrainingProgramResponse.class);
+    }
+
+    @GetMapping("/featured")
+    public List<TrainingProgramResponse> featured() {
+        return trainingProgramService.getFeatured();
     }
 
     @GetMapping("/users/{userId}/training-programs")
