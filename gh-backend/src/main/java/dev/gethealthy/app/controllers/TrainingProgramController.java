@@ -41,7 +41,7 @@ public class TrainingProgramController {
     }
 
     @GetMapping("featured")
-    public List<TrainingProgramResponse> getFeaturedTrainingPrograms() {
+    public List<FeaturedProgramResponse> getFeaturedTrainingPrograms() {
         return trainingProgramService.getFeaturedTrainingPrograms();
     }
 

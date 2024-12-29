@@ -26,3 +26,18 @@ export type TrainerProgramDTO = {
   name: string;
   createdAt: string;
 };
+
+export type FeaturedTrainingProgramDTO = {
+  id: number;
+  name: string;
+  difficulty: ProgramDifficultyDTO;
+  description: string;
+  createdAt: string;
+  categories: CategoryDTO[];
+  rating?: number;
+  imageFilePath?: string;
+  participants: number;
+  trinerId: number;
+  trainerFirstName: string;
+  trainerLastName: string;
+};

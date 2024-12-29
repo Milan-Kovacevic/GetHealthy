@@ -123,11 +123,15 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
     }
 
     @Override
-    public List<TrainingProgramResponse> getFeaturedTrainingPrograms() {
+    public List<FeaturedProgramResponse> getFeaturedTrainingPrograms() {
         return trainingProgramRepository
-                .findTop10ByOrderByCreatedAtDesc()
+                .findTop5ByOrderByCreatedAtDesc()
                 .stream()
-                .map(e->modelMapper.map(e, TrainingProgramResponse.class))
+                .map(e->{
+                    var response = modelMapper.map(e, FeaturedProgramResponse.class);
+                    response.setParticipants(trainingProgramRepository.calculateNumberOfTrainingProgramTrainees(e.getId()));
+                    return response;
+                })
                 .collect(Collectors.toList());
     }
 

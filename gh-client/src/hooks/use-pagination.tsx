@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 type UsePaginationProps<TData> = {
   fetchData: (state: UsePaginationState<TData>) => Promise<Page<TData>>;
+  initialPage?: number;
 };
 type UsePaginationState<TData> = {
   data: TData[];
@@ -17,7 +18,7 @@ export function usePagination<TData>(props: UsePaginationProps<TData>) {
   const [data, setData] = useState<TData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(props.initialPage ?? 0);
   const [first, setFirst] = useState(true);
   const [last, setLast] = useState(false);
 

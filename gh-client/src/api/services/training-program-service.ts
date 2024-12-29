@@ -2,35 +2,38 @@ import { ApiEndpoints } from "@/utils/constants";
 import { Category } from "../models/category";
 import { sendAxiosRequest } from "./base-service";
 import {
+  FeaturedTrainingProgramDTO,
   PageableTrainingProgramsDTO,
   TrainerProgramDTO,
   TrainingProgramDTO,
 } from "../contracts/training-program-contract";
 import {
+  FeaturedTrainingProgram,
   PageableTrainingPrograms,
+  ProgramFilters,
   TrainerProgram,
 } from "../models/training-program";
+import { delay } from "@/lib/utils";
 
-const getPageableTrainingPrograms = (
+const getPageableTrainingPrograms = async (
   searchString: string = "",
   page: number = 0,
-  categories: Category[] = [],
-  difficulty: number = -1,
-  ratingRange: number[] = [0.0, 5.0],
-  participantsRange: number[] = [0, 1000],
-  sortBy: string = "name",
-  sortDir: string = "asc",
-  limit: number = 12
+  filters: ProgramFilters,
+  limit: number = 6
 ) => {
   var url = ApiEndpoints.TrainingPrograms;
-  url += `?searchWord=${searchString}&page=${page}&size=${limit}&sortBy=${sortBy}&sortDir=${sortDir}&categories=${categories
-    .map((c) => c.categoryName)
-    .join(",")}&ratingUpper=${ratingRange[1]}&ratingLower=${
-    ratingRange[0]
-  }&participantsLower=${participantsRange[0]}&participantsUpper=${
-    participantsRange[1]
-  }&difficulty=${difficulty}`;
+  const sortOpt = filters.sort.split("-");
+  url += `?searchWord=${searchString}&page=${page}&size=${limit}&sortBy=${
+    sortOpt[0]
+  }&sortDir=${sortOpt[1]}&categories=${filters.categories.join(
+    ","
+  )}&ratingUpper=${filters.ratingRange[1]}&ratingLower=${
+    filters.ratingRange[0]
+  }&participantsLower=${filters.participantsRange[0]}&participantsUpper=${
+    filters.participantsRange[1]
+  }&difficulty=${filters.difficulty}`;
 
+  await delay(500);
   return sendAxiosRequest<void, PageableTrainingProgramsDTO>({
     method: "GET",
     url: url,
@@ -40,7 +43,7 @@ const getPageableTrainingPrograms = (
   });
 };
 
-export const createUpdateTrainingProgram = (
+const createUpdateTrainingProgram = async (
   trainingProgram: TrainingProgramDTO,
   isUpdate: boolean
 ) => {
@@ -53,6 +56,21 @@ export const createUpdateTrainingProgram = (
     return response.data as object;
   });
 };
+
+const getFeaturedTrainingPrograms = async () => {
+  var url = ApiEndpoints.TrainingPrograms;
+  url += `/featured`;
+
+  await delay(500);
+  return sendAxiosRequest<void, FeaturedTrainingProgramDTO[]>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    // Perform neccessary mappings etc...
+    return response.data as FeaturedTrainingProgram[];
+  });
+};
+
 const getAllTrainingProgramsForTrainer = (trainerId: number) => {
   var url = ApiEndpoints.UserTrainingPrograms.replace(
     "{userId}",
@@ -67,4 +85,9 @@ const getAllTrainingProgramsForTrainer = (trainerId: number) => {
   });
 };
 
-export { getPageableTrainingPrograms, getAllTrainingProgramsForTrainer };
+export {
+  getPageableTrainingPrograms,
+  getAllTrainingProgramsForTrainer,
+  getFeaturedTrainingPrograms,
+  createUpdateTrainingProgram,
+};

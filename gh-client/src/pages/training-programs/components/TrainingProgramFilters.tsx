@@ -15,69 +15,59 @@ import {
 import { Button } from "@/components/ui/button";
 import { FilterIcon, XIcon } from "lucide-react";
 import { Category } from "@/api/models/category";
-import { getAllCategories } from "@/api/services/category-service";
+import { ProgramFilters } from "@/api/models/training-program";
 
 type TrainingProgramFiltersProps = {
-  onFilterApply: (filter: FilterProps) => void;
-};
-
-type FilterProps = {
+  filters: ProgramFilters;
   categories: Category[];
-  difficulty: number;
-  ratingRange: number[];
-  participantsRange: number[];
-  sortBy: string;
+  onFilterApply: (filters: ProgramFilters) => void;
 };
 
 export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
-  const [sortBy, setSortBy] = useState("name-asc");
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const { filters, categories, onFilterApply } = props;
+
+  const [sortBy, setSortBy] = useState(filters.sort);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<string>();
   const [ratingRange, setRatingRange] = useState([0, 5]);
   const [participantsRange, setParticipantsRange] = useState([0, 1000]);
-  const [categories, setCategories] = useState<Category[]>([]);
 
-  useEffect(() => {
-    async function fetchCategories() {
-      setCategories(await getAllCategories());
-    }
-    fetchCategories();
-  }, []);
+  useEffect(() => {}, []);
 
   const handleCategoryChange = (categoryId: number) => {
     const category = categories.find((c) => c.id == categoryId);
     if (!category) return;
 
     setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c.id !== category?.id)
-        : [...prev, category]
+      prev.includes(category.categoryName)
+        ? prev.filter((c) => c !== category?.categoryName)
+        : [...prev, category.categoryName]
     );
   };
 
-  const onFilterApply = () => {
-    props.onFilterApply({
+  const handleApplyProgramFilters = () => {
+    onFilterApply({
       categories: selectedCategories,
       difficulty: difficulty ? parseInt(difficulty) : -1,
       ratingRange,
       participantsRange,
-      sortBy: sortBy,
+      sort: sortBy,
     });
   };
 
-  const clearFilters = () => {
+  const handleClearProgramFilters = () => {
     setSelectedCategories([]);
     setDifficulty("");
     setRatingRange([0, 5]);
     setParticipantsRange([0, 1000]);
     setSortBy("name-asc");
 
-    props.onFilterApply({
+    onFilterApply({
       categories: [],
       difficulty: -1,
       ratingRange: [0, 5],
       participantsRange: [0, 1000],
-      sortBy: "name-asc",
+      sort: "name-asc",
     });
   };
 
@@ -108,7 +98,7 @@ export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
               <div key={category.id} className="flex items-center space-x-2">
                 <Checkbox
                   id={`category-${category.id.toString()}`}
-                  checked={selectedCategories.includes(category)}
+                  checked={selectedCategories.includes(category.categoryName)}
                   onCheckedChange={() => handleCategoryChange(category.id)}
                 />
                 <Label htmlFor={`category-${category.id.toString()}`}>
@@ -171,11 +161,19 @@ export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
           </div>
         </div>
         <div className="flex gap-2 justify-end pt-3">
-          <Button variant="secondary" className="" onClick={onFilterApply}>
+          <Button
+            variant="secondary"
+            className=""
+            onClick={handleApplyProgramFilters}
+          >
             <FilterIcon />
             Apply
           </Button>
-          <Button variant="outline" className="" onClick={clearFilters}>
+          <Button
+            variant="outline"
+            className=""
+            onClick={handleClearProgramFilters}
+          >
             <XIcon />
             Clear
           </Button>

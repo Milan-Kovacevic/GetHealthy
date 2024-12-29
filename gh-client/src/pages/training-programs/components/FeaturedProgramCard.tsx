@@ -1,14 +1,16 @@
+import { FeaturedTrainingProgram } from "@/api/models/training-program";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, Users } from "lucide-react";
-import React from "react";
-
+import noImage from "@/assets/no-image.jpg";
 import { Link, useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { formatDistanceToNow } from "date-fns";
 
 type FeatureProgramCardProps = {
-  program: any;
+  program: FeaturedTrainingProgram;
 };
 
 export default function FeaturedProgramCard(props: FeatureProgramCardProps) {
@@ -26,49 +28,53 @@ export default function FeaturedProgramCard(props: FeatureProgramCardProps) {
     >
       <CardContent className="p-0">
         <div className="relative max-h-48 h-48 flex">
-          <div className="flex justify-between items-center p-4 absolute w-full">
+          <div className="flex justify-between items-center p-4 absolute w-full z-10">
             <Badge variant="secondary" className="border-primary">
               {program.difficulty}
             </Badge>
           </div>
           <AspectRatio
             ratio={16 / 9}
-            className="relative bg-muted/20 dark:bg-muted/20 border-b max-h-48"
+            className="relative border-b max-h-48 w-full bg-primary/5 dark:bg-primary/5"
           >
             <img
-              src={program.image}
-              className="rounded-md object-contain w-full h-full"
+              src={program.imageFilePath ?? noImage}
+              className={cn(
+                "rounded-md rounded-b-none object-cover w-full h-full",
+                !program.imageFilePath && "dark:filter-white"
+              )}
             ></img>
           </AspectRatio>
         </div>
         <div className="py-4 pt-3 px-5 select-none">
-          <h3 className="text-lg font-medium mb-2 mt-0">{program.title}</h3>
+          <h3 className="text-lg font-medium mb-2 mt-0">{program.name}</h3>
 
           <p className="text-foreground/85 mb-2 text-sm">
-            Trainer: {program.trainer}
+            Trainer: {program.trainerFirstName} {program.trainerLastName}
           </p>
           <div className="flex items-center mb-2">
             <Star className="w-4 h-4 text-primary/80 mr-1" />
             <span className="font-medium text-sm">{program.rating}</span>
             <span className="text-muted-foreground ml-2 text-xs">
               • Created{" "}
-              <span className="font-semibold">{program.createdAgo}</span> ago
+              <span className="font-semibold">
+                {formatDistanceToNow(program.createdAt)}
+              </span>{" "}
+              ago
             </span>
           </div>
           <div className="mb-2 flex flex-wrap gap-x-1.5 gap-y-1.5">
-            {program.categories
-              .slice(0, 4)
-              .map((category: any, index: number) => (
-                <Badge key={index} variant="secondary" className="">
-                  {category}
-                </Badge>
-              ))}
+            {program.categories.slice(0, 4).map((category) => (
+              <Badge key={category.id} variant="secondary" className="">
+                {category.categoryName}
+              </Badge>
+            ))}
           </div>
           <div className="mt-auto">
             <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
               <div className="flex items-center">
                 <Users className="w-3.5 h-3.5 mr-1" />
-                <span>{program.participants} participants</span>
+                <span>{program.participants ?? "No "} participants</span>
               </div>
             </div>
             <div className="mb-0">
