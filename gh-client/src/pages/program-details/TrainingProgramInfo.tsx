@@ -1,4 +1,4 @@
-import programImg from "@/assets/program-example.png";
+import noImage from "@/assets/no-image.jpg";
 import { Badge } from "@/components/ui/badge";
 import { ActivityIcon, UserPlus, UserXIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import SingleTrainingProgramLoader from "./components/SingleTrainingProgramLoade
 import { toast } from "sonner";
 import TrainingProgramApplicationModal from "./components/TrainingProgramApplicationModal";
 import { joinTrainingProgram } from "@/api/services/user-service";
+import { cn } from "@/lib/utils";
 
 export default function TrainingProgramInfo() {
   const params = useParams();
@@ -67,11 +68,14 @@ export default function TrainingProgramInfo() {
 
   return (
     <div className="my-4 flex flex-col lg:flex-row h-auto py-4 lg:px-0 px-4 relative">
-      <div className="w-full lg:w-1/3 mb-4 lg:mb-0 lg:border-2 rounded-xl overflow-hidden">
+      <div className="bg-primary/10 dark:bg-primary/5 w-full sm:h-[400px] lg:w-2/5 xl:w-1/3 mb-4 lg:mb-0 lg:border-2 rounded-xl overflow-hidden">
         <img
-          src={program.imageFilePath || programImg}
+          src={program.imageFilePath || noImage}
           alt="Training Program"
-          className="w-full h-full object-cover"
+          className={cn(
+            "w-full h-full object-cover mix-blend-luminosity dark:mix-blend-luminosity",
+            !program.imageFilePath && "dark:filter-white"
+          )}
         />
       </div>
 
@@ -79,12 +83,12 @@ export default function TrainingProgramInfo() {
         <div className="flex flex-col justify-between mt-1.5 flex-1">
           <div className="relative flex items-center justify-between gap-5">
             <div>
-              <h1 className="text-3xl font-semibold leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-semibold leading-tight">
                 {program.name}
               </h1>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <ActivityIcon className="h-4 w-4" />
-                <p className="text-base text-muted-foreground font-semibold">
+                <p className="text-sm sm:text-base text-muted-foreground font-semibold">
                   {program.difficulty}
                 </p>
               </div>
@@ -98,7 +102,7 @@ export default function TrainingProgramInfo() {
             </div>
           </div>
 
-          <h2 className="text-base text-muted-foreground text-justify mt-4">
+          <h2 className="text-sm sm:text-base text-muted-foreground text-justify mt-4">
             {program.description}
           </h2>
 

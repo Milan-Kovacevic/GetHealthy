@@ -20,5 +20,5 @@ public interface TrainingProgramRepository extends JpaRepository<TrainingProgram
 
     List<TrainingProgram> findAllByTrainer_Id(Integer trainerId);
 
-    List<TrainingProgram> findTop10ByOrderByCreatedAtDesc();
+    List<TrainingProgram> findTop5ByOrderByCreatedAtDesc();
 }
