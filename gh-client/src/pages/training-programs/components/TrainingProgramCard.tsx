@@ -9,10 +9,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DeleteAlert } from "@/pages/shared/DeleteAlert";
-import { Edit2Icon, Star, StarOffIcon, TrashIcon } from "lucide-react";
+import {
+  ClockIcon,
+  Edit2Icon,
+  Star,
+  StarOffIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import noImage from "@/assets/no-image.jpg";
 import { cn } from "@/lib/utils";
+import { formatDistanceToNow } from "date-fns";
 
 type TrainingProgramCardProps = {
   id: number;
@@ -23,6 +30,7 @@ type TrainingProgramCardProps = {
   rating?: number;
   categories: string[];
   difficulty: string;
+  createdAt: string;
   editable: boolean;
 };
 
@@ -112,6 +120,11 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
           </span>
         </div>
         <div className="mb-2 flex flex-wrap gap-x-1.5 gap-y-1.5">
+          {props.categories.length == 0 && (
+            <span className="text-foreground/75 text-sm italic">
+              No categories...
+            </span>
+          )}
           {props.categories.slice(0, 4).map((category: any, index: number) => (
             <Badge key={index} variant="secondary" className="">
               {category}
@@ -122,7 +135,15 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
           {props.description}
         </CardDescription>
       </CardContent>
-      <CardFooter></CardFooter>
+      <CardFooter className="px-4 mt-1 pb-3">
+        <span className="text-muted-foreground text-xs ml-auto flex items-center gap-1">
+          <ClockIcon className="h-3.5 w-3.5" />
+          <span className="font-semibold">
+            {formatDistanceToNow(props.createdAt)}
+          </span>{" "}
+          ago
+        </span>
+      </CardFooter>
     </Card>
   );
 }

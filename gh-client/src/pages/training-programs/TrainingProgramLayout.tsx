@@ -104,6 +104,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                     title={item.name}
                     description={item.description}
                     id={item.id}
+                    createdAt={item.createdAt}
                     difficulty={item.difficulty}
                     image={item.imageFilePath}
                     trainer={`${item.trainerFirstName} ${item.trainerLastName}`}

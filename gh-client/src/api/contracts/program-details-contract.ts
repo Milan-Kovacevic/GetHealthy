@@ -8,7 +8,8 @@ export type SingleTrainingProgramDTO = {
   name: string;
   imageFilePath?: string;
   difficulty: ProgramDifficultyDTO;
-  averageRate: number;
+  rating: number;
+  createdAt: string;
   totalRates: number;
   description: string;
   trainerFirstName: string;
