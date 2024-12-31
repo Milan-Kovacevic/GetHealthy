@@ -1,43 +1,67 @@
+import RangedDatePicker from "@/components/primitives/RangedDatePicker";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { addDays, format } from "date-fns";
 import {
-  CalendarDaysIcon,
-  CalendarIcon,
-  CalendarRangeIcon,
-} from "lucide-react";
+  addDays,
+  endOfMonth,
+  endOfWeek,
+  startOfMonth,
+  startOfWeek,
+} from "date-fns";
+import { CalendarDaysIcon, CalendarRangeIcon } from "lucide-react";
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
 
 export default function AnalyticsPeriodSelector() {
+  const [selectedDate, setSelectedDate] = React.useState<DateRange | undefined>(
+    {
+      from: new Date(2022, 0, 20),
+      to: addDays(new Date(2022, 0, 20), 20),
+    }
+  );
+
   return (
     <div className="flex lg:flex-row sm:flex-row-reverse flex-col-reverse lg:mr-0 gap-2 sm:mr-auto">
-      <ShortcutButtons />
-      <RangedDatePicker className="sm:w-[300px] " />
+      <PeriodShortcutButtons onPeriodChange={setSelectedDate} />
+      <RangedDatePicker
+        date={selectedDate}
+        onDateChange={setSelectedDate}
+        className="sm:w-[300px]"
+      />
     </div>
   );
 }
 
 type Period = "week" | "month";
 
-function ShortcutButtons() {
+type PeriodShortcutButtonsProps = {
+  onPeriodChange: (date: DateRange) => void;
+};
+
+function PeriodShortcutButtons(props: PeriodShortcutButtonsProps) {
+  const { onPeriodChange } = props;
   const [selectedPeriod, setSelectedPeriod] = useState<Period>("week");
+
+  const currentDate = new Date();
 
   const handlePeriodChange = (period: Period) => {
     setSelectedPeriod(period);
-    // Add your logic for period change here
+    if (period == "month") {
+      onPeriodChange({
+        from: startOfMonth(currentDate),
+        to: endOfMonth(currentDate),
+      });
+    } else if (period == "week") {
+      onPeriodChange({
+        from: startOfWeek(currentDate, { weekStartsOn: 1 }),
+        to: endOfWeek(currentDate, { weekStartsOn: 1 }),
+      });
+    }
     console.log(`Selected period: ${period}`);
   };
 
@@ -78,53 +102,5 @@ function ShortcutButtons() {
         </Tooltip>
       </div>
     </TooltipProvider>
-  );
-}
-
-function RangedDatePicker({ className }: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
-  });
-
-  return (
-    <div className={cn("grid gap-2", className)}>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            id="date"
-            variant={"outline"}
-            className={cn(
-              "justify-start text-left font-normal",
-              !date && "text-muted-foreground"
-            )}
-          >
-            <CalendarIcon />
-            {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
-                </>
-              ) : (
-                format(date.from, "LLL dd, y")
-              )
-            ) : (
-              <span>Pick a date</span>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <Calendar
-            initialFocus
-            mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
-            numberOfMonths={2}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
   );
 }

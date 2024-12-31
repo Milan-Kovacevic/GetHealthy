@@ -28,7 +28,7 @@ type ProgramParticipantsListProps = {
 export default function ProgramParticipantsList(
   props: ProgramParticipantsListProps
 ) {
-  const userId = 1; // TODO: Hardcoded for now...
+  const userId = 2; // TODO: Hardcoded for now...
   const { programId } = props;
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedParticipant, setSelectedParticipant] =
@@ -180,7 +180,7 @@ export default function ProgramParticipantsList(
             onCancel={onCancelMoveParticipant}
             onSubmit={handleMoveProgramParticipant}
             participant={selectedParticipant}
-            programs={selectablePrograms}
+            trainerPrograms={selectablePrograms}
           />
         )}
       </div>

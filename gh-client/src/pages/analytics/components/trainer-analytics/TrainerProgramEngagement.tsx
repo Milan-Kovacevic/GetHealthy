@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import TrainerProgramSelector from "./TrainerProgramSelector";
+import { useEffect, useState } from "react";
 import { TrainerProgram } from "@/api/models/training-program";
+import HorizontalBarChart from "../shared/HorizontalBarChart";
+import TrainerProgramSelector from "@/pages/shared/TrainerProgramSelector";
 import { getAllTrainingProgramsForTrainer } from "@/api/services/training-program-service";
-import HorizontalBarChart from "./HorizontalBarChart";
 
 // Mock data for exercises in a training program
 const exerciseData = [
@@ -30,10 +30,10 @@ const exerciseData = [
 ];
 
 export default function TrainerProgramEngagement() {
-  const [trainerPrograms, setTrainerPrograms] = useState<TrainerProgram[]>([]);
   const [selectedProgram, setSelectedProgram] = useState<TrainerProgram>();
-  const userId = 2;
+  const [trainerPrograms, setTrainerPrograms] = useState<TrainerProgram[]>([]);
 
+  const userId = 2;
   useEffect(() => {
     getAllTrainingProgramsForTrainer(userId).then((programs) => {
       setTrainerPrograms(programs);
@@ -43,9 +43,18 @@ export default function TrainerProgramEngagement() {
   return (
     <div>
       <div className="sm:max-w-sm flex flex-row gap-5">
-        <TrainerProgramSelector programs={trainerPrograms} />
+        <TrainerProgramSelector
+          text={
+            selectedProgram
+              ? selectedProgram.name
+              : "Show data for training program..."
+          }
+          programs={trainerPrograms}
+          onProgramSelected={setSelectedProgram}
+        />
       </div>
-      <div className="w-full space-y-4 mt-2">
+
+      <div className="w-full space-y-4 mt-3">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <HorizontalBarChart
             data={exerciseData}

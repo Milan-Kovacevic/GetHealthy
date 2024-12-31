@@ -1,4 +1,5 @@
 import { TrainerProgram } from "@/api/models/training-program";
+import { getAllTrainingProgramsForTrainer } from "@/api/services/training-program-service";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -13,30 +14,39 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronsDownIcon } from "lucide-react";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
 type TrainerProgramSelectorProps = {
+  onProgramSelected: (program: TrainerProgram) => void;
   programs: TrainerProgram[];
+  text: string;
 };
 
 export default function TrainerProgramSelector(
   props: TrainerProgramSelectorProps
 ) {
-  const { programs } = props;
+  const { onProgramSelected, text, programs } = props;
+  const [open, setOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<TrainerProgram>();
 
+  const handeProgramSelected = (program: TrainerProgram) => {
+    setOpen(false);
+    onProgramSelected(program);
+    setSelectedProgram(program);
+  };
+  useEffect(() => {}, [selectedProgram]);
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
           className="w-full justify-between font-normal truncate"
         >
-          {selectedProgram
-            ? selectedProgram.name
-            : "Show data for training program..."}
+          {text}
           <ChevronsDownIcon className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -50,17 +60,19 @@ export default function TrainerProgramSelector(
               No training programs to show.
             </CommandEmpty>
             <CommandGroup>
-              {programs.map((program: any) => (
-                <CommandItem
-                  key={program.id}
-                  value={`${program.name}`}
-                  onSelect={() => {
-                    setSelectedProgram(program);
-                  }}
-                >
-                  {program.name}
-                </CommandItem>
-              ))}
+              <ScrollArea className="overflow-y-auto h-[200px]">
+                {programs.map((program: any) => (
+                  <CommandItem
+                    key={program.id}
+                    value={`${program.name}`}
+                    onSelect={() => {
+                      handeProgramSelected(program);
+                    }}
+                  >
+                    {program.name}
+                  </CommandItem>
+                ))}
+              </ScrollArea>
             </CommandGroup>
           </CommandList>
         </Command>

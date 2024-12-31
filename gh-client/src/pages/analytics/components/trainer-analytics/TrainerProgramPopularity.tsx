@@ -1,4 +1,4 @@
-import HorizontalBarChart from "./HorizontalBarChart";
+import HorizontalBarChart from "../shared/HorizontalBarChart";
 
 // Mock data for training programs
 const trainingData = [
