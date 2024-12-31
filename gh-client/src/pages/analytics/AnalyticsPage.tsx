@@ -1,9 +1,9 @@
-import { RangedDatePicker } from "./components/RagedDatePicker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSignIcon } from "lucide-react";
 import TrainerProgramPopularity from "./components/TrainerProgramPopularity";
 import TrainerProgramEngagement from "./components/TrainerProgramEngagement";
+import AnalyticsPeriodSelector from "./components/AnalyticsPeriodSelector";
 
 export default function AnalyticsPage() {
   return (
@@ -12,15 +12,14 @@ export default function AnalyticsPage() {
         <div className="h-full flex flex-col">
           <div className="flex justify-between md:flex-row flex-col gap-4 md:items-center">
             <div className="flex flex-col">
-              <h2 className="text-3xl font-extrabold">Analytics</h2>
-              <p className="text-foreground/80">
+              <h2 className="md:text-3xl text-2xl font-extrabold">Analytics</h2>
+              <p className="text-foreground/80 md:text-base text-sm">
                 Track your program participants engagement.
               </p>
             </div>
-            <RangedDatePicker className="md:self-end md:w-[300px] max-w-md" />
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-6">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-5">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
@@ -51,23 +50,27 @@ export default function AnalyticsPage() {
             </Card>
           </div>
 
-          <div className="flex-1 mt-3">
+          <div className="flex-1 mt-8">
             <Tabs defaultValue="tab1" className="w-full">
-              <TabsList className="flex md:flex-row flex-col h-auto md:w-fit">
-                <TabsTrigger value="tab1" className="px-8 w-full">
-                  Popularity
-                </TabsTrigger>
-                <TabsTrigger value="tab2" className="px-8 w-full">
-                  Engagement
-                </TabsTrigger>
-                <TabsTrigger value="tab3" className="px-8 w-full">
-                  Trainee progress
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="tab1" className="h-full">
+              <div className="flex lg:flex-row flex-col-reverse gap-x-4 gap-y-3 justify-between w-full">
+                <TabsList className="flex md:flex-row flex-col gap-y-1 h-auto md:w-fit">
+                  <TabsTrigger value="tab1" className="px-8 w-full">
+                    Popularity
+                  </TabsTrigger>
+                  <TabsTrigger value="tab2" className="px-8 w-full">
+                    Engagement
+                  </TabsTrigger>
+                  <TabsTrigger value="tab3" className="px-8 w-full">
+                    Trainee progress
+                  </TabsTrigger>
+                </TabsList>
+                <AnalyticsPeriodSelector />
+              </div>
+
+              <TabsContent value="tab1" className="h-full py-3">
                 <TrainerProgramPopularity />
               </TabsContent>
-              <TabsContent value="tab2" className="h-full">
+              <TabsContent value="tab2" className="h-full py-3">
                 <TrainerProgramEngagement />
               </TabsContent>
               <TabsContent value="tab3" className="h-full">

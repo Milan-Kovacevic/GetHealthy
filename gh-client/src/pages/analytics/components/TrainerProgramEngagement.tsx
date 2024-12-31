@@ -42,7 +42,7 @@ export default function TrainerProgramEngagement() {
 
   return (
     <div>
-      <div className="mt-6 max-w-sm flex flex-row gap-5">
+      <div className="sm:max-w-sm flex flex-row gap-5">
         <TrainerProgramSelector programs={trainerPrograms} />
       </div>
       <div className="w-full space-y-4 mt-2">

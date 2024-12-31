@@ -1,24 +1,3 @@
-import {
-  Bar,
-  BarChart,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 import HorizontalBarChart from "./HorizontalBarChart";
 
 // Mock data for training programs
@@ -32,7 +11,7 @@ const trainingData = [
 
 export default function TrainerProgramPopularity() {
   return (
-    <div className="w-full space-y-4 mt-5">
+    <div className="w-full space-y-4">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <HorizontalBarChart
           data={trainingData}

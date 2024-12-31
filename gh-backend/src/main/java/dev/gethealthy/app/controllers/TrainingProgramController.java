@@ -60,11 +60,6 @@ public class TrainingProgramController {
         trainingProgramService.delete(programId);
     }
 
-    @GetMapping("/users/{userId}/training-programs")
-    public List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(@PathVariable Integer userId) {
-        return trainingProgramService.getAllTrainingProgramsForTrainer(userId);
-    }
-
     // Program details endpoints
 
     @GetMapping("{programId}")

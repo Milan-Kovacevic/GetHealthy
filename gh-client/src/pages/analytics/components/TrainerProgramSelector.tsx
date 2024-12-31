@@ -32,7 +32,7 @@ export default function TrainerProgramSelector(
         <Button
           variant="outline"
           role="combobox"
-          className="w-full justify-between font-normal"
+          className="w-full justify-between font-normal truncate"
         >
           {selectedProgram
             ? selectedProgram.name

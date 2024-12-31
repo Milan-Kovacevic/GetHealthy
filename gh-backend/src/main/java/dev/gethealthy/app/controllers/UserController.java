@@ -1,5 +1,7 @@
 package dev.gethealthy.app.controllers;
 
+import dev.gethealthy.app.models.responses.TrainerProgramResponse;
+import dev.gethealthy.app.services.TrainingProgramService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +25,14 @@ import dev.gethealthy.app.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${gethealthy.base-url}/users")
 public class UserController {
     private final UserService userService;
+    private final TrainingProgramService trainingProgramService;
     private final TrainingProgramApplicationService trainingProgramApplicationService;
 
     @GetMapping("/{userId}")
@@ -66,4 +71,10 @@ public class UserController {
         else
             throw new BadRequestException();
     }
+
+    @GetMapping("{userId}/training-programs")
+    public List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(@PathVariable Integer userId) {
+        return trainingProgramService.getAllTrainingProgramsForTrainer(userId);
+    }
+
 }
