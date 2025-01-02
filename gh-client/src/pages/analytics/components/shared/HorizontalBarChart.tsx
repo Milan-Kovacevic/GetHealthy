@@ -12,7 +12,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import React from "react";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { DataKey } from "recharts/types/util/types";
 
 type HorizontalBarChartProps = {
@@ -34,23 +34,22 @@ export default function HorizontalBarChart(props: HorizontalBarChartProps) {
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={config} className="h-[300px] w-full">
-          <ResponsiveContainer className="w-full" width="100%" height="100%">
-            <BarChart
-              data={data}
-              layout="vertical"
-              margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
-            >
-              <XAxis type="number" />
-              <YAxis dataKey={yDataKey} type={yType} />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar
-                dataKey={dataKey}
-                fill={`var(--color-${dataKey})`}
-                name={title}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+        <ChartContainer config={config} className="h-auto w-full">
+          <BarChart
+            data={data}
+            layout="vertical"
+            margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis type="number" />
+            <YAxis dataKey={yDataKey} type={yType} />
+            <ChartTooltip content={<ChartTooltipContent indicator="dot" />} />
+            <Bar
+              dataKey={dataKey}
+              fill={`var(--color-${dataKey})`}
+              name={title}
+            />
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>

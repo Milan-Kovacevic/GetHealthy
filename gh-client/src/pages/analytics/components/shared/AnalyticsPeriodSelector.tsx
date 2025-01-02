@@ -17,20 +17,31 @@ import { CalendarDaysIcon, CalendarRangeIcon } from "lucide-react";
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
 
-export default function AnalyticsPeriodSelector() {
+type AnalyticsPeriodSelectorProps = {
+  onPeriodChange: (period?: DateRange) => void;
+  initialPeriod?: DateRange;
+};
+
+export default function AnalyticsPeriodSelector(
+  props: AnalyticsPeriodSelectorProps
+) {
+  const { onPeriodChange, initialPeriod } = props;
   const [selectedDate, setSelectedDate] = React.useState<DateRange | undefined>(
-    {
-      from: new Date(2022, 0, 20),
-      to: addDays(new Date(2022, 0, 20), 20),
-    }
+    initialPeriod
   );
 
+  const handlePeriodChange = (date?: DateRange) => {
+    setSelectedDate(date);
+    onPeriodChange(date);
+  };
+
   return (
-    <div className="flex lg:flex-row sm:flex-row-reverse flex-col-reverse lg:mr-0 gap-2 sm:mr-auto">
-      <PeriodShortcutButtons onPeriodChange={setSelectedDate} />
+    <div className="flex sm:flex-row-reverse flex-col-reverse lg:mr-0 gap-2 sm:mr-auto">
+      <PeriodShortcutButtons onPeriodChange={handlePeriodChange} />
       <RangedDatePicker
+        placeholder="Select date range..."
         date={selectedDate}
-        onDateChange={setSelectedDate}
+        onDateChange={handlePeriodChange}
         className="sm:w-[300px]"
       />
     </div>
@@ -45,7 +56,7 @@ type PeriodShortcutButtonsProps = {
 
 function PeriodShortcutButtons(props: PeriodShortcutButtonsProps) {
   const { onPeriodChange } = props;
-  const [selectedPeriod, setSelectedPeriod] = useState<Period>("week");
+  const [selectedPeriod, setSelectedPeriod] = useState<Period>();
 
   const currentDate = new Date();
 
@@ -62,7 +73,6 @@ function PeriodShortcutButtons(props: PeriodShortcutButtonsProps) {
         to: endOfWeek(currentDate, { weekStartsOn: 1 }),
       });
     }
-    console.log(`Selected period: ${period}`);
   };
 
   return (

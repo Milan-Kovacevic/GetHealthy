@@ -35,9 +35,8 @@ export default function FeaturedTrainingPrograms() {
               Featured training programs
             </h2>
           </div>
-
           <p className="text-sm text-muted-foreground">
-            Discover training programs tailored for your needs ...
+            Discover recently created training programs...
           </p>
         </div>
 

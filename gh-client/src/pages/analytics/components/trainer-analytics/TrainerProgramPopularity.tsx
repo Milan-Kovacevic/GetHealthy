@@ -1,3 +1,4 @@
+import { DumbbellIcon } from "lucide-react";
 import HorizontalBarChart from "../shared/HorizontalBarChart";
 
 // Mock data for training programs
@@ -21,6 +22,7 @@ export default function TrainerProgramPopularity() {
             averageRating: {
               label: "Average Ratings",
               color: "hsl(var(--chart-1)/0.6)",
+              icon: () => <DumbbellIcon />,
             },
           }}
           yDataKey="program"

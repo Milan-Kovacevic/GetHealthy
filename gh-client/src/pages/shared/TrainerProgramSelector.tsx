@@ -1,5 +1,4 @@
 import { TrainerProgram } from "@/api/models/training-program";
-import { getAllTrainingProgramsForTrainer } from "@/api/services/training-program-service";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -15,6 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 import { ChevronsDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -22,12 +22,13 @@ type TrainerProgramSelectorProps = {
   onProgramSelected: (program: TrainerProgram) => void;
   programs: TrainerProgram[];
   text: string;
+  className?: string;
 };
 
 export default function TrainerProgramSelector(
   props: TrainerProgramSelectorProps
 ) {
-  const { onProgramSelected, text, programs } = props;
+  const { onProgramSelected, text, programs, className } = props;
   const [open, setOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<TrainerProgram>();
 
@@ -44,7 +45,7 @@ export default function TrainerProgramSelector(
         <Button
           variant="outline"
           role="combobox"
-          className="w-full justify-between font-normal truncate"
+          className={cn("justify-between font-normal truncate", className)}
         >
           {text}
           <ChevronsDownIcon className="opacity-50" />

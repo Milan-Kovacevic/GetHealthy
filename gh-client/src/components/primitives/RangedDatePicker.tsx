@@ -13,11 +13,12 @@ import { Calendar } from "@/components/ui/calendar";
 
 type RangedDatePickerProps = {
   date?: DateRange;
+  placeholder?: string;
   onDateChange: (date: DateRange | undefined) => void;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export default function RangedDatePicker(props: RangedDatePickerProps) {
-  const { className, date, onDateChange } = props;
+  const { className, date, placeholder, onDateChange } = props;
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -42,7 +43,7 @@ export default function RangedDatePicker(props: RangedDatePickerProps) {
                 format(date.from, "LLL dd, y")
               )
             ) : (
-              <span>Pick a date</span>
+              <span>{placeholder ?? "Pick a date"}</span>
             )}
           </Button>
         </PopoverTrigger>

@@ -22,8 +22,8 @@ export default function TrainerDashboardCards() {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-5">
       {loading ? (
         <>
-          {[...Array(4)].map((item) => (
-            <DashboardCardLoader />
+          {[...Array(4)].map((item, index) => (
+            <DashboardCardLoader key={`card-${index}`} />
           ))}
         </>
       ) : (
