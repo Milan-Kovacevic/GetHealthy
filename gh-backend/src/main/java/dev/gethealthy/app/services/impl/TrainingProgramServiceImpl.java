@@ -73,7 +73,7 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
 
         programResponse.setCurrentlyEnrolled(getTrainingProgramCurrentlyEnrolled(programId));
         programResponse.setTotalRates(getTrainingProgramTotalRates(programId));
-        programResponse.setAverageRate(getTrainingProgramAverageRate(programId));
+        programResponse.setRating(getTrainingProgramAverageRate(programId));
 
         return programResponse;
     }

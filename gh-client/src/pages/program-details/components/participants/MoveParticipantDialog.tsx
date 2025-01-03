@@ -9,14 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -24,20 +16,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { ChevronsDownIcon } from "lucide-react";
+import TrainerProgramSelector from "@/pages/shared/TrainerProgramSelector";
 import { useState } from "react";
 
 type MoveParticipantDialogProps = {
-  programs: TrainerProgram[];
   participant: SingleProgramParticipant;
   onCancel: () => void;
   onSubmit: (newProgramId: number) => void;
+  trainerPrograms: TrainerProgram[];
 };
 
 const BREAKPOINT_XL = 1280;
@@ -45,8 +32,7 @@ const BREAKPOINT_XL = 1280;
 export default function MoveParticipantDialog(
   props: MoveParticipantDialogProps
 ) {
-  const userId = 1; // TODO: Hardcoded for now...
-  const { participant, onCancel, onSubmit, programs } = props;
+  const { participant, trainerPrograms, onCancel, onSubmit } = props;
   const [selectedProgram, setSelectedProgram] = useState<TrainerProgram>();
   const showDialog = useMediaQuery(BREAKPOINT_XL);
 
@@ -85,55 +71,15 @@ export default function MoveParticipantDialog(
               </span>
             </label>
 
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  className="w-full justify-between font-normal"
-                >
-                  {selectedProgram ? selectedProgram.name : "Select program"}
-                  <ChevronsDownIcon className="opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-full p-0">
-                <Command className="">
-                  {programs.length > 0 && (
-                    <CommandInput placeholder="Search for programs ..." />
-                  )}
-                  <CommandList className="w-[300px]">
-                    <CommandEmpty className="text-sm font-mediun italic text-muted-foreground p-3 px-4">
-                      No training programs to show.
-                    </CommandEmpty>
-                    <CommandGroup>
-                      {programs.map((program: any) => (
-                        <CommandItem
-                          key={program.id}
-                          value={`${program.name}`}
-                          onSelect={() => {
-                            setSelectedProgram(program);
-                          }}
-                        >
-                          {program.name}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-            {/* <Select value={selectedProgram} onValueChange={setSelectedProgram}>
-              <SelectTrigger id="program">
-                <SelectValue placeholder="Select a program" />
-              </SelectTrigger>
-              <SelectContent>
-                {programs.map((program) => (
-                  <SelectItem key={program.id} value={`${program.id}`}>
-                    {program.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select> */}
+            <TrainerProgramSelector
+              text={
+                selectedProgram
+                  ? selectedProgram.name
+                  : "Select training program"
+              }
+              programs={trainerPrograms}
+              onProgramSelected={setSelectedProgram}
+            />
           </div>
         </div>
       </form>

@@ -10,6 +10,5 @@ import java.util.List;
 public class SingleTrainingProgramResponse extends TrainingProgramResponse {
     private int currentlyEnrolled;
     private int totalRates;
-    private double averageRate;
     List<ExerciseResponse> exercises;
 }

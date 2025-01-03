@@ -3,7 +3,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star, Users } from "lucide-react";
+import { Star, StarIcon, StarOffIcon, Users } from "lucide-react";
 import noImage from "@/assets/no-image.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -53,8 +53,21 @@ export default function FeaturedProgramCard(props: FeatureProgramCardProps) {
             Trainer: {program.trainerFirstName} {program.trainerLastName}
           </p>
           <div className="flex items-center mb-2">
-            <Star className="w-4 h-4 text-primary/80 mr-1" />
-            <span className="font-medium text-sm">{program.rating}</span>
+            {(!program.rating || program.rating == 0) && (
+              <StarOffIcon className="w-4 h-4 text-primary/80 mr-1" />
+            )}
+
+            {program.rating != 0 && (
+              <>
+                <StarIcon className="w-4 h-4 text-primary/80 mr-1 fill-primary/80" />
+                {program.rating && (
+                  <span className="font-medium text-xs">
+                    {program.rating.toFixed(1)}
+                  </span>
+                )}
+              </>
+            )}
+
             <span className="text-muted-foreground ml-2 text-xs">
               • Created{" "}
               <span className="font-semibold">

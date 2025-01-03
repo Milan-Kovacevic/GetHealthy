@@ -30,7 +30,8 @@ export type SingleTrainingProgram = {
   name: string;
   imageFilePath: string;
   difficulty: ProgramDifficulty;
-  averageRate: number;
+  rating: number;
+  createdAt: string;
   totalRates: number;
   description: string;
   trainerFirstName: string;

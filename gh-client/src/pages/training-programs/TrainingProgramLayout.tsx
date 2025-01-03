@@ -56,20 +56,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
 
   return (
     <section className="overflow-hidden relative sm:px-5 px-4 pt-8 pb-10">
-      {/* <TopBackgroundBlob /> */}
-      <CircleBackgroundBlob
-        variant="lighter"
-        className="left-auto -right-56 w-80 h-96 top-44"
-      />
-      <CircleBackgroundBlob
-        variant="lightest"
-        className="-left-72 w-1/4 h-96 top-44"
-      />
-      <CircleBackgroundBlob variant="lightest" />
-      <CircleBackgroundBlob
-        variant="lightest"
-        className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
-      />
+      <BackgroundBlurs />
       <div className="container mx-auto h-full space-y-5 z-10 relative">
         <div className="mx-auto flex flex-col">
           <TrainingProgramsPageTitle showCreate={myTrainingPrograms} />
@@ -104,6 +91,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                     title={item.name}
                     description={item.description}
                     id={item.id}
+                    createdAt={item.createdAt}
                     difficulty={item.difficulty}
                     image={item.imageFilePath}
                     trainer={`${item.trainerFirstName} ${item.trainerLastName}`}
@@ -194,5 +182,26 @@ const TrainingProgramsPageTitle = ({ showCreate }: { showCreate: boolean }) => {
         </Button>
       )}
     </div>
+  );
+};
+
+const BackgroundBlurs = () => {
+  return (
+    <>
+      {/* <TopBackgroundBlob /> */}
+      <CircleBackgroundBlob
+        variant="lighter"
+        className="left-auto -right-56 w-80 h-96 top-44"
+      />
+      <CircleBackgroundBlob
+        variant="lightest"
+        className="-left-72 w-1/4 h-96 top-44"
+      />
+      <CircleBackgroundBlob variant="lightest" />
+      <CircleBackgroundBlob
+        variant="lightest"
+        className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
+      />
+    </>
   );
 };

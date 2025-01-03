@@ -34,6 +34,90 @@ import {
   SingleProgramTrainer,
 } from "../models/program-details";
 
+// const exercises: ProgramExercise[] = [
+//   {
+//     id: 1,
+//     name: "Bench Press",
+//     description:
+//       "A compound exercise that primarily targets the chest muscles.",
+//     videoLink: "https://example.com/bench-press",
+//     exerciseSets: [
+//       {
+//         id: 1,
+//         firstMetricValue: "10",
+//         secondMetricValue: "135",
+//         reps: 20,
+//         weight: 0,
+//         restTime: 90,
+//       },
+//       {
+//         id: 2,
+//         firstMetricValue: "8",
+//         secondMetricValue: "155",
+//         reps: 10,
+//         weight: 10,
+//         restTime: 120,
+//       },
+//       {
+//         id: 3,
+//         firstMetricValue: "6",
+//         secondMetricValue: "175",
+//         reps: 10,
+//         weight: 15,
+//         restTime: 150,
+//       },
+//     ],
+//     firstMetric: metrics[0],
+//     secondMetric: metrics[1],
+//   },
+//   {
+//     id: 2,
+//     name: "Incline Bench Press",
+//     description:
+//       "A compound exercise that primarily targets the chest muscles. A compound exercise that primarily targets the chest muscles. A compound exercise that primarily targets the chest muscles.",
+//     videoLink: "https://example.com/bench-press",
+//     exerciseSets: [
+//       {
+//         id: 4,
+//         firstMetricValue: "10",
+//         secondMetricValue: "135",
+//         reps: 10,
+//         weight: 10,
+//         restTime: 90,
+//       },
+//       {
+//         id: 5,
+//         firstMetricValue: "8",
+//         secondMetricValue: "155",
+//         reps: 15,
+//         weight: 10,
+//         restTime: 120,
+//       },
+//     ],
+//     firstMetric: metrics[0],
+//     secondMetric: metrics[1],
+//   },
+//   {
+//     id: 3,
+//     name: "Squats",
+//     description:
+//       "A lower body exercise that targets the quadriceps, hamstrings, and glutes.",
+//     videoLink: "https://example.com/squats",
+//     exerciseSets: [
+//       { id: 6, firstMetricValue: "12", secondMetricValue: "185", restTime: 90 },
+//       {
+//         id: 7,
+//         firstMetricValue: "10",
+//         secondMetricValue: "205",
+//         restTime: 120,
+//       },
+//       { id: 8, firstMetricValue: "8", secondMetricValue: "225", restTime: 150 },
+//       { id: 9, firstMetricValue: "6", secondMetricValue: "245", restTime: 180 },
+//     ],
+//     firstMetric: metrics[0],
+//     secondMetric: metrics[1],
+//   },
+// ];
 
 const getSingleTrainingProgram = async (programId: number) => {
   var url = ApiEndpoints.SingleTrainingProgram.replace(

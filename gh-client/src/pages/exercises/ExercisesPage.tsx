@@ -3,6 +3,10 @@ import ExerciseList from "./components/ExerciseList";
 import ExerciseMetricsSection from "./components/ExerciseMetricsSection";
 import ExercisesTitleSection from "./components/ExercisesTitleSection";
 import useExercises from "./hooks/use-exercises";
+import {
+  CircleBackgroundBlob,
+  TopBackgroundBlob,
+} from "../shared/BackgroundBlobs";
 
 export default function ExercisesPage() {
   const [showVideos, setShowVideos] = useState(false);
@@ -18,7 +22,8 @@ export default function ExercisesPage() {
   } = useExercises();
 
   return (
-    <section className="overflow-hidden relative sm:px-5 px-4 pt-8 pb-10">
+    <section className="overflow-hidden relative sm:px-5 px-4 pt-8 pb-10 h-full">
+      <BackgroundBlurs />
       <div className="container mx-auto h-full z-10 relative">
         <div className="py-4">
           <ExercisesTitleSection
@@ -44,3 +49,22 @@ export default function ExercisesPage() {
     </section>
   );
 }
+
+const BackgroundBlurs = () => {
+  return (
+    <>
+      <CircleBackgroundBlob
+        variant="lightest"
+        className="-left-52 w-1/4 h-96 -top-44"
+      />
+      <CircleBackgroundBlob
+        variant="lighter"
+        className="left-auto -right-32 w-80 h-1/3 top-80"
+      />
+      <CircleBackgroundBlob
+        variant="lighter"
+        className="-bottom-40 right-1/2 w-1/3 h-96 left-auto"
+      />
+    </>
+  );
+};

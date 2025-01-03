@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import TrainingProgramApplicationModal from "./components/TrainingProgramApplicationModal";
 import { joinTrainingProgram } from "@/api/services/user-service";
 import { cn } from "@/lib/utils";
+import { formatDistanceToNow } from "date-fns";
 
 export default function TrainingProgramInfo() {
   const params = useParams();
@@ -87,10 +88,22 @@ export default function TrainingProgramInfo() {
                 {program.name}
               </h1>
               <div className="flex items-center gap-2 text-muted-foreground">
-                <ActivityIcon className="h-4 w-4" />
-                <p className="text-sm sm:text-base text-muted-foreground font-semibold">
-                  {program.difficulty}
-                </p>
+                <div className="flex sm:flex-row flex-col sm:items-center gap-x-2 sm:mt-0 mt-1">
+                  <div className="flex items-center gap-1">
+                    <ActivityIcon className="h-4 w-4" />
+                    <p className="text-sm sm:text-base text-muted-foreground font-semibold">
+                      {program.difficulty}
+                    </p>
+                  </div>
+
+                  <span className="text-foreground/70 ml-2 text-sm">
+                    • Created{" "}
+                    <span className="font-semibold">
+                      {formatDistanceToNow(program.createdAt)}
+                    </span>{" "}
+                    ago
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -98,7 +111,7 @@ export default function TrainingProgramInfo() {
               <p className="text-xs mb-0.5">
                 {program.totalRates + " reviews"}
               </p>
-              <StarRating readonly={true} rating={program.averageRate} />
+              <StarRating readonly={true} rating={program.rating} />
             </div>
           </div>
 

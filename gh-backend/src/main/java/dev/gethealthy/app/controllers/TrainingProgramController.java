@@ -61,11 +61,6 @@ public class TrainingProgramController {
 
     // Program details endpoints
 
-    @GetMapping("/users/{userId}/training-programs")
-    public List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(@PathVariable Integer userId) {
-        return trainingProgramService.getAllTrainingProgramsForTrainer(userId);
-    }
-
     @GetMapping("{programId}")
     public SingleTrainingProgramResponse getSingleTrainingProgram(@PathVariable Integer programId) {
         return trainingProgramService.getSingleTrainingProgram(programId);

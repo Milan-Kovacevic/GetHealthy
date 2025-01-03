@@ -1,5 +1,6 @@
-import React from "react";
+import AnalyticsPageLayout from "./AnalyticsPageLayout";
 
 export default function AnalyticsPage() {
-  return <div>AnalyticsPage</div>;
+  const isTrainer = true; // Obtain info form context...
+  return <AnalyticsPageLayout isTrainer={isTrainer} />;
 }
