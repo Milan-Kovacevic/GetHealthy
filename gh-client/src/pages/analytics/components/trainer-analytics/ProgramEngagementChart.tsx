@@ -1,5 +1,14 @@
-import * as React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import {
   Card,
@@ -16,34 +25,54 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  AnalyticsExercise,
+  AnalyticsExerciseData,
+} from "@/api/models/analytics";
+import useTrainerAnalytics from "../../hooks/use-trainer-analytics";
 
 type ProgramEngagementChartProps = {
-  programExercises: any[]; // TODO
+  title: string;
+  description: string;
+  yLabel: string;
+  xLabel: string;
+  chartData: AnalyticsExerciseData[];
+  chartColor?: string;
+  selectedExercise?: AnalyticsExercise;
+  onExerciseSelected: (exercise?: AnalyticsExercise) => void;
 };
-export function ExerciseSkippedChart(props: ProgramEngagementChartProps) {
-  const { programExercises } = props;
-  const [selectedExercise, setSelectedExercise] = React.useState<any>(
-    programExercises[0]
-  );
+export default function ProgramEngagementChart(
+  props: ProgramEngagementChartProps
+) {
+  const {
+    chartData,
+    chartColor,
+    xLabel,
+    yLabel,
+    title,
+    description,
+    selectedExercise,
+    onExerciseSelected,
+  } = props;
+  const trainerAnalytics = useTrainerAnalytics();
+  const exercises = trainerAnalytics.programExercises;
   const isMobile = useIsMobile();
 
-  const handleExerciseSelect = (exerciseId: string) => {
-    const exercise = programExercises.find((e) => e.id === exerciseId) || null;
-    setSelectedExercise(exercise);
+  const handleExerciseSelect = (exerciseId: number) => {
+    const exercise = exercises.find((e) => e.id === exerciseId);
+    onExerciseSelected(exercise);
   };
 
   return (
     <Card>
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b-0 p-0">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle>Skipped program exercises (Avg)</CardTitle>
-          <CardDescription>
-            Showing average skip rate of selected exercise on program
-          </CardDescription>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
         </div>
         <ScrollArea className="overflow-x-auto flex-1 self-stretch sm:pb-1 pb-4">
           <div className="grid sm:grid-cols-4 flex-col sm:max-h-none max-h-[150px] sm:flex-row flex-1 h-full">
-            {programExercises.map((exercise, index) => {
+            {exercises.map((exercise, index) => {
               return (
                 <button
                   key={exercise.id}
@@ -71,18 +100,18 @@ export function ExerciseSkippedChart(props: ProgramEngagementChartProps) {
         <ChartContainer
           config={{
             yLabel: {
-              label: "Percentage [%]",
+              label: yLabel,
             },
-            percentage: {
-              label: "Completion Percentage",
-              color: "hsl(var(--chart-1)/0.8)",
+            value: {
+              label: xLabel,
+              color: chartColor ?? "hsl(var(--chart-1)/0.8)",
             },
           }}
           className="aspect-auto h-[300px] w-full"
         >
-          <BarChart
+          <AreaChart
             accessibilityLayer
-            data={selectedExercise?.data ?? []}
+            data={chartData ?? []}
             margin={{
               left: 0,
               right: 0,
@@ -90,7 +119,7 @@ export function ExerciseSkippedChart(props: ProgramEngagementChartProps) {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="date"
+              dataKey="key"
               tickLine={false}
               axisLine={false}
               tickMargin={4}
@@ -105,8 +134,9 @@ export function ExerciseSkippedChart(props: ProgramEngagementChartProps) {
             />
             {!isMobile && (
               <YAxis
+                dataKey="value"
                 label={{
-                  value: "Completion (%)",
+                  value: yLabel,
                   angle: -90,
                   position: "insideLeft",
                 }}
@@ -129,12 +159,14 @@ export function ExerciseSkippedChart(props: ProgramEngagementChartProps) {
                 />
               }
             />
-            <Bar
-              dataKey="percentage"
-              fill={"var(--color-percentage)"}
-              radius={[4, 4, 0, 0]}
+            <Area
+              dataKey="value"
+              fill={"var(--color-value)"}
+              fillOpacity={0.4}
+              type="bump"
+              // radius={[4, 4, 0, 0]}
             />
-          </BarChart>
+          </AreaChart>
         </ChartContainer>
       </CardContent>
     </Card>

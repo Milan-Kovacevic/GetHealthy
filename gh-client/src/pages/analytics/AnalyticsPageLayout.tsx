@@ -1,5 +1,6 @@
 import TraineeAnalyticsSection from "./components/trainee-analytics/TraineeAnalyticsSection";
-import TrainerAnalyticsSection from "./components/trainer-analytics/TrainerAnalyticsSection";
+import TrainerAnalyticsProvider from "./components/trainer-analytics/TrainerAnalyticsProvider";
+import TrainerAnalyticsPage from "./components/trainer-analytics/TrainerAnalyticsPage";
 
 type AnalyticsPageLayoutProps = {
   isTrainer: boolean;
@@ -20,7 +21,9 @@ export default function AnalyticsPageLayout(props: AnalyticsPageLayoutProps) {
             </div>
           </div>
           {isTrainer ? (
-            <TrainerAnalyticsSection />
+            <TrainerAnalyticsProvider>
+              <TrainerAnalyticsPage />
+            </TrainerAnalyticsProvider>
           ) : (
             <TraineeAnalyticsSection />
           )}

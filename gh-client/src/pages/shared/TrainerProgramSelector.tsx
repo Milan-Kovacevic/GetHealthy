@@ -15,11 +15,11 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { ChevronsDownIcon } from "lucide-react";
+import { ChevronsDownIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type TrainerProgramSelectorProps = {
-  onProgramSelected: (program: TrainerProgram) => void;
+  onProgramSelected: (program?: TrainerProgram) => void;
   programs: TrainerProgram[];
   text: string;
   className?: string;
@@ -32,7 +32,7 @@ export default function TrainerProgramSelector(
   const [open, setOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<TrainerProgram>();
 
-  const handeProgramSelected = (program: TrainerProgram) => {
+  const handeProgramSelected = (program?: TrainerProgram) => {
     setOpen(false);
     onProgramSelected(program);
     setSelectedProgram(program);
@@ -48,9 +48,21 @@ export default function TrainerProgramSelector(
           className={cn("justify-between font-normal truncate", className)}
         >
           {text}
-          <ChevronsDownIcon className="opacity-50" />
+
+          {selectedProgram ? (
+            <Button
+              variant="ghost"
+              className="px-0 opacity-50 hover:opacity-75"
+              onClick={() => handeProgramSelected(undefined)}
+            >
+              <XIcon />
+            </Button>
+          ) : (
+            <ChevronsDownIcon className="opacity-50" />
+          )}
         </Button>
       </PopoverTrigger>
+
       <PopoverContent className="w-full p-0">
         <Command className="">
           {programs.length > 0 && (
@@ -61,7 +73,7 @@ export default function TrainerProgramSelector(
               No training programs to show.
             </CommandEmpty>
             <CommandGroup>
-              <ScrollArea className="overflow-y-auto h-[200px]">
+              <ScrollArea className="h-[200px] max-h-[200px]">
                 {programs.map((program: any) => (
                   <CommandItem
                     key={program.id}
