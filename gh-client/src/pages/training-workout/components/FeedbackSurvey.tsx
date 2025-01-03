@@ -1,37 +1,37 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { FileQuestionIcon, MessageCircleQuestionIcon } from "lucide-react";
+import { MessageCircleQuestionIcon } from "lucide-react";
+import { Metric } from "@/api/models/metric";
 
 type FeedbackSurveyProps = {
   onSubmit: () => void;
   disabled: boolean;
-  targetReps: number;
-  targetWeight: number;
+  targetFirstMatric: string;
+  targetSecondMatric?: string;
+  firstMetric: Metric;
+  secondMetric?: Metric;
 };
 
 export default function FeedbackSurvey({
   onSubmit,
   disabled,
-  targetReps,
-  targetWeight,
+  targetFirstMatric,
+  targetSecondMatric,
+  firstMetric,
+  secondMetric,
 }: FeedbackSurveyProps) {
   const [completedAsPlanned, setCompletedAsPlanned] = useState(true);
-  const [actualReps, setActualReps] = useState<number | undefined>(undefined);
-  const [actualWeight, setActualWeight] = useState<number | undefined>(
-    undefined
-  );
+  const [actualFirstMetricValue, setActualFirstMetricValue] = useState<
+    number | undefined
+  >(undefined);
+  const [actualSecondMetricValue, setActualSecondMetricValue] = useState<
+    number | undefined
+  >(undefined);
 
   const handleSubmit = (e: React.FormEvent) => {
     // Here you can add logic to save the feedback if needed
@@ -66,22 +66,25 @@ export default function FeedbackSurvey({
                   }
                 />
                 <Label htmlFor="completed">
-                  I have completed {targetReps} reps at {targetWeight} lbs
+                  I have completed {targetFirstMatric} {firstMetric.unit} at{" "}
+                  {targetSecondMatric} {secondMetric?.unit}
                 </Label>
               </div>
               {!completedAsPlanned && (
                 <div className="space-y-2">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="actualReps">Actual Reps</Label>
+                      <Label htmlFor="actualFirstMetric">
+                        Actual {firstMetric.name} ({secondMetric?.unit})
+                      </Label>
                       <Input
                         disabled={disabled}
-                        id="actualReps"
+                        id="actualFirstMetric"
                         type="number"
-                        placeholder={targetReps.toString()}
-                        value={actualReps ?? ""}
+                        placeholder={targetFirstMatric.toString()}
+                        value={actualFirstMetricValue ?? ""}
                         onChange={(e) =>
-                          setActualReps(
+                          setActualFirstMetricValue(
                             e.target.value
                               ? parseInt(e.target.value, 10)
                               : undefined
@@ -90,15 +93,17 @@ export default function FeedbackSurvey({
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="actualWeight">Actual Weight (lbs)</Label>
+                      <Label htmlFor="actualSecondMetric">
+                        Actual {secondMetric?.name} ({secondMetric?.unit})
+                      </Label>
                       <Input
                         disabled={disabled}
-                        id="actualWeight"
+                        id="actualSecondMetric"
                         type="number"
-                        placeholder={targetWeight.toString()}
-                        value={actualWeight ?? ""}
+                        placeholder={targetSecondMatric?.toString()}
+                        value={actualSecondMetricValue ?? ""}
                         onChange={(e) =>
-                          setActualWeight(
+                          setActualSecondMetricValue(
                             e.target.value
                               ? parseInt(e.target.value, 10)
                               : undefined

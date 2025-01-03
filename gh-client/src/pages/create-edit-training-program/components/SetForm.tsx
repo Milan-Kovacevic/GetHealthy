@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { HashIcon, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 
 type SetFormProps = {
   exerciseIndex: number;

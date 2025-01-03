@@ -9,7 +9,7 @@ import { useFieldArray } from "react-hook-form";
 import SetForm from "./SetForm";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ScrollBar } from "@/components/ui/scroll-area";
-import { ClipboardListIcon, HashIcon, ScrollTextIcon } from "lucide-react";
+import { ClipboardListIcon } from "lucide-react";
 import NumberInputField from "@/components/primitives/NumberInputField";
 import { useState } from "react";
 

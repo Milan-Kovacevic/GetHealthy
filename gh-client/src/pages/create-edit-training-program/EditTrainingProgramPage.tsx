@@ -26,6 +26,7 @@ export default function EditTrainingProgramPage() {
       <Separator className="my-4" />
       <GeneralInformationForm defaultValues={mockData} isEdit={true} />
       <Separator className="my-4" />
+      {/* ??? */}
       <ExercisePlanBuilder isEdit={true} />
     </div>
   );

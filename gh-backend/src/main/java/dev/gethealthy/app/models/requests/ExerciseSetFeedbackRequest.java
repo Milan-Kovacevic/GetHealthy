@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ExerciseSetFeedbackRequest {
-    private Integer ExerciseFeedbackId;
+    private Integer exerciseFeedbackId;
     private Boolean skipped;
     private Boolean completed;
     private String firstMetricValueFeedback;

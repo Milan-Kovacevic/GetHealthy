@@ -1,5 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import React from "react";
 import AppearanceForm from "./AppearanceForm";
 
 export default function AppearancePage() {

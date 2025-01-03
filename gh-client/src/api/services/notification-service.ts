@@ -1,5 +1,4 @@
 import { sendAxiosRequest } from "./base-service";
-import { PageableNotificationsDTO } from "../contracts/notification-contract";
 import { ApiEndpoints } from "@/utils/constants";
 import { PageableNotifications } from "../models/notification";
 

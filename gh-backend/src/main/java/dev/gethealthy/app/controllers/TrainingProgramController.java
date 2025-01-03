@@ -1,6 +1,5 @@
 package dev.gethealthy.app.controllers;
 
-import dev.gethealthy.app.base.CrudController;
 import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.*;

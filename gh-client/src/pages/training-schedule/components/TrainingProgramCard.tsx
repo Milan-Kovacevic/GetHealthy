@@ -55,6 +55,7 @@ export default function TrainingProgramCard({
               {programStatus === "live" && (
                 <TrainingWorkoutDialog>
                   <Button
+                    // onClick={() => onViewDetails(program.id)}
                     className="w-full text-xs"
                     size="sm"
                     variant="secondary"

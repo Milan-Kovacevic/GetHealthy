@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -6,28 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { CheckCircle, XCircle } from "lucide-react";
-
-type Set = {
-  reps: number;
-  weight: number;
-  restTime: number;
-  status: "pending" | "completed" | "skipped";
-};
-
-type Exercise = {
-  name: string;
-  sets: Set[];
-};
+import { TraineeExercising } from "@/api/models/trainee-exercising";
 
 type WorkoutSummaryProps = {
-  program: {
-    name: string;
-    categories: string[];
-    difficulty: string;
-    exercises: Exercise[];
-    trainingDuration: number;
-    trainer: string;
-  };
+  workout: TraineeExercising;
   // onStart: (feedback: boolean) => void;
   currentExerciseIndex: number;
   onFinish: () => void;
@@ -38,7 +19,7 @@ type WorkoutSummaryProps = {
 };
 
 export default function WorkoutSummary({
-  program,
+  workout,
   onStart,
   currentExerciseIndex,
   onFinish,
@@ -46,12 +27,12 @@ export default function WorkoutSummary({
   giveFeedback,
   onFeedbackChecked,
 }: WorkoutSummaryProps) {
-  const isWorkoutStarted = program.exercises.some((exercise) =>
-    exercise.sets.some((set) => set.status !== "pending")
+  const isWorkoutStarted = workout.exercises.some((exercise) =>
+    exercise.exerciseSets.some((set) => set.status !== "pending")
   );
 
-  const isWorkoutFinished = program.exercises.every((exercise) =>
-    exercise.sets.every((set) => set.status !== "pending")
+  const isWorkoutFinished = workout.exercises.every((exercise) =>
+    exercise.exerciseSets.every((set) => set.status !== "pending")
   );
 
   return (
@@ -60,25 +41,25 @@ export default function WorkoutSummary({
         <div>
           <div className="flex items-center gap-2 flex-wrap mb-0.5">
             <h2 className="text-base text-muted-foreground mb-2">
-              Trainer: {program.trainer}
+              Trainer: {workout.trainerName}
             </h2>
           </div>
           <div className="flex flex-wrap gap-2 mb-2">
-            {program.categories.map((category, index) => (
+            {workout.programCategories.map((category, index) => (
               <Badge key={index} variant="secondary">
-                {category}
+                {category.categoryName}
               </Badge>
             ))}
             <div className="text-sm flex items-center gap-1.5 w-full mb-0.5 mx-0.5">
               <p className="text-foreground/80">Level:</p>
-              <p className="font-medium">{program.difficulty}</p>
+              <p className="font-medium">{workout.programDifficulty}</p>
             </div>
           </div>
         </div>
         <h3 className="text-xl font-semibold mb-2 pt-2">Exercises</h3>
         <ScrollArea className="">
           <ul className="space-y-3 max-h-80">
-            {program.exercises.map((exercise, index) => (
+            {workout.exercises.map((exercise, index) => (
               <li key={index}>
                 <Card
                   className={
@@ -95,7 +76,7 @@ export default function WorkoutSummary({
 
                   <CardContent className="p-4 pt-0">
                     <ul className="list-disc list-inside space-y-1">
-                      {exercise.sets.map((set, setIndex) => (
+                      {exercise.exerciseSets.map((set, setIndex) => (
                         <li
                           key={setIndex}
                           className="text-sm flex items-center justify-between"
@@ -105,8 +86,15 @@ export default function WorkoutSummary({
                               set.status === "completed" ? "line-through" : ""
                             }
                           >
-                            {set.reps} reps, {set.weight} lbs, {set.restTime}s
-                            rest
+                            {set.firstMetricValue}{" "}
+                            {exercise.firstExerciseMetric.unit}
+                            {exercise.secondExerciseMetric && (
+                              <>
+                                , {set.secondMetricValue}{" "}
+                                {exercise.secondExerciseMetric.unit}
+                              </>
+                            )}
+                            , {set.restTime}s rest
                           </span>
                           {set.status === "completed" && (
                             <CheckCircle

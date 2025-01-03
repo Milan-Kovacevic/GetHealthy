@@ -59,11 +59,8 @@ export default function FilterModal(props: FilterProps) {
             <SelectContent>
               {categories.map((category) => {
                 return (
-                  <SelectItem
-                    key={category.category.id}
-                    value={category.category.categoryName}
-                  >
-                    {category.category.categoryName}
+                  <SelectItem key={category.id} value={category.categoryName}>
+                    {category.categoryName}
                   </SelectItem>
                 );
               })}

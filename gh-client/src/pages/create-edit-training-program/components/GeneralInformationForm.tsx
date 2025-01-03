@@ -23,11 +23,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getAllCategories } from "@/api/services/category-service";
-import {
-  ProgramTrainer,
-  TrainingProgram,
-  User,
-} from "@/api/models/training-program";
 import { Category } from "@/api/models/category";
 import { createUpdateTrainingProgram } from "@/api/services/training-program-service";
 import { TrainingProgramDTO } from "@/api/contracts/training-program-contract";
@@ -37,6 +32,7 @@ import { toast } from "sonner";
 import * as z from "zod";
 import FormSectionTitle from "./FormSectionTitle";
 
+// ?????
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
   info: z.string().min(1, { message: "Description is required." }),
@@ -60,7 +56,7 @@ export default function GeneralInformationForm({
   isEdit = false,
 }: {
   defaultValues?: z.infer<typeof formSchema>;
-  isEdit?: boolean,
+  isEdit?: boolean;
   setProgramId: (value: number) => void;
 }) {
   const [categoryOptions, setCategoryOptions] = useState<any[]>([]);

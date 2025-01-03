@@ -1,6 +1,6 @@
 import noImage from "@/assets/no-image.jpg";
 import { Badge } from "@/components/ui/badge";
-import { ActivityIcon, UserPlus, UserXIcon } from "lucide-react";
+import { ActivityIcon, UserXIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StarRating from "@/components/primitives/StarRating";
 import { getSingleTrainingProgram } from "@/api/services/program-details-service";

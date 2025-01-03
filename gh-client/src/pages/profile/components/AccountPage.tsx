@@ -1,5 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import React from "react";
 import AccountForm from "./AccountForm";
 
 export default function AccountPage() {

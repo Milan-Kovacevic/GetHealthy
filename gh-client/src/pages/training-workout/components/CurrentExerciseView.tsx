@@ -1,13 +1,7 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import workoutAvatar from "@/assets/workout-avatar.gif";
-import { ArrowLeft, HomeIcon } from "lucide-react";
+import { HomeIcon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,

@@ -15,8 +15,9 @@ export type ProgramExerciseDTO = {
   name: string;
   description: string;
   videoLink: string;
-  firstMetric: ExerciseMetricDTO;
-  secondMetric?: ExerciseMetricDTO;
+  firstExerciseMetric: ExerciseMetricDTO;
+  secondExerciseMetric?: ExerciseMetricDTO;
+  exerciseSets: ExerciseSetDTO[];
 };
 
 export type ExerciseMetricDTO = {
@@ -28,8 +29,6 @@ export type ExerciseMetricDTO = {
 export type ExerciseSetDTO = {
   id: number;
   restTime: number;
-  reps?: number; //dodala
-  weight?: number; //dodala
   firstMetricValue: string;
   secondMetricValue: string;
 };

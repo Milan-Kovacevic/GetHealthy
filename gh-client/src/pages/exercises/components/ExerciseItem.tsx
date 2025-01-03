@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import React from "react";
 import { Link } from "react-router-dom";
 
 type ExerciseItemProps = {

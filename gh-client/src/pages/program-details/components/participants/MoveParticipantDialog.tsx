@@ -30,8 +30,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { ChevronsDownIcon, ChevronsUpDown } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronsDownIcon } from "lucide-react";
+import { useState } from "react";
 
 type MoveParticipantDialogProps = {
   programs: TrainerProgram[];

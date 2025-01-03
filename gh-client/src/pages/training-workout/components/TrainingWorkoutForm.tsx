@@ -6,95 +6,26 @@ import WorkoutCountdownTimer from "./WorkoutCountdownTimer";
 import CurrentExerciseView from "./CurrentExerciseView";
 import { ArrowRight, SkipForward } from "lucide-react";
 import ExerciseSummary from "./ExerciseSummary";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { TraineeExercising } from "@/api/models/trainee-exercising";
 
-type Set = {
-  reps: number;
-  weight: number;
-  restTime: number;
-  status: "pending" | "completed" | "skipped";
+type TrainingWorkoutFormProps = {
+  traineeExercising: TraineeExercising;
 };
 
-type Exercise = {
-  name: string;
-  sets: Set[];
-  description: string;
-  videoLink: string;
-};
-
-type WorkoutProgram = {
-  name: string;
-  categories: string[];
-  difficulty: string;
-  exercises: Exercise[];
-  trainingDuration: number;
-  trainer: string;
-};
-
-const sampleProgram: WorkoutProgram = {
-  name: "Full Body Strength",
-  categories: ["Strength", "Endurance"],
-  difficulty: "Intermediate",
-  exercises: [
-    {
-      name: "Squats",
-      sets: [
-        { reps: 10, weight: 100, restTime: 60, status: "pending" },
-        { reps: 10, weight: 100, restTime: 60, status: "pending" },
-        { reps: 10, weight: 100, restTime: 60, status: "pending" },
-      ],
-      description:
-        "Stand with feet shoulder-width apart, lower your body as if sitting back into a chair, then push back up. ",
-      videoLink: "https://example.com/squat-video",
-    },
-    {
-      name: "Bench Press",
-      sets: [
-        { reps: 8, weight: 135, restTime: 90, status: "pending" },
-        { reps: 8, weight: 135, restTime: 90, status: "pending" },
-        { reps: 8, weight: 135, restTime: 90, status: "pending" },
-      ],
-      description:
-        "Lie on a bench, lower the barbell to your chest, then push it back up to starting position.",
-      videoLink: "https://example.com/bench-press-video",
-    },
-    {
-      name: "Squats",
-      sets: [
-        { reps: 10, weight: 100, restTime: 60, status: "pending" },
-        { reps: 10, weight: 100, restTime: 60, status: "pending" },
-        { reps: 10, weight: 100, restTime: 60, status: "pending" },
-      ],
-      description:
-        "Stand with feet shoulder-width apart, lower your body as if sitting back into a chair, then push back up.",
-      videoLink: "https://example.com/squat-video",
-    },
-    {
-      name: "Bench Press",
-      sets: [
-        { reps: 8, weight: 135, restTime: 90, status: "pending" },
-        { reps: 8, weight: 135, restTime: 90, status: "pending" },
-        { reps: 8, weight: 135, restTime: 90, status: "pending" },
-      ],
-      description:
-        "Lie on a bench, lower the barbell to your chest, then push it back up to starting position.",
-      videoLink: "https://example.com/bench-press-video",
-    },
-  ],
-  trainingDuration: 45,
-  trainer: "Anja Mirkovic",
-};
-
-export default function TrainingWorkoutForm() {
-  const [program, setProgram] = useState<WorkoutProgram>(sampleProgram);
+export default function TrainingWorkoutForm({
+  traineeExercising,
+}: TrainingWorkoutFormProps) {
+  const [workout, setWorkout] = useState<TraineeExercising>(traineeExercising);
   const [showSummary, setShowSummary] = useState(true);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
-  const [giveFeedback, setGiveFeedback] = useState(false);
+  const [giveFeedback, setGiveFeedback] = useState(true);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showRestTimer, setShowRestTimer] = useState(false);
   const [showExerciseSummary, setShowExerciseSummary] = useState(false);
   const navigate = useNavigate();
+  const params = useParams();
 
   const startWorkout = () => {
     setShowSummary(false);
@@ -109,27 +40,27 @@ export default function TrainingWorkoutForm() {
   };
 
   const nextSet = () => {
-    const updatedProgram = { ...program };
-    updatedProgram.exercises[currentExerciseIndex].sets[
+    const updatedWorkout = { ...workout };
+    updatedWorkout.exercises[currentExerciseIndex].exerciseSets[
       currentSetIndex
     ].status = "completed";
-    setProgram(updatedProgram);
+    setWorkout(updatedWorkout);
 
     if (
       currentSetIndex ===
-        program.exercises[currentExerciseIndex].sets.length - 1 &&
-      currentExerciseIndex === program.exercises.length - 1
+        workout.exercises[currentExerciseIndex].exerciseSets.length - 1 &&
+      currentExerciseIndex === workout.exercises.length - 1
     )
       setShowSummary(true);
     else setShowRestTimer(true);
   };
 
   const moveToNextSet = () => {
-    const currentExercise = program.exercises[currentExerciseIndex];
-    if (currentSetIndex < currentExercise.sets.length - 1) {
+    const currentExercise = workout.exercises[currentExerciseIndex];
+    if (currentSetIndex < currentExercise.exerciseSets.length - 1) {
       setCurrentSetIndex(currentSetIndex + 1);
     } else {
-      if (currentExerciseIndex < program.exercises.length - 1) {
+      if (currentExerciseIndex < workout.exercises.length - 1) {
         setCurrentExerciseIndex(currentExerciseIndex + 1);
         setShowExerciseSummary(true);
         setCurrentSetIndex(0);
@@ -144,12 +75,12 @@ export default function TrainingWorkoutForm() {
   };
 
   const moveToNextExercise = () => {
-    const updatedProgram = { ...program };
-    updatedProgram.exercises[currentExerciseIndex].sets.forEach(
+    const updatedWorkout = { ...workout };
+    updatedWorkout.exercises[currentExerciseIndex].exerciseSets.forEach(
       (s) => (s.status = "skipped")
     );
-    setProgram(updatedProgram);
-    if (currentExerciseIndex < program.exercises.length - 1) {
+    setWorkout(updatedWorkout);
+    if (currentExerciseIndex < workout.exercises.length - 1) {
       // Next exercise
       setCurrentExerciseIndex(currentExerciseIndex + 1);
       setShowExerciseSummary(true);
@@ -171,11 +102,11 @@ export default function TrainingWorkoutForm() {
   };
 
   const skipSet = () => {
-    const updatedProgram = { ...program };
-    updatedProgram.exercises[currentExerciseIndex].sets[
+    const updatedWorkout = { ...workout };
+    updatedWorkout.exercises[currentExerciseIndex].exerciseSets[
       currentSetIndex
     ].status = "skipped";
-    setProgram(updatedProgram);
+    setWorkout(updatedWorkout);
     moveToNextSet();
   };
 
@@ -202,7 +133,7 @@ export default function TrainingWorkoutForm() {
       <CardContent className="p-0 flex flex-col flex-1">
         {showSummary ? (
           <WorkoutSummary
-            program={program}
+            workout={workout}
             onStart={startWorkout}
             currentExerciseIndex={currentExerciseIndex}
             onFinish={finishWorkout}
@@ -212,7 +143,18 @@ export default function TrainingWorkoutForm() {
           />
         ) : showRestTimer ? (
           <WorkoutCountdownTimer
-            set={program.exercises[currentExerciseIndex].sets[currentSetIndex]}
+            set={
+              workout.exercises[currentExerciseIndex].exerciseSets[
+                currentSetIndex
+              ]
+            }
+            //TODOO
+            firstMetric={
+              workout.exercises[currentExerciseIndex].firstExerciseMetric
+            }
+            secondMetric={
+              workout.exercises[currentExerciseIndex].secondExerciseMetric
+            }
             onComplete={handleRestComplete}
             onSkip={handleSkipRest}
             onReturnToSummary={handleReturnToSummary}
@@ -224,14 +166,16 @@ export default function TrainingWorkoutForm() {
             onSkip={handleSkipExercise}
             onReturnToSummary={handleReturnToSummary}
             exerciseIndex={currentExerciseIndex}
-            exercise={program.exercises[currentExerciseIndex]}
+            exercise={workout.exercises[currentExerciseIndex]}
           />
         ) : (
           <CurrentExerciseView
-            exercise={program.exercises[currentExerciseIndex]}
+            exercise={workout.exercises[currentExerciseIndex]}
             exerciseIndex={currentExerciseIndex}
             currentSet={currentSetIndex + 1}
-            totalSets={program.exercises[currentExerciseIndex].sets.length}
+            totalSets={
+              workout.exercises[currentExerciseIndex].exerciseSets.length
+            }
             onReturnToSummary={handleReturnToSummary}
           />
         )}
@@ -250,8 +194,8 @@ export default function TrainingWorkoutForm() {
               <Button onClick={nextSet} className="flex-1" variant="secondary">
                 <ArrowRight className="w-4 h-4 ml-2" />
                 {currentSetIndex ===
-                  program.exercises[currentExerciseIndex].sets.length - 1 &&
-                currentExerciseIndex === program.exercises.length - 1
+                  workout.exercises[currentExerciseIndex].exerciseSets.length -
+                    1 && currentExerciseIndex === workout.exercises.length - 1
                   ? "Finish"
                   : "Next"}
               </Button>

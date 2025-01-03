@@ -30,7 +30,7 @@ export type ExerciseSet = {
   id: number;
   restTime: number;
   firstMetricValue: string;
-  secondMetricValue: string;
+  secondMetricValue?: string;
 };
 
 export type PageableExercises = Page<Exercise>;

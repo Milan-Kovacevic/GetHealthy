@@ -18,6 +18,7 @@ export type SingleTrainingProgramDTO = {
 };
 
 export type SingleProgramDetailsDTO = {
+  id: number,
   requirements: string;
   trainingDuration: number;
   exercises: ProgramExerciseDTO[];

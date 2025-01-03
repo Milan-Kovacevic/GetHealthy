@@ -1,6 +1,4 @@
 import { ApiEndpoints } from "@/utils/constants";
-import { ExerciseDTO } from "../contracts/exercise-contract";
-import { Exercise } from "../models/exercise";
 import { sendAxiosRequest } from "./base-service";
 import { TrainingProgramExerciseDTO } from "../contracts/training-program-exercise-contract";
 

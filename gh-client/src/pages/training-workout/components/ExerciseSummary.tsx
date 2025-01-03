@@ -1,11 +1,5 @@
+import { ProgramExercise } from "@/api/models/exercise";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
@@ -13,25 +7,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  ArrowLeft,
-  CircleIcon,
-  HashIcon,
-  HomeIcon,
-  PlayIcon,
-  SkipBackIcon,
-  SkipForwardIcon,
-  XIcon,
-} from "lucide-react";
-import React from "react";
+import { CircleIcon, HomeIcon, PlayIcon, XIcon } from "lucide-react";
 
 type ExerciseSummaryProps = {
-  exercise: {
-    name: string;
-    description: string;
-    videoLink: string;
-    sets: Array<{ reps: number; weight: number; restTime: number }>;
-  };
+  exercise: ProgramExercise;
   exerciseIndex: number;
   onStart: () => void;
   onSkip: () => void;
@@ -82,10 +61,12 @@ export default function ExerciseSummary({
         <div className="space-y-0.5">
           <SectionTitle title="Set details" />
 
-          {exercise.sets.map((set, index) => (
+          {exercise.exerciseSets.map((set, index) => (
             <p className="text-sm text-foreground/80 ml-3">
-              <span className="font-medium">{index + 1}. Set</span> - {set.reps}{" "}
-              reps, {set.weight} kg, {set.restTime}s rest
+              <span className="font-medium">{index + 1}. Set</span> -{" "}
+              {set.firstMetricValue} {exercise.firstExerciseMetric.unit},{" "}
+              {set.secondMetricValue} {exercise.secondExerciseMetric?.unit},{" "}
+              {set.restTime}s rest
             </p>
           ))}
         </div>
