@@ -43,7 +43,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-type AnalyticsRadalChartProps = {
+type AnalyticsRadialChartProps = {
   title: string;
   description: string;
   config: ChartConfig;
@@ -68,7 +68,7 @@ type AnalyticsRadalChartProps = {
   className?: string;
 };
 
-export default function AnalyticsRadialChart(props: AnalyticsRadalChartProps) {
+export default function AnalyticsRadialChart(props: AnalyticsRadialChartProps) {
   const { title, description, data, config, y, x, tooltip, className } = props;
 
   return (

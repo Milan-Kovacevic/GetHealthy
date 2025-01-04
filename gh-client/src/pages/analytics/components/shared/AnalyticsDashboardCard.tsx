@@ -33,5 +33,5 @@ export default function AnalyticsDashboardCard({
 }
 
 export const DashboardCardLoader = () => {
-  return <Skeleton className="h-[125px] w-full" />;
+  return <Skeleton className="h-[210px] w-full" />;
 };

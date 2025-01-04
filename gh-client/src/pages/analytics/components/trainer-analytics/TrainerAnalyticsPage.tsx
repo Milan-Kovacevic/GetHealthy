@@ -6,44 +6,44 @@ import TrainerAnalyticsSelector from "./TrainerAnalyticsSelector";
 import { useEffect, useState } from "react";
 import useTrainerAnalytics from "../../hooks/use-trainer-analytics";
 import {
-  AnalyticsExercise,
-  AnalyticsExerciseData,
+  AnalyticsProgramExercise,
+  EngagementChartFilter,
   EngagementChartState,
   PopularityChartState,
 } from "@/api/models/analytics";
 
-const exerciseData: AnalyticsExerciseData[] = [
-  { key: "2024-12-30", value: 74 },
-  { key: "2024-12-31", value: 39 },
-  { key: "2025-01-01", value: 85 },
-  { key: "2025-01-02", value: 68 },
-  { key: "2025-01-03", value: 38 },
-  { key: "2025-01-04", value: 16 },
-  { key: "2025-01-05", value: 36 },
-  { key: "2025-01-06", value: 86 },
-  { key: "2025-01-07", value: 40 },
-  { key: "2025-01-08", value: 100 },
-  { key: "2025-01-09", value: 65 },
-  { key: "2025-01-10", value: 57 },
-  { key: "2025-01-11", value: 77 },
-  { key: "2025-01-12", value: 80 },
-  { key: "2025-01-13", value: 87 },
-  { key: "2025-01-14", value: 57 },
-  { key: "2025-01-15", value: 2 },
-  { key: "2025-01-16", value: 0 },
-  { key: "2025-01-17", value: 10 },
-  { key: "2025-01-18", value: 6 },
-  { key: "2025-01-19", value: 45 },
-  { key: "2025-01-20", value: 23 },
-  { key: "2025-01-21", value: 86 },
-  { key: "2025-01-22", value: 79 },
-  { key: "2025-01-23", value: 56 },
-  { key: "2025-01-24", value: 24 },
-  { key: "2025-01-25", value: 95 },
-  { key: "2025-01-26", value: 79 },
-  { key: "2025-01-27", value: 26 },
-  { key: "2025-01-28", value: 31 },
-  { key: "2025-01-29", value: 63 },
+const exerciseData = [
+  { date: "2024-12-30", skipped: 74, completed: 71 },
+  { date: "2024-12-31", skipped: 39, completed: 16 },
+  { date: "2025-01-01", skipped: 85, completed: 26 },
+  { date: "2025-01-02", skipped: 68, completed: 11 },
+  { date: "2025-01-03", skipped: 38, completed: 4 },
+  { date: "2025-01-04", skipped: 16, completed: 0 },
+  { date: "2025-01-05", skipped: 36, completed: 50 },
+  { date: "2025-01-06", skipped: 86, completed: 34 },
+  { date: "2025-01-07", skipped: 40, completed: 27 },
+  { date: "2025-01-08", skipped: 100, completed: 70 },
+  { date: "2025-01-09", skipped: 65, completed: 72 },
+  { date: "2025-01-10", skipped: 57, completed: 31 },
+  { date: "2025-01-11", skipped: 77, completed: 63 },
+  { date: "2025-01-12", skipped: 80, completed: 28 },
+  { date: "2025-01-13", skipped: 87, completed: 94 },
+  { date: "2025-01-14", skipped: 57, completed: 78 },
+  { date: "2025-01-15", skipped: 2, completed: 54 },
+  { date: "2025-01-16", skipped: 0, completed: 97 },
+  { date: "2025-01-17", skipped: 10, completed: 88 },
+  { date: "2025-01-18", skipped: 6, completed: 73 },
+  { date: "2025-01-19", skipped: 45, completed: 27 },
+  { date: "2025-01-20", skipped: 23, completed: 24 },
+  { date: "2025-01-21", skipped: 86, completed: 13 },
+  { date: "2025-01-22", skipped: 79, completed: 30 },
+  { date: "2025-01-23", skipped: 56, completed: 57 },
+  { date: "2025-01-24", skipped: 24, completed: 81 },
+  { date: "2025-01-25", skipped: 95, completed: 58 },
+  { date: "2025-01-26", skipped: 79, completed: 71 },
+  { date: "2025-01-27", skipped: 26, completed: 4 },
+  { date: "2025-01-28", skipped: 31, completed: 44 },
+  { date: "2025-01-29", skipped: 63, completed: 71 },
 ];
 
 const ratingData = [
@@ -63,17 +63,15 @@ const participantData = [
 
 export default function TrainerAnalyticsPage() {
   const trainerAnalytics = useTrainerAnalytics();
-  const [skippedExercise, setSkippedExercise] = useState<EngagementChartState>({
-    data: [],
-    selectedExercise: undefined,
-    loading: false,
-  });
-  const [completedExercise, setCompletedExercise] =
+  const [engagementChartState, setEngagementChartState] =
     useState<EngagementChartState>({
       data: [],
-      selectedExercise: undefined,
       loading: false,
+      filter: {
+        display: "all",
+      },
     });
+
   const [ratingChart, setRatingChart] = useState<PopularityChartState>({
     data: [],
     loading: false,
@@ -85,15 +83,11 @@ export default function TrainerAnalyticsPage() {
     });
 
   useEffect(() => {
-    setSkippedExercise({
-      ...skippedExercise,
+    setEngagementChartState({
+      ...engagementChartState,
       data: [],
       selectedExercise: undefined,
-    });
-    setCompletedExercise({
-      ...completedExercise,
-      data: [],
-      selectedExercise: undefined,
+      selectedParticipant: undefined,
     });
 
     if (trainerAnalytics.selectedProgram) {
@@ -108,20 +102,15 @@ export default function TrainerAnalyticsPage() {
     }
 
     if (!trainerAnalytics.selectedProgram) {
-      setSkippedExercise((prev) => {
+      setEngagementChartState((prev) => {
         return {
           ...prev,
           data: [],
           selectedExercise: undefined,
+          selectedParticipant: undefined,
         };
       });
-      setCompletedExercise((prev) => {
-        return {
-          ...prev,
-          data: [],
-          selectedExercise: undefined,
-        };
-      });
+
       setRatingChart({
         ...ratingChart,
         data: [],
@@ -133,23 +122,24 @@ export default function TrainerAnalyticsPage() {
     }
   }, [trainerAnalytics.selectedProgram]);
 
-  const handleSkippedChartExerciseSelected = (exercise?: AnalyticsExercise) => {
+  const handleProgramExerciseSelected = (
+    exercise?: AnalyticsProgramExercise
+  ) => {
+    const isSameExercise =
+      engagementChartState.selectedExercise?.id == exercise?.id;
     /// Load exercise analytics data
-    setSkippedExercise({
-      ...skippedExercise,
-      selectedExercise: exercise,
-      data: exerciseData.slice(exercise?.id ?? (0 * 3) % 10),
+    setEngagementChartState({
+      ...engagementChartState,
+      selectedExercise: isSameExercise ? undefined : exercise,
+      data: isSameExercise
+        ? []
+        : exerciseData.slice(exercise?.id ?? (0 * 3) % 10),
     });
   };
 
-  const handleCompletedChartExerciseSelected = (
-    exercise?: AnalyticsExercise
-  ) => {
-    /// Load exercise analytics data
-    setCompletedExercise({
-      ...completedExercise,
-      selectedExercise: exercise,
-      data: exerciseData.slice(exercise?.id ?? (0 * 3) % 10),
+  const handleFiltersChanged = (filter: EngagementChartFilter) => {
+    setEngagementChartState((prev) => {
+      return { ...prev, filter: filter };
     });
   };
 
@@ -161,10 +151,16 @@ export default function TrainerAnalyticsPage() {
         <Tabs defaultValue="tab1" className="w-full">
           <div className="flex lg:flex-row flex-col-reverse gap-x-4 gap-y-3 justify-between w-full">
             <TabsList className="flex md:flex-row flex-col gap-y-1 h-auto md:w-fit">
-              <TabsTrigger value="tab1" className="px-8 w-full">
+              <TabsTrigger
+                value="tab1"
+                className="px-12 md:min-w-[200px] w-full"
+              >
                 Popularity
               </TabsTrigger>
-              <TabsTrigger value="tab2" className="px-8 w-full">
+              <TabsTrigger
+                value="tab2"
+                className="px-12 md:min-w-[200px] w-full"
+              >
                 Engagement
               </TabsTrigger>
             </TabsList>
@@ -178,10 +174,9 @@ export default function TrainerAnalyticsPage() {
           </TabsContent>
           <TabsContent value="tab2" className="h-full py-3">
             <TrainerProgramEngagement
-              skippedExerciseState={skippedExercise}
-              completedExerciseState={completedExercise}
-              onCompletedExerciseChanged={handleCompletedChartExerciseSelected}
-              onSkippedExerciseChanged={handleSkippedChartExerciseSelected}
+              chartState={engagementChartState}
+              onExerciseChanged={handleProgramExerciseSelected}
+              onFilterChanged={handleFiltersChanged}
             />
           </TabsContent>
         </Tabs>

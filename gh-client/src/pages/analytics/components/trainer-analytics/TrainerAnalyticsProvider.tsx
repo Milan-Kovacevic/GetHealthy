@@ -1,8 +1,12 @@
 import { getAllTrainingProgramsForTrainer } from "@/api/services/training-program-service";
 import React, { useEffect, useState } from "react";
-import { AnalyticsExercise, AnalyticsProgram } from "@/api/models/analytics";
+import {
+  AnalyticsProgramExercise,
+  AnalyticsProgram,
+} from "@/api/models/analytics";
 import { DateRange } from "react-day-picker";
 import { TrainerAnalyticsContext } from "../../hooks/use-trainer-analytics";
+import { TrainerProgram } from "@/api/models/training-program";
 
 const exercises = [
   {
@@ -31,12 +35,9 @@ export default function TrainerAnalyticsProvider({
   children,
   ...props
 }: TrainerAnalyticsProviderProps) {
-  const [programs, setPrograms] = useState<AnalyticsProgram[]>([]);
+  const [programs, setPrograms] = useState<TrainerProgram[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<DateRange | undefined>();
   const [selectedProgram, setSelectedProgram] = useState<AnalyticsProgram>();
-  const [programExercises, setProgramExercises] = useState<AnalyticsExercise[]>(
-    []
-  );
 
   const userId = 2;
   useEffect(() => {
@@ -49,25 +50,25 @@ export default function TrainerAnalyticsProvider({
     setSelectedPeriod(period);
   };
 
-  const changeProgram = (program?: AnalyticsProgram) => {
-    setSelectedProgram(program);
+  const changeProgram = (program?: TrainerProgram) => {
+    // TODO: fetch program participants and exercises for advanced analytics
+    var mockExercises = exercises.slice((selectedProgram?.id ?? 0) % 3);
+    setSelectedProgram(
+      program
+        ? { ...program, participants: [], exercises: mockExercises }
+        : undefined
+    );
   };
 
   useEffect(() => {
     // Mocked
-    if (!selectedProgram) {
-      setProgramExercises([]);
-      return;
-    }
-    setProgramExercises(exercises.slice((selectedProgram?.id ?? 0) % 3));
-  }, [selectedProgram]);
+  }, [selectedPeriod]);
 
   return (
     <TrainerAnalyticsContext.Provider
       {...props}
       value={{
         programs: programs,
-        programExercises: programExercises,
         selectedPeriod: selectedPeriod,
         selectedProgram: selectedProgram,
         onChangePeriod: changePeriod,

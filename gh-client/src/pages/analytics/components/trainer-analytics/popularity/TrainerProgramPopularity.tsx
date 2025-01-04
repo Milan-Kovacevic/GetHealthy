@@ -1,15 +1,7 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PopularityChartState } from "@/api/models/analytics";
 import AnalyticsLineChart from "../../shared/AnalyticsLineChart";
-import { ProgramsPopularityTable } from "./ProgramsPopularityTable";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import AnalyticsRadalChart from "../../shared/AnalyticsRadialChart";
+import AnalyticsRadialChart from "../../shared/AnalyticsRadialChart";
 
 type TrainerProgramPopularityProps = {
   ratingChartState: PopularityChartState;

@@ -1,13 +1,13 @@
-import { AnalyticsExercise, AnalyticsProgram } from "@/api/models/analytics";
+import { AnalyticsProgram } from "@/api/models/analytics";
+import { TrainerProgram } from "@/api/models/training-program";
 import { createContext, useContext } from "react";
 import { DateRange } from "react-day-picker";
 
 type TrainerAnalyticsState = {
-  programs: AnalyticsProgram[];
+  programs: TrainerProgram[];
   selectedProgram?: AnalyticsProgram;
   selectedPeriod?: DateRange;
-  programExercises: AnalyticsExercise[];
-  onChangeProgram: (program?: AnalyticsProgram) => void;
+  onChangeProgram: (program?: TrainerProgram) => void;
   onChangePeriod: (period?: DateRange) => void;
 };
 
@@ -15,7 +15,6 @@ export const TrainerAnalyticsContext = createContext<TrainerAnalyticsState>({
   programs: [],
   onChangePeriod: () => {},
   onChangeProgram: () => {},
-  programExercises: [],
 });
 
 export default function useTrainerAnalytics() {

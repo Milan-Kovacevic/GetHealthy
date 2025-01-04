@@ -1,4 +1,4 @@
-import { TrainerProgram } from "@/api/models/training-program";
+import { AnalyticsProgramParticipant } from "@/api/models/analytics";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -18,26 +18,31 @@ import { cn } from "@/lib/utils";
 import { ChevronsDownIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
-type TrainerProgramSelectorProps = {
-  onProgramSelected: (program?: TrainerProgram) => void;
-  programs: TrainerProgram[];
+type TraineeAnalyticsSelectorProps = {
+  onParticipantSelected: (participant?: AnalyticsProgramParticipant) => void;
+  participants: AnalyticsProgramParticipant[];
   text: string;
+  placeholder: string;
   className?: string;
 };
 
-export default function TrainerProgramSelector(
-  props: TrainerProgramSelectorProps
+export default function TraineeAnalyticsSelector(
+  props: TraineeAnalyticsSelectorProps
 ) {
-  const { onProgramSelected, text, programs, className } = props;
+  const { onParticipantSelected, text, placeholder, participants, className } =
+    props;
   const [open, setOpen] = useState(false);
-  const [selectedProgram, setSelectedProgram] = useState<TrainerProgram>();
+  const [selectedParticipant, setSelectedParticipant] =
+    useState<AnalyticsProgramParticipant>();
 
-  const handeProgramSelected = (program?: TrainerProgram) => {
+  const handeParticipantSelected = (
+    participant?: AnalyticsProgramParticipant
+  ) => {
     setOpen(false);
-    onProgramSelected(program);
-    setSelectedProgram(program);
+    onParticipantSelected(participant);
+    setSelectedParticipant(participant);
   };
-  useEffect(() => {}, [selectedProgram]);
+  useEffect(() => {}, [selectedParticipant]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -49,10 +54,10 @@ export default function TrainerProgramSelector(
         >
           {text}
 
-          {selectedProgram ? (
+          {selectedParticipant ? (
             <div
               className="px-0 opacity-50 hover:opacity-75"
-              onClick={() => handeProgramSelected(undefined)}
+              onClick={() => handeParticipantSelected(undefined)}
             >
               <XIcon />
             </div>
@@ -64,24 +69,24 @@ export default function TrainerProgramSelector(
 
       <PopoverContent className="w-full p-0">
         <Command className="">
-          {programs.length > 0 && (
+          {participants.length > 0 && (
             <CommandInput placeholder="Search for programs ..." />
           )}
           <CommandList className="w-[320px]">
             <CommandEmpty className="text-sm font-mediun italic text-muted-foreground p-3 px-4">
-              No training programs to show.
+              {placeholder}
             </CommandEmpty>
             <CommandGroup>
               <ScrollArea className="h-[200px] max-h-[200px]">
-                {programs.map((program: any) => (
+                {participants.map((participant) => (
                   <CommandItem
-                    key={program.id}
-                    value={`${program.name}`}
+                    key={participant.id}
+                    value={`${participant.firstName} ${participant.lastName}`}
                     onSelect={() => {
-                      handeProgramSelected(program);
+                      handeParticipantSelected(participant);
                     }}
                   >
-                    {program.name}
+                    {`${participant.firstName} ${participant.lastName}`}
                   </CommandItem>
                 ))}
               </ScrollArea>

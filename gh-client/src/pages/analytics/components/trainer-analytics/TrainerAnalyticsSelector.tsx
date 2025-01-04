@@ -24,7 +24,7 @@ export default function TrainerAnalyticsSelector(
               text={
                 trainerAnalytics.selectedProgram
                   ? trainerAnalytics.selectedProgram.name
-                  : "Show data for training program..."
+                  : "Select training program..."
               }
               programs={trainerAnalytics.programs}
               onProgramSelected={trainerAnalytics.onChangeProgram}
