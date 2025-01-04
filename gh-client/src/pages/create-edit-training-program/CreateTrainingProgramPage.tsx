@@ -1,10 +1,33 @@
-import GeneralInformationForm from "./components/GeneralInformationForm";
-import ExercisePlanBuilder from "./components/ExercisePlanBuilder";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import ExercisePlanBuilder from "./components/ExercisePlanBuilder";
+import GeneralInformationForm from "./components/GeneralInformationForm";
+import TrainingProgramForm from "./components/TrainingProgramForm";
 
 const CreateTrainingProgramPage = () => {
-  const [programId, setProgramId] = useState<number>(-1);
+  const [generalInfo, setGeneralInfo] = useState<any>(null);
+  const [exercisePlan, setExercisePlan] = useState<any>(null);
+  const generalInfoRef = useRef<{ submitForm: () => Promise<boolean> }>(null);
+  const exercisePlanRef = useRef<{ submitForm: () => Promise<boolean> }>(null);
+
+  const handleSubmit = async () => {
+    const generalInfoValid = await generalInfoRef.current?.submitForm();
+    const exercisePlanValid = await exercisePlanRef.current?.submitForm();
+
+    if (generalInfoValid && exercisePlanValid) {
+      const combinedData = { ...generalInfo, ...exercisePlan };
+      try {
+        // await createUpdateTrainingProgram(combinedData);
+        console.log("Training program successfully created/updated!");
+      } catch (error) {
+        console.log("Failed to create/update training program:", error);
+      }
+    } else {
+      console.log("Please fill out all required fields.");
+    }
+  };
+
   return (
     <div className="container mx-auto relative overflow-hidden sm:px-5 px-4 pt-8 pb-10">
       <div className="space-y-0.5">
@@ -14,10 +37,14 @@ const CreateTrainingProgramPage = () => {
           workout plan
         </p>
       </div>
+      <TrainingProgramForm isEdit={false} />
+      {/* <Separator className="my-4" />
+      <GeneralInformationForm isEdit={false} />
       <Separator className="my-4" />
-      <GeneralInformationForm isEdit={false} setProgramId={setProgramId}/>
-      <Separator className="my-4" />
-      <ExercisePlanBuilder programId={programId}/>
+      <ExercisePlanBuilder isEdit={false} />
+      <Button onClick={handleSubmit} variant="default" className="mt-4">
+        Create Training Program
+      </Button> */}
     </div>
   );
 };

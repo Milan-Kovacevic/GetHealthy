@@ -1,4 +1,3 @@
-import GeneralInformationForm from "./components/GeneralInformationForm";
 import ExercisePlanBuilder from "./components/ExercisePlanBuilder";
 import { Separator } from "@/components/ui/separator";
 
@@ -23,11 +22,11 @@ export default function EditTrainingProgramPage() {
           Edit general information about the program or update your workout plan
         </p>
       </div>
+      {/* <Separator className="my-4" />
+      <GeneralInformationForm isEdit={true} />
       <Separator className="my-4" />
-      <GeneralInformationForm defaultValues={mockData} isEdit={true} />
-      <Separator className="my-4" />
-      {/* ??? */}
-      <ExercisePlanBuilder isEdit={true} />
+      <ExercisePlanBuilder isEdit={true} /> */}
+      {/* <TrainingProgramForm /> */}
     </div>
   );
 }

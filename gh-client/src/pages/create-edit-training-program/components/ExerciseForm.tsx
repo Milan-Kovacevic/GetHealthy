@@ -11,18 +11,25 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ScrollBar } from "@/components/ui/scroll-area";
 import { ClipboardListIcon } from "lucide-react";
 import NumberInputField from "@/components/primitives/NumberInputField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ExerciseFormProps = {
   exercise: any;
   index: number;
   form: any;
+  formPath?: string;
 };
 
-const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
+const ExerciseForm = ({
+  exercise,
+  index,
+  form,
+  formPath = "",
+}: ExerciseFormProps) => {
+  const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: `exercises.${index}.sets`,
+    name: `${exercisesPath}.${index}.sets`,
   });
   const [numOfSets, setNumOfSets] = useState(fields.length);
   const onExerciseSetRemoved = (setIndex: number) => {
@@ -35,7 +42,7 @@ const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
       <div>
         <FormField
           control={form.control}
-          name={`exercises.${index}.sets`}
+          name={`${exercisesPath}.${index}.sets`}
           render={({ field: { onChange } }) => (
             <FormItem className="space-y-[2px] mb-5">
               <FormLabel>Number of sets</FormLabel>
@@ -80,9 +87,9 @@ const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
               <FormDescription className="text-xs ml-0.5">
                 Enter the number of sets for this exercise.
               </FormDescription>
-              {form.formState.errors.exercises?.[index]?.sets && (
+              {form.formState.errors?.[exercisesPath]?.[index]?.sets && (
                 <p className="text-xs ml-0.5 font-medium text-destructive ">
-                  {form.formState.errors.exercises[index].sets.message}
+                  {form.formState.errors?.[exercisesPath]?.[index].sets.message}
                 </p>
               )}
             </FormItem>
@@ -106,8 +113,13 @@ const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
               exerciseIndex={index}
               setIndex={setIndex}
               form={form}
+              formPath={formPath}
               exerciseType={exercise?.type}
               onRemove={onExerciseSetRemoved}
+              metrics={[
+                exercise?.firstExerciseMetric?.name,
+                exercise?.secondExerciseMetric?.name,
+              ]}
             />
           ))}
         </div>

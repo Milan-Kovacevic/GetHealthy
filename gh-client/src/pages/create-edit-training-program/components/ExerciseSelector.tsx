@@ -15,6 +15,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "../../../components/ui/form";
 import {
   Popover,
@@ -25,6 +26,7 @@ import {
 type ExerciseSelectorProps = {
   exercises: any;
   form: any;
+  formPath?: string;
   disableSearch?: boolean;
   comboBoxOpen: boolean;
   setComboBoxOpen: (value: boolean) => void;
@@ -36,6 +38,7 @@ type ExerciseSelectorProps = {
 const ExerciseSelector = ({
   exercises,
   form,
+  formPath = "",
   disableSearch,
   comboBoxOpen,
   setComboBoxOpen,
@@ -43,10 +46,11 @@ const ExerciseSelector = ({
   onSelect,
   selectedExercises,
 }: ExerciseSelectorProps) => {
+  const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
   return (
     <FormField
       control={form.control}
-      name="exercises"
+      name={`${exercisesPath}`}
       render={({ field }) => (
         <FormItem className="space-y-[2px]">
           <FormLabel>Exercises</FormLabel>
@@ -71,9 +75,9 @@ const ExerciseSelector = ({
                   <CommandList>
                     <CommandEmpty>No items found.</CommandEmpty>
                     <CommandGroup>
-                      {exercises.map((item: any) => (
+                      {exercises.map((item: any, index: any) => (
                         <CommandItem
-                          key={item.id}
+                          key={index}
                           value={item.value}
                           onSelect={() => {
                             const newExercise = {
@@ -105,9 +109,9 @@ const ExerciseSelector = ({
             </Popover>
           </FormControl>
           <FormDescription>Add exercises to workout</FormDescription>
-          {form.formState.errors.exercises && (
+          {form.formState.errors?.[exercisesPath]?.message && (
             <p className="text-sm font-medium text-destructive">
-              {form.formState.errors.exercises.message}
+              {form.formState.errors?.[exercisesPath]?.message}
             </p>
           )}
         </FormItem>
