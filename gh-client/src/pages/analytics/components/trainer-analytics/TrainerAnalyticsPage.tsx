@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import TrainerProgramPopularity from "./TrainerProgramPopularity";
-import TrainerProgramEngagement from "./TrainerProgramEngagement";
+import TrainerProgramPopularity from "./popularity/TrainerProgramPopularity";
+import TrainerProgramEngagement from "./engagement/TrainerProgramEngagement";
 import TrainerDashboardCards from "./TrainerDashboardCards";
 import TrainerAnalyticsSelector from "./TrainerAnalyticsSelector";
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import {
   AnalyticsExercise,
   AnalyticsExerciseData,
   EngagementChartState,
+  PopularityChartState,
 } from "@/api/models/analytics";
 
 const exerciseData: AnalyticsExerciseData[] = [
@@ -45,6 +46,21 @@ const exerciseData: AnalyticsExerciseData[] = [
   { key: "2025-01-29", value: 63 },
 ];
 
+const ratingData = [
+  { date: "2024-12-30", value: 4.5 },
+  { date: "2024-12-31", value: 4.2 },
+  { date: "2025-01-01", value: 4.7 },
+  { date: "2025-01-02", value: 4.3 },
+  { date: "2025-01-03", value: 4.1 },
+];
+const participantData = [
+  { date: "2024-12-30", value: 150 },
+  { date: "2024-12-31", value: 120 },
+  { date: "2025-01-01", value: 200 },
+  { date: "2025-01-02", value: 180 },
+  { date: "2025-01-03", value: 100 },
+];
+
 export default function TrainerAnalyticsPage() {
   const trainerAnalytics = useTrainerAnalytics();
   const [skippedExercise, setSkippedExercise] = useState<EngagementChartState>({
@@ -52,11 +68,19 @@ export default function TrainerAnalyticsPage() {
     selectedExercise: undefined,
     loading: false,
   });
-
   const [completedExercise, setCompletedExercise] =
     useState<EngagementChartState>({
       data: [],
       selectedExercise: undefined,
+      loading: false,
+    });
+  const [ratingChart, setRatingChart] = useState<PopularityChartState>({
+    data: [],
+    loading: false,
+  });
+  const [participantCountChart, setParticipantCountChart] =
+    useState<PopularityChartState>({
+      data: [],
       loading: false,
     });
 
@@ -72,6 +96,17 @@ export default function TrainerAnalyticsPage() {
       selectedExercise: undefined,
     });
 
+    if (trainerAnalytics.selectedProgram) {
+      setRatingChart({
+        ...ratingChart,
+        data: ratingData,
+      });
+      setParticipantCountChart({
+        ...participantCountChart,
+        data: participantData,
+      });
+    }
+
     if (!trainerAnalytics.selectedProgram) {
       setSkippedExercise((prev) => {
         return {
@@ -86,6 +121,14 @@ export default function TrainerAnalyticsPage() {
           data: [],
           selectedExercise: undefined,
         };
+      });
+      setRatingChart({
+        ...ratingChart,
+        data: [],
+      });
+      setParticipantCountChart({
+        ...participantCountChart,
+        data: [],
       });
     }
   }, [trainerAnalytics.selectedProgram]);
@@ -128,7 +171,10 @@ export default function TrainerAnalyticsPage() {
           </div>
 
           <TabsContent value="tab1" className="h-full py-3">
-            <TrainerProgramPopularity />
+            <TrainerProgramPopularity
+              ratingChartState={ratingChart}
+              partcipantChartState={participantCountChart}
+            />
           </TabsContent>
           <TabsContent value="tab2" className="h-full py-3">
             <TrainerProgramEngagement

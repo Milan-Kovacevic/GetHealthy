@@ -29,7 +29,7 @@ import {
   AnalyticsExercise,
   AnalyticsExerciseData,
 } from "@/api/models/analytics";
-import useTrainerAnalytics from "../../hooks/use-trainer-analytics";
+import useTrainerAnalytics from "@/pages/analytics/hooks/use-trainer-analytics";
 
 type ProgramEngagementChartProps = {
   title: string;
@@ -47,7 +47,6 @@ export default function ProgramEngagementChart(
   const {
     chartData,
     chartColor,
-    xLabel,
     yLabel,
     title,
     description,
@@ -103,7 +102,6 @@ export default function ProgramEngagementChart(
               label: yLabel,
             },
             value: {
-              label: xLabel,
               color: chartColor ?? "hsl(var(--chart-1)/0.8)",
             },
           }}
@@ -164,7 +162,6 @@ export default function ProgramEngagementChart(
               fill={"var(--color-value)"}
               fillOpacity={0.4}
               type="bump"
-              // radius={[4, 4, 0, 0]}
             />
           </AreaChart>
         </ChartContainer>

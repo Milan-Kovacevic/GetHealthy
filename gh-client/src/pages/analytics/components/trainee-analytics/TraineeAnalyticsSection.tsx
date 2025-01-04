@@ -26,7 +26,7 @@ export default function TraineeAnalyticsSection() {
       </div>
 
       <div className="flex-1 mt-8">
-        <AnalyticsPeriodSelector />
+        <AnalyticsPeriodSelector onPeriodChange={() => {}} />
         // TODO
       </div>
     </div>

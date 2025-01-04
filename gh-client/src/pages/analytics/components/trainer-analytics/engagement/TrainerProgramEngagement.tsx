@@ -1,9 +1,10 @@
-import useTrainerAnalytics from "../../hooks/use-trainer-analytics";
-import ProgramEngagementChart from "./ProgramEngagementChart";
+import useTrainerAnalytics from "../../../hooks/use-trainer-analytics";
+
 import {
   AnalyticsExercise,
   EngagementChartState,
 } from "@/api/models/analytics";
+import ProgramEngagementChart from "./ProgramEngagementChart";
 
 type TrainerProgramEngagementProps = {
   skippedExerciseState: EngagementChartState;
@@ -20,8 +21,11 @@ export default function TrainerProgramEngagement({
 }: TrainerProgramEngagementProps) {
   const trainerAnalytics = useTrainerAnalytics();
 
+  const noDataMessage =
+    "No data to show, please select the period and training program first...";
+
   const skippedChartDescription = !trainerAnalytics.selectedProgram
-    ? "No data to show, please select the training program first..."
+    ? noDataMessage
     : `Showing average skip rate of ${
         skippedExerciseState.selectedExercise
           ? `'${skippedExerciseState.selectedExercise.name}' exercise`
@@ -29,7 +33,7 @@ export default function TrainerProgramEngagement({
       } `;
 
   const completedChartDescription = !trainerAnalytics.selectedProgram
-    ? "No data to show, please select the training program first..."
+    ? noDataMessage
     : `Showing average completion rate of ${
         completedExerciseState.selectedExercise
           ? `'${completedExerciseState.selectedExercise.name}' exercise`

@@ -17,3 +17,13 @@ export type EngagementChartState = {
   data: AnalyticsExerciseData[];
   loading: boolean;
 };
+
+export type AnalyticsPopularityData = {
+  date: string;
+  value: number;
+};
+
+export type PopularityChartState = {
+  data: AnalyticsPopularityData[];
+  loading: boolean;
+};
