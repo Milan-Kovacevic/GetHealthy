@@ -54,15 +54,15 @@ const BackgroundBlurs = () => {
   return (
     <>
       <CircleBackgroundBlob
-        variant="lightest"
-        className="-left-52 w-1/4 h-96 -top-44"
+        variant="lighter"
+        className="-left-52 w-1/4 h-96 -top-56"
       />
       <CircleBackgroundBlob
         variant="lighter"
         className="left-auto -right-32 w-80 h-1/3 top-80"
       />
       <CircleBackgroundBlob
-        variant="lighter"
+        variant="lightest"
         className="-bottom-40 right-1/2 w-1/3 h-96 left-auto"
       />
     </>

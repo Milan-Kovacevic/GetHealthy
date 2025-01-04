@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
-import AnalyticsDashboardCard, {
-  DashboardCardLoader,
-} from "../shared/AnalyticsDashboardCard";
-import { DollarSignIcon } from "lucide-react";
+import { DashboardCardLoader } from "../shared/AnalyticsDashboardCard";
 import { delay } from "@/lib/utils";
-import ChartGaugeDashboardCard from "../shared/ChartDashboardCardFrame";
 import TotalProgramsDashboardChart from "./engagement/TotalProgramsDashboardChart";
 import ChartDashboardCardFrame from "../shared/ChartDashboardCardFrame";
 import { TopThreeVotedProgramsChart } from "./engagement/TopThreeVotedProgramsChart";
