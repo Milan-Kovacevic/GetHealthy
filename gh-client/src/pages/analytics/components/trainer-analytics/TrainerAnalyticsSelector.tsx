@@ -1,52 +1,36 @@
-import { TrainerProgram } from "@/api/models/training-program";
-import { useState } from "react";
-import { DateRange } from "react-day-picker";
 import AnalyticsPeriodSelector from "../shared/AnalyticsPeriodSelector";
 import { CircleIcon } from "lucide-react";
 import TrainerProgramSelector from "@/pages/shared/TrainerProgramSelector";
+import useTrainerAnalytics from "../../hooks/use-trainer-analytics";
 
-type TrainerAnalyticsSelectorProps = {
-  programs: TrainerProgram[];
-  onPeriodChange: (period?: DateRange) => void;
-  onProgramChange: (program: TrainerProgram) => void;
-};
+type TrainerAnalyticsSelectorProps = {};
 
 export default function TrainerAnalyticsSelector(
   props: TrainerAnalyticsSelectorProps
 ) {
-  const { programs: trainerPrograms, onPeriodChange, onProgramChange } = props;
-  const [selectedDate, setSelectedDate] = useState<DateRange | undefined>();
-  const [selectedProgram, setSelectedProgram] = useState<TrainerProgram>();
-
-  const handleProgamChange = (program: TrainerProgram) => {
-    setSelectedProgram(program);
-    onProgramChange(program);
-  };
-
-  const handlePeriodChange = (period?: DateRange) => {
-    setSelectedDate(period);
-    onPeriodChange(period);
-  };
+  const trainerAnalytics = useTrainerAnalytics();
 
   return (
     <div className="w-full flex md:flex-row flex-col md:items-center gap-x-5 gap-y-2 mb-3">
       <AnalyticsPeriodSelector
-        initialPeriod={selectedDate}
-        onPeriodChange={handlePeriodChange}
+        initialPeriod={trainerAnalytics.selectedPeriod}
+        onPeriodChange={trainerAnalytics.onChangePeriod}
       />
-      {selectedDate && (
+      {trainerAnalytics.selectedPeriod && (
         <>
           <CircleIcon className="h-2 w-2 fill-border text-border md:block hidden" />
-          <TrainerProgramSelector
-            text={
-              selectedProgram
-                ? selectedProgram.name
-                : "Show data for training program..."
-            }
-            programs={trainerPrograms}
-            onProgramSelected={handleProgamChange}
-            className="sm:max-w-sm md:max-w-xs max-w-none w-full"
-          />
+          <div className="flex items-center gap-1.5 w-full md:max-w-xs max-w-none ">
+            <TrainerProgramSelector
+              text={
+                trainerAnalytics.selectedProgram
+                  ? trainerAnalytics.selectedProgram.name
+                  : "Select training program..."
+              }
+              programs={trainerAnalytics.programs}
+              onProgramSelected={trainerAnalytics.onChangeProgram}
+              className="sm:max-w-sm w-full"
+            />
+          </div>
         </>
       )}
     </div>

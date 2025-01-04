@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import AnalyticsDashboardCard, {
-  DashboardCardLoader,
-} from "../shared/AnalyticsDashboardCard";
-import { DollarSignIcon } from "lucide-react";
+import { DashboardCardLoader } from "../shared/AnalyticsDashboardCard";
 import { delay } from "@/lib/utils";
+import TotalProgramsDashboardChart from "./engagement/TotalProgramsDashboardChart";
+import ChartDashboardCardFrame from "../shared/ChartDashboardCardFrame";
+import { TopThreeVotedProgramsChart } from "./engagement/TopThreeVotedProgramsChart";
+import { TopThreeJoinedProgramsChart } from "./engagement/TopThreeJoinedProgramsChart";
+import { TopThreeInteractedProgramsChart } from "./engagement/TopThreeInteractedProgramsChart";
 
 export default function TrainerDashboardCards() {
   const [loading, setLoading] = useState(false);
@@ -28,38 +30,32 @@ export default function TrainerDashboardCards() {
         </>
       ) : (
         <>
-          <AnalyticsDashboardCard
-            title="Total active programs"
-            value="$45,231.89"
-            description="+20.1% from last month"
-            icon={() => (
-              <DollarSignIcon className="h-4 w-4 text-muted-foreground" />
-            )}
-          />
-          <AnalyticsDashboardCard
-            title="Averege program rate"
-            value="+2350"
-            description="+180.1% from last month"
-            icon={() => (
-              <DollarSignIcon className="h-4 w-4 text-muted-foreground" />
-            )}
-          />
-          <AnalyticsDashboardCard
-            title="Averege program rate"
-            value="+2350"
-            description="+180.1% from last month"
-            icon={() => (
-              <DollarSignIcon className="h-4 w-4 text-muted-foreground" />
-            )}
-          />
-          <AnalyticsDashboardCard
-            title="Averege program rate"
-            value="+2350"
-            description="+180.1% from last month"
-            icon={() => (
-              <DollarSignIcon className="h-4 w-4 text-muted-foreground" />
-            )}
-          />
+          <ChartDashboardCardFrame
+            title="Total training programs"
+            description="Showing total number of training programs based on difficulty"
+          >
+            <TotalProgramsDashboardChart />
+          </ChartDashboardCardFrame>
+
+          <ChartDashboardCardFrame
+            title="Top interacted programs"
+            description="Showing top 3 interacted programs this week based on number of participants"
+          >
+            <TopThreeInteractedProgramsChart />
+          </ChartDashboardCardFrame>
+
+          <ChartDashboardCardFrame
+            title="Top joined programs"
+            description="Showing top 3 programs based on number of participants"
+          >
+            <TopThreeJoinedProgramsChart />
+          </ChartDashboardCardFrame>
+          <ChartDashboardCardFrame
+            title="Top voted programs"
+            description="Showing top 3 programs based on average rating"
+          >
+            <TopThreeVotedProgramsChart />
+          </ChartDashboardCardFrame>
         </>
       )}
     </div>
