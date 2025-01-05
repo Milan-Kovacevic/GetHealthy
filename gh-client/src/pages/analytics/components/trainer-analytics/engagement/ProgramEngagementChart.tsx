@@ -9,20 +9,24 @@ import {
 } from "@/components/ui/chart";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { AnalyticsEngagementData } from "@/api/models/analytics";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type ProgramEngagementChartProps = {
   chartData: AnalyticsEngagementData[];
   tooltipText: string;
   showLegend?: boolean;
+  loading?: boolean;
   show: "skipped" | "completed" | "all";
 };
 export default function ProgramEngagementChart(
   props: ProgramEngagementChartProps
 ) {
-  const { chartData, tooltipText, showLegend, show } = props;
+  const { chartData, tooltipText, showLegend, show, loading } = props;
   const isMobile = useIsMobile();
 
-  return (
+  return loading ? (
+    <Skeleton className="aspect-auto h-[400px] w-full" />
+  ) : (
     <ChartContainer
       config={{
         yLabel: {

@@ -55,7 +55,28 @@ export default function TrainerAnalyticsProvider({
     var mockExercises = exercises.slice((selectedProgram?.id ?? 0) % 3);
     setSelectedProgram(
       program
-        ? { ...program, participants: [], exercises: mockExercises }
+        ? {
+            ...program,
+            participants: [
+              {
+                id: 1,
+                firstName: "Alex",
+                lastName: "Doe",
+                joinDate: "01/01/2025",
+                dateOfBirth: "01/01/2001",
+                gender: "MALE",
+              },
+              {
+                id: 1,
+                firstName: "Jhon",
+                lastName: "Stock",
+                joinDate: "02/01/2025",
+                dateOfBirth: "01/01/2002",
+                gender: "MALE",
+              },
+            ],
+            exercises: mockExercises,
+          }
         : undefined
     );
   };

@@ -1,13 +1,4 @@
-import {
-  Bar,
-  BarChart,
-  LineChart,
-  CartesianGrid,
-  LabelList,
-  Line,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { LineChart, CartesianGrid, LabelList, Line, XAxis } from "recharts";
 
 import {
   ChartConfig,
@@ -16,22 +7,23 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { UsersIcon } from "lucide-react";
-
-const chartData = [
-  { program: "Cardio HIIT", participants: 126 },
-  { program: "Best Program", participants: 257 },
-  { program: "Third one", participants: 42 },
-];
+import { TopProgramsDashboardData } from "@/api/models/analytics";
 
 const chartConfig = {
-  participants: {
+  value: {
     label: "Participants",
     color: "hsl(var(--chart-2)/0.5)",
     icon: UsersIcon,
   },
 } satisfies ChartConfig;
 
-export function TopThreeJoinedProgramsChart() {
+type TopThreeJoinedProgramsChartProps = {
+  chartData: TopProgramsDashboardData[];
+};
+
+export function TopThreeJoinedProgramsChart({
+  chartData,
+}: TopThreeJoinedProgramsChartProps) {
   return (
     <ChartContainer
       config={chartConfig}
@@ -50,12 +42,7 @@ export function TopThreeJoinedProgramsChart() {
         <XAxis dataKey="program" tickLine={false} axisLine={false} />
 
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <Line
-          dataKey="participants"
-          fill="var(--color-participants)"
-          radius={8}
-          type="step"
-        >
+        <Line dataKey="value" fill="var(--color-value)" radius={8} type="step">
           <LabelList
             position="top"
             offset={12}

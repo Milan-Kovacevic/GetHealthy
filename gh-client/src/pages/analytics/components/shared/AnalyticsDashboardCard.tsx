@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DollarSignIcon } from "lucide-react";
 import React from "react";
 
 type AnalyticsDashboardCardProps = {
@@ -33,5 +32,5 @@ export default function AnalyticsDashboardCard({
 }
 
 export const DashboardCardLoader = () => {
-  return <Skeleton className="h-[210px] w-full" />;
+  return <Skeleton className="h-[230px] w-full" />;
 };

@@ -7,22 +7,23 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { DumbbellIcon } from "lucide-react";
-
-const chartData = [
-  { program: "Cardio HIIT", interactions: 10 },
-  { program: "Best Program", interactions: 14 },
-  { program: "Third one", interactions: 8 },
-];
+import { TopProgramsDashboardData } from "@/api/models/analytics";
 
 const chartConfig = {
-  interactions: {
-    label: "Rating",
+  value: {
+    label: "Interactions",
     color: "hsl(var(--chart-3)/0.6)",
     icon: DumbbellIcon,
   },
 } satisfies ChartConfig;
 
-export function TopThreeInteractedProgramsChart() {
+type TopThreeInteractedProgramsChartProps = {
+  chartData: TopProgramsDashboardData[];
+};
+
+export function TopThreeInteractedProgramsChart({
+  chartData,
+}: TopThreeInteractedProgramsChartProps) {
   return (
     <ChartContainer
       config={chartConfig}
@@ -42,11 +43,11 @@ export function TopThreeInteractedProgramsChart() {
 
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         <Area
-          dataKey="interactions"
+          dataKey="value"
           type="step"
-          fill="var(--color-interactions)"
+          fill="var(--color-value)"
           fillOpacity={0.4}
-          stroke="var(--color-interactions)"
+          stroke="var(--color-value)"
         >
           <LabelList
             position="top"

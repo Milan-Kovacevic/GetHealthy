@@ -24,16 +24,24 @@ type TraineeAnalyticsSelectorProps = {
   text: string;
   placeholder: string;
   className?: string;
+  initialParticipant?: AnalyticsProgramParticipant;
 };
 
 export default function TraineeAnalyticsSelector(
   props: TraineeAnalyticsSelectorProps
 ) {
-  const { onParticipantSelected, text, placeholder, participants, className } =
-    props;
+  const {
+    onParticipantSelected,
+    text,
+    placeholder,
+    participants,
+    className,
+    initialParticipant,
+  } = props;
   const [open, setOpen] = useState(false);
-  const [selectedParticipant, setSelectedParticipant] =
-    useState<AnalyticsProgramParticipant>();
+  const [selectedParticipant, setSelectedParticipant] = useState<
+    AnalyticsProgramParticipant | undefined
+  >(initialParticipant);
 
   const handeParticipantSelected = (
     participant?: AnalyticsProgramParticipant
@@ -85,6 +93,7 @@ export default function TraineeAnalyticsSelector(
                     onSelect={() => {
                       handeParticipantSelected(participant);
                     }}
+                    className="cursor-pointer"
                   >
                     {`${participant.firstName} ${participant.lastName}`}
                   </CommandItem>

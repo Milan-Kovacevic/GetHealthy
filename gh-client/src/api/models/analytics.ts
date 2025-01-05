@@ -19,18 +19,21 @@ export type AnalyticsProgramExercise = {
   name: string;
 };
 
+// Trainer Engagement chart models
+export type TrainerEngagementAnalytics = {
+  data: AnalyticsEngagementData[];
+};
+
 export type AnalyticsEngagementData = {
   date: string;
   skipped: number;
   completed: number;
 };
 
-export type EngagementChartState = {
-  selectedParticipant?: AnalyticsProgramParticipant;
-  selectedExercise?: AnalyticsProgramExercise;
-  data: AnalyticsEngagementData[];
-  loading: boolean;
-  filter: EngagementChartFilter;
+// Trainer Popularity chart models
+export type TrainerPopularityAnalytics = {
+  ratings: AnalyticsPopularityData[];
+  totalParticipants: AnalyticsPopularityData[];
 };
 
 export type AnalyticsPopularityData = {
@@ -38,11 +41,21 @@ export type AnalyticsPopularityData = {
   value: number;
 };
 
-export type PopularityChartState = {
-  data: AnalyticsPopularityData[];
-  loading: boolean;
+// Trainer Dashboard chart models
+export type TrainerDashboardAnalytics = {
+  topInteracted: TopProgramsDashboardData[];
+  topJoined: TopProgramsDashboardData[];
+  topVoted: TopProgramsDashboardData[];
+  totalPrograms: TotalProgramsDashboardData[];
 };
 
-export type EngagementChartFilter = {
-  display: "all" | "skipped" | "completed";
+export type TopProgramsDashboardData = {
+  program: string;
+  value: number;
+};
+
+export type TotalProgramsDashboardData = {
+  beginner: number;
+  intermediate: number;
+  advanced: number;
 };

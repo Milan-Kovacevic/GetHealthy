@@ -1,17 +1,17 @@
 import { useIsMobile } from "@/hooks/use-mobile";
-import { PopularityChartState } from "@/api/models/analytics";
 import AnalyticsLineChart from "../../shared/AnalyticsLineChart";
-import AnalyticsRadialChart from "../../shared/AnalyticsRadialChart";
+import { AnalyticsPopularityData } from "@/api/models/analytics";
 
 type TrainerProgramPopularityProps = {
-  ratingChartState: PopularityChartState;
-  partcipantChartState: PopularityChartState;
+  ratingsData: AnalyticsPopularityData[];
+  participantsData: AnalyticsPopularityData[];
+  loading: boolean;
 };
 
 export default function TrainerProgramPopularity(
   props: TrainerProgramPopularityProps
 ) {
-  const { ratingChartState, partcipantChartState } = props;
+  const { ratingsData, participantsData, loading } = props;
   const isMobile = useIsMobile();
 
   const toChartTooltip = () => {
@@ -63,27 +63,26 @@ export default function TrainerProgramPopularity(
     };
   };
 
-  const maxParticipantCount = Math.max(
-    ...partcipantChartState.data.map((i) => i.value)
-  );
+  const maxParticipantCount = Math.max(...participantsData.map((i) => i.value));
 
   return (
     <div className="w-full space-y-4">
       <div className="flex flex-col-reverse lg:flex-row gap-4">
         <AnalyticsLineChart
           className="flex-1"
-          data={ratingChartState.data}
+          data={ratingsData}
           x={toXChartData()}
           y={toYChartData("Rating [0-5]", [0, 5], "number", isMobile)}
           config={toChartConfig("Rating [Avg]", "hsl(var(--primary)/0.9)")}
           tooltip={toChartTooltip()}
           title="Program rating (Avg)"
           description="Average rating over time for selected training program"
+          loading={loading}
         />
 
         <AnalyticsLineChart
           className="flex-1"
-          data={partcipantChartState.data}
+          data={participantsData}
           x={toXChartData()}
           y={toYChartData(
             "Total pariticipants",
@@ -95,10 +94,9 @@ export default function TrainerProgramPopularity(
           tooltip={toChartTooltip()}
           title="Total program participants"
           description="Participants over time on selected training program"
+          loading={loading}
         />
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
     </div>
   );
 }

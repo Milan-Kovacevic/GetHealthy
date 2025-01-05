@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
 import { BanIcon, CheckIcon, CircleCheckBigIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import {
-  EngagementChartFilter,
-  EngagementChartState,
-} from "@/api/models/analytics";
+import { AnalyticsProgramParticipant } from "@/api/models/analytics";
 import useTrainerAnalytics from "@/pages/analytics/hooks/use-trainer-analytics";
 import TraineeAnalyticsSelector from "./TraineeAnalyticsSelector";
 import { cn } from "@/lib/utils";
+import { EngagementChartFilter } from "@/pages/analytics/hooks/use-trainer-charts";
 
 type EngagementChartFiltersProps = {
-  chartState: EngagementChartState;
+  visible: boolean;
+  filter: EngagementChartFilter;
   onFilterChange: (filter: EngagementChartFilter) => void;
 };
 
@@ -19,9 +16,9 @@ export default function EngagementChartFilters(
   props: EngagementChartFiltersProps
 ) {
   const trainerAnalytics = useTrainerAnalytics();
-  const { chartState, onFilterChange } = props;
-  type DisplayState = typeof chartState.filter.display;
-  const displayState = chartState.filter.display;
+  const { visible, filter, onFilterChange } = props;
+  type DisplayState = typeof filter.display;
+  const displayState = filter.display;
 
   const getNextState = (currentState: DisplayState): DisplayState => {
     switch (currentState) {
@@ -34,10 +31,20 @@ export default function EngagementChartFilters(
     }
   };
 
-  const handleClick = () => {
+  const handleChangeDisplay = () => {
     const newState = getNextState(displayState);
     onFilterChange({
+      ...filter,
       display: newState,
+    });
+  };
+
+  const handleChangeParticipant = (
+    participant?: AnalyticsProgramParticipant
+  ) => {
+    onFilterChange({
+      ...filter,
+      participant: participant,
     });
   };
 
@@ -63,27 +70,30 @@ export default function EngagementChartFilters(
     }
   };
 
-  const isVisible =
-    chartState.selectedExercise && trainerAnalytics.selectedProgram;
   return (
     <div className="flex sm:flex-row flex-col sm:items-center lg:self-end flex-1 mx-3.5 mb-3.5 gap-x-2 gap-y-1.5">
-      {isVisible && (
+      {visible && (
         <div className="flex-1 flex justify-end">
           <TraineeAnalyticsSelector
             className="max-w-xs w-full"
-            text="Select program participant"
+            text={
+              filter.participant
+                ? `${filter.participant.firstName} ${filter.participant.lastName}`
+                : "Select program participant"
+            }
             placeholder="There are no participants to show now"
             participants={trainerAnalytics.selectedProgram?.participants ?? []}
-            onParticipantSelected={() => {}}
+            onParticipantSelected={handleChangeParticipant}
+            initialParticipant={filter.participant}
           />
         </div>
       )}
-      {isVisible && (
+      {visible && (
         <div className={cn("flex self-end items-center space-x-1")}>
           <Button
             variant="secondary"
             id="filter"
-            onClick={handleClick}
+            onClick={handleChangeDisplay}
             className="rounded-sm"
             aria-label={getLabel()}
           >

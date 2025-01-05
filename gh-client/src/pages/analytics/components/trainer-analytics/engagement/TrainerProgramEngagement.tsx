@@ -1,9 +1,9 @@
 import useTrainerAnalytics from "../../../hooks/use-trainer-analytics";
 
 import {
+  AnalyticsEngagementData,
   AnalyticsProgramExercise,
-  EngagementChartFilter,
-  EngagementChartState,
+  AnalyticsProgramParticipant,
 } from "@/api/models/analytics";
 import ProgramEngagementChart from "./ProgramEngagementChart";
 import {
@@ -16,22 +16,32 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import EngagementChartFilters from "./EngagementChartFilters";
+import { EngagementChartFilter } from "@/pages/analytics/hooks/use-trainer-charts";
 
 type TrainerProgramEngagementProps = {
-  chartState: EngagementChartState;
+  data: AnalyticsEngagementData[];
+  loading: boolean;
+  selectedExercise?: AnalyticsProgramExercise;
+  filter: EngagementChartFilter;
   onExerciseChanged: (exercise?: AnalyticsProgramExercise) => void;
   onFilterChanged: (filter: EngagementChartFilter) => void;
 };
 
-export default function TrainerProgramEngagement({
-  chartState,
-  onExerciseChanged,
-  onFilterChanged,
-}: TrainerProgramEngagementProps) {
+export default function TrainerProgramEngagement(
+  props: TrainerProgramEngagementProps
+) {
+  const {
+    data,
+    loading,
+    filter,
+    selectedExercise,
+    onExerciseChanged,
+    onFilterChanged,
+  } = props;
   const trainerAnalytics = useTrainerAnalytics();
 
-  const chartTitle = chartState.selectedParticipant
-    ? `Program exercise engagement [${chartState.selectedParticipant.firstName} ${chartState.selectedParticipant.lastName}]`
+  const chartTitle = filter.participant
+    ? `Program exercise engagement for '${filter.participant.firstName} ${filter.participant.lastName}'`
     : "Program exercise engagement (Avg)";
 
   const noDataMessage =
@@ -40,8 +50,8 @@ export default function TrainerProgramEngagement({
   const chartDescription = !trainerAnalytics.selectedProgram
     ? noDataMessage
     : `Showing skip and complete rate of ${
-        chartState.selectedExercise
-          ? `'${chartState.selectedExercise.name}' exercise`
+        selectedExercise
+          ? `'${selectedExercise.name}' exercise`
           : " selected exercise on program"
       } `;
 
@@ -49,14 +59,18 @@ export default function TrainerProgramEngagement({
     <div className="w-full space-y-4 flex flex-col">
       <Card>
         <CardHeader className="flex flex-col items-stretch space-y-0 border-b-0 p-0">
-          <div className="flex lg:flex-row flex-col lg:justify-between lg:gap-4">
+          <div className="flex lg:flex-row flex-col lg:justify-between lg:gap-4 border-b">
             <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
               <CardTitle>{chartTitle}</CardTitle>
               <CardDescription>{chartDescription}</CardDescription>
             </div>
 
             <EngagementChartFilters
-              chartState={chartState}
+              visible={
+                selectedExercise != undefined &&
+                trainerAnalytics.selectedProgram != undefined
+              }
+              filter={filter}
               onFilterChange={onFilterChanged}
             />
           </div>
@@ -68,14 +82,13 @@ export default function TrainerProgramEngagement({
                   return (
                     <div
                       key={exercise.id}
-                      data-active={
-                        chartState.selectedExercise?.id === exercise.id
-                      }
+                      data-active={selectedExercise?.id === exercise.id}
                       className={cn(
                         "cursor-pointer flex min-w-40 flex-row flex-1 justify-center gap-2 border-t sm:border-b sm:border-r border-b-0 last:border-b px-6 py-2 items-center text-start data-[active=true]:bg-muted/50 data-[active=true]:border-b-primary",
                         index % 4 == 3 && "sm:border-r-0",
                         index >= 4 ? "sm:border-t-0" : "",
-                        index >= 4 && index % 4 == 0 && "sm:border-l-0"
+                        index >= 4 && index % 4 == 0 && "sm:border-l-0",
+                        loading && "opacity-80 pointer-events-none"
                       )}
                       onClick={() => onExerciseChanged(exercise)}
                     >
@@ -95,8 +108,9 @@ export default function TrainerProgramEngagement({
         </CardHeader>
         <CardContent className="px-2 sm:p-6">
           <ProgramEngagementChart
-            chartData={chartState.data}
-            show={chartState.filter.display}
+            loading={loading}
+            chartData={data}
+            show={filter.display}
             tooltipText="Percentage [%]"
           />
         </CardContent>

@@ -3,10 +3,7 @@ import ExerciseList from "./components/ExerciseList";
 import ExerciseMetricsSection from "./components/ExerciseMetricsSection";
 import ExercisesTitleSection from "./components/ExercisesTitleSection";
 import useExercises from "./hooks/use-exercises";
-import {
-  CircleBackgroundBlob,
-  TopBackgroundBlob,
-} from "../shared/BackgroundBlobs";
+import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
 
 export default function ExercisesPage() {
   const [showVideos, setShowVideos] = useState(false);

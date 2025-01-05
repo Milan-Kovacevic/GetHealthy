@@ -1,11 +1,4 @@
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  LabelList,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 
 import {
   ChartConfig,
@@ -14,27 +7,23 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { AwardIcon } from "lucide-react";
-
-const chartData = [
-  { program: "Cardio HIIT", rate: 4.7, total: 320 },
-  { program: "Best Program", rate: 4.8, total: 140 },
-  { program: "Third one", rate: 4.55, total: 260 },
-];
+import { TopProgramsDashboardData } from "@/api/models/analytics";
 
 const chartConfig = {
-  rate: {
+  value: {
     label: "Rating",
-    color: "hsl(var(--primary)/0.5)",
-    icon: AwardIcon,
-  },
-  total: {
-    label: "Program name",
     color: "hsl(var(--primary)/0.5)",
     icon: AwardIcon,
   },
 } satisfies ChartConfig;
 
-export function TopThreeVotedProgramsChart() {
+type TopThreeVotedProgramsChartProps = {
+  chartData: TopProgramsDashboardData[];
+};
+
+export function TopThreeVotedProgramsChart({
+  chartData,
+}: TopThreeVotedProgramsChartProps) {
   return (
     <ChartContainer
       config={chartConfig}
@@ -51,7 +40,7 @@ export function TopThreeVotedProgramsChart() {
         <XAxis dataKey="program" tickLine={false} axisLine={false} />
 
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <Bar dataKey="rate" fill="var(--color-rate)" radius={8}>
+        <Bar dataKey="value" fill="var(--color-value)" radius={8}>
           <LabelList
             position="top"
             offset={12}

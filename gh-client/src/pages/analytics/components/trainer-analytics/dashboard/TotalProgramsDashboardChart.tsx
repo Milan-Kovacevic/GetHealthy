@@ -1,3 +1,4 @@
+import { TotalProgramsDashboardData } from "@/api/models/analytics";
 import {
   ChartConfig,
   ChartContainer,
@@ -21,9 +22,14 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const chartData = [{ beginner: 1260, intermediate: 570, advanced: 621 }];
+type TotalProgramsDashboardChartProps = {
+  chartData: TotalProgramsDashboardData[];
+};
 
-export default function TotalProgramsDashboardChart() {
+export default function TotalProgramsDashboardChart({
+  chartData,
+}: TotalProgramsDashboardChartProps) {
+  if (chartData.length == 0) return;
   const totalPrograms =
     chartData[0].beginner + chartData[0].intermediate + chartData[0].advanced;
 
