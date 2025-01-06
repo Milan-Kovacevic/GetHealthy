@@ -49,3 +49,18 @@ export type FeaturedTrainingProgram = {
   trainerFirstName: string;
   trainerLastName: string;
 };
+
+export enum TrainingProgramDifficulty {
+  BEGINNER = "BEGINNER",
+  INTERMEDIATE = "INTERMEDIATE",
+  ADVANCED = "ADVANCED",
+}
+
+export const difficultyOptions = Object.values(TrainingProgramDifficulty).map(
+  (difficulty) => ({
+    label: difficulty.charAt(0) + difficulty.slice(1).toLowerCase(),
+    // value: (index + 1).toString(),
+    value: difficulty,
+    name: difficulty,
+  })
+);

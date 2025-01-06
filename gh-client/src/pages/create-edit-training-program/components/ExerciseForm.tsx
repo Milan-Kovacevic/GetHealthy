@@ -1,3 +1,4 @@
+import NumberInputField from "@/components/primitives/NumberInputField";
 import {
   FormControl,
   FormDescription,
@@ -5,13 +6,11 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ClipboardListIcon } from "lucide-react";
+import { useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import SetForm from "./SetForm";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ScrollBar } from "@/components/ui/scroll-area";
-import { ClipboardListIcon, HashIcon, ScrollTextIcon } from "lucide-react";
-import NumberInputField from "@/components/primitives/NumberInputField";
-import { useEffect, useState } from "react";
 
 type ExerciseFormProps = {
   exercise: any;
@@ -65,23 +64,6 @@ const ExerciseForm = ({
                     }
                   }}
                 />
-
-                {/* <Input
-                type="number"
-                value={fields.length}
-                onChange={(e) => {
-                  const newSetCount = parseInt(e.target.value) || 0;
-                  if (newSetCount > fields.length) {
-                    for (let i = fields.length; i < newSetCount; i++) {
-                      append({});
-                    }
-                  } else if (newSetCount < fields.length) {
-                    for (let i = fields.length; i > newSetCount; i--) {
-                      remove(i - 1);
-                    }
-                  }
-                }}
-              /> */}
               </FormControl>
 
               <FormDescription className="text-xs ml-0.5">
@@ -117,8 +99,14 @@ const ExerciseForm = ({
               exerciseType={exercise?.type}
               onRemove={onExerciseSetRemoved}
               metrics={[
-                exercise?.firstExerciseMetric?.name,
-                exercise?.secondExerciseMetric?.name,
+                {
+                  ...exercise?.firstExerciseMetric,
+                  metricName: "firstMetricValue",
+                },
+                {
+                  ...exercise?.secondExerciseMetric,
+                  metricName: "secondMetricValue",
+                },
               ]}
             />
           ))}

@@ -1,13 +1,11 @@
 package dev.gethealthy.app.services.impl;
 
-import dev.gethealthy.app.base.CrudJpaService;
-import dev.gethealthy.app.exceptions.NotFoundException;
-import dev.gethealthy.app.models.entities.*;
-import dev.gethealthy.app.models.responses.*;
-import dev.gethealthy.app.repositories.TraineeOnTrainingProgramRepository;
-import dev.gethealthy.app.repositories.TrainingProgramExerciseRepository;
-import dev.gethealthy.app.repositories.TrainingProgramRepository;
-import dev.gethealthy.app.services.TrainingProgramService;
+import java.io.IOException;
+import java.time.Instant;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,33 +13,67 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import dev.gethealthy.app.base.CrudJpaService;
+import dev.gethealthy.app.exceptions.NotFoundException;
+import dev.gethealthy.app.models.entities.ExerciseSet;
+import dev.gethealthy.app.models.entities.ProgramRating;
+import dev.gethealthy.app.models.entities.Trainer;
+import dev.gethealthy.app.models.entities.TrainingProgram;
+import dev.gethealthy.app.models.entities.TrainingProgramExercise;
+import dev.gethealthy.app.models.entities.UserAccount;
+import dev.gethealthy.app.models.enums.StorageType;
+import dev.gethealthy.app.models.requests.ExerciseSetRequest;
+import dev.gethealthy.app.models.requests.TrainingProgramExerciseRequest;
+import dev.gethealthy.app.models.requests.TrainingProgramExercisesRequest;
+import dev.gethealthy.app.models.requests.TrainingProgramRequest;
+import dev.gethealthy.app.models.responses.FeaturedProgramResponse;
+import dev.gethealthy.app.models.responses.ProgramExerciseResponse;
+import dev.gethealthy.app.models.responses.SingleProgramDetailsResponse;
+import dev.gethealthy.app.models.responses.SingleTrainingProgramResponse;
+import dev.gethealthy.app.models.responses.TrainerProgramResponse;
+import dev.gethealthy.app.models.responses.TrainerResponse;
+import dev.gethealthy.app.models.responses.TrainingProgramResponse;
+import dev.gethealthy.app.repositories.ExerciseSetRepository;
+import dev.gethealthy.app.repositories.TrainerRepository;
+import dev.gethealthy.app.repositories.TrainingProgramExerciseRepository;
+import dev.gethealthy.app.repositories.TrainingProgramRepository;
+import dev.gethealthy.app.services.StorageAccessService;
+import dev.gethealthy.app.services.TrainingProgramService;
 
 @Service
-public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, Integer> implements TrainingProgramService {
+public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, Integer>
+        implements TrainingProgramService {
     private final TrainingProgramRepository trainingProgramRepository;
     private final TrainingProgramExerciseRepository trainingProgramExerciseRepository;
+    private final ExerciseSetRepository exerciseSetRepository;
     private final ModelMapper modelMapper;
+    private final TrainerRepository trainerRepository;
+    private final StorageAccessService storageAccessService;
 
     public TrainingProgramServiceImpl(TrainingProgramRepository trainingProgramRepository,
-                                      TrainingProgramExerciseRepository trainingProgramExerciseRepository,
-                                      ModelMapper modelMapper) {
+            TrainingProgramExerciseRepository trainingProgramExerciseRepository,
+            ModelMapper modelMapper, TrainerRepository trainerRepository, ExerciseSetRepository exerciseSetRepository,
+            StorageAccessService storageAccessService) {
         super(trainingProgramRepository, modelMapper, TrainingProgram.class);
         this.trainingProgramRepository = trainingProgramRepository;
         this.trainingProgramExerciseRepository = trainingProgramExerciseRepository;
         this.modelMapper = modelMapper;
+        this.trainerRepository = trainerRepository;
+        this.exerciseSetRepository = exerciseSetRepository;
+        this.storageAccessService = storageAccessService;
     }
 
     @Override
-    public Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort, Pageable page) {
+    public Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort,
+            Pageable page) {
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
         var dbResponse = trainingProgramRepository.findAll(spec, pageableWithSort);
         var result = dbResponse.map(e -> modelMapper.map(e, TrainingProgramResponse.class));
         for (int i = 0; i < result.getContent().size(); i++) {
-            result.getContent().get(i).setRating(dbResponse.getContent().get(i).getTrainingProgramRatings().stream().mapToDouble(ProgramRating::getRate).average().orElse(0.0));
+            result.getContent().get(i).setRating(dbResponse.getContent().get(i).getTrainingProgramRatings().stream()
+                    .mapToDouble(ProgramRating::getRate).average().orElse(0.0));
         }
         return result;
     }
@@ -127,12 +159,53 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
         return trainingProgramRepository
                 .findTop5ByOrderByCreatedAtDesc()
                 .stream()
-                .map(e->{
+                .map(e -> {
                     var response = modelMapper.map(e, FeaturedProgramResponse.class);
-                    response.setParticipants(trainingProgramRepository.calculateNumberOfTrainingProgramTrainees(e.getId()));
+                    response.setParticipants(
+                            trainingProgramRepository.calculateNumberOfTrainingProgramTrainees(e.getId()));
                     return response;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void createTrainingProgram(Integer userId, TrainingProgramRequest trainingProgramRequest,
+            TrainingProgramExercisesRequest trainingProgramExercisesRequest, MultipartFile file) {
+        Trainer trainer = trainerRepository.findById(userId).orElseThrow(NotFoundException::new);
+
+        TrainingProgram trainingProgram = new TrainingProgram();
+
+        trainingProgram = modelMapper.map(trainingProgramRequest, TrainingProgram.class);
+
+        trainingProgram.setTrainer(trainer);
+        trainingProgram.setCreatedAt(Instant.now());
+        trainingProgramRepository.saveAndFlush(trainingProgram);
+
+        for (TrainingProgramExerciseRequest exercisesRequest : trainingProgramExercisesRequest.getExercises()) {
+            TrainingProgramExercise trainingProgramExercise = modelMapper.map(exercisesRequest,
+                    TrainingProgramExercise.class);
+            trainingProgramExercise.setProgram(trainingProgram);
+            trainingProgramExerciseRepository.saveAndFlush(trainingProgramExercise);
+
+            for (ExerciseSetRequest setRequest : exercisesRequest.getExerciseSets()) {
+                ExerciseSet exerciseSet = modelMapper.map(setRequest, ExerciseSet.class);
+                exerciseSet.setProgramExercise(trainingProgramExercise);
+                exerciseSetRepository.saveAndFlush(exerciseSet);
+            }
+
+        }
+
+        if (file != null) {
+            try {
+                String savedFileName = storageAccessService.saveToFile(file.getOriginalFilename(), file.getBytes(),
+                        StorageType.PICTURE);
+
+                trainingProgram.setImageFilePath(savedFileName);
+                trainingProgramRepository.saveAndFlush(trainingProgram);
+            } catch (IOException ex) {
+                throw new RuntimeException("Error handling file upload", ex);
+            }
+        }
     }
 
 }
