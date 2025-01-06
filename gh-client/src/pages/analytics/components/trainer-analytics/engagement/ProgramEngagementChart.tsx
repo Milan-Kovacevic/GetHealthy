@@ -8,7 +8,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { AnalyticsEngagementData } from "@/api/models/analytics";
+import { AnalyticsEngagementData } from "@/api/models/trainer-analytics";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type ProgramEngagementChartProps = {

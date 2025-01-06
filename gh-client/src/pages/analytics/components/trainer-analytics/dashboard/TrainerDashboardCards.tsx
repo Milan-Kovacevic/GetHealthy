@@ -6,7 +6,7 @@ import ChartDashboardCardFrame from "../../shared/ChartDashboardCardFrame";
 import { TopThreeVotedProgramsChart } from "./TopThreeVotedProgramsChart";
 import { TopThreeJoinedProgramsChart } from "./TopThreeJoinedProgramsChart";
 import { TopThreeInteractedProgramsChart } from "./TopThreeInteractedProgramsChart";
-import { TrainerDashboardAnalytics } from "@/api/models/analytics";
+import { TrainerDashboardAnalytics } from "@/api/models/trainer-analytics";
 import { getTrainerDashboardAnalytics } from "@/api/services/trainer-analytics-service";
 
 type TrainerDashboardCardsProps = {};

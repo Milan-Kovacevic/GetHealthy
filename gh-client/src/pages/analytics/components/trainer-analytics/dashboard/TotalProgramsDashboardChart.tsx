@@ -1,4 +1,4 @@
-import { TotalProgramsDashboardData } from "@/api/models/analytics";
+import { TotalProgramsDashboardData } from "@/api/models/trainer-analytics";
 import {
   ChartConfig,
   ChartContainer,

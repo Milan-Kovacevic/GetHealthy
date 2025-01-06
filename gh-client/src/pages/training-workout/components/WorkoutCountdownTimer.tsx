@@ -10,14 +10,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { HomeIcon } from "lucide-react";
-import { Exercise, Set } from "@/api/models/trainee-exercising";
-import { Metric } from "@/api/models/metric";
-
-// type ExerciseSet = {
-//   reps: number;
-//   weight: number;
-//   restTime: number;
-// };
+import { Set } from "@/api/models/trainee-exercising";
+import { ExerciseMetric } from "@/api/models/exercise";
 
 type WorkoutCountdownTimerProps = {
   showFeedback: boolean;
@@ -25,8 +19,8 @@ type WorkoutCountdownTimerProps = {
   onSkip: () => void;
   onReturnToSummary: () => void;
   set: Set;
-  firstMetric: Metric;
-  secondMetric?: Metric;
+  firstMetric: ExerciseMetric;
+  secondMetric?: ExerciseMetric;
 };
 
 export default function WorkoutCountdownTimer({

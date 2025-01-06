@@ -1,4 +1,4 @@
-import { AnalyticsProgramParticipant } from "@/api/models/analytics";
+import { AnalyticsProgramParticipant } from "@/api/models/trainer-analytics";
 import { Button } from "@/components/ui/button";
 import {
   Command,

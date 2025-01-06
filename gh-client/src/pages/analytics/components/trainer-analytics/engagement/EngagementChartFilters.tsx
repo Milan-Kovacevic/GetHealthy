@@ -1,6 +1,6 @@
 import { BanIcon, CheckIcon, CircleCheckBigIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AnalyticsProgramParticipant } from "@/api/models/analytics";
+import { AnalyticsProgramParticipant } from "@/api/models/trainer-analytics";
 import useTrainerAnalytics from "@/pages/analytics/hooks/use-trainer-analytics";
 import TraineeAnalyticsSelector from "./TraineeAnalyticsSelector";
 import { cn } from "@/lib/utils";

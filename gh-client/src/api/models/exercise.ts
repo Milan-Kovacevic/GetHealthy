@@ -1,23 +1,12 @@
 import { Page } from "../contracts/pageable-contract";
-import { Metric } from "./metric";
 
 export type Exercise = {
   id: number;
   exerciseName: string;
   description: string;
   videoLink: string;
-  firstExerciseMetric: Metric;
-  secondExerciseMetric: Metric;
-};
-
-export type ProgramExercise = {
-  id: number;
-  name: string;
-  description: string;
-  videoLink: string;
   firstExerciseMetric: ExerciseMetric;
-  secondExerciseMetric?: ExerciseMetric;
-  exerciseSets: ExerciseSet[];
+  secondExerciseMetric: ExerciseMetric;
 };
 
 export type ExerciseMetric = {

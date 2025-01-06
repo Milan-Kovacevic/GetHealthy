@@ -19,4 +19,5 @@ public interface TrainingProgramService extends CrudService<Integer> {
     @Override
     void delete(Integer id);
     List<FeaturedProgramResponse> getFeaturedTrainingPrograms();
+
 }

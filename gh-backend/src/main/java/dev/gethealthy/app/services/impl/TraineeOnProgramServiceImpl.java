@@ -5,7 +5,8 @@ import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.TraineeOnTrainingProgram;
 import dev.gethealthy.app.models.entities.TraineeOnTrainingProgramId;
 import dev.gethealthy.app.models.requests.MoveProgramParticipantRequest;
-import dev.gethealthy.app.models.responses.SingleProgramParticipantResponse;
+import dev.gethealthy.app.models.responses.ProgramParticipantDetailsResponse;
+import dev.gethealthy.app.models.responses.ProgramParticipantResponse;
 import dev.gethealthy.app.repositories.TraineeOnTrainingProgramRepository;
 import dev.gethealthy.app.repositories.TrainingProgramRepository;
 import dev.gethealthy.app.services.TraineeOnProgramService;
@@ -16,7 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,15 +29,23 @@ public class TraineeOnProgramServiceImpl implements TraineeOnProgramService {
     private final ModelMapper modelMapper;
 
     @Override
-    public Page<SingleProgramParticipantResponse> getTrainingProgramParticipants(Integer programId, String filter, Pageable page) {
+    public Page<ProgramParticipantDetailsResponse> getTrainingProgramParticipants(Integer programId, String filter, Pageable page) {
         var programParticipants = traineeOnTrainingProgramRepository.getAllTraineesOnTrainingProgramFiltered(programId, filter, page);
 
         return programParticipants.map(e -> {
-            var model = modelMapper.map(e, SingleProgramParticipantResponse.class);
+            var model = modelMapper.map(e, ProgramParticipantDetailsResponse.class);
             modelMapper.map(e.getUser(), model);
-//            modelMapper.map(e.getUser().getUser(), model);
             return model;
         });
+    }
+
+    @Override
+    public List<ProgramParticipantResponse> getAllTrainingProgramParticipants(Integer programId) {
+        return traineeOnTrainingProgramRepository
+                .findAllByProgram_Id(programId)
+                .stream()
+                .map(e -> modelMapper.map(e, ProgramParticipantResponse.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -42,7 +53,7 @@ public class TraineeOnProgramServiceImpl implements TraineeOnProgramService {
         var exists = traineeOnTrainingProgramRepository.existsByProgram_IdAndUser_Id(programId, traineeId);
         if (!exists)
             throw new NotFoundException();
-        traineeOnTrainingProgramRepository.deleteById(new TraineeOnTrainingProgramId(traineeId, programId));
+        traineeOnTrainingProgramRepository.deleteByProgram_IdAndUser_Id(programId, traineeId);
     }
 
     @Override
