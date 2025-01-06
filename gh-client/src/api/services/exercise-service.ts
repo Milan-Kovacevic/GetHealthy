@@ -1,9 +1,14 @@
 import { ApiEndpoints } from "@/utils/constants";
 import {
   ExerciseDTO,
+  ExerciseMetricDTO,
   PageableExercisesDTO,
 } from "../contracts/exercise-contract";
-import { Exercise, PageableExercises } from "../models/exercise";
+import {
+  Exercise,
+  ExerciseMetric,
+  PageableExercises,
+} from "../models/exercise";
 import { sendAxiosRequest } from "./base-service";
 import { delay } from "@/lib/utils";
 
@@ -15,6 +20,17 @@ const getAllExcercises = async () => {
     url: url,
   }).then((response) => {
     return response.data as Exercise[];
+  });
+};
+
+const getAllExerciseMetrics = async () => {
+  const url = ApiEndpoints.Metrics;
+  await delay(2500);
+  return sendAxiosRequest<void, ExerciseMetricDTO[]>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    return response.data as ExerciseMetric[];
   });
 };
 
@@ -34,4 +50,4 @@ const getPageableExcercises = async (
   });
 };
 
-export { getAllExcercises, getPageableExcercises };
+export { getAllExcercises, getPageableExcercises, getAllExerciseMetrics };

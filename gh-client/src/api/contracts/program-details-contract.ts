@@ -1,7 +1,6 @@
 import { CategoryDTO } from "./category-contract";
-import { ProgramExerciseDTO } from "./exercise-contract";
-import { Page } from "./pageable-contract";
 import { ProgramDifficultyDTO } from "./training-program-contract";
+import { ProgramExerciseDetailsDTO } from "./program-exercise-contract";
 
 export type SingleTrainingProgramDTO = {
   id: number;
@@ -19,10 +18,10 @@ export type SingleTrainingProgramDTO = {
 };
 
 export type SingleProgramDetailsDTO = {
-  id: number,
+  id: number;
   requirements: string;
   trainingDuration: number;
-  exercises: ProgramExerciseDTO[];
+  exercises: ProgramExerciseDetailsDTO[];
 };
 
 export type SingleProgramTrainerDTO = {
@@ -35,23 +34,4 @@ export type SingleProgramTrainerDTO = {
   profilePictureFilePath?: string;
   contactInfo?: string;
   biography?: string;
-};
-
-export type SingleProgramParticipantDTO = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  gender?: number;
-  dateOfBirth?: string;
-  profilePictureFilePath?: string;
-  height?: number;
-  weight?: number;
-  medicalHistory?: string;
-  joinDate: string;
-};
-export type PageableProgramParticipantsDTO = Page<SingleProgramParticipantDTO>;
-
-export type MoveProgramParticipantDTO = {
-  newProgramId: number;
-  trainerId: number;
 };

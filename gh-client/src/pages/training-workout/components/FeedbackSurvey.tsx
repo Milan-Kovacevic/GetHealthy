@@ -6,15 +6,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { MessageCircleQuestionIcon } from "lucide-react";
-import { Metric } from "@/api/models/metric";
+import { ExerciseMetric } from "@/api/models/exercise";
 
 type FeedbackSurveyProps = {
   onSubmit: () => void;
   disabled: boolean;
   targetFirstMatric: string;
   targetSecondMatric?: string;
-  firstMetric: Metric;
-  secondMetric?: Metric;
+  firstMetric: ExerciseMetric;
+  secondMetric?: ExerciseMetric;
 };
 
 export default function FeedbackSurvey({

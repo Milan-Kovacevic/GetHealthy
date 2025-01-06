@@ -1,4 +1,4 @@
-import { ProgramExercise } from "@/api/models/exercise";
+import { ProgramExerciseDetails } from "@/api/models/exercise";
 import {
   Accordion,
   AccordionContent,
@@ -18,7 +18,7 @@ import { PlayCircleIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 type ExerciseCardProps = {
-  exercise: ProgramExercise;
+  exercise: ProgramExerciseDetails;
   index: number;
 };
 

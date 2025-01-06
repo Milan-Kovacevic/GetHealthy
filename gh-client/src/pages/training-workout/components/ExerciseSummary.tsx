@@ -1,4 +1,4 @@
-import { ProgramExercise } from "@/api/models/exercise";
+import { ProgramExerciseDetails } from "@/api/models/exercise";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -10,7 +10,7 @@ import {
 import { CircleIcon, HomeIcon, PlayIcon, XIcon } from "lucide-react";
 
 type ExerciseSummaryProps = {
-  exercise: ProgramExercise;
+  exercise: ProgramExerciseDetails;
   exerciseIndex: number;
   onStart: () => void;
   onSkip: () => void;

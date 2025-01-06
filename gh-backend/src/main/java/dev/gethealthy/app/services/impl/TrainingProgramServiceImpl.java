@@ -4,7 +4,6 @@ import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.*;
 import dev.gethealthy.app.models.responses.*;
-import dev.gethealthy.app.repositories.TraineeOnTrainingProgramRepository;
 import dev.gethealthy.app.repositories.TrainingProgramExerciseRepository;
 import dev.gethealthy.app.repositories.TrainingProgramRepository;
 import dev.gethealthy.app.services.TrainingProgramService;
@@ -112,7 +111,7 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
                 .stream()
                 .sorted(Comparator.comparingInt(TrainingProgramExercise::getPosition))
                 .map(e -> {
-                    var respObj = modelMapper.map(e, ProgramExerciseResponse.class);
+                    var respObj = modelMapper.map(e, ProgramExerciseDetailsResponse.class);
                     modelMapper.map(e.getExercise(), respObj);
                     modelMapper.map(e.getExerciseSets(), respObj);
                     return respObj;
@@ -127,7 +126,7 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
         return trainingProgramRepository
                 .findTop5ByOrderByCreatedAtDesc()
                 .stream()
-                .map(e->{
+                .map(e -> {
                     var response = modelMapper.map(e, FeaturedProgramResponse.class);
                     response.setParticipants(trainingProgramRepository.calculateNumberOfTrainingProgramTrainees(e.getId()));
                     return response;

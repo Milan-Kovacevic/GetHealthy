@@ -1,17 +1,21 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import AnalyticsLineChart from "../../shared/AnalyticsLineChart";
-import { AnalyticsPopularityData } from "@/api/models/analytics";
+import { AnalyticsPopularityData } from "@/api/models/trainer-analytics";
+import { LockIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type TrainerProgramPopularityProps = {
   ratingsData: AnalyticsPopularityData[];
   participantsData: AnalyticsPopularityData[];
-  loading: boolean;
+  loadingCharts: boolean;
+  loadingMetadata: boolean;
 };
 
 export default function TrainerProgramPopularity(
   props: TrainerProgramPopularityProps
 ) {
-  const { ratingsData, participantsData, loading } = props;
+  const { ratingsData, participantsData, loadingCharts, loadingMetadata } =
+    props;
   const isMobile = useIsMobile();
 
   const toChartTooltip = () => {
@@ -66,8 +70,28 @@ export default function TrainerProgramPopularity(
   const maxParticipantCount = Math.max(...participantsData.map((i) => i.value));
 
   return (
-    <div className="w-full space-y-4">
-      <div className="flex flex-col-reverse lg:flex-row gap-4">
+    <>
+      {loadingMetadata && (
+        <div className="w-full h-full absolute flex flex-col-reverse lg:flex-row gap-4">
+          <div className="flex-1 h-full rounded-lg bg-muted/65" />
+          <div className="flex-1 h-full rounded-lg bg-muted/65" />
+          <div className="w-full h-full absolute flex flex-col-reverse lg:flex-row gap-4 z-10">
+            <div className="flex items-center justify-center flex-1 w-full h-full">
+              <LockIcon className="h-10 w-10 text-muted-foreground" />
+            </div>
+
+            <div className="flex items-center justify-center flex-1 w-full h-full">
+              <LockIcon className="h-10 w-10 text-muted-foreground" />
+            </div>
+          </div>
+        </div>
+      )}
+      <div
+        className={cn(
+          "w-full flex flex-col-reverse lg:flex-row gap-4",
+          loadingMetadata && "pointer-events-none"
+        )}
+      >
         <AnalyticsLineChart
           className="flex-1"
           data={ratingsData}
@@ -77,7 +101,7 @@ export default function TrainerProgramPopularity(
           tooltip={toChartTooltip()}
           title="Program rating (Avg)"
           description="Average rating over time for selected training program"
-          loading={loading}
+          loading={loadingCharts}
         />
 
         <AnalyticsLineChart
@@ -94,9 +118,9 @@ export default function TrainerProgramPopularity(
           tooltip={toChartTooltip()}
           title="Total program participants"
           description="Participants over time on selected training program"
-          loading={loading}
+          loading={loadingCharts}
         />
       </div>
-    </div>
+    </>
   );
 }

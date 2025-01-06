@@ -1,32 +1,34 @@
 import { ApiEndpoints } from "@/utils/constants";
 import { TraineeExercising } from "../models/trainee-exercising";
-import { TraineeExercisingDTO, TraineeExercisingRequestDTO } from "../contracts/trainee-exercising-contract";
+import {
+  TraineeExercisingDTO,
+  TraineeExercisingRequestDTO,
+} from "../contracts/trainee-exercising-contract";
 import { sendAxiosRequest } from "./base-service";
 import { Category } from "../models/category";
 import { ProgramDifficulty } from "../models/training-program";
 import { ExerciseMetric } from "../models/exercise";
 import { Set, Exercise } from "../models/trainee-exercising";
 
-const getWorkoutSummary = async (
+const getWorkoutSummary = async () =>
   // programId: number
   //userId: number
-) => {
+  {
     //TODOOO
-  // var url = ApiEndpoints.TraineeExercising.replace(
-  //   "{programId}",
-  //   `${programId}`
-  // );
+    // var url = ApiEndpoints.TraineeExercising.replace(
+    //   "{programId}",
+    //   `${programId}`
+    // );
 
-//   return sendAxiosRequest<void, TraineeExercisingDTO>({
-//     method: "GET",
-//     url: url,
-//   }).then((response) => {
-//     return response.data as TraineeExercising;
-//   });
+    //   return sendAxiosRequest<void, TraineeExercisingDTO>({
+    //     method: "GET",
+    //     url: url,
+    //   }).then((response) => {
+    //     return response.data as TraineeExercising;
+    //   });
 
-return Promise.resolve<TraineeExercising>(mockTraineeExercising);
-};
-  
+    return Promise.resolve<TraineeExercising>(mockTraineeExercising);
+  };
 
 // const startWorkout = async (
 //   programId: number,
@@ -41,7 +43,6 @@ return Promise.resolve<TraineeExercising>(mockTraineeExercising);
 //   };
 
 // const giveSetFeedback = async ()=>{};
-
 
 // Mock podaci za ExerciseMetric
 const mockExerciseMetrics: ExerciseMetric[] = [
@@ -58,30 +59,31 @@ const mockExerciseSets: Set[] = [
     restTime: 60,
     firstMetricValue: "20",
     secondMetricValue: "10",
-    status: "pending"
+    status: "pending",
   },
   {
     id: 2,
     restTime: 90,
     firstMetricValue: "25",
     secondMetricValue: "8",
-    status: "pending"
+    status: "pending",
   },
   {
     id: 3,
     restTime: 120,
     firstMetricValue: "30",
     secondMetricValue: "6",
-    status: "pending"
+    status: "pending",
   },
 ];
 
-// Mock podaci za ProgramExercise
+// Mock podaci za ProgramExerciseDetails
 const mockProgramExercises: Exercise[] = [
   {
     id: 1,
     name: "Bench Press",
-    description: "A compound exercise targeting the chest, shoulders, and triceps.",
+    description:
+      "A compound exercise targeting the chest, shoulders, and triceps.",
     videoLink: "https://example.com/bench-press",
     firstExerciseMetric: mockExerciseMetrics[0],
     secondExerciseMetric: mockExerciseMetrics[1],
@@ -100,14 +102,14 @@ const mockProgramExercises: Exercise[] = [
         restTime: 120,
         firstMetricValue: "50",
         secondMetricValue: "8",
-        status: "pending"
+        status: "pending",
       },
       {
         id: 5,
         restTime: 150,
         firstMetricValue: "60",
         secondMetricValue: "6",
-        status: "pending"
+        status: "pending",
       },
     ],
   },
@@ -124,14 +126,14 @@ const mockProgramExercises: Exercise[] = [
         restTime: 30,
         firstMetricValue: "500",
         secondMetricValue: "120",
-        status: "pending"
+        status: "pending",
       },
       {
         id: 7,
         restTime: 45,
         firstMetricValue: "750",
         secondMetricValue: "180",
-        status: "pending"
+        status: "pending",
       },
     ],
   },
@@ -151,7 +153,7 @@ const mockTraineeExercising: TraineeExercising = {
   programCategories: [mockCategories[0], mockCategories[2]], // Strength i Cardio
   programDifficulty: "Intermediate" as ProgramDifficulty,
   exercises: mockProgramExercises,
-  traineeExercisingId: 0
+  traineeExercisingId: 0,
 };
 
-  export { getWorkoutSummary };
+export { getWorkoutSummary };

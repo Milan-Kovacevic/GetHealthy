@@ -1,5 +1,4 @@
 import { ApiEndpoints } from "@/utils/constants";
-import { Category } from "../models/category";
 import { sendAxiosRequest } from "./base-service";
 import {
   FeaturedTrainingProgramDTO,

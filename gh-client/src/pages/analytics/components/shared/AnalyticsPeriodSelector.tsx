@@ -1,5 +1,6 @@
 import RangedDatePicker from "@/components/primitives/RangedDatePicker";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -14,12 +15,13 @@ import { DateRange } from "react-day-picker";
 type AnalyticsPeriodSelectorProps = {
   onPeriodChange: (period?: DateRange) => void;
   initialPeriod?: DateRange;
+  loading?: boolean;
 };
 
 export default function AnalyticsPeriodSelector(
   props: AnalyticsPeriodSelectorProps
 ) {
-  const { onPeriodChange, initialPeriod } = props;
+  const { onPeriodChange, initialPeriod, loading } = props;
   const [selectedDate, setSelectedDate] = React.useState<DateRange | undefined>(
     initialPeriod
   );
@@ -29,7 +31,15 @@ export default function AnalyticsPeriodSelector(
     onPeriodChange(date);
   };
 
-  return (
+  return loading ? (
+    <div className="flex sm:flex-row-reverse flex-col-reverse lg:mr-0 gap-2 sm:mr-auto">
+      <div className="flex space-x-2">
+        <Skeleton className="h-10 w-10" />
+        <Skeleton className="h-10 w-10" />
+      </div>
+      <Skeleton className="sm:w-[300px] w-full h-10" />
+    </div>
+  ) : (
     <div className="flex sm:flex-row-reverse flex-col-reverse lg:mr-0 gap-2 sm:mr-auto">
       <PeriodShortcutButtons onPeriodChange={handlePeriodChange} />
       <RangedDatePicker

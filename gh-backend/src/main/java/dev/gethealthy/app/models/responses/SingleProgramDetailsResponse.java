@@ -9,5 +9,5 @@ public class SingleProgramDetailsResponse {
     private Integer id;
     private String requirements;
     private Integer trainingDuration;
-    private List<ProgramExerciseResponse> exercises;
+    private List<ProgramExerciseDetailsResponse> exercises;
 }

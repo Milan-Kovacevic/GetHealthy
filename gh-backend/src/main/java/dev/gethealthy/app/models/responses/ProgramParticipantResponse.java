@@ -7,15 +7,11 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 @Data
-public class SingleProgramParticipantResponse {
+public class ProgramParticipantResponse {
     private Integer id;
     private String firstName;
     private String lastName;
     private Gender gender;
     private LocalDate dateOfBirth;
-    private String profilePictureFilePath;
-    private Double height;
-    private Double weight;
-    private String medicalHistory;
     private Instant joinDate;
 }

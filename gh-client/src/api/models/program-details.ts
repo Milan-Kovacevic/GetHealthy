@@ -1,13 +1,14 @@
 import { Page } from "../contracts/pageable-contract";
 import { Category } from "./category";
-import { ProgramExercise } from "./exercise";
+import { ProgramExerciseDetails } from "./program-exercise";
+
 import { ProgramDifficulty } from "./training-program";
 
 export type SingleProgramDetails = {
   id: number;
   requirements: string;
   trainingDuration: number;
-  exercises: ProgramExercise[];
+  exercises: ProgramExerciseDetails[];
 };
 
 export type SingleProgramParticipant = {

@@ -7,7 +7,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { DumbbellIcon } from "lucide-react";
-import { TopProgramsDashboardData } from "@/api/models/analytics";
+import { TopProgramsDashboardData } from "@/api/models/trainer-analytics";
 
 const chartConfig = {
   value: {

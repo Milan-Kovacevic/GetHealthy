@@ -20,6 +20,7 @@ public class JwtUser implements UserDetails {
     private String email;
     private String password;
     private Role role;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(role.name()));

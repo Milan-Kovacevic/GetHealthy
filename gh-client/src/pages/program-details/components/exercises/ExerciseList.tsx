@@ -1,9 +1,9 @@
 import { DumbbellIcon } from "lucide-react";
-import { ProgramExercise } from "@/api/models/exercise";
+import { ProgramExerciseDetails } from "@/api/models/exercise";
 import ExerciseCard from "./ExerciseCard";
 
 type ExerciseListProps = {
-  exercises: ProgramExercise[];
+  exercises: ProgramExerciseDetails[];
 };
 
 export default function ExerciseList(props: ExerciseListProps) {
