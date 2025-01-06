@@ -1,3 +1,4 @@
+import NumberInputField from "@/components/primitives/NumberInputField";
 import {
   FormControl,
   FormDescription,
@@ -5,24 +6,29 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ClipboardListIcon } from "lucide-react";
+import { useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import SetForm from "./SetForm";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ScrollBar } from "@/components/ui/scroll-area";
-import { ClipboardListIcon } from "lucide-react";
-import NumberInputField from "@/components/primitives/NumberInputField";
-import { useState } from "react";
 
 type ExerciseFormProps = {
   exercise: any;
   index: number;
   form: any;
+  formPath?: string;
 };
 
-const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
+const ExerciseForm = ({
+  exercise,
+  index,
+  form,
+  formPath = "",
+}: ExerciseFormProps) => {
+  const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: `exercises.${index}.sets`,
+    name: `${exercisesPath}.${index}.sets`,
   });
   const [numOfSets, setNumOfSets] = useState(fields.length);
   const onExerciseSetRemoved = (setIndex: number) => {
@@ -35,7 +41,7 @@ const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
       <div>
         <FormField
           control={form.control}
-          name={`exercises.${index}.sets`}
+          name={`${exercisesPath}.${index}.sets`}
           render={({ field: { onChange } }) => (
             <FormItem className="space-y-[2px] mb-5">
               <FormLabel>Number of sets</FormLabel>
@@ -58,31 +64,14 @@ const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
                     }
                   }}
                 />
-
-                {/* <Input
-                type="number"
-                value={fields.length}
-                onChange={(e) => {
-                  const newSetCount = parseInt(e.target.value) || 0;
-                  if (newSetCount > fields.length) {
-                    for (let i = fields.length; i < newSetCount; i++) {
-                      append({});
-                    }
-                  } else if (newSetCount < fields.length) {
-                    for (let i = fields.length; i > newSetCount; i--) {
-                      remove(i - 1);
-                    }
-                  }
-                }}
-              /> */}
               </FormControl>
 
               <FormDescription className="text-xs ml-0.5">
                 Enter the number of sets for this exercise.
               </FormDescription>
-              {form.formState.errors.exercises?.[index]?.sets && (
+              {form.formState.errors?.[exercisesPath]?.[index]?.sets && (
                 <p className="text-xs ml-0.5 font-medium text-destructive ">
-                  {form.formState.errors.exercises[index].sets.message}
+                  {form.formState.errors?.[exercisesPath]?.[index].sets.message}
                 </p>
               )}
             </FormItem>
@@ -106,8 +95,19 @@ const ExerciseForm = ({ exercise, index, form }: ExerciseFormProps) => {
               exerciseIndex={index}
               setIndex={setIndex}
               form={form}
+              formPath={formPath}
               exerciseType={exercise?.type}
               onRemove={onExerciseSetRemoved}
+              metrics={[
+                {
+                  ...exercise?.firstExerciseMetric,
+                  metricName: "firstMetricValue",
+                },
+                {
+                  ...exercise?.secondExerciseMetric,
+                  metricName: "secondMetricValue",
+                },
+              ]}
             />
           ))}
         </div>
