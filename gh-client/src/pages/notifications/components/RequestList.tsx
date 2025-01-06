@@ -2,7 +2,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import React from "react";
 import RequestItem from "./RequestItem";
 import { Separator } from "@/components/ui/separator";
-import InfiniteScroll from "@/components/ui/infnite-scroll";
+import InfiniteScroll from "@/components/ui/infinite-scroll";
 import { Loader2Icon } from "lucide-react";
 import { ProgramRequest } from "@/api/models/program-request";
 

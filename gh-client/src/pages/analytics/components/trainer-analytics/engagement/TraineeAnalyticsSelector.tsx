@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { ChevronsDownIcon, XIcon } from "lucide-react";
+import { format, formatDate, formatDistanceToNow } from "date-fns";
+import { ChevronsDownIcon, ChevronsUpDownIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type TraineeAnalyticsSelectorProps = {
@@ -70,7 +71,7 @@ export default function TraineeAnalyticsSelector(
               <XIcon />
             </div>
           ) : (
-            <ChevronsDownIcon className="opacity-50" />
+            <ChevronsUpDownIcon className="opacity-50" />
           )}
         </Button>
       </PopoverTrigger>
@@ -85,19 +86,47 @@ export default function TraineeAnalyticsSelector(
               {placeholder}
             </CommandEmpty>
             <CommandGroup>
-              <ScrollArea className="h-[200px] max-h-[200px]">
-                {participants.map((participant) => (
-                  <CommandItem
-                    key={participant.id}
-                    value={`${participant.firstName} ${participant.lastName}`}
-                    onSelect={() => {
-                      handeParticipantSelected(participant);
-                    }}
-                    className="cursor-pointer"
-                  >
-                    {`${participant.firstName} ${participant.lastName}`}
-                  </CommandItem>
-                ))}
+              <ScrollArea>
+                <div className="max-h-[200px] w-full">
+                  <div className="flex w-full flex-col items-center">
+                    {participants.map((participant) => (
+                      <CommandItem
+                        key={participant.id}
+                        value={`${participant.firstName} ${participant.lastName}`}
+                        onSelect={() => {
+                          handeParticipantSelected(participant);
+                        }}
+                        className={cn(
+                          "w-full cursor-pointer",
+                          selectedParticipant?.id == participant.id &&
+                            "bg-accent/50 text-accent-foreground border-primary border-b rounded-b-none"
+                        )}
+                      >
+                        <div className="p-0.5">
+                          <div className="leading-tight flex flex-row gap-1.5 items-center">
+                            <p className="font-normal">
+                              {`${participant.firstName} ${participant.lastName}`}
+                            </p>
+                            <span className="text-muted-foreground text-sm">
+                              •
+                            </span>
+                            <span className="lowercase text-muted-foreground text-xs ml-1">
+                              {participant.gender} |{" "}
+                              {format(participant.dateOfBirth!, "dd.MM.yyyy")}
+                            </span>
+                          </div>
+
+                          <p className="text-muted-foreground text-[11px]">
+                            Joined:{" "}
+                            {formatDistanceToNow(participant.joinDate, {
+                              addSuffix: true,
+                            })}
+                          </p>
+                        </div>
+                      </CommandItem>
+                    ))}
+                  </div>
+                </div>
               </ScrollArea>
             </CommandGroup>
           </CommandList>

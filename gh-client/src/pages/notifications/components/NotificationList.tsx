@@ -1,7 +1,7 @@
 import { Notification } from "@/api/models/notification";
 import NotificationItem from "./NotificationItem";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import InfiniteScroll from "@/components/ui/infnite-scroll";
+import InfiniteScroll from "@/components/ui/infinite-scroll";
 import { Loader2Icon } from "lucide-react";
 
 type NotificationListProps = {

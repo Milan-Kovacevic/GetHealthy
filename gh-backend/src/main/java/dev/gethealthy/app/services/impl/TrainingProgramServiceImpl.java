@@ -55,12 +55,10 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
     }
 
     @Override
-    public List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(Integer userId) {
+    public Page<TrainerProgramResponse> getTrainingProgramsForTrainer(Integer userId, Pageable page) {
         return trainingProgramRepository
-                .findAllByTrainer_Id(userId)
-                .stream()
-                .map(e -> modelMapper.map(e, TrainerProgramResponse.class))
-                .collect(Collectors.toList());
+                .findAllByTrainer_Id(userId, page)
+                .map(e -> modelMapper.map(e, TrainerProgramResponse.class));
     }
 
     @Override

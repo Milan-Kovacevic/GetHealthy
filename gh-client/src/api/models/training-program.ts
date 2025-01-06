@@ -27,6 +27,8 @@ export type TrainerProgram = {
   createdAt: string;
 };
 
+export type PageableTrainerPrograms = Page<TrainerProgram>;
+
 export type ProgramFilters = {
   categories: string[];
   difficulty: number;

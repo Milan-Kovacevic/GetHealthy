@@ -2,12 +2,14 @@ import { ApiEndpoints } from "@/utils/constants";
 import { sendAxiosRequest } from "./base-service";
 import {
   FeaturedTrainingProgramDTO,
+  PageableTrainerProgramsDTO,
   PageableTrainingProgramsDTO,
   TrainerProgramDTO,
   TrainingProgramDTO,
 } from "../contracts/training-program-contract";
 import {
   FeaturedTrainingProgram,
+  PageableTrainerPrograms,
   PageableTrainingPrograms,
   ProgramFilters,
   TrainerProgram,
@@ -70,23 +72,43 @@ const getFeaturedTrainingPrograms = async () => {
   });
 };
 
-const getAllTrainingProgramsForTrainer = (trainerId: number) => {
+// const getAllTrainingProgramsForTrainer = (trainerId: number) => {
+//   var url = ApiEndpoints.UserTrainingPrograms.replace(
+//     "{userId}",
+//     `${trainerId}`
+//   );
+
+//   return sendAxiosRequest<void, TrainerProgramDTO[]>({
+//     method: "GET",
+//     url: url,
+//   }).then((response) => {
+//     return response.data as TrainerProgram[];
+//   });
+// };
+
+const getPageableProgramsForTrainer = (
+  trainerId: number,
+  page: number = 0,
+  limit: number = 5
+) => {
   var url = ApiEndpoints.UserTrainingPrograms.replace(
     "{userId}",
     `${trainerId}`
   );
+  url += `?page=${page}&size=${limit}`;
 
-  return sendAxiosRequest<void, TrainerProgramDTO[]>({
+  return sendAxiosRequest<void, PageableTrainerProgramsDTO>({
     method: "GET",
     url: url,
   }).then((response) => {
-    return response.data as TrainerProgram[];
+    return response.data as PageableTrainerPrograms;
   });
 };
 
 export {
   getPageableTrainingPrograms,
-  getAllTrainingProgramsForTrainer,
+  getPageableProgramsForTrainer,
+  // getAllTrainingProgramsForTrainer,
   getFeaturedTrainingPrograms,
   createUpdateTrainingProgram,
 };

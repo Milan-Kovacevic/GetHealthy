@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/pagination";
 import { SearchBar } from "@/components/primitives/SearchBar";
 import { TrainerProgram } from "@/api/models/training-program";
-import { getAllTrainingProgramsForTrainer } from "@/api/services/training-program-service";
+// import { getAllTrainingProgramsForTrainer } from "@/api/services/training-program-service";
 
 type ProgramParticipantsListProps = {
   programId: number;
@@ -55,9 +55,9 @@ export default function ProgramParticipantsList(
   const [trainerPrograms, setTrainerPrograms] = useState<TrainerProgram[]>([]);
   const selectablePrograms = trainerPrograms.filter((p) => p.id != programId);
   useEffect(() => {
-    getAllTrainingProgramsForTrainer(userId).then((programs) => {
-      setTrainerPrograms(programs);
-    });
+    // getAllTrainingProgramsForTrainer(userId).then((programs) => {
+    //   setTrainerPrograms(programs);
+    // });
   }, []);
 
   const handleSearchParticipants = () => {

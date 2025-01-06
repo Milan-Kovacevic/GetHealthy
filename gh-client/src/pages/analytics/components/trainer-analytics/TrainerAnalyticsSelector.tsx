@@ -37,7 +37,6 @@ export default function TrainerAnalyticsSelector(
                   ? trainerAnalytics.selectedProgram.name
                   : "Select training program..."
               }
-              programs={trainerAnalytics.programs}
               onProgramSelected={trainerAnalytics.onChangeProgram}
               className="sm:max-w-sm w-full"
             />

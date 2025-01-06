@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { DashboardCardLoader } from "../../shared/AnalyticsDashboardCard";
-import { delay } from "@/lib/utils";
 import TotalProgramsDashboardChart from "./TotalProgramsDashboardChart";
 import ChartDashboardCardFrame from "../../shared/ChartDashboardCardFrame";
 import { TopThreeVotedProgramsChart } from "./TopThreeVotedProgramsChart";

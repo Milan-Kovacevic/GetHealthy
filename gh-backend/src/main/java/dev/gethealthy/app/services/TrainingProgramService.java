@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface TrainingProgramService extends CrudService<Integer> {
     Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort, Pageable page);
-    List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(Integer userId);
+    Page<TrainerProgramResponse> getTrainingProgramsForTrainer(Integer userId, Pageable page);
     SingleTrainingProgramResponse getSingleTrainingProgram(Integer programId);
     TrainerResponse getTrainerByProgramId(Integer programId);
     SingleProgramDetailsResponse getTrainingProgramDetails(Integer id);
