@@ -5,13 +5,14 @@ const setSchema = z.object({
   weight: z.number().min(0, "Weight must be non-negative").optional(),
   time: z.number().min(1, "Time must be at least one second").optional(),
   distance: z.number().optional(),
-  pause: z.number().min(0, "Pause time must be greater than 0"),
+  firstMetricValue: z.number().min(1, "First metric value is required"),
+  secondMetricValue: z.number().optional(),
+  restTime: z.number().min(0, "Pause time must be greater than 0"),
 });
 
 const exerciseSchema = z.object({
   id: z.number(),
   name: z.string(),
-  // type: z.enum(["bodyweight", "weighted", "cardio", "timed"]),
   sets: z
     .array(setSchema)
     .min(1, "At least one set is required")
@@ -26,17 +27,18 @@ export type ExercisePlanValues = z.infer<typeof exercisePlanSchema>;
 
 export const generalInfoSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
-  info: z.string().min(1, { message: "Description is required." }),
+  difficulty: z.string().min(1, { message: "Program difficulty is required." }),
+  trainingDuration: z
+    .number()
+    .min(1, { message: "Training duration must be positive number" }),
+  description: z.string().min(1, { message: "Description is required." }),
+  requirements: z.string().optional(),
   categories: z
     .array(
       z.object({
-        id: z.number().min(1, { message: "Category ID is required." }),
-        categoryName: z
-          .string()
-          .min(1, { message: "Category name is required." }),
+        categoryId: z.number().min(1, { message: "Category ID is required." }),
+        name: z.string().min(1, { message: "Category name is required." }),
       })
     )
     .min(1, { message: "At least one category is required." }),
-  requirements: z.string().optional(),
-  difficulty: z.string().min(1, { message: "Program difficulty is required." }),
 });

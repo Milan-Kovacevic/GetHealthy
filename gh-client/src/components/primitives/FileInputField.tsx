@@ -92,6 +92,7 @@ export const FileInputField = (props: FileInputFieldProps) => {
             //     setSelectedFile(event.target?.files?.[0]);
             //   }
             // }}
+            accept={formats}
             onChange={handleFileChange}
             disabled={disabled}
           />

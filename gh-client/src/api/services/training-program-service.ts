@@ -1,10 +1,10 @@
+import { delay } from "@/lib/utils";
 import { ApiEndpoints } from "@/utils/constants";
 import { sendAxiosRequest } from "./base-service";
 import {
   FeaturedTrainingProgramDTO,
   PageableTrainingProgramsDTO,
   TrainerProgramDTO,
-  TrainingProgramDTO,
 } from "../contracts/training-program-contract";
 import {
   FeaturedTrainingProgram,
@@ -12,7 +12,6 @@ import {
   ProgramFilters,
   TrainerProgram,
 } from "../models/training-program";
-import { delay } from "@/lib/utils";
 
 const getPageableTrainingPrograms = async (
   searchString: string = "",
@@ -42,17 +41,44 @@ const getPageableTrainingPrograms = async (
   });
 };
 
-const createUpdateTrainingProgram = async (
-  trainingProgram: TrainingProgramDTO,
-  isUpdate: boolean
-) => {
-  var url = ApiEndpoints.TrainingPrograms;
-  return sendAxiosRequest<TrainingProgramDTO, object>({
-    method: !isUpdate ? "POST" : "PUT",
+const createTrainingProgram = async (userId: number, formData: FormData) => {
+  var url = `${ApiEndpoints.TrainingPrograms}/${userId}`;
+  return sendAxiosRequest<any, object>({
+    method: "POST",
     url: url,
-    data: trainingProgram,
+    data: formData,
   }).then((response) => {
     return response.data as object;
+  });
+};
+
+const updateTrainingProgramGeneralInfo = async (
+  programId: number,
+  formData: FormData
+): Promise<any> => {
+  var url = `${ApiEndpoints.TrainingPrograms}/${programId}/general-info`;
+
+  return sendAxiosRequest<FormData, any>({
+    method: "PUT",
+    url: url,
+    data: formData,
+  }).then((response) => {
+    return response.data;
+  });
+};
+
+const updateTrainingProgramExercisePlan = async (
+  programId: number,
+  formData: FormData
+): Promise<any> => {
+  var url = `${ApiEndpoints.TrainingPrograms}/${programId}/exercise-plan`;
+
+  return sendAxiosRequest<FormData, any>({
+    method: "PUT",
+    url: url,
+    data: formData,
+  }).then((response) => {
+    return response.data;
   });
 };
 
@@ -85,8 +111,10 @@ const getAllTrainingProgramsForTrainer = (trainerId: number) => {
 };
 
 export {
-  getPageableTrainingPrograms,
+  createTrainingProgram,
   getAllTrainingProgramsForTrainer,
   getFeaturedTrainingPrograms,
-  createUpdateTrainingProgram,
+  getPageableTrainingPrograms,
+  updateTrainingProgramExercisePlan,
+  updateTrainingProgramGeneralInfo,
 };

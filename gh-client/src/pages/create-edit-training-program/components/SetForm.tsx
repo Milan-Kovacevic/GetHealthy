@@ -6,7 +6,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
+import { handleIntegerOnValueChange } from "@/utils/formInputUtils";
 import { TrashIcon } from "lucide-react";
+import { useEffect } from "react";
 
 type SetFormProps = {
   exerciseIndex: number;
@@ -23,30 +25,20 @@ const SetForm = ({
   setIndex,
   form,
   formPath = "",
-  exerciseType,
   onRemove,
   metrics,
 }: SetFormProps) => {
   const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
-
-  const handleIntegerOnValueChange = (e: any, field: any) => {
-    if (!e.target.value) field.onChange(undefined);
-    else if (isNaN(parseInt(e.target.value))) field.onChange(e.target.value);
-    else field.onChange(parseInt(e.target.value));
-  };
-
-  const handleDecimalOnValueChange = (e: any, field: any) => {
-    if (!e.target.value) field.onChange(undefined);
-    else if (e.target.value.endsWith(".")) field.onChange(e.target.value);
-    else if (isNaN(parseFloat(e.target.value))) field.onChange(e.target.value);
-    else field.onChange(parseFloat(e.target.value));
-  };
 
   const currentSet = form.watch(
     `${exercisesPath}.${exerciseIndex}.sets.${setIndex}`
   );
 
   const setAttributes = Object.keys(currentSet);
+
+  useEffect(() => {
+    console.log(metrics);
+  }, []);
 
   return (
     <Accordion type="single" collapsible className="w-full mx-1 mt-1">
@@ -116,109 +108,50 @@ const SetForm = ({
         </AccordionTrigger>
         <AccordionContent>
           <div className="flex flex-wrap gap-4 p-1">
-            {(exerciseType === "bodyweight" || exerciseType === "weighted") && (
-              <div className="flex flex-col flex-grow w-full sm:w-auto">
-                <InputFormField
-                  control={form.control}
-                  name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.reps`}
-                  type="text"
-                  display="Repetitions"
-                  placeholder="Enter a number ..."
-                  onChange={handleIntegerOnValueChange}
-                />
-              </div>
-            )}
-
-            {exerciseType === "weighted" && (
-              <div className="flex flex-col flex-grow w-full sm:w-auto">
-                <InputFormField
-                  control={form.control}
-                  name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.weight`}
-                  type="text"
-                  display="Weight (kg)"
-                  placeholder="Enter a number ..."
-                  onChange={handleDecimalOnValueChange}
-                />
-              </div>
-            )}
-
-            {exerciseType === "cardio" && (
-              <>
-                <div className="flex flex-col flex-grow w-full sm:w-auto">
-                  <InputFormField
-                    control={form.control}
-                    name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.distance`}
-                    type="text"
-                    display="Distance (km)"
-                    placeholder="Enter a number ..."
-                    onChange={handleDecimalOnValueChange}
-                  />
-                </div>
-                <div className="flex flex-col flex-grow w-full sm:w-auto">
-                  <InputFormField
-                    control={form.control}
-                    name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.time`}
-                    type="text"
-                    display="Time (minutes)"
-                    placeholder="Enter a number ..."
-                    onChange={handleIntegerOnValueChange}
-                  />
-                </div>
-              </>
-            )}
-
-            {exerciseType === "timed" && (
-              <div className="flex flex-col flex-grow w-full sm:w-auto">
-                <InputFormField
-                  control={form.control}
-                  name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.time`}
-                  type="text"
-                  display="Time (seconds)"
-                  placeholder="Enter a number ..."
-                  onChange={handleIntegerOnValueChange}
-                />
-              </div>
-            )}
-
             {metrics.map((metric, index) => {
-              if (metric === "Repetitions") {
-                return (
-                  <div
-                    key={index}
-                    className="flex flex-col flex-grow w-full sm:w-auto"
-                  >
-                    <InputFormField
-                      control={form.control}
-                      name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.reps`}
-                      type="text"
-                      display="Repetitions"
-                      placeholder="Enter number of reps"
-                      onChange={handleIntegerOnValueChange}
-                    />
-                  </div>
-                );
-              } else if (metric === "Time") {
-                return (
-                  <div className="flex flex-col flex-grow w-full sm:w-auto">
-                    <InputFormField
-                      control={form.control}
-                      name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.time`}
-                      type="text"
-                      display="Time (minutes)"
-                      placeholder="Enter a number ..."
-                      onChange={handleIntegerOnValueChange}
-                    />
-                  </div>
-                );
+              switch (metric.name) {
+                case "Repetitions":
+                  return (
+                    <div
+                      key={index}
+                      className="flex flex-col flex-grow w-full sm:w-auto"
+                    >
+                      <InputFormField
+                        control={form.control}
+                        // name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.reps`}
+                        name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.${metric.metricName}`}
+                        type="text"
+                        display="Repetitions"
+                        placeholder="Enter number of reps"
+                        onChange={handleIntegerOnValueChange}
+                      />
+                    </div>
+                  );
+                case "Time":
+                  return (
+                    <div className="flex flex-col flex-grow w-full sm:w-auto">
+                      <InputFormField
+                        control={form.control}
+                        // name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.time`}
+                        name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.${metric.metricName}`}
+                        type="text"
+                        display="Time (minutes)"
+                        placeholder="Enter a time"
+                        onChange={handleIntegerOnValueChange}
+                      />
+                    </div>
+                  );
+                default:
+                  return;
               }
             })}
 
             <div className="flex flex-col flex-grow w-full sm:w-auto">
               <InputFormField
                 control={form.control}
-                name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.pause`}
+                name={`${exercisesPath}.${exerciseIndex}.sets.${setIndex}.restTime`}
                 type="text"
-                display="Pause (seconds)"
+                display="Rest time (seconds)"
                 placeholder="Enter a number ..."
                 onChange={handleIntegerOnValueChange}
               />
