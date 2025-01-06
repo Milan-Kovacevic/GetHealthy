@@ -17,4 +17,4 @@ export type NotificationType =
   | "PROGRAM_ADDED_ON_SCHEDULE"
   | "PROGRAM_REMOVED_FROM_SCHEDULE";
 
-export type PageableNotificationsDTO = Page<Notification>;
+export type PageableNotificationsDTO = Page<NotificationDTO>;

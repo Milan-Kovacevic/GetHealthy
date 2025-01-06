@@ -1,71 +1,79 @@
 import { sendAxiosRequest } from "./base-service";
 import { ApiEndpoints } from "@/utils/constants";
 import { PageableNotifications } from "../models/notification";
+import {
+  NotificationDTO,
+  PageableNotificationsDTO,
+} from "../contracts/notification-contract";
+import { formatDistanceToNow } from "date-fns";
+import { delay } from "@/lib/utils";
 
-const pageSize = 10;
+const pageSize = 5;
 
-const getPageableUserNotifications = async ({ page }: { page: number }) => {
-  const userId = "1"; // Hardcoded for now
+const generateNotificationContent = (
+  notification: NotificationDTO
+): { title: string; description: string } => {
+  switch (notification.notificationType) {
+    case "PROGRAM_APPLICATION_ACCEPTED": // PROGRAM_APPLICATION_ACCEPTED
+      return {
+        title: `Program request APPROVED`,
+        description: `Your request for training program '${notification.metadata}' has been approved by ${notification.senderFirstName} ${notification.senderLastName}`,
+      };
+    case "PROGRAM_APPLICATION_REJECTED":
+      return {
+        title: `Program request REJECTED`,
+        description: `Your request for training program '${notification.metadata}' has been rejected by ${notification.senderFirstName} ${notification.senderLastName}`,
+      };
+    case "NEW_COMMENT_ON_PROGRAM":
+      return {
+        title: `New comment on program`,
+        description: `${notification.senderFirstName} ${notification.senderLastName} posted a new comment on '${notification.metadata}'`,
+      };
+    case "PROGRAM_REMOVED_FROM_SCHEDULE":
+      return {
+        title: `REMOVED program from schedule`,
+        description: `${notification.senderFirstName} ${notification.senderLastName} removed '${notification.metadata}' from your schedule`,
+      };
+    case "PROGRAM_ADDED_ON_SCHEDULE":
+      return {
+        title: `ADDED program to schedule`,
+        description: `${notification.senderFirstName} ${notification.senderLastName} added program '${notification.metadata}' on your schedule`,
+      };
+  }
+};
+
+const getPageableUserNotifications = async (
+  userId: number,
+  page: number = 0
+) => {
   // TODO: Obtain this information from jwt or session storage...
-  var url = ApiEndpoints.UserNotifications.replace("{userId}", userId);
+  var url = ApiEndpoints.UserNotifications.replace("{userId}", `${userId}`);
   url += `?page=${page}&size=${pageSize}`;
-  // return sendAxiosRequest<void, PageableNotificationsDTO>({
-  //   method: "GET",
-  //   url: url,
-  // }).then((response) => {
-  //   return response.data as PageableNotifications;
-  // });
 
-  // Mock response for now
-  return Promise.resolve<PageableNotifications>({
-    content: [
-      {
-        id: 1,
-        title: "Notification 1",
-        description: "This is the first notification",
-        isRead: true,
-        time: "test",
-      },
-      {
-        id: 2,
-        title: "Notification 2",
-        description: "This is the second notification",
-        isRead: false,
-        time: "test",
-      },
-      {
-        id: 3,
-        title: "Notification 3",
-        description: "This is the third notification",
-        isRead: true,
-        time: "test",
-      },
-    ],
-    empty: false,
-    first: true,
-    last: true,
-    number: 1,
-    numberOfElements: 3,
-    pageable: {
-      offset: 0,
-      paged: true,
-      pageNumber: 1,
-      pageSize: 3,
-      sort: {
-        empty: true,
-        sorted: false,
-        unsorted: true,
-      },
-    },
-    size: 3,
-    totalElements: 3,
-    totalPages: 1,
+  await delay(1500);
+  return sendAxiosRequest<void, PageableNotificationsDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    var value: PageableNotifications = {
+      ...response.data,
+      content: response.data.content.map((item) => {
+        var content = generateNotificationContent(item);
+        return {
+          id: item.id,
+          title: content.title,
+          description: content.description,
+          isRead: item.markRead,
+          time: formatDistanceToNow(item.date, { addSuffix: true }),
+        };
+      }),
+    };
+    return value;
   });
 };
 
-const markAllUserNotificationsAsRead = () => {
-  const userId = "1"; // Hardcoded for now
-  var url = ApiEndpoints.UserNotifications.replace("{userId}", userId);
+const markAllUserNotificationsAsRead = (userId: number) => {
+  var url = ApiEndpoints.UserNotifications.replace("{userId}", `${userId}`);
   url += "/mark-read";
 
   return sendAxiosRequest<void, PageableNotifications>({
@@ -74,10 +82,9 @@ const markAllUserNotificationsAsRead = () => {
   });
 };
 
-const markUserNotificationAsRead = (id: number) => {
-  const userId = "1"; // Hardcoded for now
-  var url = ApiEndpoints.UserNotifications.replace("{userId}", userId);
-  url += `/${id}/mark-read`;
+const markUserNotificationAsRead = (userId: number, notificationId: number) => {
+  var url = ApiEndpoints.UserNotifications.replace("{userId}", `${userId}`);
+  url += `/${notificationId}/mark-read`;
 
   return sendAxiosRequest<void, PageableNotifications>({
     method: "POST",
@@ -85,10 +92,9 @@ const markUserNotificationAsRead = (id: number) => {
   });
 };
 
-const deleteUserNotification = (id: number) => {
-  const userId = "1"; // Hardcoded for now
-  var url = ApiEndpoints.UserNotifications.replace("{userId}", userId);
-  url += `/${id}`;
+const deleteUserNotification = (userId: number, notificationId: number) => {
+  var url = ApiEndpoints.UserNotifications.replace("{userId}", `${userId}`);
+  url += `/${notificationId}`;
 
   return sendAxiosRequest<void, PageableNotifications>({
     method: "DELETE",

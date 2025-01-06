@@ -25,7 +25,7 @@ export default function TrainerDashboardCards(
       topJoined: [],
       topVoted: [],
       totalPrograms: [],
-      loading: false,
+      loading: true,
     });
 
   useEffect(() => {

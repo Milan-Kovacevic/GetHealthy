@@ -1,7 +1,8 @@
 import { Page } from "../contracts/pageable-contract";
 
 export type ProgramRequest = {
-  id: number;
+  programId: number;
+  traineeId: number;
   markRead: boolean;
   submissionDate: string;
   note: string;

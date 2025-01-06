@@ -1,7 +1,8 @@
 import { Page } from "./pageable-contract";
 
 export type TrainingProgramApplicationDTO = {
-  id: number;
+  programId: number;
+  traineeId: number;
   markRead: boolean;
   submissionDate: string;
   note: string;

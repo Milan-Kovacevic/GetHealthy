@@ -10,6 +10,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 export function useNotifications() {
+  const userId = 2;
   const [pending, setPending] = useState(false);
   const {
     data: notifications,
@@ -23,15 +24,13 @@ export function useNotifications() {
     setPage: setNotificationsPage,
   } = useInfiniteScroll<Notification>({
     fetchData: (state) => {
-      return getPageableUserNotifications({
-        page: state.page,
-      });
+      return getPageableUserNotifications(userId, state.page);
     },
   });
 
   const onMarkNotificationAsRead = async (id: number) => {
     setPending(true);
-    markUserNotificationAsRead(id)
+    markUserNotificationAsRead(userId, id)
       .then(() => {
         setNotifications((prev) => [
           ...prev.map((notif) =>
@@ -49,7 +48,7 @@ export function useNotifications() {
 
   const onDeleteNotification = async (id: number) => {
     setPending(true);
-    deleteUserNotification(id)
+    deleteUserNotification(userId, id)
       .then(() => {
         setNotifications((prev) => [
           ...prev.filter((notif) => notif.id !== id),
@@ -65,7 +64,7 @@ export function useNotifications() {
 
   const onMarkAllAsRead = async () => {
     setPending(true);
-    markAllUserNotificationsAsRead()
+    markAllUserNotificationsAsRead(userId)
       .then(() => {
         setNotifications((prev) => [
           ...prev.map((notif) => {

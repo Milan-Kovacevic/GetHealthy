@@ -11,8 +11,8 @@ type RequestListProps = {
   isLoading: boolean;
   hasMore: boolean;
   onPageChange: () => void;
-  onAcceptRequest: (id: number) => void;
-  onRejectRequest: (id: number) => void;
+  onAcceptRequest: (programId: number, traineeId: number) => void;
+  onRejectRequest: (programId: number, traineeId: number) => void;
 };
 
 export default function RequestList(props: RequestListProps) {
@@ -36,9 +36,9 @@ export default function RequestList(props: RequestListProps) {
               </p>
             </div>
           )}
-          <div className="space-y-2">
+          <div className="space-y-2 w-full">
             {requests.map((request, index) => (
-              <React.Fragment key={request.id}>
+              <React.Fragment key={`${request.programId}-${request.traineeId}`}>
                 <RequestItem
                   onAccept={onAcceptRequest}
                   onReject={onRejectRequest}

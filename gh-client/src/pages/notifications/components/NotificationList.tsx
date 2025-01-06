@@ -27,7 +27,7 @@ export default function NotificationList(props: NotificationListProps) {
   const readNotifications = notifications.filter((notif) => notif.isRead);
 
   return (
-    <ScrollArea className="w-full overflow-y-auto pl-5 pr-4 mr-3">
+    <ScrollArea className="w-full pl-5 pr-4 mr-3">
       <div className="h-[300px]">
         <div className="flex w-full flex-col items-center">
           {!isLoading && notifications.length == 0 && (

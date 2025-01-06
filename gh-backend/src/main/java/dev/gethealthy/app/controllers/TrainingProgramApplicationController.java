@@ -35,17 +35,6 @@ public class TrainingProgramApplicationController  {
             return trainingProgramApplicationService.getAllApplicationsForTrainerFiltered(userId, filter, page);
     }
 
-//    @GetMapping("/users/{userId}/programs/{programId}/application") // TODO: ???
-//    @ResponseStatus(HttpStatus.OK)
-//    public SingleTrainingProgramApplicationResponse getTrainingProgramApplication(
-//            @PathVariable(name = "userId") Integer userId,
-//            @PathVariable(name = "programId") Integer programId) {
-//        TrainingProgramApplicationId id = new TrainingProgramApplicationId();
-//        id.setUserId(userId);
-//        id.setProgramId(programId);
-//        return trainingProgramApplicationService.getProgramApplication(id);
-//    }
-
     @PostMapping("/training-program-applications")
     @ResponseStatus(HttpStatus.CREATED)
     public TrainingProgramApplicationResponse addTrainingProgramApplication(@RequestBody @Valid TrainingProgramApplicationRequest request) {
