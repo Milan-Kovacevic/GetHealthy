@@ -1,4 +1,3 @@
-import { getAllTrainingProgramsForTrainer } from "@/api/services/training-program-service";
 import React, { useEffect, useState } from "react";
 import { AnalyticsProgram } from "@/api/models/trainer-analytics";
 import { DateRange } from "react-day-picker";
@@ -17,18 +16,10 @@ export default function TrainerAnalyticsProvider({
   children,
   ...props
 }: TrainerAnalyticsProviderProps) {
-  const [programs, setPrograms] = useState<TrainerProgram[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<DateRange | undefined>();
   const [selectedAnalyticsProgram, setSelectedAnalyticsProgram] =
     useState<AnalyticsProgram>();
   const [loading, setLoading] = useState(false);
-
-  const userId = 2;
-  useEffect(() => {
-    getAllTrainingProgramsForTrainer(userId).then((programs) => {
-      setPrograms(programs);
-    });
-  }, []);
 
   const changePeriod = (period?: DateRange) => {
     setSelectedPeriod(period);
@@ -69,7 +60,6 @@ export default function TrainerAnalyticsProvider({
     <TrainerAnalyticsContext.Provider
       {...props}
       value={{
-        programs: programs,
         selectedPeriod: selectedPeriod,
         selectedProgram: selectedAnalyticsProgram,
         onChangePeriod: changePeriod,

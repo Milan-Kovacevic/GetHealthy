@@ -1,14 +1,10 @@
 import {
   BellIcon,
-  Book,
   ChartBarIcon,
   DumbbellIcon,
   LayoutListIcon,
   Menu,
   NotebookPenIcon,
-  Sunset,
-  Trees,
-  Zap,
 } from "lucide-react";
 
 import appIcon from "@/assets/applogo.png";
@@ -40,7 +36,7 @@ import { cn } from "@/lib/utils";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationsPopover from "../notifications/NotificationsPopover";
 import useAuth from "@/hooks/use-auth";
-import { UserRole } from "@/api/models/user-account";
+import { UserRole } from "@/api/enums/user-role";
 
 type NavbarMenuItem = {
   title: string;
@@ -123,7 +119,11 @@ const Navbar = () => {
   return (
     <section className="py-3 shadow-md dark:shadow-white/15 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
       <div className="container mx-auto">
-        <DesktopNavbar navbarMenuItems={navBarMenu} isTrainer={isTrainer} />
+        <DesktopNavbar
+          navbarMenuItems={navBarMenu}
+          isTrainer={isTrainer}
+          isLoggedIn={isLoggedIn}
+        />
       </div>
       <MobileNavbar navbarMenuItems={navBarMenu} />
     </section>
@@ -302,13 +302,13 @@ const MobileNavbar = ({
               <Menu className="size-4" />
             </Button>
           </SheetTrigger>
-          <SheetContent className="overflow-y-auto">
+          <SheetContent className="overflow-y-auto w-full">
             <SheetHeader>
               <SheetTitle className="-ml-2">
                 <AppBanner />
               </SheetTitle>
             </SheetHeader>
-            <div className="my-8 flex flex-col gap-4">
+            <div className="my-8 mb-3 flex flex-col gap-4">
               <Accordion
                 type="single"
                 collapsible
@@ -362,9 +362,28 @@ const MobileNavbar = ({
                 })}
               </Accordion>
 
-              <Link className={cn("font-semibold")} to="#">
-                Notifications
-              </Link>
+              <NotificationsPopover isTrainer={true}>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className={cn(
+                    "relative",
+                    navigationMenuTriggerStyle,
+                    buttonVariants({
+                      variant: "ghost",
+                    }),
+                    "h-auto mr-3 w-full border [&_svg]:h-5 [&_svg]:w-5"
+                  )}
+                >
+                  <Badge
+                    variant="secondary"
+                    className="absolute border-none top-0.5 -right-0.5 rounded-full pointer-events-none text-primary-foreground leading-none bg-primary text-[10px] px-1.5 py-1 h-auto"
+                  >
+                    <span className="font-semibold leading-none">4</span>
+                  </Badge>
+                  <BellIcon strokeWidth={2} className="w-full h-full" />
+                </Button>
+              </NotificationsPopover>
             </div>
             <div className="">
               <div className="mt-2 flex flex-col gap-3">

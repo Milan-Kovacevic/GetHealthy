@@ -1,6 +1,6 @@
 // For now only...
 
-import { UserRole } from "./user-account";
+import { UserRole } from "@/api/enums/user-role";
 
 export type AuthUserContext = {
   user: AuthUser | null;

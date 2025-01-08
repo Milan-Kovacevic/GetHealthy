@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function useFeaturedTrainingPrograms() {
   const [loadingFeaturedPrograms, setLoadingFeaturedPrograms] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
   const [featuredPrograms, setFeaturedPrograms] = useState<
     FeaturedTrainingProgram[]
   >([]);
@@ -12,10 +13,12 @@ export default function useFeaturedTrainingPrograms() {
     setLoadingFeaturedPrograms(true);
     getFeaturedTrainingPrograms()
       .then((programs) => {
+        if (programs.length == 0) setIsEmpty(true);
         setFeaturedPrograms(programs);
       })
+      .catch((error) => setIsEmpty(true))
       .finally(() => setLoadingFeaturedPrograms(false));
   }, []);
 
-  return { featuredPrograms, loadingFeaturedPrograms };
+  return { featuredPrograms, loadingFeaturedPrograms, isEmpty };
 }

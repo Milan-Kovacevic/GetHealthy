@@ -1,5 +1,5 @@
+import { ProgramDifficulty } from "../enums/program-difficulty";
 import { CategoryDTO } from "./category-contract";
-import { ProgramDifficultyDTO } from "./training-program-contract";
 import { ProgramExerciseDetailsDTO } from "./program-exercise-contract";
 
 export type TraineeExercisingDTO = {
@@ -7,7 +7,7 @@ export type TraineeExercisingDTO = {
   programName: string;
   trainerName: string;
   programCategories: CategoryDTO[];
-  programDifficulty: ProgramDifficultyDTO;
+  programDifficulty: ProgramDifficulty;
   exercises: ProgramExerciseDetailsDTO[];
 };
 

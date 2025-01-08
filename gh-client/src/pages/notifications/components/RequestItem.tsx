@@ -1,18 +1,19 @@
 import { ProgramRequest } from "@/api/models/program-request";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { formatDistanceToNow } from "date-fns";
 import { CheckIcon, XIcon } from "lucide-react";
 
 type RequestItemProps = {
   request: ProgramRequest;
-  onAccept: (id: number) => void;
-  onReject: (id: number) => void;
+  onAccept: (programId: number, traineeId: number) => void;
+  onReject: (programId: number, traineeId: number) => void;
 };
 
 export default function RequestItem(props: RequestItemProps) {
   const { request, onAccept, onReject } = props;
   return (
-    <div className="flex items-center space-x-3.5 p-2" key={request.id}>
+    <div className="flex items-center space-x-3.5 p-2 w-full">
       <Avatar className="self-start mt-1.5">
         <AvatarImage src="" alt={request.traineeFirstName} />
         <AvatarFallback>
@@ -26,7 +27,7 @@ export default function RequestItem(props: RequestItemProps) {
         </p>
         <p className="text-xs text-muted-foreground">{request.note}</p>
         <p className="text-xs text-muted-foreground">
-          {request.submissionDate}
+          {formatDistanceToNow(request.submissionDate, { addSuffix: true })}
         </p>
       </div>
       <div className="flex space-x-2 self-end">
@@ -34,7 +35,7 @@ export default function RequestItem(props: RequestItemProps) {
           size="icon"
           variant="ghost"
           className="h-8 w-8"
-          onClick={() => onAccept(request.id)}
+          onClick={() => onAccept(request.programId, request.traineeId)}
         >
           <CheckIcon className="h-4 w-4" />
           <span className="sr-only">Accept</span>
@@ -43,7 +44,7 @@ export default function RequestItem(props: RequestItemProps) {
           size="icon"
           variant="ghost"
           className="h-8 w-8 text-destructive hover:text-destructive"
-          onClick={() => onReject(request.id)}
+          onClick={() => onReject(request.programId, request.traineeId)}
         >
           <XIcon className="h-4 w-4" />
           <span className="sr-only">Reject</span>

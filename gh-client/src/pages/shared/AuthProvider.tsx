@@ -1,5 +1,5 @@
 import { AuthUser, AuthUserContext, Tokens } from "@/api/models/authentication";
-import { UserRole } from "@/api/models/user-account";
+import { UserRole } from "@/api/enums/user-role";
 import { UserAuthContext } from "@/hooks/use-auth";
 import { delay } from "@/lib/utils";
 import { LoginFormSchema } from "@/schemas/login-form-schema";
@@ -62,6 +62,9 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
   const getUserRole = () => {
     return authUser?.role ?? null;
   };
+  const isLoggedIn = () => {
+    return authUser != undefined;
+  };
 
   const value = {
     context: {
@@ -72,6 +75,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
     logout: logout,
     getUserId: getUserId,
     getUserRole: getUserRole,
+    isLoggedIn: isLoggedIn,
   };
 
   return (

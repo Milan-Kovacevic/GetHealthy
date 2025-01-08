@@ -1,6 +1,6 @@
 import { ProgramComment } from "@/api/models/program-review";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import InfiniteScroll from "@/components/ui/infnite-scroll";
+import InfiniteScroll from "@/components/ui/infinite-scroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2Icon } from "lucide-react";
 

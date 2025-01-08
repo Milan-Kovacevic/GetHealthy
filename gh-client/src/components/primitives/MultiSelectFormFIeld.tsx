@@ -231,7 +231,6 @@ export const MultiSelect = React.forwardRef<
               <div className="flex justify-between items-center w-full">
                 <div className="flex flex-wrap items-center">
                   {selectedValues.slice(0, maxCount).map((item) => {
-                    // console.log(item[itemValueKey]);
                     const option = options.find(
                       (o) => o[itemNameKey] === item[itemNameKey]
                     );

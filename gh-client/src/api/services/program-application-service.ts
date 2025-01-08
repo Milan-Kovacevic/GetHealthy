@@ -4,12 +4,15 @@ import { PageableProgramApplicationsDTO } from "../contracts/program-application
 import { PageableProgramRequests } from "../models/program-request";
 
 const getPageableTrainingProgramApplications = async (
+  userId: number,
   searchString: string = "",
   page: number = 0,
   limit: number = 12
 ) => {
-  var userId = "1";
-  var url = ApiEndpoints.TrainerProgramApplications.replace("{userId}", userId);
+  var url = ApiEndpoints.TrainerProgramApplications.replace(
+    "{userId}",
+    `${userId}`
+  );
   url += `?${
     searchString ? `filter=${searchString}&` : ""
   }page=${page}&size=${limit}`;

@@ -20,8 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("${gethealthy.base-url}/training-programs")
 public class TrainingProgramExerciseController  {
-    TrainingProgramExerciseService trainingProgramExerciseService;
-    ExerciseSetService exerciseSetService;
+    private final TrainingProgramExerciseService trainingProgramExerciseService;
+    private final ExerciseSetService exerciseSetService;
 
     @GetMapping("{programId}/exercises")
     public List<ProgramExerciseResponse> getTrainingProgramExercises(@PathVariable(name = "programId") Integer programId) {
@@ -33,14 +33,14 @@ public class TrainingProgramExerciseController  {
     public void addExercisesToTrainingProgram(@PathVariable(name = "programId") Integer programId,
                                               @RequestBody List<TrainingProgramExerciseRequest> requests)
     {
-        for (var request : requests)
-        {
-            var programExercise = trainingProgramExerciseService.insert(request, TrainingProgramExercise.class);
-
-            for (var set : request.getExerciseSets()) {
-                set.setProgramExericseId(programExercise.getId());
-                exerciseSetService.insert(set, ExerciseSet.class);
-            }
-        }
+//        for (var request : requests)
+//        {
+//            var programExercise = trainingProgramExerciseService.insert(request, TrainingProgramExercise.class);
+//
+//            for (var set : request.getExerciseSets()) {
+//                set.setProgramExericseId(programExercise.getId());
+//                exerciseSetService.insert(set, ExerciseSet.class);
+//            }
+//        }
     }
 }

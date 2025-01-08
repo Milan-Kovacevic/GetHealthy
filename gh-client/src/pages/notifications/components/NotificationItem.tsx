@@ -29,18 +29,18 @@ export default function NotificationItem({
       <div
         className={cn(
           "flex items-start space-x-4 py-2",
-          !notification.isRead && "bg-muted/50 pl-3.5 pr-1 rounded-md"
+          !notification.isRead && "bg-muted/50 pl-3.5 pr-1 rounded-md mb-2"
         )}
       >
         <div className="flex-1 space-y-1">
           <h3
             className={`text-sm font-medium ${
-              !notification.isRead ? "text-foreground" : "text-foreground/90"
+              !notification.isRead ? "text-foreground" : "text-foreground/85"
             }`}
           >
             {notification.title}
           </h3>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-foreground/80">
             {notification.description}
           </p>
           <p className="text-xs text-muted-foreground/90">
@@ -66,7 +66,7 @@ export default function NotificationItem({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {!isLast && <Separator />}
+      {!isLast && notification.isRead && <Separator />}
     </React.Fragment>
   );
 }

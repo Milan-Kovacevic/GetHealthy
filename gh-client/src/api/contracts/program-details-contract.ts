@@ -1,12 +1,12 @@
+import { ProgramDifficulty } from "../enums/program-difficulty";
 import { CategoryDTO } from "./category-contract";
-import { ProgramDifficultyDTO } from "./training-program-contract";
 import { ProgramExerciseDetailsDTO } from "./program-exercise-contract";
 
 export type SingleTrainingProgramDTO = {
   id: number;
   name: string;
   imageFilePath?: string;
-  difficulty: ProgramDifficultyDTO;
+  difficulty: ProgramDifficulty;
   rating: number;
   createdAt: string;
   totalRates: number;

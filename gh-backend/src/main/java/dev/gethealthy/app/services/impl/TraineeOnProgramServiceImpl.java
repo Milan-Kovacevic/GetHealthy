@@ -44,7 +44,11 @@ public class TraineeOnProgramServiceImpl implements TraineeOnProgramService {
         return traineeOnTrainingProgramRepository
                 .findAllByProgram_Id(programId)
                 .stream()
-                .map(e -> modelMapper.map(e, ProgramParticipantResponse.class))
+                .map(e -> {
+                    var model = modelMapper.map(e, ProgramParticipantResponse.class);
+                    modelMapper.map(e.getUser(), model);
+                    return model;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -65,7 +69,7 @@ public class TraineeOnProgramServiceImpl implements TraineeOnProgramService {
         var newTrainingProgram = trainingProgramRepository.findById(request.getNewProgramId()).orElseThrow(NotFoundException::new);
 
         // Check to see if the new program belongs to the same trainer ...
-        if(!Objects.equals(request.getTrainerId(), trainerId)
+        if (!Objects.equals(request.getTrainerId(), trainerId)
                 || !Objects.equals(newTrainingProgram.getTrainer().getId(), trainerId))
             throw new BadRequestException("Training program not owned by the same trainer");
 

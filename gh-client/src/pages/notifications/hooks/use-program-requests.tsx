@@ -4,6 +4,7 @@ import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { useState } from "react";
 
 export function useProgramRequests() {
+  const userId = 2;
   const [pending, setPending] = useState(false);
   const {
     data: requests,
@@ -17,13 +18,14 @@ export function useProgramRequests() {
     setPage: setRequestsPage,
   } = useInfiniteScroll<ProgramRequest>({
     fetchData: (state) => {
-      return getPageableTrainingProgramApplications("", state.page);
+      return getPageableTrainingProgramApplications(userId, "", state.page);
     },
   });
 
-  const onRequestApprove = async () => {};
+  // TODO
+  const onRequestApprove = async (programId: number, traineeId: number) => {};
 
-  const onRequestReject = async () => {};
+  const onRequestReject = async (programId: number, traineeId: number) => {};
 
   return {
     requests,

@@ -74,7 +74,12 @@ public class TrainingProgramApplicationServiceImpl
     public Page<TrainingProgramApplicationResponse> getAllApplicationsForTrainer(Integer trainerId, Pageable page) {
         return trainingProgramApplicationRepository
                 .findByProgram_Trainer_IdOrderByMarkReadAsc(trainerId, page)
-                .map(e -> modelMapper.map(e, TrainingProgramApplicationResponse.class));
+                .map(e -> {
+                    var response = modelMapper.map(e, TrainingProgramApplicationResponse.class);
+                    modelMapper.map(e.getProgram(), response);
+                    modelMapper.map(e.getUser(), response);
+                    return response;
+                });
     }
 
     @Override
@@ -82,7 +87,12 @@ public class TrainingProgramApplicationServiceImpl
             Pageable page) {
         return trainingProgramApplicationRepository
                 .findAllTrainerApplicationsFiltered(userId, filter, page)
-                .map(e -> modelMapper.map(e, TrainingProgramApplicationResponse.class));
+                .map(e -> {
+                    var response = modelMapper.map(e, TrainingProgramApplicationResponse.class);
+                    modelMapper.map(e.getProgram(), response);
+                    modelMapper.map(e.getUser(), response);
+                    return response;
+                });
     }
 
     @Override

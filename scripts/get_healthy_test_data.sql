@@ -172,3 +172,27 @@ VALUES
 INSERT INTO get_healthy.exercise_set_feedback (Id, ExerciseFeedbackId, Skipped, Completed, FirstMetricValueFeedback, SecondMetricValueFeedback)
 VALUES 
   (1, 1, 0, 1, '10', NULL);
+
+-- Test data for get_healthy.NOTIFICATION
+INSERT INTO get_healthy.notification (NotificationId, Date, MarkRead, Metadata, NotificationType, SenderId, UserId)
+VALUES
+    (1, NOW() - INTERVAL 1 DAY, FALSE, 'Full Body Workout', FLOOR(RAND() * 5), 3, 2),
+    (2, NOW() - INTERVAL 2 DAY, TRUE, 'Leg Day Program', FLOOR(RAND() * 5), 3, 2),
+    (3, NOW() - INTERVAL 3 DAY, FALSE, 'Cardio Blast', FLOOR(RAND() * 5), 3, 2),
+    (4, NOW() - INTERVAL 4 DAY, TRUE, 'Strength Training', FLOOR(RAND() * 5), 3, 2),
+    (5, NOW() - INTERVAL 5 DAY, FALSE, 'HIIT Training', FLOOR(RAND() * 5), 3, 2),
+    (6, NOW() - INTERVAL 6 DAY, TRUE, 'Upper Body Focus', FLOOR(RAND() * 5), 3, 2),
+    (7, NOW() - INTERVAL 7 DAY, FALSE, 'Core Workout', FLOOR(RAND() * 5), 3, 2),
+    (8, NOW() - INTERVAL 8 DAY, TRUE, 'Endurance Program', FLOOR(RAND() * 5), 3, 2),
+    (9, NOW() - INTERVAL 9 DAY, FALSE, 'Mobility & Flexibility', FLOOR(RAND() * 5), 3, 2),
+    (10, NOW() - INTERVAL 10 DAY, TRUE, 'Recovery Workout', FLOOR(RAND() * 5), 3, 2),
+    (11, NOW() - INTERVAL 11 DAY, FALSE, 'Strength & Conditioning', FLOOR(RAND() * 5), 3, 2),
+    (12, NOW() - INTERVAL 12 DAY, TRUE, 'Powerlifting Program', FLOOR(RAND() * 5), 3, 2),
+    (13, NOW() - INTERVAL 13 DAY, FALSE, 'Weight Loss Program', FLOOR(RAND() * 5), 3, 2),
+    (14, NOW() - INTERVAL 14 DAY, TRUE, 'Muscle Building Plan', FLOOR(RAND() * 5), 3, 2),
+    (15, NOW() - INTERVAL 15 DAY, FALSE, 'Plyometric Training', FLOOR(RAND() * 5), 3, 2),
+    (16, NOW() - INTERVAL 16 DAY, TRUE, 'Functional Fitness', FLOOR(RAND() * 5), 3, 2),
+    (17, NOW() - INTERVAL 17 DAY, FALSE, 'Yoga for Athletes', FLOOR(RAND() * 5), 3, 2),
+    (18, NOW() - INTERVAL 18 DAY, TRUE, 'Running Program', FLOOR(RAND() * 5), 3, 2),
+    (19, NOW() - INTERVAL 19 DAY, FALSE, 'Cycling Plan', FLOOR(RAND() * 5), 3, 2),
+    (20, NOW() - INTERVAL 20 DAY, TRUE, 'Swimming Training', FLOOR(RAND() * 5), 3, 2);

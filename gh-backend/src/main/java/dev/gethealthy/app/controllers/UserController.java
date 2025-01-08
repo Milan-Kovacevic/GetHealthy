@@ -2,6 +2,8 @@ package dev.gethealthy.app.controllers;
 
 import dev.gethealthy.app.models.responses.TrainerProgramResponse;
 import dev.gethealthy.app.services.TrainingProgramService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,8 +75,8 @@ public class UserController {
     }
 
     @GetMapping("{userId}/training-programs")
-    public List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(@PathVariable Integer userId) {
-        return trainingProgramService.getAllTrainingProgramsForTrainer(userId);
+    public Page<TrainerProgramResponse> getTrainingProgramsForTrainer(@PathVariable Integer userId, Pageable page) {
+        return trainingProgramService.getTrainingProgramsForTrainer(userId, page);
     }
 
 }

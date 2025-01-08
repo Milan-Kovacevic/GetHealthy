@@ -183,56 +183,56 @@ const getAnalyticsProgramParticipants = async (programId: number) => {
   );
   url += `/all`;
   await delay(500);
-  // return sendAxiosRequest<void, ProgramParticipantDTO[]>({
-  //   method: "GET",
-  //   url: url,
-  // }).then((response) => {
-  //   // Perform neccessary mappings etc...
-  //   return response.data as AnalyticsProgramParticipant[];
-  // });
-  return [
-    {
-      id: 1,
-      firstName: "Alex",
-      lastName: "Doe",
-      joinDate: "01/01/2025",
-      dateOfBirth: "01/01/2001",
-      gender: "MALE",
-    },
-    {
-      id: 2,
-      firstName: "Jhon",
-      lastName: "Stock",
-      joinDate: "02/01/2025",
-      dateOfBirth: "01/01/2002",
-      gender: "MALE",
-    },
-  ];
+  return sendAxiosRequest<void, ProgramParticipantDTO[]>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    // Perform neccessary mappings etc...
+    return response.data as AnalyticsProgramParticipant[];
+  });
+  // return [
+  //   {
+  //     id: 1,
+  //     firstName: "Alex",
+  //     lastName: "Doe",
+  //     joinDate: "01/01/2025",
+  //     dateOfBirth: "01/01/2001",
+  //     gender: "MALE",
+  //   },
+  //   {
+  //     id: 2,
+  //     firstName: "Jhon",
+  //     lastName: "Stock",
+  //     joinDate: "02/01/2025",
+  //     dateOfBirth: "01/01/2002",
+  //     gender: "MALE",
+  //   },
+  // ];
 };
 
 const getAnalyticsProgramExercises = async (programId: number) => {
-  // return getTrainingProgramExercises(programId).then(
-  //   (response) => response as AnalyticsProgramExercise[]
-  // );
-  await delay(500);
-  return [
-    {
-      id: 1,
-      name: "Bench Press",
-    },
-    {
-      id: 2,
-      name: "Deadlift",
-    },
-    {
-      id: 3,
-      name: "Overhead Press",
-    },
-    {
-      id: 4,
-      name: "Pull-Up",
-    },
-  ];
+  return getTrainingProgramExercises(programId).then(
+    (response) => response as AnalyticsProgramExercise[]
+  );
+  // await delay(500);
+  // return [
+  //   {
+  //     id: 1,
+  //     name: "Bench Press",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Deadlift",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Overhead Press",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Pull-Up",
+  //   },
+  // ];
 };
 
 export {

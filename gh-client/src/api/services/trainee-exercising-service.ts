@@ -6,9 +6,9 @@ import {
 } from "../contracts/trainee-exercising-contract";
 import { sendAxiosRequest } from "./base-service";
 import { Category } from "../models/category";
-import { ProgramDifficulty } from "../models/training-program";
 import { ExerciseMetric } from "../models/exercise";
 import { Set, Exercise } from "../models/trainee-exercising";
+import { ProgramDifficulty } from "../enums/program-difficulty";
 
 const getWorkoutSummary = async () =>
   // programId: number
@@ -141,9 +141,9 @@ const mockProgramExercises: Exercise[] = [
 
 // Mock podaci za Category
 const mockCategories: Category[] = [
-  { id: 1, categoryName: "Strength" },
-  { id: 2, categoryName: "Endurance" },
-  { id: 3, categoryName: "Cardio" },
+  { categoryId: 1, name: "Strength" },
+  { categoryId: 2, name: "Endurance" },
+  { categoryId: 3, name: "Cardio" },
 ];
 
 // Mock podaci za TraineeExercising
@@ -151,7 +151,7 @@ const mockTraineeExercising: TraineeExercising = {
   programName: "Total Body Strength",
   trainerName: "John Doe",
   programCategories: [mockCategories[0], mockCategories[2]], // Strength i Cardio
-  programDifficulty: "Intermediate" as ProgramDifficulty,
+  programDifficulty: ProgramDifficulty.INTERMEDIATE,
   exercises: mockProgramExercises,
   traineeExercisingId: 0,
 };

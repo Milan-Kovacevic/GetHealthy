@@ -4,7 +4,6 @@ import { createContext, useContext } from "react";
 import { DateRange } from "react-day-picker";
 
 type TrainerAnalyticsState = {
-  programs: TrainerProgram[];
   selectedProgram?: AnalyticsProgram;
   selectedPeriod?: DateRange;
   onChangeProgram: (program?: TrainerProgram) => void;
@@ -13,7 +12,6 @@ type TrainerAnalyticsState = {
 };
 
 export const TrainerAnalyticsContext = createContext<TrainerAnalyticsState>({
-  programs: [],
   onChangePeriod: () => {},
   onChangeProgram: () => {},
   loading: false,
