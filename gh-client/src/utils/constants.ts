@@ -32,7 +32,7 @@ export const ApiEndpoints = {
   TrainingProgramComments: `${API_PREFIX}/training-programs/{programId}/comments`,
   TrainingProgramRatings: `${API_PREFIX}/training-programs/{programId}/ratings`,
   TrainingProgramUserRating: `${API_PREFIX}/training-programs/{programId}/user-ratings/{userId}`,
-  TrainingProgramExercises: `${API_PREFIX}/training-program/{programId}/exercises`,
+  TrainingProgramExercises: `${API_PREFIX}/training-programs/{programId}/exercises`,
   TrainingProgramOnSchedule: `${API_PREFIX}/schedules`,
   Metrics: `${API_PREFIX}/metrics`,
   Exercises: `${API_PREFIX}/exercises`,

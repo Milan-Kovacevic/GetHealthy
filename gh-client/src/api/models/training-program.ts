@@ -1,12 +1,12 @@
 import { Page } from "../contracts/pageable-contract";
+import { ProgramDifficulty } from "../enums/program-difficulty";
 import { Category } from "./category";
 import { Exercise } from "./exercise";
 
 export type TrainingProgram = {
   id: number;
   name: string;
-  // difficulty: ProgramDifficulty;
-  difficulty: TrainingProgramDifficulty;
+  difficulty: ProgramDifficulty;
   trainingDuration: number;
   description: string;
   requirements?: string;
@@ -21,8 +21,6 @@ export type TrainingProgram = {
 };
 
 export type PageableTrainingPrograms = Page<TrainingProgram>;
-
-export type ProgramDifficulty = "Beginner" | "Intermediate" | "Advanced";
 
 export type TrainerProgram = {
   id: number;
@@ -54,18 +52,3 @@ export type FeaturedTrainingProgram = {
   trainerFirstName: string;
   trainerLastName: string;
 };
-
-export enum TrainingProgramDifficulty {
-  BEGINNER = "BEGINNER",
-  INTERMEDIATE = "INTERMEDIATE",
-  ADVANCED = "ADVANCED",
-}
-
-export const difficultyOptions = Object.values(TrainingProgramDifficulty).map(
-  (difficulty) => ({
-    label: difficulty.charAt(0) + difficulty.slice(1).toLowerCase(),
-    // value: (index + 1).toString(),
-    value: difficulty,
-    name: difficulty,
-  })
-);

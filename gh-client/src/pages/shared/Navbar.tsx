@@ -1,14 +1,10 @@
 import {
   BellIcon,
-  Book,
   ChartBarIcon,
   DumbbellIcon,
   LayoutListIcon,
   Menu,
   NotebookPenIcon,
-  Sunset,
-  Trees,
-  Zap,
 } from "lucide-react";
 
 import appIcon from "@/assets/applogo.png";
@@ -40,7 +36,7 @@ import { cn } from "@/lib/utils";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationsPopover from "../notifications/NotificationsPopover";
 import useAuth from "@/hooks/use-auth";
-import { UserRole } from "@/api/models/user-account";
+import { UserRole } from "@/api/enums/user-role";
 
 type NavbarMenuItem = {
   title: string;
@@ -123,7 +119,11 @@ const Navbar = () => {
   return (
     <section className="py-3 shadow-md dark:shadow-white/15 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
       <div className="container mx-auto">
-        <DesktopNavbar navbarMenuItems={navBarMenu} isTrainer={isTrainer} />
+        <DesktopNavbar
+          navbarMenuItems={navBarMenu}
+          isTrainer={isTrainer}
+          isLoggedIn={isLoggedIn}
+        />
       </div>
       <MobileNavbar navbarMenuItems={navBarMenu} />
     </section>

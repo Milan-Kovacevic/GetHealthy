@@ -21,6 +21,8 @@ import { Category } from "@/api/models/category";
 import { SearchBar } from "@/components/primitives/SearchBar";
 import useTrainingPrograms from "./hooks/use-training-programs";
 import { getAllCategories } from "@/api/services/category-service";
+import useFeaturedTrainingPrograms from "./hooks/use-featured-programs";
+import noResults from "@/assets/no-results.png";
 
 type TrainingProgramLayoutProps = {
   myTrainingPrograms: boolean;
@@ -44,6 +46,9 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
     onSearchTrainingPrograms,
   } = useTrainingPrograms();
 
+  const { loadingFeaturedPrograms, featuredPrograms, isEmpty } =
+    useFeaturedTrainingPrograms();
+
   // TODO: nemam pojma sta ovo radi
   useEffect(() => {
     getAllCategories().then((categories) => {
@@ -61,7 +66,13 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
         <div className="mx-auto flex flex-col">
           <TrainingProgramsPageTitle showCreate={myTrainingPrograms} />
           <Separator className="my-4" />
-          {!myTrainingPrograms && <FeaturedTrainingPrograms />}
+          {!myTrainingPrograms && (
+            <FeaturedTrainingPrograms
+              loading={loadingFeaturedPrograms}
+              featuredPrograms={featuredPrograms}
+              isEmpty={isEmpty}
+            />
+          )}
           <div className="flex lg:flex-row flex-col lg:gap-8 gap-2">
             <div className="flex flex-col my-6 pr-4 lg:border-r lg:border-b-0 border-b pb-4">
               <SearchBar
@@ -80,6 +91,17 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
 
             {loadingPrograms ? (
               <TrainingProgramsLoader />
+            ) : trainingPrograms.length == 0 ? (
+              <div className="w-full flex flex-col items-center justify-center">
+                <img src={noResults} className="dark:filter-white h-24 w-24" />
+                <p className="text-xl font-semibold tracking-tight mt-2">
+                  No results found
+                </p>
+                <p className="text-sm text-muted-foreground tracking-tight mt-1">
+                  Please, reload page and try again later or adjust the filter
+                  criteria...
+                </p>
+              </div>
             ) : (
               <div className="grid mt-5 gap-x-6 gap-y-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 flex-1">
                 {trainingPrograms.map((item) => (

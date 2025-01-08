@@ -1,8 +1,7 @@
 import { Page } from "../contracts/pageable-contract";
+import { ProgramDifficulty } from "../enums/program-difficulty";
 import { Category } from "./category";
 import { ProgramExerciseDetails } from "./program-exercise";
-
-import { ProgramDifficulty } from "./training-program";
 
 export type SingleProgramDetails = {
   id: number;

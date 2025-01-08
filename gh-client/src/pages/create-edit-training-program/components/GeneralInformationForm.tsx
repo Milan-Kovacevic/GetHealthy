@@ -23,7 +23,7 @@ import { CheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import FormSectionTitle from "./FormSectionTitle";
 import { handleIntegerOnValueChange } from "@/utils/formInputUtils";
-import { difficultyOptions } from "@/api/models/training-program";
+import { difficultyOptions } from "@/api/enums/program-difficulty";
 import { Category } from "@/api/models/category";
 
 type GeneralInformationFormProps = {

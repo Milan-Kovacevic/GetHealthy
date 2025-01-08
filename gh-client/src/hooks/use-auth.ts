@@ -1,5 +1,5 @@
+import { UserRole } from "@/api/enums/user-role";
 import { AuthUserContext } from "@/api/models/authentication";
-import { UserRole } from "@/api/models/user-account";
 import { LoginFormSchema } from "@/schemas/login-form-schema";
 import { createContext, useContext } from "react";
 
