@@ -21,75 +21,67 @@ import java.util.List;
 @Entity
 @Table(name = "training_program")
 public class TrainingProgram implements BaseEntity<Integer> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ProgramId", nullable = false)
-    private Integer id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "ProgramId", nullable = false)
+        private Integer id;
 
-    @Size(max = 128)
-    @NotNull
-    @Column(name = "Name", nullable = false, length = 128)
-    private String name;
+        @Size(max = 128)
+        @NotNull
+        @Column(name = "Name", nullable = false, length = 128)
+        private String name;
 
-    @NotNull
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "Difficulty", nullable = false)
-    private TrainingProgramDifficulty difficulty;
+        @NotNull
+        @Enumerated(EnumType.ORDINAL)
+        @Column(name = "Difficulty", nullable = false)
+        private TrainingProgramDifficulty difficulty;
 
-    @NotNull
-    @Column(name = "TrainingDuration", nullable = false)
-    private Integer trainingDuration;
+        @NotNull
+        @Column(name = "TrainingDuration", nullable = false)
+        private Integer trainingDuration;
 
-    @Size(max = 512)
-    @Column(name = "Description", length = 512, nullable = false)
-    private String description;
+        @Size(max = 512)
+        @Column(name = "Description", length = 512, nullable = false)
+        private String description;
 
-    @Size(max = 512)
-    @Column(name = "Requirements", length = 512)
-    private String requirements;
+        @Size(max = 512)
+        @Column(name = "Requirements", length = 512)
+        private String requirements;
 
-    @NotNull
-    @Column(name = "CreatedAt", nullable = false)
-    private Instant createdAt;
+        @NotNull
+        @Column(name = "CreatedAt", nullable = false)
+        private Instant createdAt;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "UserId", nullable = false)
-    private Trainer trainer;
+        @NotNull
+        @ManyToOne(fetch = FetchType.EAGER, optional = false)
+        @OnDelete(action = OnDeleteAction.CASCADE)
+        @JoinColumn(name = "UserId", nullable = false)
+        private Trainer trainer;
 
-    @OneToMany(fetch = FetchType.EAGER) // TODO: LAZY??
-    @JoinColumn(name = "ProgramId")
-    private List<ProgramRating> trainingProgramRatings;
+        @OneToMany(fetch = FetchType.EAGER) // TODO: LAZY??
+        @JoinColumn(name = "ProgramId")
+        private List<ProgramRating> trainingProgramRatings;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "CategoryId", nullable = false)
-    @JoinTable(
-            name = "training_program_category",
-            joinColumns = @JoinColumn(name = "ProgramId"),
-            inverseJoinColumns = @JoinColumn(name = "CategoryId")
-    )
-    private List<Category> categories;
+        @OneToMany(fetch = FetchType.EAGER)
+        @OnDelete(action = OnDeleteAction.CASCADE)
+        @JoinColumn(name = "CategoryId", nullable = false)
+        @JoinTable(name = "training_program_category", joinColumns = @JoinColumn(name = "ProgramId"), inverseJoinColumns = @JoinColumn(name = "CategoryId"))
+        private List<Category> categories;
 
-    //@OnDelete(action = OnDeleteAction.CASCADE)
-    //@JoinColumn(name = "ExerciseId", nullable = false)
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }) // TODO: ???
-    @JoinTable(
-            name = "training_program_exercise",
-            joinColumns = @JoinColumn(name = "ProgramId"),
-            inverseJoinColumns = @JoinColumn(name = "ExerciseId")
-    )
-    private List<Exercise> exercises;
+        // @OnDelete(action = OnDeleteAction.CASCADE)
+        // @JoinColumn(name = "ExerciseId", nullable = false)
+        @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }) // TODO: ???
+        @JoinTable(name = "training_program_exercise", joinColumns = @JoinColumn(name = "ProgramId"), inverseJoinColumns = @JoinColumn(name = "ExerciseId"))
+        private List<Exercise> exercises;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ProgramId")
-    private List<TrainingProgramExercise> trainingProgramExercises;
+        @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+        @JoinColumn(name = "ProgramId")
+        private List<TrainingProgramExercise> trainingProgramExercises;
 
-    @Column(name = "Deleted")
-    private Boolean deleted = false;
+        @Column(name = "Deleted")
+        private Boolean deleted = false;
 
-    @Size(max = 255)
-    @Column(name = "ImageFilePath")
-    private String imageFilePath;
+        @Size(max = 255)
+        @Column(name = "ImageFilePath")
+        private String imageFilePath;
 }

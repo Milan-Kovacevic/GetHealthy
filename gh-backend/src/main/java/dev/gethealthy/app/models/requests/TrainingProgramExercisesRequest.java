@@ -10,5 +10,5 @@ import java.util.List;
 @Getter
 @Setter
 public class TrainingProgramExercisesRequest {
-    private List<TrainingProgramExerciseRequest> exercises;
+    private List<TrainingProgramExerciseRequest> trainingProgramExercises;
 }

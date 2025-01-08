@@ -74,7 +74,7 @@ const EditTrainingProgramForm = ({
     data: z.infer<typeof exercisePlanSchema>
   ) => {
     const exercisesData = {
-      exercises: data.exercises.map((elem, index) => ({
+      trainingProgramExercises: data.exercises.map((elem, index) => ({
         position: index + 1,
         exerciseId: elem.id,
         programId: programId,
