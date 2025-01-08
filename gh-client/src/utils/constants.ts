@@ -3,6 +3,7 @@ import environments from "@/environments/config";
 export const LIGHT_THEME = "light";
 export const DARK_THEME = "dark";
 export const APP_THEME_STORAGE_KEY = "gethealthy_ui_theme";
+export const AUTH_CONTEXT_STORAGE_KEY = "gethealthy_auth_context";
 
 export const TRAINEE_ACCOUNT_TYPE = "trainee";
 export const TRAINER_ACCOUNT_TYPE = "trainer";
@@ -31,7 +32,8 @@ export const ApiEndpoints = {
   TrainingProgramComments: `${API_PREFIX}/training-programs/{programId}/comments`,
   TrainingProgramRatings: `${API_PREFIX}/training-programs/{programId}/ratings`,
   TrainingProgramUserRating: `${API_PREFIX}/training-programs/{programId}/user-ratings/{userId}`,
-  TrainingProgramExercises: `${API_PREFIX}/training-programs/{programId}/exercises`,
+  TrainingProgramExercises: `${API_PREFIX}/training-program/{programId}/exercises`,
+  TrainingProgramOnSchedule: `${API_PREFIX}/schedules`,
   Metrics: `${API_PREFIX}/metrics`,
   Exercises: `${API_PREFIX}/exercises`,
   TraineeExercising: `${API_PREFIX}/trainee-exercising`,

@@ -1,10 +1,6 @@
-import GeneralInformationForm from "./components/GeneralInformationForm";
-import ExercisePlanBuilder from "./components/ExercisePlanBuilder";
-import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import CreateTrainingProgramForm from "./components/CreateTrainingProgramForm";
 
 const CreateTrainingProgramPage = () => {
-  const [programId, setProgramId] = useState<number>(-1);
   return (
     <div className="container mx-auto relative overflow-hidden sm:px-5 px-4 pt-8 pb-10">
       <div className="space-y-0.5">
@@ -14,10 +10,7 @@ const CreateTrainingProgramPage = () => {
           workout plan
         </p>
       </div>
-      <Separator className="my-4" />
-      <GeneralInformationForm isEdit={false} setProgramId={setProgramId}/>
-      <Separator className="my-4" />
-      <ExercisePlanBuilder programId={programId}/>
+      <CreateTrainingProgramForm />
     </div>
   );
 };

@@ -1,5 +1,5 @@
+import { delay } from "@/lib/utils";
 import { ApiEndpoints } from "@/utils/constants";
-import { sendAxiosRequest } from "./base-service";
 import {
   FeaturedTrainingProgramDTO,
   PageableTrainerProgramsDTO,
@@ -13,8 +13,9 @@ import {
   PageableTrainingPrograms,
   ProgramFilters,
   TrainerProgram,
+  TrainingProgram,
 } from "../models/training-program";
-import { delay } from "@/lib/utils";
+import { sendAxiosRequest } from "./base-service";
 
 const getPageableTrainingPrograms = async (
   searchString: string = "",
@@ -44,17 +45,56 @@ const getPageableTrainingPrograms = async (
   });
 };
 
-const createUpdateTrainingProgram = async (
-  trainingProgram: TrainingProgramDTO,
-  isUpdate: boolean
-) => {
-  var url = ApiEndpoints.TrainingPrograms;
-  return sendAxiosRequest<TrainingProgramDTO, object>({
-    method: !isUpdate ? "POST" : "PUT",
+const getTrainingProgram = async (
+  programId: number
+): Promise<TrainingProgram> => {
+  var url = `${ApiEndpoints.TrainingPrograms}/${programId}/details`;
+  return sendAxiosRequest<void, TrainingProgramDTO>({
+    method: "GET",
     url: url,
-    data: trainingProgram,
+  }).then((response) => {
+    return response.data as TrainingProgram;
+  });
+};
+
+const createTrainingProgram = async (userId: number, formData: FormData) => {
+  var url = `${ApiEndpoints.TrainingPrograms}/${userId}`;
+  return sendAxiosRequest<any, object>({
+    method: "POST",
+    url: url,
+    data: formData,
   }).then((response) => {
     return response.data as object;
+  });
+};
+
+const updateTrainingProgramGeneralInfo = async (
+  programId: number,
+  formData: FormData
+): Promise<any> => {
+  var url = `${ApiEndpoints.TrainingPrograms}/${programId}/general-info`;
+
+  return sendAxiosRequest<FormData, any>({
+    method: "PUT",
+    url: url,
+    data: formData,
+  }).then((response) => {
+    return response.data;
+  });
+};
+
+const updateTrainingProgramExercisePlan = async (
+  programId: number,
+  data: any
+): Promise<any> => {
+  var url = `${ApiEndpoints.TrainingPrograms}/${programId}/exercise-plan`;
+
+  return sendAxiosRequest<any, any>({
+    method: "PUT",
+    url: url,
+    data: data,
+  }).then((response) => {
+    return response.data;
   });
 };
 
@@ -108,7 +148,9 @@ const getPageableProgramsForTrainer = (
 export {
   getPageableTrainingPrograms,
   getPageableProgramsForTrainer,
-  // getAllTrainingProgramsForTrainer,
+  createTrainingProgram,
   getFeaturedTrainingPrograms,
-  createUpdateTrainingProgram,
+  getTrainingProgram,
+  updateTrainingProgramExercisePlan,
+  updateTrainingProgramGeneralInfo,
 };

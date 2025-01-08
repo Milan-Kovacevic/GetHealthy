@@ -1,10 +1,13 @@
+import { TrainingProgramDifficulty } from "../models/training-program";
 import { CategoryDTO } from "./category-contract";
+import { ExerciseDTO } from "./exercise-contract";
 import { Page } from "./pageable-contract";
 
 export type TrainingProgramDTO = {
   id: number;
   name: string;
-  difficulty: ProgramDifficultyDTO;
+  // difficulty: ProgramDifficultyDTO;
+  difficulty: TrainingProgramDifficulty;
   trainingDuration: number;
   description: string;
   requirements?: string;
@@ -15,6 +18,7 @@ export type TrainingProgramDTO = {
   trinerId: number;
   trainerFirstName: string;
   trainerLastName: string;
+  exercises: ExerciseDTO[];
 };
 
 export type PageableTrainingProgramsDTO = Page<TrainingProgramDTO>;

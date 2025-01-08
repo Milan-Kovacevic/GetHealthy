@@ -1,10 +1,10 @@
+import { getAllCategories } from "@/api/services/category-service";
 import { FileInputField } from "@/components/primitives/FileInputField";
 import InputFormField from "@/components/primitives/InputFormField";
 import { MultiSelect } from "@/components/primitives/MultiSelectFormFIeld";
 import TextareaFormField from "@/components/primitives/TextareaFormField";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -19,93 +19,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getAllCategories } from "@/api/services/category-service";
-import { Category } from "@/api/models/category";
-import { createUpdateTrainingProgram } from "@/api/services/training-program-service";
-import { TrainingProgramDTO } from "@/api/contracts/training-program-contract";
-import { CategoryDTO } from "@/api/contracts/category-contract";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
 import FormSectionTitle from "./FormSectionTitle";
+import { handleIntegerOnValueChange } from "@/utils/formInputUtils";
+import { difficultyOptions } from "@/api/models/training-program";
+import { Category } from "@/api/models/category";
 
-// ?????
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Name is required." }),
-  info: z.string().min(1, { message: "Description is required." }),
-  categories: z
-    .array(
-      z.z.object({
-        id: z.number().min(1, { message: "Category ID is required." }),
-        categoryName: z
-          .string()
-          .min(1, { message: "Category name is required." }),
-      })
-    )
-    .min(1, { message: "At least one category is required." }),
-  requirements: z.string().optional(),
-  difficulty: z.string().min(1, { message: "Program difficulty is required." }),
-});
-
-export default function GeneralInformationForm({
-  defaultValues,
-  setProgramId,
-  isEdit = false,
-}: {
-  defaultValues?: z.infer<typeof formSchema>;
+type GeneralInformationFormProps = {
   isEdit?: boolean;
-  setProgramId: (value: number) => void;
-}) {
-  const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: defaultValues || {
-      name: "",
-      info: "",
-      categories: [],
-      requirements: "",
-      difficulty: "",
-    },
-  });
+  form: any;
+  onSelectFile: (file: File | undefined) => void;
+  formPath?: string;
+  defaultValueCategories?: Category[];
+};
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      if (!isEdit) {
-        toast(
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">
-              {JSON.stringify(values, null, 2)}
-            </code>
-          </pre>
-        );
-        const program: TrainingProgramDTO = {
-          //rating: 0,
-          name: values.name,
-          difficulty: Number.parseInt(values.difficulty),
-          trainingDuration: 0,
-          description: values.info,
-          requirements: values.requirements,
-          categories: values.categories.map((c) => ({
-            categoryId: c.id,
-          })),
-          trainerId: 2,
-        };
-        var response = await createUpdateTrainingProgram(program, false);
-        // da bi radilo potrebno je ovaj id propagirati u roditeljsku komponentu koja ce dalje raditi sa ExercisePlanBuilderom
-        console.log(response.id);
-        setProgramId(response.id);
-      } else {
-        console.log("Updated values:", values);
-        toast.success("Changes saved successfully.");
-      }
-    } catch (error) {
-      console.error("Form submission error", error);
-      toast.error("Failed to submit the form. Please try again.");
-    }
-  }
+const GeneralInformationForm = ({
+  isEdit = false,
+  form,
+  formPath = "",
+  onSelectFile,
+  defaultValueCategories,
+}: GeneralInformationFormProps) => {
+  const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -114,11 +50,9 @@ export default function GeneralInformationForm({
     fetchCategories();
   }, []);
 
-  const difficultyOptions = [
-    { label: "Beginner", value: "1" },
-    { label: "Intermediate", value: "2" },
-    { label: "Advanced", value: "3" },
-  ];
+  const handleFileSelection = (file: File | undefined) => {
+    file ? onSelectFile(file) : onSelectFile(undefined);
+  };
 
   return (
     <div className="mt-5 w-full">
@@ -126,129 +60,144 @@ export default function GeneralInformationForm({
         <FormSectionTitle title="General information" />
       </div>
       <div className="">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-10">
-              <div className="flex flex-col gap-4 col-span-3">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                  <InputFormField
-                    control={form.control}
-                    name="name"
-                    type="text"
-                    description="Enter a training program name."
-                    placeholder="ex. HIIT"
-                    display="Program name *"
-                    className="max-w-lg"
-                  />
-                  <FormField
-                    control={form.control}
-                    name="difficulty"
-                    render={({ field }) => (
-                      <FormItem className="space-y-0.5 max-w-lg">
-                        <FormLabel>Difficulty *</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select an option" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {difficultyOptions.map((item) => (
-                              <SelectItem key={item.value} value={item.value}>
-                                {item.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormDescription className="text-xs ml-0.5">
-                          Select program difficulty.
-                        </FormDescription>
-                        <FormMessage className="text-xs ml-0.5" />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <FormField
-                  control={form.control}
-                  name="categories"
-                  render={({ field }) => (
-                    <FormItem className="space-y-0.5 max-w-xl">
-                      <FormLabel className="">Categories *</FormLabel>
-
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-10">
+          <div className="flex flex-col gap-4 col-span-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <InputFormField
+                control={form.control}
+                name={`${formPath}.name`}
+                type="text"
+                description="Enter a training program name."
+                placeholder="ex. HIIT"
+                display="Program name *"
+                className="max-w-lg"
+              />
+              <FormField
+                control={form.control}
+                name={`${formPath}.difficulty`}
+                render={({ field }) => (
+                  <FormItem className="space-y-0.5 max-w-lg">
+                    <FormLabel>Difficulty *</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
-                        <MultiSelect
-                          className=""
-                          options={categoryOptions}
-                          // value={field.value || []}
-                          defaultValue={defaultValues?.categories}
-                          onValueChange={(categories) =>
-                            field.onChange(categories)
-                          }
-                          maxCount={3}
-                          minCount={1}
-                          itemNameKey="categoryName"
-                          itemValueKey="id"
-                        />
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select an option" />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormDescription className="text-xs ml-0.5">
-                        Select one or more categories.
-                      </FormDescription>
-                      <FormMessage className="text-xs ml-0.5" />
-                    </FormItem>
-                  )}
-                />
-                <TextareaFormField
-                  control={form.control}
-                  name="info"
-                  display="Description *"
-                  label="Description *"
-                  description="Enter a description for training program."
-                  placeholder="ex. HIIT is a functional training program"
-                  className="col-span-full w-full"
-                />
-                <TextareaFormField
-                  control={form.control}
-                  name="requirements"
-                  display="Requirements"
-                  label="Requirements"
-                  description="Enter requirements for training program."
-                  placeholder="ex. Not for someone with heart problems"
-                  className="col-span-full w-full"
-                />
-              </div>
-              <div className="md:col-span-2 w-full">
-                <FileInputField
-                  title="Training Program Picture *"
-                  name="files"
-                  description="Upload a picture for the training program."
-                  formats=""
-                  className="lg:h-56 h-48"
-                />
-              </div>
+                      <SelectContent>
+                        {difficultyOptions.map((item) => (
+                          <SelectItem key={item.value} value={item.value}>
+                            {item.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription className="text-xs ml-0.5">
+                      Select program difficulty.
+                    </FormDescription>
+                    <FormMessage className="text-xs ml-0.5" />
+                  </FormItem>
+                )}
+              />
             </div>
-            <div className="flex md:flex-row flex-col flex-wrap justify-between md:items-end items-start pt-4 gap-x-2 gap-y-6">
-              <div className="flex flex-row items-start gap-1">
-                <span className="text-xs font-bold text-muted-foreground uppercase">
-                  note:
-                </span>
-                <p className="text-muted-foreground text-xs font-medium">
-                  * indicates the required fields to be filled in order to
-                  create new training program
-                </p>
-              </div>
-              <div className="flex self-end">
-                <Button type="submit" variant="secondary" className="min-w-32">
-                  <CheckIcon />
-                  {isEdit ? "Save Changes" : "Submit"}
-                </Button>
-              </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <FormField
+                control={form.control}
+                name={`${formPath}.categories`}
+                render={({ field }) => (
+                  <FormItem className="space-y-0.5 max-w-lg">
+                    <FormLabel className="">Categories *</FormLabel>
+
+                    <FormControl>
+                      <MultiSelect
+                        className=""
+                        options={categoryOptions}
+                        // value={field.value || []}
+                        defaultValue={defaultValueCategories ?? undefined}
+                        onValueChange={(categories) =>
+                          field.onChange(categories)
+                        }
+                        maxCount={3}
+                        minCount={1}
+                        itemNameKey="name"
+                        itemValueKey="categoryId"
+                      />
+                    </FormControl>
+                    <FormDescription className="text-xs ml-0.5">
+                      Select one or more categories.
+                    </FormDescription>
+                    <FormMessage className="text-xs ml-0.5" />
+                  </FormItem>
+                )}
+              />
+              <InputFormField
+                control={form.control}
+                name={`${formPath}.trainingDuration`}
+                type="text"
+                description="Enter a duration in seconds."
+                placeholder="ex. 100"
+                display="Training duration *"
+                className="max-w-lg"
+                onChange={handleIntegerOnValueChange}
+              />
             </div>
-          </form>
-        </Form>
+            <TextareaFormField
+              control={form.control}
+              name={`${formPath}.description`}
+              display="Description *"
+              label="Description *"
+              description="Enter a description for training program."
+              placeholder="ex. HIIT is a functional training program"
+              className="col-span-full w-full"
+            />
+            <TextareaFormField
+              control={form.control}
+              name={`${formPath}.requirements`}
+              display="Requirements"
+              label="Requirements"
+              description="Enter requirements for training program."
+              placeholder="ex. Not for someone with heart problems"
+              className="col-span-full w-full"
+            />
+          </div>
+          <div className="col-span-full md:col-span-2  w-full ">
+            <FileInputField
+              title="Training Program Picture *"
+              name="files"
+              description="Upload a picture for the training program."
+              formats=".png, .jpeg"
+              onFileSelect={handleFileSelection}
+              className="lg:h-56 h-48"
+            />
+          </div>
+        </div>
+        <div className="flex md:flex-row flex-col flex-wrap justify-between md:items-end items-start pt-4 gap-x-2 gap-y-6">
+          <div className="flex flex-row items-start gap-1">
+            <span className="text-xs font-bold text-muted-foreground uppercase">
+              note:
+            </span>
+            <p className="text-muted-foreground text-xs font-medium">
+              * indicates the required fields to be filled in order to create
+              new training program
+            </p>
+          </div>
+          {isEdit ? (
+            <div className="flex self-end">
+              <Button type="submit" variant="secondary" className="min-w-32">
+                <CheckIcon />
+                {isEdit ? "Save Changes" : "Submit"}
+              </Button>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default GeneralInformationForm;

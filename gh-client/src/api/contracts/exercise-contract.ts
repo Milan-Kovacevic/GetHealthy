@@ -7,6 +7,7 @@ export type ExerciseDTO = {
   videoLink: string;
   firstExerciseMetric: ExerciseMetricDTO;
   secondExerciseMetric: ExerciseMetricDTO;
+  exerciseSets: ExerciseSetDTO[];
 };
 
 export type ExerciseMetricDTO = {

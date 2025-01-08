@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SingleProgramDetailsResponse {
+public class SingleProgramDetailsResponse extends TrainingProgramResponse {
     private Integer id;
     private String requirements;
     private Integer trainingDuration;
