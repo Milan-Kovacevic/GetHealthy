@@ -1,6 +1,9 @@
 import { ApiEndpoints } from "@/utils/constants";
 import { sendAxiosRequest } from "./base-service";
-import { PageableProgramApplicationsDTO } from "../contracts/program-application-contract";
+import {
+  CreateTrainingProgramApplicationDTO,
+  PageableProgramApplicationsDTO,
+} from "../contracts/program-application-contract";
 import { PageableProgramRequests } from "../models/program-request";
 
 const getPageableTrainingProgramApplications = async (
@@ -26,4 +29,19 @@ const getPageableTrainingProgramApplications = async (
   });
 };
 
-export { getPageableTrainingProgramApplications };
+const sendTrainingProgramApplication = async (
+  request: CreateTrainingProgramApplicationDTO
+): Promise<void> => {
+  const url = `${ApiEndpoints.TrainingProgramApplications}`;
+
+  return sendAxiosRequest<CreateTrainingProgramApplicationDTO, void>({
+    method: "POST",
+    url: url,
+    data: request,
+  }).then(() => {});
+};
+
+export {
+  getPageableTrainingProgramApplications,
+  sendTrainingProgramApplication,
+};

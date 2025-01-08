@@ -22,12 +22,10 @@ public interface TrainingProgramApplicationService extends CrudService<TrainingP
 
     SingleTrainingProgramApplicationResponse getProgramApplication(TrainingProgramApplicationId id);
 
-    TrainingProgramApplicationResponse insertTrainingProgramApplication(TrainingProgramApplicationRequest request);
+    TrainingProgramApplicationResponse createTrainingProgramApplication(TrainingProgramApplicationRequest request);
 
     void processTrainingProgramApplication(TrainingProgramApplicationId id,
             TrainingProgramApplicationProcessRequest request);
 
     void markTrainingProgramApplicationAsRead(TrainingProgramApplicationId id);
-
-    void joinProgram(TrainingProgramApplicationRequest request);
 }

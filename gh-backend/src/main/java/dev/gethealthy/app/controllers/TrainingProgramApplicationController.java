@@ -38,7 +38,7 @@ public class TrainingProgramApplicationController  {
     @PostMapping("/training-program-applications")
     @ResponseStatus(HttpStatus.CREATED)
     public TrainingProgramApplicationResponse addTrainingProgramApplication(@RequestBody @Valid TrainingProgramApplicationRequest request) {
-        return trainingProgramApplicationService.insertTrainingProgramApplication(request);
+        return trainingProgramApplicationService.createTrainingProgramApplication(request);
     }
 
     @PostMapping("/training-program-applications/process") // TODO: ???

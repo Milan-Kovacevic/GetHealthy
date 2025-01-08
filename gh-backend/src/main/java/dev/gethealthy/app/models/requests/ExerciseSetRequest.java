@@ -5,10 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Data
-@Getter
-@Setter
 public class ExerciseSetRequest {
-    private Integer programExericseId;
+    private Integer programExerciseId;
     private Integer restTime;
     private String firstMetricValue;
     private String secondMetricValue;

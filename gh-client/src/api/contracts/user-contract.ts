@@ -27,9 +27,3 @@ export type TraineeDTO = UserDTO & {
   weight: number;
   medicalHistory: string;
 };
-
-export type TrainingProgramApplicationDTO = {
-  programId: number;
-  traineeId: number;
-  note: string;
-};

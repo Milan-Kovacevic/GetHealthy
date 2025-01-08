@@ -84,20 +84,13 @@ public class TrainingProgramController {
                 file);
     }
 
-    @PutMapping(path = "{programId}/general-info", consumes = "multipart/form-data")
+    @PutMapping(path = "{programId}/info", consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.OK)
     public void updateTrainingProgramGeneralInfo(@PathVariable Integer programId,
             @RequestPart(name = "training-program") @Valid TrainingProgramRequest trainingProgramRequest,
             @RequestPart(name = "file", required = false) MultipartFile file,
             Authentication auth) {
         trainingProgramService.updateTrainingProgramGeneralInfo(programId, trainingProgramRequest, file);
-    }
-
-    @PutMapping(path = "{programId}/exercise-plan")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateTrainingProgramExercisePlan(@PathVariable Integer programId,
-            @RequestBody @Valid TrainingProgramExercisesRequest trainingProgramExercisesRequest, Authentication auth) {
-        trainingProgramService.updateTrainingProgramExercisePlan(programId, trainingProgramExercisesRequest);
     }
 
     @DeleteMapping("{programId}")

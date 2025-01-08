@@ -72,7 +72,7 @@ const updateTrainingProgramGeneralInfo = async (
   programId: number,
   formData: FormData
 ): Promise<any> => {
-  var url = `${ApiEndpoints.TrainingPrograms}/${programId}/general-info`;
+  var url = `${ApiEndpoints.TrainingPrograms}/${programId}/info`;
 
   return sendAxiosRequest<FormData, any>({
     method: "PUT",
@@ -87,7 +87,10 @@ const updateTrainingProgramExercisePlan = async (
   programId: number,
   data: any
 ): Promise<any> => {
-  var url = `${ApiEndpoints.TrainingPrograms}/${programId}/exercise-plan`;
+  var url = `${ApiEndpoints.TrainingProgramExercises.replace(
+    "{programId}",
+    `${programId}`
+  )}`;
 
   return sendAxiosRequest<any, any>({
     method: "PUT",

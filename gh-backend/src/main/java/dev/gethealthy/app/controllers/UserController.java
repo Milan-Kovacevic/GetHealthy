@@ -65,14 +65,6 @@ public class UserController {
         return userService.updateProfilePicture(userId, file);
     }
 
-    @PostMapping("/join-program")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void joinProgram(@RequestBody @Valid TrainingProgramApplicationRequest request) {
-        if (request != null)
-            trainingProgramApplicationService.joinProgram(request);
-        else
-            throw new BadRequestException();
-    }
 
     @GetMapping("{userId}/training-programs")
     public Page<TrainerProgramResponse> getTrainingProgramsForTrainer(@PathVariable Integer userId, Pageable page) {

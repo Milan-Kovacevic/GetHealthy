@@ -1,8 +1,7 @@
 import { ApiEndpoints } from "@/utils/constants";
-import { TrainingProgramApplicationDTO } from "../contracts/user-contract";
 import { sendAxiosRequest } from "./base-service";
 
-const getProfile = (userId: number = 0): Promise<any> => {
+const getProfile = async (userId: number = 0): Promise<any> => {
   var url = `${ApiEndpoints.Users}/${userId}/userInfo`;
 
   return sendAxiosRequest<void, any>({
@@ -13,7 +12,7 @@ const getProfile = (userId: number = 0): Promise<any> => {
   });
 };
 
-const updateUserProfile = (
+const updateUserProfile = async (
   userId: number,
   formData: FormData
 ): Promise<any> => {
@@ -28,16 +27,4 @@ const updateUserProfile = (
   });
 };
 
-const joinTrainingProgram = (
-  request: TrainingProgramApplicationDTO
-): Promise<void> => {
-  const url = `${ApiEndpoints.Users}/join-program`;
-
-  return sendAxiosRequest<TrainingProgramApplicationDTO, void>({
-    method: "POST",
-    url: url,
-    data: request,
-  }).then(() => {});
-};
-
-export { getProfile, updateUserProfile, joinTrainingProgram };
+export { getProfile, updateUserProfile };

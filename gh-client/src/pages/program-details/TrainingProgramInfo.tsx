@@ -10,9 +10,9 @@ import { useParams } from "react-router-dom";
 import SingleTrainingProgramLoader from "./components/SingleTrainingProgramLoader";
 import { toast } from "sonner";
 import TrainingProgramApplicationModal from "./components/TrainingProgramApplicationModal";
-import { joinTrainingProgram } from "@/api/services/user-service";
 import { capitalize, cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
+import { sendTrainingProgramApplication } from "@/api/services/program-application-service";
 
 export default function TrainingProgramInfo() {
   const params = useParams();
@@ -64,7 +64,7 @@ export default function TrainingProgramInfo() {
 
     // send request
     var request = { programId: 1, traineeId: 1, note: application };
-    joinTrainingProgram(request);
+    sendTrainingProgramApplication(request);
   };
 
   return (

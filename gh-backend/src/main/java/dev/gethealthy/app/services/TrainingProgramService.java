@@ -34,7 +34,4 @@ public interface TrainingProgramService extends CrudService<Integer> {
 
     void updateTrainingProgramGeneralInfo(Integer programId, TrainingProgramRequest trainingProgramRequest,
                                           MultipartFile file);
-
-    void updateTrainingProgramExercisePlan(Integer programId,
-                                           TrainingProgramExercisesRequest trainingProgramExercisesRequest);
 }

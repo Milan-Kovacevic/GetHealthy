@@ -114,7 +114,7 @@ public class TrainingProgramApplicationServiceImpl
     }
 
     @Override
-    public TrainingProgramApplicationResponse insertTrainingProgramApplication(
+    public TrainingProgramApplicationResponse createTrainingProgramApplication(
             TrainingProgramApplicationRequest request) {
         TrainingProgramApplication entity = modelMapper.map(request, TrainingProgramApplication.class);
         entity.setMarkRead(false);
@@ -194,20 +194,4 @@ public class TrainingProgramApplicationServiceImpl
 
     }
 
-    @Override
-    public void joinProgram(TrainingProgramApplicationRequest request) {
-        TrainingProgramApplication trainingProgramApplication = new TrainingProgramApplication();
-        TrainingProgram trainingProgram = trainingProgramRepository.findById(request.getProgramId())
-                .orElseThrow(NotFoundException::new);
-        Trainee trainee = traineeRepository.findById(request.getTraineeId()).orElseThrow(NotFoundException::new);
-        TrainingProgramApplicationId trainingProgramApplicationId = new TrainingProgramApplicationId();
-        trainingProgramApplicationId.setProgramId(request.getProgramId());
-        trainingProgramApplicationId.setUserId(request.getTraineeId());
-        trainingProgramApplication.setNote(request.getNote());
-        trainingProgramApplication.setProgram(trainingProgram);
-        trainingProgramApplication.setUser(trainee);
-        trainingProgramApplication.setSubmissionDate(Instant.now());
-        trainingProgramApplication.setId(trainingProgramApplicationId);
-        trainingProgramApplicationRepository.save(trainingProgramApplication);
-    }
 }

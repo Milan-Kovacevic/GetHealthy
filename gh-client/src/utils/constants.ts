@@ -35,6 +35,7 @@ export const ApiEndpoints = {
   TrainingProgramUserRating: `${API_PREFIX}/training-programs/{programId}/user-ratings/{userId}`,
   TrainingProgramExercises: `${API_PREFIX}/training-programs/{programId}/exercises`,
   TrainingProgramOnSchedule: `${API_PREFIX}/schedules`,
+  TrainingProgramApplications: `${API_PREFIX}/training-program-applications`,
   Metrics: `${API_PREFIX}/metrics`,
   Exercises: `${API_PREFIX}/exercises`,
   TraineeExercising: `${API_PREFIX}/trainee-exercising`,

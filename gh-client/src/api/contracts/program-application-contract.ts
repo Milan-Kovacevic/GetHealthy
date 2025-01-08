@@ -15,3 +15,9 @@ export type TrainingProgramApplicationDTO = {
 
 export type PageableProgramApplicationsDTO =
   Page<TrainingProgramApplicationDTO>;
+
+export type CreateTrainingProgramApplicationDTO = {
+  programId: number;
+  traineeId: number;
+  note: string;
+};
