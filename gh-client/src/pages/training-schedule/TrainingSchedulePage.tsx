@@ -150,7 +150,7 @@ export default function TrainingSchedulePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // this could be done on the backend side (sorting programs)
+    // this could be done on the backend side (sorting programs), fetching training programs for trainerId
     const sortedPrograms = [...mockPrograms].sort((a, b) => {
       const [aHours, aMinutes] = a.startTime.split(":").map(Number);
       const [bHours, bMinutes] = b.startTime.split(":").map(Number);

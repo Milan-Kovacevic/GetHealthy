@@ -22,6 +22,8 @@ import {
   PencilIcon,
   Trash2Icon,
 } from "lucide-react";
+import { deleteTrainingProgramOnSchedule } from "@/api/services/training-program-on-schedule-service";
+import { toast } from "sonner";
 
 interface TrainingProgramCardProps {
   program: TrainingProgram;
@@ -50,7 +52,7 @@ export default function TrainingProgramCard({
             <CardContent className="p-2 pt-0 flex flex-col">
               <div className="mt-1 flex justify-between items-center">
                 <StatusBadge status={programStatus} />
-                {editable && <ManageProgramPopup />}
+                {editable && <ManageProgramPopup programId={program.id} />}
               </div>
               {programStatus === "live" && (
                 <TrainingWorkoutDialog>
@@ -108,10 +110,20 @@ const StatusBadge = ({ status }: { status: ScheduleTrainingStatus }) => {
   );
 };
 
-const ManageProgramPopup = () => {
-  const handleEdit = () => {};
+const ManageProgramPopup = ({ programId }: { programId: number }) => {
+  const handleEdit = () => {
+    console.log("Edit training program on schedule!");
+  };
 
-  const handleRemove = () => {};
+  const handleRemove = async () => {
+    try {
+      await deleteTrainingProgramOnSchedule(programId);
+      toast.success("Training program successfully deleted!");
+    } catch (error) {
+      toast.error("Could not delete training program!");
+      console.log(error);
+    }
+  };
 
   return (
     <Popover>

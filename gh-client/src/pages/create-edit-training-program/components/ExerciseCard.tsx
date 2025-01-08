@@ -38,7 +38,7 @@ export default function ExerciseCard({
             <div className="flex items-center text-xs text-muted-foreground space-x-2">
               <span>{exercise.type}</span>
               <span>•</span>
-              <span>{exercise.sets.length} sets</span>
+              <span>{exercise?.sets?.length} sets</span>
             </div>
           </div>
         </div>

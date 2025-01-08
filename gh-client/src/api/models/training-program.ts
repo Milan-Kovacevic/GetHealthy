@@ -1,10 +1,12 @@
 import { Page } from "../contracts/pageable-contract";
 import { Category } from "./category";
+import { Exercise } from "./exercise";
 
 export type TrainingProgram = {
   id: number;
   name: string;
-  difficulty: ProgramDifficulty;
+  // difficulty: ProgramDifficulty;
+  difficulty: TrainingProgramDifficulty;
   trainingDuration: number;
   description: string;
   requirements?: string;
@@ -15,6 +17,7 @@ export type TrainingProgram = {
   trinerId: number;
   trainerFirstName: string;
   trainerLastName: string;
+  exercises: Exercise[];
 };
 
 export type PageableTrainingPrograms = Page<TrainingProgram>;

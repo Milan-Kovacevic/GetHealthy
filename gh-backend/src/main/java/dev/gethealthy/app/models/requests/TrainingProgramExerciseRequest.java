@@ -10,8 +10,10 @@ import java.util.List;
 @Getter
 @Setter
 public class TrainingProgramExerciseRequest {
+    private Integer id;
     private Integer exerciseId;
     private Integer position;
     private Integer programId;
     private List<ExerciseSetRequest> exerciseSets;
+    private Integer programExerciseId;
 }

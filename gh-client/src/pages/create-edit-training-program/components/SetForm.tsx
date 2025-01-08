@@ -33,6 +33,7 @@ const SetForm = ({
   const currentSet = form.watch(
     `${exercisesPath}.${exerciseIndex}.sets.${setIndex}`
   );
+  const exercise = form.watch(`${exercisesPath}.${exerciseIndex}`);
 
   const setAttributes = Object.keys(currentSet);
 
@@ -69,19 +70,6 @@ const SetForm = ({
 
             <div className="flex md:items-center md:flex-row flex-col text-xs text-muted-foreground md:space-x-3 ml-6">
               {/* {setAttributes.map((attribute, index) => (
-                <div key={index}>
-                  <div className="flex flex-row gap-1">
-                    <span>{attribute}:</span>
-                    <span className="font-semibold text-foreground/80">
-                      {currentSet[attribute] ?? "-"}
-                    </span>
-                  </div>
-                  {index < setAttributes.length - 1 && (
-                    <span className="md:block hidden">|</span>
-                  )}
-                </div>
-              ))} */}
-              {setAttributes.map((attribute, index) => (
                 <div key={index} className="flex items-center">
                   <div className="flex flex-row gap-1">
                     <span>{attribute}:</span>
@@ -93,7 +81,58 @@ const SetForm = ({
                     <span className="md:block hidden mx-2">|</span>
                   )}
                 </div>
-              ))}
+              ))} */}
+              {setAttributes
+                .filter((attribute) => {
+                  if (
+                    attribute === "restTime" ||
+                    attribute === "firstMetricValue" ||
+                    attribute === "secondMetricValue"
+                  ) {
+                    const value =
+                      attribute === "firstMetricValue"
+                        ? currentSet.firstMetricValue
+                        : attribute === "secondMetricValue"
+                        ? currentSet.secondMetricValue
+                        : currentSet[attribute];
+
+                    return (
+                      value !== null && value !== undefined && value !== ""
+                    );
+                  }
+                  return false;
+                })
+                .map((attribute, index, filteredAttributes) => {
+                  const value =
+                    attribute === "firstMetricValue"
+                      ? currentSet.firstMetricValue
+                      : attribute === "secondMetricValue"
+                      ? currentSet.secondMetricValue
+                      : currentSet[attribute];
+
+                  const metricName =
+                    attribute === "firstMetricValue"
+                      ? exercise.firstExerciseMetric?.name
+                      : attribute === "secondMetricValue"
+                      ? exercise.secondExerciseMetric?.name
+                      : attribute === "restTime"
+                      ? "Rest time"
+                      : attribute;
+
+                  return (
+                    <div key={index} className="flex items-center">
+                      <div className="flex flex-row gap-1">
+                        <span>{metricName}:</span>
+                        <span className="font-semibold text-foreground/80">
+                          {value ?? "-"}
+                        </span>
+                      </div>
+                      {index < filteredAttributes.length - 1 && (
+                        <span className="md:block hidden mx-2">|</span>
+                      )}
+                    </div>
+                  );
+                })}
             </div>
           </div>
           <div className="mr-3">

@@ -5,13 +5,14 @@ const setSchema = z.object({
   weight: z.number().min(0, "Weight must be non-negative").optional(),
   time: z.number().min(1, "Time must be at least one second").optional(),
   distance: z.number().optional(),
-  firstMetricValue: z.number().min(1, "First metric value is required"),
+  firstMetricValue: z.number().min(1, "Value must greater than 0."),
   secondMetricValue: z.number().optional(),
   restTime: z.number().min(0, "Pause time must be greater than 0"),
 });
 
 const exerciseSchema = z.object({
   id: z.number(),
+  programExerciseId: z.number().optional(),
   name: z.string(),
   sets: z
     .array(setSchema)
@@ -32,7 +33,10 @@ export const generalInfoSchema = z.object({
     .number()
     .min(1, { message: "Training duration must be positive number" }),
   description: z.string().min(1, { message: "Description is required." }),
-  requirements: z.string().optional(),
+  requirements: z.preprocess(
+    (val) => (val === null ? undefined : val),
+    z.string().optional()
+  ),
   categories: z
     .array(
       z.object({
