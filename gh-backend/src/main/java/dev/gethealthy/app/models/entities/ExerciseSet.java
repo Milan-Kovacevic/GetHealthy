@@ -1,5 +1,8 @@
 package dev.gethealthy.app.models.entities;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import dev.gethealthy.app.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +23,7 @@ public class ExerciseSet implements BaseEntity<Integer> {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ProgramExericseId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private TrainingProgramExercise programExercise;
 
     @NotNull
@@ -34,6 +38,5 @@ public class ExerciseSet implements BaseEntity<Integer> {
     @Size(max = 128)
     @Column(name = "SecondMetricValue", length = 128)
     private String secondMetricValue;
-
 
 }

@@ -1,3 +1,5 @@
+import { difficultyOptions } from "@/api/enums/program-difficulty";
+import { Category } from "@/api/models/category";
 import { getAllCategories } from "@/api/services/category-service";
 import { FileInputField } from "@/components/primitives/FileInputField";
 import InputFormField from "@/components/primitives/InputFormField";
@@ -19,12 +21,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { handleIntegerOnValueChange } from "@/utils/formInputUtils";
 import { CheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import FormSectionTitle from "./FormSectionTitle";
-import { handleIntegerOnValueChange } from "@/utils/formInputUtils";
-import { difficultyOptions } from "@/api/enums/program-difficulty";
-import { Category } from "@/api/models/category";
 
 type GeneralInformationFormProps = {
   isEdit?: boolean;
@@ -133,6 +133,7 @@ const GeneralInformationForm = ({
                   </FormItem>
                 )}
               />
+
               <InputFormField
                 control={form.control}
                 name={`${formPath}.trainingDuration`}

@@ -32,31 +32,29 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
             FilterChain filterChain) throws ServletException, IOException {
-        // String authorizationHeader =
-        // httpServletRequest.getHeader(authorizationHeaderName);
-        // if (authorizationHeader == null ||
-        // !authorizationHeader.startsWith(authorizationHeaderPrefix)) {
-        // filterChain.doFilter(httpServletRequest, httpServletResponse);
-        // return;
-        // }
-        // String token = authorizationHeader.replace(authorizationHeaderPrefix, "");
-        // try {
-        // Claims claims = Jwts.parser()
-        // .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(authorizationSecret)))
-        // .build()
-        // .parseSignedClaims(token)
-        // .getPayload();
-        // JwtUser jwtUser = new JwtUser(Integer.valueOf(claims.getId()),
-        // claims.getSubject(), null, null, Role.valueOf(claims.get("role",
-        // String.class)));
-        // Authentication authentication = new
-        // UsernamePasswordAuthenticationToken(jwtUser, null,
-        // jwtUser.getAuthorities());
-        // SecurityContextHolder.getContext().setAuthentication(authentication);
-        // } catch (Exception e) {
-        // logger.error("JWT Authentication failed from: " +
-        // httpServletRequest.getRemoteHost());
-        // }
+        String authorizationHeader = httpServletRequest.getHeader(authorizationHeaderName);
+        if (authorizationHeader == null ||
+                !authorizationHeader.startsWith(authorizationHeaderPrefix)) {
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+            return;
+        }
+        String token = authorizationHeader.replace(authorizationHeaderPrefix, "");
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(authorizationSecret)))
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+            JwtUser jwtUser = new JwtUser(Integer.valueOf(claims.getId()),
+                    claims.getSubject(), null, null, Role.valueOf(claims.get("role",
+                            String.class)));
+            Authentication authentication = new UsernamePasswordAuthenticationToken(jwtUser, null,
+                    jwtUser.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (Exception e) {
+            logger.error("JWT Authentication failed from: " +
+                    httpServletRequest.getRemoteHost());
+        }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }
