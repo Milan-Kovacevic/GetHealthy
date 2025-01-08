@@ -3,6 +3,7 @@ import {
   ChartBarIcon,
   DumbbellIcon,
   LayoutListIcon,
+  Loader2Icon,
   Menu,
   NotebookPenIcon,
 } from "lucide-react";
@@ -37,6 +38,8 @@ import { Link, useNavigate } from "react-router-dom";
 import NotificationsPopover from "../notifications/NotificationsPopover";
 import useAuth from "@/hooks/use-auth";
 import { UserRole } from "@/api/enums/user-role";
+import { toast } from "sonner";
+import { useState } from "react";
 
 type NavbarMenuItem = {
   title: string;
@@ -53,8 +56,10 @@ type NavbarSubMenuItem = {
 
 const Navbar = () => {
   const auth = useAuth();
-  const isLoggedIn = auth?.context.user != undefined;
+  const [pending, setPending] = useState(false);
+  const isLoggedIn = auth?.isLoggedIn();
   const isTrainer = auth?.getUserRole() == UserRole.TRAINER;
+  const navigate = useNavigate();
 
   const trainingProgramSubMenuItems: NavbarSubMenuItem[] = [
     {
@@ -116,13 +121,32 @@ const Navbar = () => {
     },
   ];
 
+  const handleLogout = () => {
+    setPending(true);
+    auth
+      .logout()
+      .then(() => {
+        navigate("/login");
+      })
+      .catch(() => {
+        toast.error("Unable to logout", {
+          description: "Please, try again later",
+        });
+      })
+      .finally(() => {
+        setPending(false);
+      });
+  };
+
   return (
     <section className="py-3 shadow-md dark:shadow-white/15 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
       <div className="container mx-auto">
         <DesktopNavbar
           navbarMenuItems={navBarMenu}
           isTrainer={isTrainer}
-          isLoggedIn={isLoggedIn}
+          isLoggedIn={isLoggedIn ?? false}
+          onLogout={handleLogout}
+          pending={pending}
         />
       </div>
       <MobileNavbar navbarMenuItems={navBarMenu} />
@@ -146,16 +170,21 @@ const AppBanner = () => {
     </Link>
   );
 };
+type NavbarProps = {
+  navbarMenuItems: NavbarMenuItem[];
+  isTrainer: boolean;
+  isLoggedIn: boolean;
+  onLogout: () => void;
+  pending: boolean;
+};
 
 const DesktopNavbar = ({
   navbarMenuItems,
   isTrainer,
   isLoggedIn,
-}: {
-  navbarMenuItems: NavbarMenuItem[];
-  isTrainer: boolean;
-  isLoggedIn: boolean;
-}) => {
+  onLogout,
+  pending,
+}: NavbarProps) => {
   const navigate = useNavigate();
 
   return (
@@ -228,6 +257,7 @@ const DesktopNavbar = ({
       <div className="flex items-center gap-2">
         <NotificationsPopover isTrainer={isTrainer}>
           <Button
+            disabled={pending}
             size="sm"
             variant="ghost"
             className={cn(
@@ -249,7 +279,7 @@ const DesktopNavbar = ({
           </Button>
         </NotificationsPopover>
 
-        {isLoggedIn ? (
+        {!isLoggedIn ? (
           <>
             <Button
               onClick={() => {
@@ -271,13 +301,17 @@ const DesktopNavbar = ({
           </>
         ) : (
           <Button
-            onClick={() => {
-              navigate("/login");
-            }}
+            disabled={pending}
+            onClick={onLogout}
             size="sm"
             variant={"outline"}
+            className="min-w-20"
           >
-            Log out
+            {pending ? (
+              <Loader2Icon className="animate-spin" />
+            ) : (
+              <span className="mb-0.5">Log out</span>
+            )}
           </Button>
         )}
       </div>

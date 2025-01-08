@@ -7,7 +7,7 @@ export type LoginFormSchema = {
   password: string;
 };
 
-export default function useLoginFormSchema(defaultValues?: LoginFormSchema) {
+export default function useLoginForm(defaultValues?: LoginFormSchema) {
   // Used as a hook for future i18n updates ...
 
   const formSchema = z.object({

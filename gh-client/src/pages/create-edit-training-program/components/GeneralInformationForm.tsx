@@ -170,6 +170,7 @@ const GeneralInformationForm = ({
               name="files"
               description="Upload a picture for the training program."
               formats=".png, .jpeg"
+              formatLabel=".png | .jpeg"
               onFileSelect={handleFileSelection}
               className="lg:h-56 h-48"
             />

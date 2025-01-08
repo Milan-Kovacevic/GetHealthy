@@ -1,82 +1,35 @@
-"use client";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormDescription } from "@/components/ui/form";
 import InputFormField from "@/components/primitives/InputFormField";
 import { cn } from "@/lib/utils";
 import { GlobeIcon } from "lucide-react";
-
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(1, {
-      message: "Username is required.",
-    })
-    .max(32, {
-      message: "Maximum username length is 32",
-    }),
-  email: z
-    .string()
-    .min(1, {
-      message: "Email is required.",
-    })
-    .max(128, {
-      message: "Maximum email length is 128",
-    }),
-  password: z
-    .string()
-    .min(1, {
-      message: "Password is required.",
-    })
-    .max(64, {
-      message: "Maximum password length is 64",
-    }),
-  repeatPassword: z
-    .string()
-    .min(1, {
-      message: "Passwords must match.",
-    })
-    .max(64, {
-      message: "Maximum password length is 64",
-    }),
-});
+import {
+  AccountInfoFormSchema,
+  useAccountInfoForm,
+} from "@/schemas/register-form-schema";
 
 type AccountInfoFormProps = {
-  onInfoSubmitted: (data: z.infer<typeof formSchema>) => void;
+  onInfoSubmitted: (data: AccountInfoFormSchema) => void;
   onGoBack: () => void;
   className?: string;
 };
 
 export default function AccountInfoForm(props: AccountInfoFormProps) {
   const { onGoBack, onInfoSubmitted, className } = props;
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-      repeatPassword: "",
-    },
-  });
+  const { accountInfoForm } = useAccountInfoForm();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      onInfoSubmitted(values);
-    } catch (error) {
-      console.error("Form submission error", error);
-    }
+  function onSubmit(values: AccountInfoFormSchema) {
+    onInfoSubmitted(values);
   }
 
   return (
-    <Form {...form}>
+    <Form {...accountInfoForm}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={accountInfoForm.handleSubmit(onSubmit)}
         className={cn("space-y-2 mx-auto", className)}
       >
         <InputFormField
-          control={form.control}
+          control={accountInfoForm.control}
           name="username"
           type="text"
           description="Enter your username"
@@ -84,7 +37,7 @@ export default function AccountInfoForm(props: AccountInfoFormProps) {
           placeholder="ex. user1"
         />
         <InputFormField
-          control={form.control}
+          control={accountInfoForm.control}
           name="email"
           type="text"
           description="Enter your email"
@@ -95,7 +48,7 @@ export default function AccountInfoForm(props: AccountInfoFormProps) {
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-6">
               <InputFormField
-                control={form.control}
+                control={accountInfoForm.control}
                 name="password"
                 type="password"
                 display="Password *"
@@ -104,7 +57,7 @@ export default function AccountInfoForm(props: AccountInfoFormProps) {
             </div>
             <div className="col-span-6">
               <InputFormField
-                control={form.control}
+                control={accountInfoForm.control}
                 name="repeatPassword"
                 type="password"
                 display="Repeat Password *"
@@ -117,19 +70,9 @@ export default function AccountInfoForm(props: AccountInfoFormProps) {
           </FormDescription>
         </div>
 
-        <div className="pb-6">
-          <div className="flex items-center gap-4 py-4">
-            <span className="h-px flex-1 bg-input"></span>
-            <span className="text-xs text-muted-foreground">OR</span>
-            <span className="h-px flex-1 bg-input"></span>
-          </div>
-          <Button variant="secondary" className="w-full border-primary border">
-            <GlobeIcon className="mr-2 size-4" />
-            Continue with Google
-          </Button>
-        </div>
+        {/* <SocialRegistrationOption /> */}
 
-        <div className="pt-2 flex flex-row gap-3">
+        <div className="flex flex-row gap-3 pt-5">
           <Button
             variant="outline"
             className="w-full"
@@ -146,3 +89,19 @@ export default function AccountInfoForm(props: AccountInfoFormProps) {
     </Form>
   );
 }
+
+const SocialRegistrationOption = () => {
+  return (
+    <div className="pb-6">
+      <div className="flex items-center gap-4 py-4">
+        <span className="h-px flex-1 bg-input"></span>
+        <span className="text-xs text-muted-foreground">OR</span>
+        <span className="h-px flex-1 bg-input"></span>
+      </div>
+      <Button variant="secondary" className="w-full border-primary border">
+        <GlobeIcon className="mr-2 size-4" />
+        Continue with Google
+      </Button>
+    </div>
+  );
+};
