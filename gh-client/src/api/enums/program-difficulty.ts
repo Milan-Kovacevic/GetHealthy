@@ -1,3 +1,5 @@
+import { capitalize } from "@/lib/utils";
+
 export enum ProgramDifficulty {
   BEGINNER = "BEGINNER",
   INTERMEDIATE = "INTERMEDIATE",
@@ -6,7 +8,7 @@ export enum ProgramDifficulty {
 
 export const difficultyOptions = Object.values(ProgramDifficulty).map(
   (difficulty) => ({
-    label: difficulty.charAt(0) + difficulty.slice(1).toLowerCase(),
+    label: capitalize(difficulty),
     // value: (index + 1).toString(),
     value: difficulty,
     name: difficulty,

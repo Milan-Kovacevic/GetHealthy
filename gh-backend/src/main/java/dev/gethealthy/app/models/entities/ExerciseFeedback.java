@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class ExerciseFeedback implements BaseEntity<Integer> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ProgramExerciseId")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private TrainingProgramExercise programExercise;
 
     @OneToMany(mappedBy = "exerciseFeedback")

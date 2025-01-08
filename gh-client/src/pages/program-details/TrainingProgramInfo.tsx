@@ -11,7 +11,7 @@ import SingleTrainingProgramLoader from "./components/SingleTrainingProgramLoade
 import { toast } from "sonner";
 import TrainingProgramApplicationModal from "./components/TrainingProgramApplicationModal";
 import { joinTrainingProgram } from "@/api/services/user-service";
-import { cn } from "@/lib/utils";
+import { capitalize, cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 
 export default function TrainingProgramInfo() {
@@ -92,7 +92,7 @@ export default function TrainingProgramInfo() {
                   <div className="flex items-center gap-1">
                     <ActivityIcon className="h-4 w-4" />
                     <p className="text-sm sm:text-base text-muted-foreground font-semibold">
-                      {program.difficulty}
+                      {capitalize(program.difficulty)}
                     </p>
                   </div>
 
@@ -137,11 +137,11 @@ export default function TrainingProgramInfo() {
               {program.categories?.length > 0 ? (
                 program.categories.map((item) => (
                   <Badge
-                    key={item.id}
+                    key={item.categoryId}
                     variant="secondary"
                     className="text-sm px-3 border-foreground/30 font-normal py-0.5 h-auto transition-none"
                   >
-                    {item.categoryName}
+                    {item.name}
                   </Badge>
                 ))
               ) : (
