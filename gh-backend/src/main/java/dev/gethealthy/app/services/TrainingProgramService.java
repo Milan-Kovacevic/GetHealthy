@@ -14,22 +14,28 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface TrainingProgramService extends CrudService<Integer> {
-    Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort,
-            Pageable page);
+        Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort,
+                        Pageable page);
 
-    List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(Integer userId);
+        List<TrainerProgramResponse> getAllTrainingProgramsForTrainer(Integer userId);
 
-    SingleTrainingProgramResponse getSingleTrainingProgram(Integer programId);
+        SingleTrainingProgramResponse getSingleTrainingProgram(Integer programId);
 
-    TrainerResponse getTrainerByProgramId(Integer programId);
+        TrainerResponse getTrainerByProgramId(Integer programId);
 
-    SingleProgramDetailsResponse getTrainingProgramDetails(Integer id);
+        SingleProgramDetailsResponse getTrainingProgramDetails(Integer id);
 
-    @Override
-    void delete(Integer id);
+        @Override
+        void delete(Integer id);
 
-    List<FeaturedProgramResponse> getFeaturedTrainingPrograms();
+        List<FeaturedProgramResponse> getFeaturedTrainingPrograms();
 
-    void createTrainingProgram(Integer userId, TrainingProgramRequest trainingProgramRequest,
-            TrainingProgramExercisesRequest trainingProgramExercisesRequest, MultipartFile file);
+        void createTrainingProgram(Integer userId, TrainingProgramRequest trainingProgramRequest,
+                        TrainingProgramExercisesRequest trainingProgramExercisesRequest, MultipartFile file);
+
+        void updateTrainingProgramGeneralInfo(Integer programId, TrainingProgramRequest trainingProgramRequest,
+                        MultipartFile file);
+
+        void updateTrainingProgramExercisePlan(Integer programId,
+                        TrainingProgramExercisesRequest trainingProgramExercisesRequest);
 }

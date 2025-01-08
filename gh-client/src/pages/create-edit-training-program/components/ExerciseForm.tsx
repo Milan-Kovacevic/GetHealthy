@@ -32,8 +32,16 @@ const ExerciseForm = ({
   });
   const [numOfSets, setNumOfSets] = useState(fields.length);
   const onExerciseSetRemoved = (setIndex: number) => {
+    const updatedSets = fields.filter((_, i) => i !== setIndex);
+
     remove(setIndex);
-    setNumOfSets(numOfSets - 1);
+
+    form.reset({
+      ...form.getValues(),
+      [`${exercisesPath}.${index}.sets`]: updatedSets,
+    });
+
+    setNumOfSets((prev) => prev - 1);
   };
 
   return (

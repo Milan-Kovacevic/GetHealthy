@@ -24,12 +24,14 @@ import { useEffect, useState } from "react";
 import FormSectionTitle from "./FormSectionTitle";
 import { handleIntegerOnValueChange } from "@/utils/formInputUtils";
 import { difficultyOptions } from "@/api/models/training-program";
+import { Category } from "@/api/models/category";
 
 type GeneralInformationFormProps = {
   isEdit?: boolean;
   form: any;
   onSelectFile: (file: File | undefined) => void;
   formPath?: string;
+  defaultValueCategories?: Category[];
 };
 
 const GeneralInformationForm = ({
@@ -37,6 +39,7 @@ const GeneralInformationForm = ({
   form,
   formPath = "",
   onSelectFile,
+  defaultValueCategories,
 }: GeneralInformationFormProps) => {
   const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
 
@@ -113,7 +116,7 @@ const GeneralInformationForm = ({
                         className=""
                         options={categoryOptions}
                         // value={field.value || []}
-                        // defaultValue={defaultValues?.categories}
+                        defaultValue={defaultValueCategories ?? undefined}
                         onValueChange={(categories) =>
                           field.onChange(categories)
                         }

@@ -1,17 +1,19 @@
 import { delay } from "@/lib/utils";
 import { ApiEndpoints } from "@/utils/constants";
-import { sendAxiosRequest } from "./base-service";
 import {
   FeaturedTrainingProgramDTO,
   PageableTrainingProgramsDTO,
   TrainerProgramDTO,
+  TrainingProgramDTO,
 } from "../contracts/training-program-contract";
 import {
   FeaturedTrainingProgram,
   PageableTrainingPrograms,
   ProgramFilters,
   TrainerProgram,
+  TrainingProgram,
 } from "../models/training-program";
+import { sendAxiosRequest } from "./base-service";
 
 const getPageableTrainingPrograms = async (
   searchString: string = "",
@@ -38,6 +40,18 @@ const getPageableTrainingPrograms = async (
   }).then((response) => {
     // Perform neccessary mappings etc...
     return response.data as PageableTrainingPrograms;
+  });
+};
+
+const getTrainingProgram = async (
+  programId: number
+): Promise<TrainingProgram> => {
+  var url = `${ApiEndpoints.TrainingPrograms}/${programId}/details`;
+  return sendAxiosRequest<void, TrainingProgramDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    return response.data as TrainingProgram;
   });
 };
 
@@ -69,14 +83,14 @@ const updateTrainingProgramGeneralInfo = async (
 
 const updateTrainingProgramExercisePlan = async (
   programId: number,
-  formData: FormData
+  data: any
 ): Promise<any> => {
   var url = `${ApiEndpoints.TrainingPrograms}/${programId}/exercise-plan`;
 
-  return sendAxiosRequest<FormData, any>({
+  return sendAxiosRequest<any, any>({
     method: "PUT",
     url: url,
-    data: formData,
+    data: data,
   }).then((response) => {
     return response.data;
   });
@@ -115,6 +129,7 @@ export {
   getAllTrainingProgramsForTrainer,
   getFeaturedTrainingPrograms,
   getPageableTrainingPrograms,
+  getTrainingProgram,
   updateTrainingProgramExercisePlan,
   updateTrainingProgramGeneralInfo,
 };

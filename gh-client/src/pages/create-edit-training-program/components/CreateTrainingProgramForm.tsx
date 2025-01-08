@@ -85,17 +85,19 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
         onSubmit={createTrainingProgramForm.handleSubmit(onSubmit)}
         className="space-y-8"
       >
-        <Separator className="my-4" />
-        <GeneralInformationForm
-          onSelectFile={setSelectedFile}
-          form={createTrainingProgramForm}
-          formPath="generalInfo"
-        />
-        <Separator className="my-4" />
-        <ExercisePlanBuilder
-          form={createTrainingProgramForm}
-          formPath="exercisePlan"
-        />
+        <div>
+          <Separator className="my-4" />
+          <GeneralInformationForm
+            onSelectFile={setSelectedFile}
+            form={createTrainingProgramForm}
+            formPath="generalInfo"
+          />
+          <Separator className="my-4" />
+          <ExercisePlanBuilder
+            form={createTrainingProgramForm}
+            formPath="exercisePlan"
+          />
+        </div>
         <div className="flex w-full justify-end">
           <Button type="submit" variant="default">
             Create Program

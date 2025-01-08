@@ -13,4 +13,5 @@ public class ProgramExerciseDetailsResponse {
     private ExerciseMetricResponse firstExerciseMetric;
     private ExerciseMetricResponse secondExerciseMetric;
     private List<ExerciseSetResponse> exerciseSets;
+    private Integer programExerciseId;
 }
