@@ -1,15 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import {
   CircleBackgroundBlob,
   TopBackgroundBlob,
 } from "../shared/BackgroundBlobs";
-import AuthCardHeader from "../shared/AuthCardHeader";
+import { AuthCardHeader, AuthFooter } from "../shared/AuthPageSections";
 import LoginForm from "./components/LoginForm";
 import { LoginFormSchema } from "@/schemas/login-form-schema";
 import useAuth from "@/hooks/use-auth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -20,9 +20,13 @@ export default function LoginPage() {
     setIsSubmitting(true);
     auth
       ?.login(values)
-      .then(() => {
-        toast.message("You have successfully logged in to your account.");
-        navigate("/schedule");
+      .then((response) => {
+        if (response) {
+          toast.message(`Welcome ${response.firstName} ${response.lastName}`, {
+            description: "You have successfully logged in to your account!",
+          });
+          navigate("/schedule");
+        }
       })
       .catch((error) => {
         console.error("Form submission error", error);
@@ -50,15 +54,11 @@ export default function LoginPage() {
               </div>
             </CardContent>
           </Card>
-          <div className="mx-auto flex gap-1 text-sm">
-            <p>Don&apos;t have an account yet?</p>
-            <Link
-              to="/register"
-              className="underline text-foreground/80 hover:text-foreground"
-            >
-              Sign up
-            </Link>
-          </div>
+          <AuthFooter
+            text="Don't have an account yet?"
+            linkHref="/register"
+            linkLabel="Sign up"
+          />
         </div>
       </div>
     </section>

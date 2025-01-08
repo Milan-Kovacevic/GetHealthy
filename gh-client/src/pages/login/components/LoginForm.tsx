@@ -1,9 +1,7 @@
 import InputFormField from "@/components/primitives/InputFormField";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import useLoginFormSchema, {
-  LoginFormSchema,
-} from "@/schemas/login-form-schema";
+import useLoginForm, { LoginFormSchema } from "@/schemas/login-form-schema";
 import { Loader2Icon } from "lucide-react";
 
 type LoginFormProps = {
@@ -13,7 +11,7 @@ type LoginFormProps = {
 
 export default function LoginForm(props: LoginFormProps) {
   const { onLogin, enabled } = props;
-  const { loginForm } = useLoginFormSchema();
+  const { loginForm } = useLoginForm();
 
   function onSubmit(values: LoginFormSchema) {
     onLogin(values);

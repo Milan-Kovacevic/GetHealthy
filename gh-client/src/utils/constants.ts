@@ -2,8 +2,11 @@ import environments from "@/environments/config";
 
 export const LIGHT_THEME = "light";
 export const DARK_THEME = "dark";
+
 export const APP_THEME_STORAGE_KEY = "gethealthy_ui_theme";
-export const AUTH_CONTEXT_STORAGE_KEY = "gethealthy_auth_context";
+export const AUTH_USER_STORAGE_KEY = "gethealthy_auth_user";
+export const ACCESS_TOKEN_STORAGE_KEY = "gethealthy_access_token";
+export const REFRESH_TOKEN_STORAGE_KEY = "gethealthy_refresh_token";
 
 export const TRAINEE_ACCOUNT_TYPE = "trainee";
 export const TRAINER_ACCOUNT_TYPE = "trainer";
@@ -15,11 +18,9 @@ export const ACCOUNT_TYPES = [
   TRAINER_ACCOUNT_TYPE,
 ] as const;
 
-export const ACCESS_TOKEN_STORAGE_KEY = "gethealthy_access_token";
-export const REFRESH_TOKEN_STORAGE_KEY = "gethealthy_refresh_token";
-
 const API_PREFIX = environments().apiResourcePrefix;
 export const ApiEndpoints = {
+  Authentication: `${API_PREFIX}/auth`,
   UserNotifications: `${API_PREFIX}/users/{userId}/notifications`,
   Categories: `${API_PREFIX}/categories`,
   TrainingPrograms: `${API_PREFIX}/training-programs`,

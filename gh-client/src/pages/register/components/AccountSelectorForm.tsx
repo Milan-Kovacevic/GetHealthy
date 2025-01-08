@@ -10,40 +10,27 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import {
+  AccountSelectorFormSchema,
+  useAccountSelectorForm,
+} from "@/schemas/register-form-schema";
+import {
   AccountType,
-  ACCOUNT_TYPES,
   TRAINEE_ACCOUNT_TYPE,
   TRAINER_ACCOUNT_TYPE,
 } from "@/utils/constants";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { AlbumIcon, DumbbellIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 
 type AccountTypeSelectorProps = {
   className?: string;
   onAccountSelected: (type: AccountType) => void;
 };
 
-const formSchema = z.object({
-  type: z.enum(ACCOUNT_TYPES, {
-    required_error: "You need to select an account type to proceed.",
-  }),
-});
-
-function AccountTypeSelector(props: AccountTypeSelectorProps) {
+function AccountSelectorForm(props: AccountTypeSelectorProps) {
   const { onAccountSelected, className } = props;
+  const { accountSelectorForm } = useAccountSelectorForm();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-  });
-
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    try {
-      onAccountSelected(data.type);
-    } catch (error) {
-      console.error("Form submission error", error);
-    }
+  function onSubmit(data: AccountSelectorFormSchema) {
+    onAccountSelected(data.type);
   }
 
   return (
@@ -51,10 +38,13 @@ function AccountTypeSelector(props: AccountTypeSelectorProps) {
       <div className="flex items-center justify-center mb-2">
         <p className="font-medium">Select your account type</p>
       </div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+      <Form {...accountSelectorForm}>
+        <form
+          onSubmit={accountSelectorForm.handleSubmit(onSubmit)}
+          className="w-full"
+        >
           <FormField
-            control={form.control}
+            control={accountSelectorForm.control}
             name="type"
             render={({ field }) => (
               <FormItem className="">
@@ -62,9 +52,9 @@ function AccountTypeSelector(props: AccountTypeSelectorProps) {
                   <RadioGroup
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    className="grid grid-cols-12 flex-row items-center justify-center"
+                    className="grid grid-cols-2 flex-row items-stretch justify-center"
                   >
-                    <div className="col-span-6">
+                    <div className="">
                       <RadioGroupItem
                         value={TRAINEE_ACCOUNT_TYPE}
                         id={TRAINEE_ACCOUNT_TYPE}
@@ -73,7 +63,7 @@ function AccountTypeSelector(props: AccountTypeSelectorProps) {
                       />
                       <Label
                         htmlFor={TRAINEE_ACCOUNT_TYPE}
-                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        className="flex h-full flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                       >
                         <DumbbellIcon className="mb-3 h-10 w-10" />
                         <p className="text-lg -mt-2">Trainee</p>
@@ -83,7 +73,7 @@ function AccountTypeSelector(props: AccountTypeSelectorProps) {
                         </p>
                       </Label>
                     </div>
-                    <div className="col-span-6">
+                    <div className="">
                       <RadioGroupItem
                         value={TRAINER_ACCOUNT_TYPE}
                         id={TRAINER_ACCOUNT_TYPE}
@@ -92,7 +82,7 @@ function AccountTypeSelector(props: AccountTypeSelectorProps) {
                       />
                       <Label
                         htmlFor={TRAINER_ACCOUNT_TYPE}
-                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary "
+                        className="flex h-full flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary "
                       >
                         <AlbumIcon className="mb-3 h-6 w-6" />
                         <p className="text-lg -mt-2">Trainer</p>
@@ -119,4 +109,4 @@ function AccountTypeSelector(props: AccountTypeSelectorProps) {
   );
 }
 
-export default AccountTypeSelector;
+export default AccountSelectorForm;

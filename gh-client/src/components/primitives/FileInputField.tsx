@@ -18,6 +18,7 @@ type FileInputFieldProps = {
   description?: string;
   initialFile?: string;
   formats?: string;
+  formatLabel?: string;
   disabled?: boolean;
   className?: string;
   onFileSelect?: (file: File | undefined) => void;
@@ -30,6 +31,7 @@ export const FileInputField = (props: FileInputFieldProps) => {
     className,
     title,
     formats,
+    formatLabel,
     onFileSelect,
     disabled,
     initialFile,
@@ -62,11 +64,6 @@ export const FileInputField = (props: FileInputFieldProps) => {
             <div className="flex flex-col items-center justify-center pt-3.5 pb-4">
               <CloudUploadIcon className="mb-1 h-8 w-8 text-muted-foreground/80" />
               <div className="sm:max-w-md max-w-32 sm:h-6">
-                {/* {selectedFile ? (
-                  <p className="mb-1 text-sm font-semibold text-center text-ellipsis overflow-clip line-clamp-1 mx-auto">
-                    {selectedFile.name}
-                  </p>
-                )  */}
                 {currentFileName ? (
                   <p className="mb-1 text-sm font-semibold text-center text-ellipsis overflow-clip line-clamp-1 mx-auto">
                     {currentFileName}
@@ -78,20 +75,17 @@ export const FileInputField = (props: FileInputFieldProps) => {
                   </p>
                 )}
               </div>
-              <p className="text-xs text-muted-foreground text-center">
-                {formats}
-              </p>
+              {formatLabel && (
+                <p className="text-xs text-muted-foreground text-center">
+                  {formatLabel}
+                </p>
+              )}
             </div>
           </label>
           <Input
             id={name}
             type="file"
             className="hidden"
-            // onChange={(event) => {
-            //   if (event.target?.files) {
-            //     setSelectedFile(event.target?.files?.[0]);
-            //   }
-            // }}
             accept={formats}
             onChange={handleFileChange}
             disabled={disabled}
