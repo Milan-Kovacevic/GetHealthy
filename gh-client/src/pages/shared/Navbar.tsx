@@ -39,6 +39,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationsPopover from "../notifications/NotificationsPopover";
+import useAuth from "@/hooks/use-auth";
+import { UserRole } from "@/api/models/user-account";
 
 type NavbarMenuItem = {
   title: string;
@@ -54,8 +56,9 @@ type NavbarSubMenuItem = {
 };
 
 const Navbar = () => {
-  // TODO: Hardcoded for now...
-  const isTrainer = true;
+  const auth = useAuth();
+  const isLoggedIn = auth?.context.user != undefined;
+  const isTrainer = auth?.getUserRole() == UserRole.TRAINER;
 
   const trainingProgramSubMenuItems: NavbarSubMenuItem[] = [
     {
@@ -143,12 +146,15 @@ const AppBanner = () => {
     </Link>
   );
 };
+
 const DesktopNavbar = ({
   navbarMenuItems,
   isTrainer,
+  isLoggedIn,
 }: {
   navbarMenuItems: NavbarMenuItem[];
   isTrainer: boolean;
+  isLoggedIn: boolean;
 }) => {
   const navigate = useNavigate();
 
@@ -220,7 +226,6 @@ const DesktopNavbar = ({
         </div>
       </div>
       <div className="flex items-center gap-2">
-        {/* <ThemeToggle /> */}
         <NotificationsPopover isTrainer={isTrainer}>
           <Button
             size="sm"
@@ -244,27 +249,42 @@ const DesktopNavbar = ({
           </Button>
         </NotificationsPopover>
 
-        <Button
-          onClick={() => {
-            navigate("/login");
-          }}
-          size="sm"
-          variant={"outline"}
-        >
-          Log in
-        </Button>
-        <Button
-          onClick={() => {
-            navigate("/register");
-          }}
-          size="sm"
-        >
-          Sign up
-        </Button>
+        {isLoggedIn ? (
+          <>
+            <Button
+              onClick={() => {
+                navigate("/login");
+              }}
+              size="sm"
+              variant={"outline"}
+            >
+              Log in
+            </Button>
+            <Button
+              onClick={() => {
+                navigate("/register");
+              }}
+              size="sm"
+            >
+              Sign up
+            </Button>
+          </>
+        ) : (
+          <Button
+            onClick={() => {
+              navigate("/login");
+            }}
+            size="sm"
+            variant={"outline"}
+          >
+            Log out
+          </Button>
+        )}
       </div>
     </nav>
   );
 };
+
 const MobileNavbar = ({
   navbarMenuItems,
 }: {

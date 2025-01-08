@@ -13,7 +13,7 @@ import TextareaFormField from "@/components/primitives/TextareaFormField";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
-import { UserRole } from "@/api/models/user";
+import { UserRole } from "@/api/models/user-account";
 import { traineeScheme, trainerScheme } from "@/schemas/user-schemas";
 
 const profileFormSchema = z.union([traineeScheme, trainerScheme]);

@@ -1,4 +1,3 @@
-// import PageFooter from "@/pages/shared/PageFooter";
 import { Outlet } from "react-router-dom";
 
 export default function AuthLayout() {
@@ -7,7 +6,6 @@ export default function AuthLayout() {
       <main className="flex-1">
         <Outlet></Outlet>
       </main>
-      {/* <PageFooter /> */}
     </div>
   );
 }

@@ -3,3 +3,8 @@ export type UserAccount = {
   username: string;
   email: string;
 };
+
+export enum UserRole {
+  TRAINER = "TRAINER",
+  TRAINEE = "TRAINEE",
+}

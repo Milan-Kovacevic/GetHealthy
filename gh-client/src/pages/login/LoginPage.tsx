@@ -1,118 +1,52 @@
-import { Globe } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Form } from "@/components/ui/form";
 import {
   CircleBackgroundBlob,
   TopBackgroundBlob,
 } from "../shared/BackgroundBlobs";
-import InputFormField from "@/components/primitives/InputFormField";
 import AuthCardHeader from "../shared/AuthCardHeader";
+import LoginForm from "./components/LoginForm";
+import { LoginFormSchema } from "@/schemas/login-form-schema";
+import useAuth from "@/hooks/use-auth";
+import { useEffect, useState } from "react";
 
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(1, {
-      message: "Username is required.",
-    })
-    .max(32, {
-      message: "Maximum username length is 32",
-    }),
-  password: z
-    .string()
-    .min(1, {
-      message: "Password is required.",
-    })
-    .max(64, {
-      message: "Maximum password length is 64",
-    }),
-});
-
-const LoginPage = () => {
+export default function LoginPage() {
   const navigate = useNavigate();
+  const auth = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
-      navigate("/programs");
-    } catch (error) {
-      console.error("Form submission error", error);
-      toast.error("Failed to submit the form. Please try again.");
-    }
+  function handleLogin(values: LoginFormSchema) {
+    setIsSubmitting(true);
+    auth
+      ?.login(values)
+      .then(() => {
+        toast.message("You have successfully logged in to your account.");
+        navigate("/schedule");
+      })
+      .catch((error) => {
+        console.error("Form submission error", error);
+        toast.error("Failed to submit the form. Please try again.");
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   }
 
   return (
     <section className="h-full relative overflow-hidden">
-      <TopBackgroundBlob />
-      <CircleBackgroundBlob variant="lighter" />
-      <CircleBackgroundBlob
-        variant="light"
-        className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
-      />
+      <BackgroundBlurs />
       <div className="relative container mx-auto z-10 my-28">
         <div className="flex flex-col gap-4">
-          <Card className="mx-auto w-full max-w-md animate-fade-down shadow-md dark:shadow-white/5">
+          <Card className="mx-auto w-full max-w-md p-1 animate-fade-down shadow-md dark:shadow-white/5">
             <AuthCardHeader
               title="Log in with your email or username"
               description="Enter your information to login"
             />
             <CardContent>
               <div className="grid gap-4">
-                <Button variant="outline" className="w-full">
-                  <Globe className="mr-2 size-4" />
-                  Continue with Google
-                </Button>
-                <div className="flex items-center gap-4">
-                  <span className="h-px w-full bg-input"></span>
-                  <span className="text-xs text-muted-foreground">OR</span>
-                  <span className="h-px w-full bg-input"></span>
-                </div>
-
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-3"
-                  >
-                    <InputFormField
-                      control={form.control}
-                      name="username"
-                      type="text"
-                      description="Enter your username or email."
-                      display="Username *"
-                      placeholder="ex. user1"
-                    />
-                    <InputFormField
-                      control={form.control}
-                      name="password"
-                      type="password"
-                      description="Enter your password."
-                      display="Password *"
-                      placeholder="ex. 123"
-                    />
-
-                    <Button type="submit" className="w-full mt-10">
-                      Log in
-                    </Button>
-                  </form>
-                </Form>
+                {/* <SocialLogin /> */}
+                <LoginForm enabled={!isSubmitting} onLogin={handleLogin} />
               </div>
             </CardContent>
           </Card>
@@ -129,6 +63,17 @@ const LoginPage = () => {
       </div>
     </section>
   );
-};
+}
 
-export default LoginPage;
+const BackgroundBlurs = () => {
+  return (
+    <>
+      <TopBackgroundBlob />
+      <CircleBackgroundBlob variant="lighter" />
+      <CircleBackgroundBlob
+        variant="light"
+        className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
+      />
+    </>
+  );
+};

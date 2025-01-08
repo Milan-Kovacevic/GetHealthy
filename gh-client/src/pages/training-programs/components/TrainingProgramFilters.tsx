@@ -35,13 +35,13 @@ export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
   useEffect(() => {}, []);
 
   const handleCategoryChange = (categoryId: number) => {
-    const category = categories.find((c) => c.id == categoryId);
+    const category = categories.find((c) => c.categoryId == categoryId);
     if (!category) return;
 
     setSelectedCategories((prev) =>
-      prev.includes(category.categoryName)
-        ? prev.filter((c) => c !== category?.categoryName)
-        : [...prev, category.categoryName]
+      prev.includes(category.name)
+        ? prev.filter((c) => c !== category?.name)
+        : [...prev, category.name]
     );
   };
 
@@ -95,14 +95,19 @@ export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
           <h3 className="text-sm font-medium mb-2">Categories</h3>
           <div className="space-y-2">
             {categories.map((category) => (
-              <div key={category.id} className="flex items-center space-x-2">
+              <div
+                key={category.categoryId}
+                className="flex items-center space-x-2"
+              >
                 <Checkbox
-                  id={`category-${category.id.toString()}`}
-                  checked={selectedCategories.includes(category.categoryName)}
-                  onCheckedChange={() => handleCategoryChange(category.id)}
+                  id={`category-${category.categoryId.toString()}`}
+                  checked={selectedCategories.includes(category.name)}
+                  onCheckedChange={() =>
+                    handleCategoryChange(category.categoryId)
+                  }
                 />
-                <Label htmlFor={`category-${category.id.toString()}`}>
-                  {category.categoryName}
+                <Label htmlFor={`category-${category.categoryId.toString()}`}>
+                  {category.name}
                 </Label>
               </div>
             ))}

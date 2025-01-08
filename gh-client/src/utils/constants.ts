@@ -3,6 +3,7 @@ import environments from "@/environments/config";
 export const LIGHT_THEME = "light";
 export const DARK_THEME = "dark";
 export const APP_THEME_STORAGE_KEY = "gethealthy_ui_theme";
+export const AUTH_CONTEXT_STORAGE_KEY = "gethealthy_auth_context";
 
 export const TRAINEE_ACCOUNT_TYPE = "trainee";
 export const TRAINER_ACCOUNT_TYPE = "trainer";
