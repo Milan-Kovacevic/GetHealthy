@@ -13,6 +13,7 @@ import ExerciseCard from "./ExerciseCard";
 import ExerciseForm from "./ExerciseForm";
 import ExerciseSelector from "./ExerciseSelector";
 import FormSectionTitle from "./FormSectionTitle";
+import { useFieldArray } from "react-hook-form";
 
 type ExercisePlanBuilderProps = {
   isEdit?: boolean;
@@ -26,8 +27,11 @@ const ExercisePlanBuilder = ({
   formPath = "",
 }: ExercisePlanBuilderProps) => {
   const [exercises, setExercises] = useState<any[]>([]);
-
   const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: `${exercisesPath}`,
+  });
 
   useEffect(() => {
     async function fetchExercises() {
@@ -61,16 +65,20 @@ const ExercisePlanBuilder = ({
     setSelectedExerciseIndex(form.getValues(exercisesPath).length - 1);
   };
 
-  const handleRemoveExercise = (index: any) => {
+  const handleRemoveExercise = (index: number) => {
     const currentExercises = form.getValues(exercisesPath);
-
     const updatedExercises = currentExercises.filter(
       (_: any, i: any) => i !== index
     );
+
+    const unregisterSets = (index: number) =>
+      form.unregister(`${exercisesPath}.${index}.sets`);
+
+    unregisterSets(index);
+    remove(index);
+    unregisterSets(fields.length - 1);
+
     form.setValue(exercisesPath, updatedExercises);
-    // form.reset({
-    //   exercises: updatedExercises,
-    // });
 
     if (selectedExerciseIndex === index) {
       setSelectedExerciseIndex(null);
@@ -80,7 +88,34 @@ const ExercisePlanBuilder = ({
     ) {
       setSelectedExerciseIndex(selectedExerciseIndex - 1);
     }
+
+    console.log(form.getValues(exercisesPath));
   };
+
+  // const handleRemoveExercise = (index: any) => {
+  //   const currentExercises = form.getValues(exercisesPath);
+
+  //   const updatedExercises = currentExercises.filter((elem: any, i: any) => {
+  //     if (i !== index) {
+  //       return elem;
+  //     }
+
+  //     elem.sets = [];
+  //   });
+  //   form.setValue(exercisesPath, updatedExercises);
+  //   // form.reset({
+  //   //   exercises: updatedExercises,
+  //   // });
+
+  //   if (selectedExerciseIndex === index) {
+  //     setSelectedExerciseIndex(null);
+  //   } else if (
+  //     selectedExerciseIndex !== null &&
+  //     selectedExerciseIndex > index
+  //   ) {
+  //     setSelectedExerciseIndex(selectedExerciseIndex - 1);
+  //   }
+  // };
 
   const handleDragStart = (e: React.DragEvent, draggedIndex: number) => {
     e.dataTransfer.setData("draggedIndex", String(draggedIndex));
@@ -233,11 +268,7 @@ const ExercisePlanBuilder = ({
         </div>
         {isEdit ? (
           <div className="flex justify-end">
-            <Button
-              type="submit"
-              variant={isEdit ? "default" : "secondary"}
-              className="min-w-32"
-            >
+            <Button type="submit" variant="secondary" className="min-w-32">
               <CheckIcon />
               {isEdit ? "Save changes" : "Submit"}
             </Button>

@@ -64,11 +64,13 @@ public class TrainingProgramController {
         return trainingProgramService.getFeaturedTrainingPrograms();
     }
 
-    @PutMapping("{programId}")
-    public TrainingProgramResponse updateTrainingProgram(@PathVariable Integer programId,
-            @RequestBody TrainingProgramRequest request) {
-        return trainingProgramService.update(programId, request, TrainingProgramResponse.class);
-    }
+    // @PutMapping("{programId}")
+    // public TrainingProgramResponse updateTrainingProgram(@PathVariable Integer
+    // programId,
+    // @RequestBody TrainingProgramRequest request) {
+    // return trainingProgramService.update(programId, request,
+    // TrainingProgramResponse.class);
+    // }
 
     @PostMapping(path = "{userId}", consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
@@ -82,18 +84,20 @@ public class TrainingProgramController {
                 file);
     }
 
-    @PutMapping("{programId}/general-info")
+    @PutMapping(path = "{programId}/general-info", consumes = "multipart/form-data")
+    @ResponseStatus(HttpStatus.OK)
     public void updateTrainingProgramGeneralInfo(@PathVariable Integer programId,
             @RequestPart(name = "training-program") @Valid TrainingProgramRequest trainingProgramRequest,
             @RequestPart(name = "file", required = false) MultipartFile file,
             Authentication auth) {
-        System.out.println("Endpoint works! GeneralInfo update!");
+        trainingProgramService.updateTrainingProgramGeneralInfo(programId, trainingProgramRequest, file);
     }
 
-    @PutMapping("{programId}/exercise-plan")
+    @PutMapping(path = "{programId}/exercise-plan")
+    @ResponseStatus(HttpStatus.OK)
     public void updateTrainingProgramExercisePlan(@PathVariable Integer programId,
-            @RequestBody @Valid TrainingProgramRequest request, Authentication auth) {
-        System.out.println("Endpoint works! ExercisePlan update!");
+            @RequestBody @Valid TrainingProgramExercisesRequest trainingProgramExercisesRequest, Authentication auth) {
+        trainingProgramService.updateTrainingProgramExercisePlan(programId, trainingProgramExercisesRequest);
     }
 
     @DeleteMapping("{programId}")

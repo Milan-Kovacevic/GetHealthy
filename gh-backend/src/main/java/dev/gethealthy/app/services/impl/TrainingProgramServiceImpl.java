@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.exceptions.NotFoundException;
+import dev.gethealthy.app.models.entities.Category;
+import dev.gethealthy.app.models.entities.Exercise;
 import dev.gethealthy.app.models.entities.ExerciseSet;
 import dev.gethealthy.app.models.entities.ProgramRating;
 import dev.gethealthy.app.models.entities.Trainer;
@@ -29,12 +31,14 @@ import dev.gethealthy.app.models.requests.TrainingProgramExerciseRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramExercisesRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.FeaturedProgramResponse;
-import dev.gethealthy.app.models.responses.ProgramExerciseResponse;
+import dev.gethealthy.app.models.responses.ProgramExerciseDetailsResponse;
 import dev.gethealthy.app.models.responses.SingleProgramDetailsResponse;
 import dev.gethealthy.app.models.responses.SingleTrainingProgramResponse;
 import dev.gethealthy.app.models.responses.TrainerProgramResponse;
 import dev.gethealthy.app.models.responses.TrainerResponse;
 import dev.gethealthy.app.models.responses.TrainingProgramResponse;
+import dev.gethealthy.app.repositories.CategoryRepository;
+import dev.gethealthy.app.repositories.ExerciseRepository;
 import dev.gethealthy.app.repositories.ExerciseSetRepository;
 import dev.gethealthy.app.repositories.TrainerRepository;
 import dev.gethealthy.app.repositories.TrainingProgramExerciseRepository;
@@ -51,11 +55,14 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
     private final ModelMapper modelMapper;
     private final TrainerRepository trainerRepository;
     private final StorageAccessService storageAccessService;
+    private final CategoryRepository categoryRepository;
+    private final ExerciseRepository exerciseRepository;
 
     public TrainingProgramServiceImpl(TrainingProgramRepository trainingProgramRepository,
             TrainingProgramExerciseRepository trainingProgramExerciseRepository,
             ModelMapper modelMapper, TrainerRepository trainerRepository, ExerciseSetRepository exerciseSetRepository,
-            StorageAccessService storageAccessService) {
+            StorageAccessService storageAccessService, CategoryRepository categoryRepository,
+            ExerciseRepository exerciseRepository) {
         super(trainingProgramRepository, modelMapper, TrainingProgram.class);
         this.trainingProgramRepository = trainingProgramRepository;
         this.trainingProgramExerciseRepository = trainingProgramExerciseRepository;
@@ -63,6 +70,8 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
         this.trainerRepository = trainerRepository;
         this.exerciseSetRepository = exerciseSetRepository;
         this.storageAccessService = storageAccessService;
+        this.categoryRepository = categoryRepository;
+        this.exerciseRepository = exerciseRepository;
     }
 
     @Override
@@ -145,6 +154,7 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
                 .sorted(Comparator.comparingInt(TrainingProgramExercise::getPosition))
                 .map(e -> {
                     var respObj = modelMapper.map(e, ProgramExerciseDetailsResponse.class);
+                    respObj.setProgramExerciseId(e.getId());
                     modelMapper.map(e.getExercise(), respObj);
                     modelMapper.map(e.getExerciseSets(), respObj);
                     return respObj;
@@ -195,17 +205,59 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
 
         }
 
+        saveFile(file, trainingProgram);
+
+        trainingProgramRepository.saveAndFlush(trainingProgram);
+    }
+
+    @Override
+    public void updateTrainingProgramGeneralInfo(Integer programId, TrainingProgramRequest trainingProgramRequest,
+            MultipartFile file) {
+        TrainingProgram trainingProgram = trainingProgramRepository.findById(programId)
+                .orElseThrow(NotFoundException::new);
+
+        trainingProgram.setName(trainingProgramRequest.getName());
+        trainingProgram.setDescription(trainingProgramRequest.getDescription());
+        trainingProgram.setRequirements(trainingProgramRequest.getRequirements());
+        trainingProgram.setDifficulty(trainingProgramRequest.getDifficulty());
+        trainingProgram.setTrainingDuration(trainingProgramRequest.getTrainingDuration());
+
+        if (trainingProgramRequest.getCategories() != null) {
+            List<Category> updatedCategories = trainingProgramRequest.getCategories().stream()
+                    .map(catReq -> categoryRepository.findById(catReq.getCategoryId())
+                            .orElseThrow(() -> new NotFoundException("Category not found: " +
+                                    catReq.getCategoryId())))
+                    .toList();
+
+            trainingProgram.getCategories().clear();
+            trainingProgram.getCategories().addAll(updatedCategories);
+        }
+
+        saveFile(file, trainingProgram);
+
+        trainingProgramRepository.saveAndFlush(trainingProgram);
+    }
+
+    private void saveFile(MultipartFile file, TrainingProgram trainingProgram) {
         if (file != null) {
             try {
                 String savedFileName = storageAccessService.saveToFile(file.getOriginalFilename(), file.getBytes(),
                         StorageType.PICTURE);
 
                 trainingProgram.setImageFilePath(savedFileName);
-                trainingProgramRepository.saveAndFlush(trainingProgram);
             } catch (IOException ex) {
                 throw new RuntimeException("Error handling file upload", ex);
             }
         }
     }
 
+    @Override
+    public void updateTrainingProgramExercisePlan(Integer programId,
+            TrainingProgramExercisesRequest trainingProgramExercisesRequest) {
+        TrainingProgram trainingProgram = trainingProgramRepository.findById(programId)
+                .orElseThrow(() -> new NotFoundException("Training program not found: " + programId));
+
+        // TO DO -> update the training program exercise plan
+
+    }
 }
