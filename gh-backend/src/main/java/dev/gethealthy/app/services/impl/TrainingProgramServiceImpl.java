@@ -100,9 +100,17 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
 
     @Override
     public Page<TrainerProgramResponse> getTrainingProgramsForTrainer(Integer userId, Pageable page) {
+        // return trainingProgramRepository
+        // .findAllByTrainer_Id(userId, page)
+        // .map(e -> modelMapper.map(e, TrainerProgramResponse.class));
         return trainingProgramRepository
                 .findAllByTrainer_Id(userId, page)
-                .map(e -> modelMapper.map(e, TrainerProgramResponse.class));
+                .map(trainingProgram -> {
+                    TrainerProgramResponse response = modelMapper.map(trainingProgram, TrainerProgramResponse.class);
+                    response.setTrainerName(trainingProgram.getTrainer().getFirstName() + " "
+                            + trainingProgram.getTrainer().getLastName());
+                    return response;
+                });
     }
 
     @Override

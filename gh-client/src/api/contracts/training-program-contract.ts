@@ -26,6 +26,8 @@ export type TrainerProgramDTO = {
   id: number;
   name: string;
   createdAt: string;
+  description: string;
+  trainerName: string;
 };
 
 export type PageableTrainerProgramsDTO = Page<TrainerProgramDTO>;

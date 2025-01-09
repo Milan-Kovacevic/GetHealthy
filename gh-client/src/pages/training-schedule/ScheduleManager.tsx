@@ -1,3 +1,4 @@
+import { useSchedule } from "@/hooks/use-schedule";
 import { getProgramStatus } from "@/utils/date-time-utils";
 import { addDays, format, startOfWeek } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -6,68 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
 import CreateEditProgramOnScheduleModal from "./components/CreateEditProgramOnScheduleModal";
 import ProgramScheduleDay from "./components/ProgramScheduleDay";
-import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
 
-// this should be Training Program On Schedule?
-
-const mockPrograms: TrainingProgramOnSchedule[] = [
-  {
-    id: 1,
-    dayOfWeek: 1,
-    startTime: "10:00",
-    trainingDuration: 100,
-    program: {
-      id: 1,
-      name: "Morning Yoga",
-      createdAt: "2025-01-01T00:00:00.000Z",
-      description: "Start your day with energizing yoga",
-      trainerName: "Marko Markovic",
-    },
-  },
-  {
-    id: 2,
-    dayOfWeek: 4,
-    startTime: "18:00",
-    trainingDuration: 100,
-    program: {
-      id: 2,
-      name: "HIIT Workout",
-      createdAt: "2025-01-01T00:00:00.000Z",
-      description: "High-intensity interval training",
-      trainerName: "Marko Markovic",
-    },
-  },
-  {
-    id: 3,
-    dayOfWeek: 4,
-    startTime: "00:00",
-    trainingDuration: 100,
-    program: {
-      id: 3,
-      name: "Strength Training",
-      createdAt: "2025-01-01T00:00:00.000Z",
-      description: "Build muscle and strength with our structured workout.",
-      trainerName: "Anna Smith",
-    },
-  },
-];
-
-export default function TrainingSchedulePage() {
+const ScheduleManager = () => {
+  const { programs } = useSchedule();
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [programs, setPrograms] = useState<TrainingProgramOnSchedule[]>([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // this could be done on the backend side (sorting programs), fetching training programs for trainerId
-    const sortedPrograms = [...mockPrograms].sort((a, b) => {
-      const [aHours, aMinutes] = a.startTime.split(":").map(Number);
-      const [bHours, bMinutes] = b.startTime.split(":").map(Number);
-      const aTime = aHours * 60 + aMinutes;
-      const bTime = bHours * 60 + bMinutes;
-      return aTime - bTime;
-    });
-    setPrograms(sortedPrograms);
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentDate(new Date()), 60000);
@@ -83,17 +29,6 @@ export default function TrainingSchedulePage() {
     navigate(`/programs/${programId}`);
   };
 
-  const handleEditProgramOnSchedule = (
-    programOnSchedule: TrainingProgramOnSchedule
-  ) => {
-    setPrograms((prevPrograms) =>
-      prevPrograms.map((program) =>
-        program.id === programOnSchedule.id
-          ? { ...programOnSchedule, program: programOnSchedule.program }
-          : program
-      )
-    );
-  };
   return (
     <section className="h-full relative overflow-hidden flex flex-col">
       <CircleBackgroundBlob
@@ -135,7 +70,6 @@ export default function TrainingSchedulePage() {
                 <ProgramScheduleDay
                   forDay={day}
                   dayOfWeek={index + 1}
-                  onEditProgramOnSchedule={handleEditProgramOnSchedule}
                   getProgramStatus={getProgramStatus}
                   programs={programs.filter(
                     (program) =>
@@ -153,4 +87,6 @@ export default function TrainingSchedulePage() {
       </div>
     </section>
   );
-}
+};
+
+export default ScheduleManager;

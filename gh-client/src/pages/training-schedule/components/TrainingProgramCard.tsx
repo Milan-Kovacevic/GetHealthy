@@ -13,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useSchedule } from "@/hooks/use-schedule";
 import TrainingWorkoutDialog from "@/pages/training-workout/TrainingWorkoutDialog";
 import {
   getTrainingProgramTimeRange,
@@ -24,9 +25,6 @@ import CreateEditProgramOnScheduleModal from "./CreateEditProgramOnScheduleModal
 
 interface TrainingProgramCardProps {
   programOnSchedule: TrainingProgramOnSchedule;
-  onEditProgramOnSchedule: (
-    programOnSchedule: TrainingProgramOnSchedule
-  ) => void;
   programStatus: ScheduleTrainingStatus;
   onViewDetails: (programId: number) => void;
   editable: boolean;
@@ -37,13 +35,15 @@ export default function TrainingProgramCard({
   onViewDetails,
   programStatus,
   editable,
-  onEditProgramOnSchedule,
 }: TrainingProgramCardProps) {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Card className="cursor-pointer shadow-md hover:border-foreground transition-colors p-1 border-foreground/35">
+          <Card
+            data-state="closed"
+            className="cursor-pointer shadow-md hover:border-foreground transition-colors p-1 border-foreground/35"
+          >
             <CardContent className="p-2 flex flex-col">
               <h3 className="font-semibold text-sm mb-1">
                 {programOnSchedule.program.name}
@@ -58,7 +58,7 @@ export default function TrainingProgramCard({
                 {editable && (
                   <ManageProgramPopup
                     programOnSchedule={programOnSchedule}
-                    onEditProgramOnSchedule={onEditProgramOnSchedule}
+                    // onEditProgramOnSchedule={onEditProgramOnSchedule}
                   />
                 )}
               </div>
@@ -77,8 +77,10 @@ export default function TrainingProgramCard({
             </CardContent>
           </Card>
         </TooltipTrigger>
-        <TooltipContent>
-          <p>{programOnSchedule.program.description}</p>
+        <TooltipContent className="w-64 max-h-40 p-3">
+          <div className="text-sm line-clamp-3 mb-2">
+            {programOnSchedule.program.description}
+          </div>
 
           <p className="text-xs text-muted-foreground font-medium">
             Trainer: {programOnSchedule.program.trainerName}
@@ -91,7 +93,7 @@ export default function TrainingProgramCard({
               onClick={() => onViewDetails(programOnSchedule.program.id)}
               size="sm"
               variant="ghost"
-              className="h-auto py-1.5 px-2"
+              className="h-auto  px-2"
             >
               <ExternalLinkIcon className="w-4 h-4" />
             </Button>
@@ -120,15 +122,12 @@ const StatusBadge = ({ status }: { status: ScheduleTrainingStatus }) => {
 
 const ManageProgramPopup = ({
   programOnSchedule,
-  onEditProgramOnSchedule,
 }: {
   programOnSchedule: TrainingProgramOnSchedule;
-  onEditProgramOnSchedule: (
-    programOnSchedule: TrainingProgramOnSchedule
-  ) => void;
 }) => {
+  const { editProgram } = useSchedule();
   const handleEdit = (editedProgram: TrainingProgramOnSchedule) => {
-    onEditProgramOnSchedule(editedProgram);
+    editProgram(editedProgram);
   };
 
   const handleRemove = async () => {
@@ -140,10 +139,14 @@ const ManageProgramPopup = ({
       console.log(error);
     }
   };
-
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        asChild
+        onClick={(e) => {
+          e.type;
+        }}
+      >
         <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
           <MoreHorizontalIcon className="h-4 w-4" />
           <span className="sr-only">Open menu</span>

@@ -10,4 +10,6 @@ public class TrainerProgramResponse {
     private Integer id;
     private String name;
     private Instant createdAt;
+    private String description;
+    private String trainerName;
 }

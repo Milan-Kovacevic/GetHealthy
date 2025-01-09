@@ -16,7 +16,7 @@ import TrainingProgramTrainees from "@/pages/program-details/components/particip
 import RegisterPage from "@/pages/register/RegisterPage";
 import { ManageTrainingProgramsPage } from "@/pages/training-programs/ManageTrainingProgramsPage";
 import { TrainingProgramsPage } from "@/pages/training-programs/TrainingProgramsPage";
-import TrainingSchedulePage from "@/pages/training-schedule/TrainingSchedulePage";
+import TrainingProgramSchedulePage from "@/pages/training-schedule/TrainingProgramSchedulePage";
 import ProfilePage from "@/pages/profile/components/ProfilePage";
 import AppearancePage from "@/pages/profile/components/AppearancePage";
 import AccountPage from "@/pages/profile/components/AccountPage";
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/schedule",
-            element: <TrainingSchedulePage />,
+            element: <TrainingProgramSchedulePage />,
           },
           // Routes for every role
           {

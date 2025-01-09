@@ -14,7 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface TrainingProgramService extends CrudService<Integer> {
-    Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort, Pageable page);
+    Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort,
+            Pageable page);
 
     Page<TrainerProgramResponse> getTrainingProgramsForTrainer(Integer userId, Pageable page);
 
@@ -30,8 +31,11 @@ public interface TrainingProgramService extends CrudService<Integer> {
     List<FeaturedProgramResponse> getFeaturedTrainingPrograms();
 
     void createTrainingProgram(Integer userId, TrainingProgramRequest trainingProgramRequest,
-                               TrainingProgramExercisesRequest trainingProgramExercisesRequest, MultipartFile file);
+            TrainingProgramExercisesRequest trainingProgramExercisesRequest, MultipartFile file);
 
     void updateTrainingProgramGeneralInfo(Integer programId, TrainingProgramRequest trainingProgramRequest,
-                                          MultipartFile file);
+            MultipartFile file);
+
+    void updateTrainingProgramExercisePlan(Integer programId,
+            TrainingProgramExercisesRequest trainingProgramExercisesRequest);
 }

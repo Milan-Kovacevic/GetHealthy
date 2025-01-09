@@ -10,9 +10,6 @@ type ProgramScheduleDayProps = {
   forDay: Date;
   dayOfWeek: number;
   programs: TrainingProgramOnSchedule[];
-  onEditProgramOnSchedule: (
-    programOnSchedule: TrainingProgramOnSchedule
-  ) => void;
   getProgramStatus: (
     programOnSchedule: TrainingProgramOnSchedule
   ) => ScheduleTrainingStatus;
@@ -68,11 +65,6 @@ export default function ProgramScheduleDay(props: ProgramScheduleDayProps) {
                     programOnSchedule={program}
                     onViewDetails={() => {
                       onViewDetails(program.id);
-                    }}
-                    onEditProgramOnSchedule={(
-                      programOnSchedule: TrainingProgramOnSchedule
-                    ) => {
-                      props.onEditProgramOnSchedule(programOnSchedule);
                     }}
                     programStatus={getProgramStatus(program)}
                     editable={true}
