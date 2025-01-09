@@ -1,18 +1,21 @@
+import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
 import { CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import {
-  ScheduleTrainingStatus,
-  TrainingProgram,
-} from "../TrainingSchedulePage";
-import { format, getDayOfYear } from "date-fns";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import { ScheduleTrainingStatus } from "@/utils/date-time-utils";
+import { format, getDayOfYear } from "date-fns";
 import TrainingProgramCard from "./TrainingProgramCard";
 
 type ProgramScheduleDayProps = {
   forDay: Date;
   dayOfWeek: number;
-  programs: TrainingProgram[];
-  getProgramStatus: (program: TrainingProgram) => ScheduleTrainingStatus;
+  programs: TrainingProgramOnSchedule[];
+  onEditProgramOnSchedule: (
+    programOnSchedule: TrainingProgramOnSchedule
+  ) => void;
+  getProgramStatus: (
+    programOnSchedule: TrainingProgramOnSchedule
+  ) => ScheduleTrainingStatus;
   onViewDetails: (id: number) => void;
 };
 
@@ -62,9 +65,14 @@ export default function ProgramScheduleDay(props: ProgramScheduleDayProps) {
                 return (
                   <TrainingProgramCard
                     key={program.id}
-                    program={program}
+                    programOnSchedule={program}
                     onViewDetails={() => {
                       onViewDetails(program.id);
+                    }}
+                    onEditProgramOnSchedule={(
+                      programOnSchedule: TrainingProgramOnSchedule
+                    ) => {
+                      props.onEditProgramOnSchedule(programOnSchedule);
                     }}
                     programStatus={getProgramStatus(program)}
                     editable={true}

@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
-import { handleIntegerOnValueChange } from "@/utils/formInputUtils";
+import { handleIntegerOnValueChange } from "@/utils/form-input-utils";
 import { TrashIcon } from "lucide-react";
 import { useEffect } from "react";
 

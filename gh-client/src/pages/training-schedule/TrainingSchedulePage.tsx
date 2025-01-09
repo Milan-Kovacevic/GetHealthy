@@ -1,152 +1,60 @@
-import {
-  addDays,
-  format,
-  isPast,
-  isSameDay,
-  isWithinInterval,
-  startOfWeek,
-} from "date-fns";
-import { useEffect, useState } from "react";
+import { getProgramStatus } from "@/utils/date-time-utils";
+import { addDays, format, startOfWeek } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import AddProgramToScheduleModal from "./components/AddProgramToScheduleModal";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ProgramScheduleDay from "./components/ProgramScheduleDay";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
+import CreateEditProgramOnScheduleModal from "./components/CreateEditProgramOnScheduleModal";
+import ProgramScheduleDay from "./components/ProgramScheduleDay";
+import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
 
-export interface TrainingProgram {
-  id: number;
-  name: string;
-  description: string;
-  startTime: string;
-  endTime: string;
-  trainerName: string;
-  day: Date;
-}
-export type ScheduleTrainingStatus = "completed" | "upcoming" | "live";
+// this should be Training Program On Schedule?
 
-const mockPrograms: TrainingProgram[] = [
+const mockPrograms: TrainingProgramOnSchedule[] = [
   {
     id: 1,
-    name: "Morning Yoga",
-    description: "Start your day with energizing yoga",
+    dayOfWeek: 1,
     startTime: "10:00",
-    endTime: "23:59",
-    trainerName: "Marko Markovic",
-    day: new Date(),
+    trainingDuration: 100,
+    program: {
+      id: 1,
+      name: "Morning Yoga",
+      createdAt: "2025-01-01T00:00:00.000Z",
+      description: "Start your day with energizing yoga",
+      trainerName: "Marko Markovic",
+    },
   },
   {
     id: 2,
-    name: "HIIT Workout",
-    description: "High-intensity interval training",
+    dayOfWeek: 4,
     startTime: "18:00",
-    endTime: "19:00",
-    trainerName: "Marko Markovic",
-    day: addDays(new Date(), 3),
-  },
-  {
-    id: 2,
-    name: "HIIT Workout",
-    description: "High-intensity interval training",
-    startTime: "14:00",
-    endTime: "15:00",
-    trainerName: "Marko Markovic",
-    day: addDays(new Date(), -1),
+    trainingDuration: 100,
+    program: {
+      id: 2,
+      name: "HIIT Workout",
+      createdAt: "2025-01-01T00:00:00.000Z",
+      description: "High-intensity interval training",
+      trainerName: "Marko Markovic",
+    },
   },
   {
     id: 3,
-    name: "New Workout",
-    description: "Easy training",
-    startTime: "20:00",
-    endTime: "21:50",
-    trainerName: "Marko Markovic",
-    day: addDays(new Date(), 0),
+    dayOfWeek: 4,
+    startTime: "00:00",
+    trainingDuration: 100,
+    program: {
+      id: 3,
+      name: "Strength Training",
+      createdAt: "2025-01-01T00:00:00.000Z",
+      description: "Build muscle and strength with our structured workout.",
+      trainerName: "Anna Smith",
+    },
   },
-  {
-    id: 4,
-    name: "Pilates",
-    description: "Core-strengthening exercises",
-    startTime: "10:00",
-    endTime: "11:00",
-    trainerName: "Marko Markovic",
-    day: addDays(new Date(), 2),
-  },
-  {
-    id: 5,
-    name: "Strength Training",
-    description: "Build muscle and increase strength",
-    startTime: "17:00",
-    endTime: "18:00",
-    trainerName: "Marko Markovic",
-    day: addDays(new Date(), 5),
-  },
-  {
-    id: 6,
-    name: "Cardio Blast",
-    description: "Boost your cardiovascular fitness",
-    startTime: "07:00",
-    endTime: "08:00",
-    trainerName: "Marko Markovic",
-    day: addDays(new Date(), 4),
-  },
-  {
-    id: 6,
-    name: "Cardio Blast v2",
-    description: "Boost your cardiovascular fitness",
-    startTime: "07:00",
-    endTime: "08:00",
-    trainerName: "Marko Markovic",
-    day: addDays(new Date(), -3),
-  },
-  // {
-  //   id: 7,
-  //   name: "Cardio Blast v2",
-  //   description: "Boost your cardiovascular fitness",
-  //   startTime: "07:00",
-  //   endTime: "08:00",
-  //   trainerName: "Marko Markovic",
-  //   day: addDays(new Date(), 0),
-  // },
-  // {
-  //   id: 8,
-  //   name: "Cardio Blast v2",
-  //   description: "Boost your cardiovascular fitness",
-  //   startTime: "07:00",
-  //   endTime: "08:00",
-  //   trainerName: "Marko Markovic",
-  //   day: addDays(new Date(), 0),
-  // },
-  // {
-  //   id: 9,
-  //   name: "Cardio Blast v2",
-  //   description: "Boost your cardiovascular fitness",
-  //   startTime: "07:00",
-  //   endTime: "08:00",
-  //   trainerName: "Marko Markovic",
-  //   day: addDays(new Date(), 0),
-  // },
-  // {
-  //   id: 10,
-  //   name: "Cardio Blast v2",
-  //   description: "Boost your cardiovascular fitness",
-  //   startTime: "07:00",
-  //   endTime: "08:00",
-  //   trainerName: "Marko Markovic",
-  //   day: addDays(new Date(), 0),
-  // },
-  // {
-  //   id: 11,
-  //   name: "Cardio Blast v2",
-  //   description: "Boost your cardiovascular fitness",
-  //   startTime: "07:00",
-  //   endTime: "08:00",
-  //   trainerName: "Marko Markovic",
-  //   day: addDays(new Date(), 0),
-  // },
 ];
 
 export default function TrainingSchedulePage() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [programs, setPrograms] = useState<TrainingProgram[]>([]);
+  const [programs, setPrograms] = useState<TrainingProgramOnSchedule[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -171,30 +79,21 @@ export default function TrainingSchedulePage() {
     addDays(startOfCurrentWeek, i)
   );
 
-  const getProgramStatus = (
-    program: TrainingProgram
-  ): ScheduleTrainingStatus => {
-    const now = currentDate;
-    const [startHour, startMinute] = program.startTime.split(":").map(Number);
-    const [endHour, endMinute] = program.endTime.split(":").map(Number);
-    const programStart = new Date(program.day).setHours(startHour, startMinute);
-    const programEnd = new Date(program.day).setHours(endHour, endMinute);
-
-    if (isPast(programEnd)) return "completed";
-    if (
-      isWithinInterval(now, {
-        start: new Date(programStart),
-        end: new Date(programEnd),
-      })
-    )
-      return "live";
-    return "upcoming";
-  };
-
   const handleViewProgramDetails = (programId: any) => {
     navigate(`/programs/${programId}`);
   };
 
+  const handleEditProgramOnSchedule = (
+    programOnSchedule: TrainingProgramOnSchedule
+  ) => {
+    setPrograms((prevPrograms) =>
+      prevPrograms.map((program) =>
+        program.id === programOnSchedule.id
+          ? { ...programOnSchedule, program: programOnSchedule.program }
+          : program
+      )
+    );
+  };
   return (
     <section className="h-full relative overflow-hidden flex flex-col">
       <CircleBackgroundBlob
@@ -226,7 +125,7 @@ export default function TrainingSchedulePage() {
               </div>
             </div>
             <div className="md:flex-none flex-1 md:mb-0 mb-3 md:self-center">
-              <AddProgramToScheduleModal />
+              <CreateEditProgramOnScheduleModal />
             </div>
           </div>
 
@@ -236,9 +135,13 @@ export default function TrainingSchedulePage() {
                 <ProgramScheduleDay
                   forDay={day}
                   dayOfWeek={index + 1}
+                  onEditProgramOnSchedule={handleEditProgramOnSchedule}
                   getProgramStatus={getProgramStatus}
-                  programs={programs.filter((program) =>
-                    isSameDay(program.day, day)
+                  programs={programs.filter(
+                    (program) =>
+                      // isSameDay(program.dayOfWeek, day)
+                      program.dayOfWeek ===
+                      (day.getDay() === 0 ? 7 : day.getDay())
                   )}
                   key={day.toISOString()}
                   onViewDetails={handleViewProgramDetails}

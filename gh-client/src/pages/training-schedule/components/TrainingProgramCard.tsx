@@ -1,42 +1,43 @@
+import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
+import { deleteTrainingProgramOnSchedule } from "@/api/services/training-program-on-schedule-service";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  ScheduleTrainingStatus,
-  TrainingProgram,
-} from "../TrainingSchedulePage";
-import TrainingWorkoutDialog from "@/pages/training-workout/TrainingWorkoutDialog";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import {
-  ExternalLinkIcon,
-  MoreHorizontalIcon,
-  PencilIcon,
-  Trash2Icon,
-} from "lucide-react";
-import { deleteTrainingProgramOnSchedule } from "@/api/services/training-program-on-schedule-service";
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import TrainingWorkoutDialog from "@/pages/training-workout/TrainingWorkoutDialog";
+import {
+  getTrainingProgramTimeRange,
+  ScheduleTrainingStatus,
+} from "@/utils/date-time-utils";
+import { ExternalLinkIcon, MoreHorizontalIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
+import CreateEditProgramOnScheduleModal from "./CreateEditProgramOnScheduleModal";
 
 interface TrainingProgramCardProps {
-  program: TrainingProgram;
+  programOnSchedule: TrainingProgramOnSchedule;
+  onEditProgramOnSchedule: (
+    programOnSchedule: TrainingProgramOnSchedule
+  ) => void;
   programStatus: ScheduleTrainingStatus;
   onViewDetails: (programId: number) => void;
   editable: boolean;
 }
 
 export default function TrainingProgramCard({
-  program,
+  programOnSchedule,
   onViewDetails,
   programStatus,
   editable,
+  onEditProgramOnSchedule,
 }: TrainingProgramCardProps) {
   return (
     <TooltipProvider>
@@ -44,15 +45,22 @@ export default function TrainingProgramCard({
         <TooltipTrigger asChild>
           <Card className="cursor-pointer shadow-md hover:border-foreground transition-colors p-1 border-foreground/35">
             <CardContent className="p-2 flex flex-col">
-              <h3 className="font-semibold text-sm mb-1">{program.name}</h3>
+              <h3 className="font-semibold text-sm mb-1">
+                {programOnSchedule.program.name}
+              </h3>
               <p className="text-xs text-muted-foreground">
-                {program.startTime} - {program.endTime}
+                {getTrainingProgramTimeRange(programOnSchedule)}
               </p>
             </CardContent>
             <CardContent className="p-2 pt-0 flex flex-col">
               <div className="mt-1 flex justify-between items-center">
                 <StatusBadge status={programStatus} />
-                {editable && <ManageProgramPopup programId={program.id} />}
+                {editable && (
+                  <ManageProgramPopup
+                    programOnSchedule={programOnSchedule}
+                    onEditProgramOnSchedule={onEditProgramOnSchedule}
+                  />
+                )}
               </div>
               {programStatus === "live" && (
                 <TrainingWorkoutDialog>
@@ -70,17 +78,17 @@ export default function TrainingProgramCard({
           </Card>
         </TooltipTrigger>
         <TooltipContent>
-          <p>{program.description}</p>
+          <p>{programOnSchedule.program.description}</p>
 
           <p className="text-xs text-muted-foreground font-medium">
-            Trainer: {program.trainerName}
+            Trainer: {programOnSchedule.program.trainerName}
           </p>
           <div className="flex justify-between items-center mt-1">
             <p className="text-xs text-muted-foreground">
-              {program.startTime} - {program.endTime}
+              {getTrainingProgramTimeRange(programOnSchedule)}
             </p>
             <Button
-              onClick={() => onViewDetails(program.id)}
+              onClick={() => onViewDetails(programOnSchedule.program.id)}
               size="sm"
               variant="ghost"
               className="h-auto py-1.5 px-2"
@@ -110,14 +118,22 @@ const StatusBadge = ({ status }: { status: ScheduleTrainingStatus }) => {
   );
 };
 
-const ManageProgramPopup = ({ programId }: { programId: number }) => {
-  const handleEdit = () => {
-    console.log("Edit training program on schedule!");
+const ManageProgramPopup = ({
+  programOnSchedule,
+  onEditProgramOnSchedule,
+}: {
+  programOnSchedule: TrainingProgramOnSchedule;
+  onEditProgramOnSchedule: (
+    programOnSchedule: TrainingProgramOnSchedule
+  ) => void;
+}) => {
+  const handleEdit = (editedProgram: TrainingProgramOnSchedule) => {
+    onEditProgramOnSchedule(editedProgram);
   };
 
   const handleRemove = async () => {
     try {
-      await deleteTrainingProgramOnSchedule(programId);
+      await deleteTrainingProgramOnSchedule(programOnSchedule.id);
       toast.success("Training program successfully deleted!");
     } catch (error) {
       toast.error("Could not delete training program!");
@@ -134,15 +150,11 @@ const ManageProgramPopup = ({ programId }: { programId: number }) => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-32 p-0">
-        <Button
-          className="w-full justify-start rounded-none px-4 py-2 text-xs font-normal"
-          size="sm"
-          variant="ghost"
-          onClick={handleEdit}
-        >
-          <PencilIcon className="mr-0 h-3.5 w-3.5" />
-          Edit
-        </Button>
+        <CreateEditProgramOnScheduleModal
+          isEdit={true}
+          programOnSchedule={programOnSchedule}
+          onEditProgramOnSchedule={handleEdit}
+        />
         <Button
           variant="ghost"
           size="sm"

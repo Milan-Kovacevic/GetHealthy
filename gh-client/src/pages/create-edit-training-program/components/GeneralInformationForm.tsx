@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { handleIntegerOnValueChange } from "@/utils/formInputUtils";
+import { handleIntegerOnValueChange } from "@/utils/form-input-utils";
 import { CheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import FormSectionTitle from "./FormSectionTitle";
@@ -138,7 +138,7 @@ const GeneralInformationForm = ({
                 control={form.control}
                 name={`${formPath}.trainingDuration`}
                 type="text"
-                description="Enter a duration in seconds."
+                description="Enter a duration in minutes."
                 placeholder="ex. 100"
                 display="Training duration *"
                 className="max-w-lg"
