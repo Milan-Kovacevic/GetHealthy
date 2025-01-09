@@ -34,7 +34,7 @@ export default function FeaturedTrainingPrograms(
 
   return (
     !isEmpty && (
-      <section className="py-4 mb-2">
+      <section className="py-2">
         <div className="mx-auto">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">

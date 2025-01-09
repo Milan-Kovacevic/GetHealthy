@@ -115,7 +115,7 @@ export default function NotificationsPopover({
   return (
     <Popover>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent className="sm:w-[400px] w-screen sm:relative sm:translate-y-0 -translate-y-1/2 px-0 py-4">
+      <PopoverContent className="sm:w-[400px] w-screen sm:relative px-0 py-4">
         {isTrainer ? TrainerView : TraineeView}
       </PopoverContent>
     </Popover>

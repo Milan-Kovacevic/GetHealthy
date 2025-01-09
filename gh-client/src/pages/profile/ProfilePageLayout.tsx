@@ -19,11 +19,11 @@ const sidebarNavItems = [
 
 const ProfilePageLayout = () => {
   return (
-    <section className="overflow-hidden relative sm:px-5 px-4 pt-8 pb-10">
+    <section className="overflow-hidden relative sm:px-5 px-4 md:pt-6 pt-4 pb-10">
       <div className=" container mx-auto space-y-5">
         <div className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">My settings</h2>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground sm:text-base text-sm">
             Manage your profile details, account and appearance
           </p>
         </div>

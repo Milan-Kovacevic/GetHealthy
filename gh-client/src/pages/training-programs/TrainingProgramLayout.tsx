@@ -60,7 +60,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   }, [myTrainingPrograms]);
 
   return (
-    <section className="overflow-hidden relative sm:px-5 px-4 pt-8 pb-10">
+    <section className="overflow-hidden relative sm:px-5 px-4 md:pt-6 pt-4 pb-10">
       <BackgroundBlurs />
       <div className="container mx-auto h-full space-y-5 z-10 relative">
         <div className="mx-auto flex flex-col">
@@ -74,7 +74,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
             />
           )}
           <div className="flex lg:flex-row flex-col lg:gap-8 gap-2">
-            <div className="flex flex-col my-6 pr-4 lg:border-r lg:border-b-0 border-b pb-4">
+            <div className="flex flex-col my-4 mb-0 pr-4 lg:border-r lg:border-b-0 border-b pb-4">
               <SearchBar
                 query={programsSearchQuery}
                 setQuery={setProgramsSearchQuery} // todo
@@ -189,7 +189,7 @@ const TrainingProgramsPageTitle = ({ showCreate }: { showCreate: boolean }) => {
     <div className="flex justify-between">
       <div className="space-y-0.5">
         <h2 className="text-2xl font-bold tracking-tight">Training Programs</h2>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground sm:text-base text-sm">
           Browse and explore your perfect training program today.
         </p>
       </div>
@@ -200,7 +200,7 @@ const TrainingProgramsPageTitle = ({ showCreate }: { showCreate: boolean }) => {
           onClick={handleCreateProgram}
         >
           <PlusIcon className="text-primary"></PlusIcon>
-          Create program
+          <span className="sm:block hidden">Create program</span>
         </Button>
       )}
     </div>
