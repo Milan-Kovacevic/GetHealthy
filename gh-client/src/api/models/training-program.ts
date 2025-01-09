@@ -26,6 +26,8 @@ export type TrainerProgram = {
   id: number;
   name: string;
   createdAt: string;
+  description: string;
+  trainerName: string;
 };
 
 export type PageableTrainerPrograms = Page<TrainerProgram>;

@@ -17,8 +17,16 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 
+import {
+  CreateTrainingProgramOnScheduleDTO,
+  EditTrainingProgramOnScheduleDTO,
+} from "@/api/contracts/training-program-on-schedule-contract";
 import { TrainerProgram } from "@/api/models/training-program";
 import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
+import {
+  createTrainingProgramOnSchedule,
+  editTrainingProgramOnSchedule,
+} from "@/api/services/training-program-on-schedule-service";
 import { TimePicker } from "@/components/primitives/TimePicker";
 import {
   Form,
@@ -29,21 +37,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import TrainerProgramSelector from "@/pages/shared/TrainerProgramSelector";
+import { parseTimeStringToDate } from "@/utils/date-time-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PencilIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { parseTimeStringToDate } from "@/utils/date-time-utils";
-import {
-  createTrainingProgramOnSchedule,
-  editTrainingProgramOnSchedule,
-} from "@/api/services/training-program-on-schedule-service";
-import {
-  CreateTrainingProgramOnScheduleDTO,
-  EditTrainingProgramOnScheduleDTO,
-  TrainingProgramOnScheduleDTO,
-} from "@/api/contracts/training-program-on-schedule-contract";
 import { toast } from "sonner";
+import { z } from "zod";
 
 const daysOfWeek = [
   "Monday",
@@ -61,6 +60,8 @@ const formSchema = z.object({
       id: z.number(),
       name: z.string(),
       createdAt: z.string(),
+      description: z.string(),
+      trainerName: z.string(),
     })
     .nullable()
     .refine((val) => val !== null && val.id > 0, {
@@ -138,8 +139,6 @@ export const CreateEditProgramOnScheduleModal = ({
         }),
         program: {
           ...values.program,
-          description: "Opis",
-          trainerName: "Luka Majkovic",
         },
       };
 
