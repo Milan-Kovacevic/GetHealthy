@@ -97,7 +97,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                 <p className="text-xl font-semibold tracking-tight mt-2">
                   No results found
                 </p>
-                <p className="text-sm text-muted-foreground tracking-tight mt-1">
+                <p className="text-sm text-muted-foreground tracking-tight mt-1 max-w-sm text-center">
                   Please, reload page and try again later or adjust the filter
                   criteria...
                 </p>

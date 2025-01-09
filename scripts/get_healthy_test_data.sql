@@ -3,7 +3,9 @@ INSERT INTO get_healthy.user_account (UserId, Username, Password, Email, Enabled
 VALUES 
   (1, 'admin1', 'passwordHash1', 'admin1@example.com', 1, 0, '2024-12-01 10:00:00', '2024-12-20 15:30:00'),
   (2, 'trainer1', 'passwordHash2', 'trainer1@example.com', 1, 1, '2024-12-01 11:00:00', NULL),
-  (3, 'trainee1', 'passwordHash3', 'trainee1@example.com', 1, 2, '2024-12-02 09:30:00', '2024-12-21 08:00:00');
+  (3, 'trainee1', 'passwordHash3', 'trainee1@example.com', 1, 2, '2024-12-02 09:30:00', '2024-12-21 08:00:00'),
+  (4, 'trainee2', 'passwordHash4', 'trainee2@example.com', 1, 2, '2025-01-08 10:31:26', NULL);
+  
 
 -- Test data for get_healthy.ADMINISTRATOR
 INSERT INTO get_healthy.administrator (UserId)
@@ -14,7 +16,8 @@ VALUES
 INSERT INTO get_healthy.user (UserId, FirstName, LastName, DateOfBirth, Gender, ProfilePictureFilePath)
 VALUES 
   (2, 'John', 'Doe', '1985-05-15', 1, '/images/john_doe.png'),
-  (3, 'Jane', 'Smith', '1990-10-20', 0, '/images/jane_smith.png');
+  (3, 'Jane', 'Smith', '1990-10-20', 0, '/images/jane_smith.png'),
+  (4, 'Jack', 'Sparrow', '1996-11-07', 0, '/images/jack_sparrow.png');
 
 -- Test data for get_healthy.REGISTRATION_REQUEST
 INSERT INTO get_healthy.registration_request (UserId, IssueDate, CertificationFilePath, Description, FirstName, LastName)
@@ -29,7 +32,8 @@ VALUES
 -- Test data for get_healthy.TRAINEE
 INSERT INTO get_healthy.trainee (UserId, Height, Weight, MedicalHistory)
 VALUES 
-  (3, 175.5, 68.0, 'No known medical conditions');
+  (3, 175.5, 68.0, 'No known medical conditions'),
+  (4, 189.5, 88.0, NULL);
 
 -- Test data for get_healthy.EXERCISE_METRIC
 INSERT INTO get_healthy.exercise_metric (Id, Name, Unit)
@@ -120,7 +124,45 @@ VALUES
 INSERT INTO get_healthy.category (CategoryId, Name)
 VALUES 
   (1, 'Strength'),
-  (2, 'Cardio');
+  (2, 'Cardio'),
+  (3, 'Flexibility'),
+  (4, 'Endurance'),
+  (5, 'Balance'),
+  (6, 'Weight Loss'),
+  (7, 'HIIT'),
+  (8, 'Pilates'),
+  (9, 'Yoga'),
+  (10, 'Functional Training'),
+  (11, 'Rehabilitation'),
+  (12, 'Powerlifting'),
+  (13, 'Bodybuilding'),
+  (14, 'CrossFit'),
+  (15, 'Mobility'),
+  (16, 'Martial Arts'),
+  (17, 'Sports Performance'),
+  (18, 'Dance Fitness'),
+  (19, 'Prenatal Fitness'),
+  (20, 'Postnatal Fitness'),
+  (21, 'Aquatic Training'),
+  (22, 'Core Strength'),
+  (23, 'Stretching'),
+  (24, 'Circuit Training'),
+  (25, 'Mental Wellness'),
+  (26, 'Athletic Conditioning'),
+  (27, 'Outdoor Training'),
+  (28, 'Senior Fitness'),
+  (29, 'Kids Fitness'),
+  (30, 'Mindfulness & Meditation'),
+  (31, 'Self-defense'),
+  (32, 'Kettlebell Training'),
+  (33, 'TRX Training'),
+  (34, 'Bootcamp'),
+  (35, 'Running'),
+  (36, 'Cycling'),
+  (37, 'Swimming'),
+  (38, 'Climbing'),
+  (39, 'Rowing'),
+  (40, 'Boxing');
 
 -- Test data for get_healthy.TRAINING_PROGRAM_CATEGORY
 INSERT INTO get_healthy.training_program_category (ProgramId, CategoryId)
@@ -130,7 +172,26 @@ VALUES
 -- Test data for get_healthy.TRAINING_PROGRAM_APPLICATION
 INSERT INTO get_healthy.training_program_application (UserId, ProgramId, MarkRead, SubmissionDate, Note)
 VALUES 
-  (3, 1, 0, '2024-12-15 16:00:00', 'Excited to start this program.');
+  (3, 1, 0, '2024-12-15 16:00:00', 'Excited to start this program.'),
+  (3, 2, 1, '2024-12-20 10:30:00', NULL),
+  (3, 3, 0, '2024-12-25 09:00:00', 'Looking forward to improving my strength.'),
+  (3, 4, 0, '2025-01-05 14:45:00', 'Ready to try something new!'),
+  (3, 5, 1, '2025-01-08 08:00:00', NULL),
+  (3, 6, 0, '2025-01-10 11:20:00', 'I hope this program helps me stay consistent.'),
+  (3, 7, 0, '2025-01-12 17:00:00', NULL),
+  (3, 8, 1, '2025-01-15 12:00:00', 'I’ve heard great things about this one.'),
+  (3, 9, 0, '2025-01-18 13:30:00', NULL),
+  (3, 10, 1, '2025-01-20 15:00:00', 'Can’t wait to see the results.'),
+  (4, 1, 0, '2025-01-22 16:00:00', NULL),
+  (4, 2, 0, '2025-01-25 18:00:00', 'Trying to build a good habit.'),
+  (4, 3, 1, '2025-01-27 19:00:00', NULL),
+  (4, 4, 0, '2025-01-30 08:45:00', 'Consistency is key!'),
+  (4, 5, 1, '2025-02-02 09:00:00', NULL),
+  (4, 6, 0, '2025-02-04 11:15:00', 'Hoping to challenge myself with this program.'),
+  (4, 7, 1, '2025-02-07 13:00:00', NULL),
+  (4, 8, 0, '2025-02-10 14:30:00', 'I’ll give it my best shot.'),
+  (4, 9, 0, '2025-02-15 16:00:00', NULL),
+  (4, 10, 1, '2025-02-18 17:45:00', 'Let’s see how far I can go!');
 
 -- Test data for get_healthy.COMMENT
 INSERT INTO get_healthy.comment (CommentId, Content, DatePosted, UserId, ProgramId)

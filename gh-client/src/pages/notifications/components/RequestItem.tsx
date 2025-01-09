@@ -1,6 +1,7 @@
 import { ProgramRequest } from "@/api/models/program-request";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { CheckIcon, XIcon } from "lucide-react";
 
@@ -13,9 +14,9 @@ type RequestItemProps = {
 export default function RequestItem(props: RequestItemProps) {
   const { request, onAccept, onReject } = props;
   return (
-    <div className="flex items-center space-x-3.5 p-2 w-full">
+    <div className="flex items-center space-x-3.5 py-1 px-0.5 w-full">
       <Avatar className="self-start mt-1.5">
-        <AvatarImage src="" alt={request.traineeFirstName} />
+        <AvatarImage src="TODO" alt={request.traineeFirstName} />
         <AvatarFallback>
           {request.traineeFirstName[0]}
           {request.traineeLastName[0]}
@@ -23,9 +24,18 @@ export default function RequestItem(props: RequestItemProps) {
       </Avatar>
       <div className="flex-1 space-y-1">
         <p className="text-sm font-medium">
-          {request.traineeFirstName} {request.traineeLastName}
+          {request.trainingProgramName} - {request.traineeFirstName}{" "}
+          {request.traineeLastName}
         </p>
-        <p className="text-xs text-muted-foreground">{request.note}</p>
+
+        <p
+          className={cn(
+            "text-xs text-muted-foreground line-clamp-1",
+            !request.note && "italic"
+          )}
+        >
+          {request.note ?? "No additional note..."}
+        </p>
         <p className="text-xs text-muted-foreground">
           {formatDistanceToNow(request.submissionDate, { addSuffix: true })}
         </p>

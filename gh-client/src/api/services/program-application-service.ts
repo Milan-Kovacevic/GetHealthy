@@ -3,8 +3,14 @@ import { sendAxiosRequest } from "./base-service";
 import {
   CreateTrainingProgramApplicationDTO,
   PageableProgramApplicationsDTO,
+  ProcessTrainingProgramApplicationDTO,
 } from "../contracts/program-application-contract";
-import { PageableProgramRequests } from "../models/program-request";
+import {
+  PageableProgramRequests,
+  ProcessProgramApplication,
+  SendProgramApplication,
+} from "../models/program-request";
+import { delay } from "@/lib/utils";
 
 const getPageableTrainingProgramApplications = async (
   userId: number,
@@ -20,28 +26,45 @@ const getPageableTrainingProgramApplications = async (
     searchString ? `filter=${searchString}&` : ""
   }page=${page}&size=${limit}`;
 
+  await delay(1500);
   return sendAxiosRequest<void, PageableProgramApplicationsDTO>({
     method: "GET",
     url: url,
   }).then((response) => {
-    // Perform neccessary mappings etc...
     return response.data as PageableProgramRequests;
   });
 };
 
 const sendTrainingProgramApplication = async (
-  request: CreateTrainingProgramApplicationDTO
+  request: SendProgramApplication
 ): Promise<void> => {
   const url = `${ApiEndpoints.TrainingProgramApplications}`;
 
   return sendAxiosRequest<CreateTrainingProgramApplicationDTO, void>({
     method: "POST",
     url: url,
-    data: request,
-  }).then(() => {});
+    data: request as CreateTrainingProgramApplicationDTO,
+  }).then((response) => {
+    return response.data;
+  });
+};
+
+const processTrainingProgramApplication = async (
+  request: ProcessProgramApplication
+): Promise<void> => {
+  const url = `${ApiEndpoints.TrainingProgramApplications}/process`;
+
+  return sendAxiosRequest<ProcessTrainingProgramApplicationDTO, void>({
+    method: "POST",
+    url: url,
+    data: request as ProcessTrainingProgramApplicationDTO,
+  }).then((response) => {
+    return response.data;
+  });
 };
 
 export {
   getPageableTrainingProgramApplications,
   sendTrainingProgramApplication,
+  processTrainingProgramApplication,
 };

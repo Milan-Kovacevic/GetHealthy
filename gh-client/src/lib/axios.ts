@@ -6,17 +6,19 @@ import axios, {
 import environments from "@/environments/config";
 import {
   ACCESS_TOKEN_STORAGE_KEY,
+  ApiEndpoints,
   REFRESH_TOKEN_STORAGE_KEY,
 } from "@/utils/constants";
-import { Tokens } from "@/api/models/authentication";
+import { TokensDTO } from "@/api/contracts/auth-contract";
 
 const axiosConfiguration = {
   baseURL: environments().baseApiPath,
 };
 
 const refreshUserTokens = async (accessToken: string, refreshToken: string) => {
-  const response = await axios.post<Tokens>(
-    "/api/Refresh",
+  const api = `${ApiEndpoints.Authentication}/refresh`;
+  const response = await axios.post<TokensDTO>(
+    api,
     {
       accessToken: accessToken,
       refreshToken: refreshToken,

@@ -10,7 +10,7 @@ export type TrainingProgramApplicationDTO = {
   trainingProgramName: string;
   traineeFirstName: string;
   traineeLastName: string;
-  traineeGender: number;
+  traineeGender: string;
 };
 
 export type PageableProgramApplicationsDTO =
@@ -20,4 +20,10 @@ export type CreateTrainingProgramApplicationDTO = {
   programId: number;
   traineeId: number;
   note: string;
+};
+
+export type ProcessTrainingProgramApplicationDTO = {
+  programId: number;
+  userId: number;
+  approve: boolean;
 };

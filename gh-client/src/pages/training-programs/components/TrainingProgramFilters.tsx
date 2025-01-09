@@ -13,9 +13,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { FilterIcon, XIcon } from "lucide-react";
+import {
+  CheckCheckIcon,
+  CheckIcon,
+  FilterIcon,
+  ListCheckIcon,
+  ListChecksIcon,
+  XIcon,
+} from "lucide-react";
 import { Category } from "@/api/models/category";
 import { ProgramFilters } from "@/api/models/training-program";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type TrainingProgramFiltersProps = {
   filters: ProgramFilters;
@@ -33,6 +41,14 @@ export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
   const [participantsRange, setParticipantsRange] = useState([0, 1000]);
 
   useEffect(() => {}, []);
+
+  const handleClearAllSelectedCategories = () => {
+    setSelectedCategories([]);
+  };
+
+  const handleSelectAllCategories = () => {
+    setSelectedCategories([...categories.map((c) => c.name)]);
+  };
 
   const handleCategoryChange = (categoryId: number) => {
     const category = categories.find((c) => c.categoryId == categoryId);
@@ -92,26 +108,55 @@ export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
         </div>
 
         <div>
-          <h3 className="text-sm font-medium mb-2">Categories</h3>
-          <div className="space-y-2">
-            {categories.map((category) => (
-              <div
-                key={category.categoryId}
-                className="flex items-center space-x-2"
+          <div className="flex items-center gap-2 mb-2 relative">
+            <h3 className="text-sm font-medium">Categories</h3>
+            <div className="flex items-center gap-0 h-6 right-0">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-auto py-1.5 px-1.5 translate-y-0.5"
+                onClick={() => handleSelectAllCategories()}
               >
-                <Checkbox
-                  id={`category-${category.categoryId.toString()}`}
-                  checked={selectedCategories.includes(category.name)}
-                  onCheckedChange={() =>
-                    handleCategoryChange(category.categoryId)
-                  }
-                />
-                <Label htmlFor={`category-${category.categoryId.toString()}`}>
-                  {category.name}
-                </Label>
-              </div>
-            ))}
+                <ListCheckIcon className="text-foreground/80" />
+              </Button>
+              {selectedCategories.length > 0 && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-auto py-1.5 px-1.5 translate-y-0.5"
+                  onClick={handleClearAllSelectedCategories}
+                >
+                  <XIcon className="text-foreground/70" />
+                </Button>
+              )}
+            </div>
           </div>
+
+          <ScrollArea className="">
+            <div className="space-y-2.5 max-h-[200px]">
+              {categories.map((category) => (
+                <div
+                  key={category.categoryId}
+                  className="flex items-center space-x-2"
+                >
+                  <Checkbox
+                    className="border-primary/75"
+                    id={`category-${category.categoryId.toString()}`}
+                    checked={selectedCategories.includes(category.name)}
+                    onCheckedChange={() =>
+                      handleCategoryChange(category.categoryId)
+                    }
+                  />
+                  <Label
+                    className="cursor-pointer"
+                    htmlFor={`category-${category.categoryId.toString()}`}
+                  >
+                    {category.name}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
         </div>
       </div>
 

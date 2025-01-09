@@ -31,6 +31,9 @@ export default function NotificationsPopover({
     pending: pendingRequests,
     onRequestApprove,
     onRequestReject,
+    searchQuery,
+    setSearchQuery,
+    onSearchRequests,
   } = useProgramRequests();
 
   const {
@@ -44,7 +47,7 @@ export default function NotificationsPopover({
     pending: pendingNotifications,
   } = useNotifications();
 
-  const TrainerView = () => (
+  const TrainerView = (
     <>
       <div className="flex items-center justify-between mb-2 mx-4 h-8">
         <NotificationTitle
@@ -79,9 +82,12 @@ export default function NotificationsPopover({
               requests={requests}
               isLoading={isLoadingRequests}
               hasMore={hasMoreRequests}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
               onPageChange={onRequestPageChange}
               onAcceptRequest={onRequestApprove}
               onRejectRequest={onRequestReject}
+              onSearchRequests={onSearchRequests}
             />
           )}
         </TabsContent>
@@ -89,7 +95,7 @@ export default function NotificationsPopover({
     </>
   );
 
-  const TraineeView = () => (
+  const TraineeView = (
     <>
       <div className="flex items-center justify-between mb-2 mx-4 h-8">
         <NotificationTitle showMarkAll={true} onMarkAll={onMarkAllAsRead} />
@@ -106,36 +112,36 @@ export default function NotificationsPopover({
     </>
   );
 
-  const NotificationTitle = ({
-    onMarkAll,
-    showMarkAll,
-  }: {
-    onMarkAll?: () => void;
-    showMarkAll: boolean;
-  }) => {
-    return (
-      <div className="flex items-center justify-between h-8 w-full">
-        <h2 className="text-lg font-semibold ml-0.5">Notifications</h2>
-        {showMarkAll && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-foreground hover:text-primary"
-            onClick={onMarkAll}
-          >
-            Mark all as read
-          </Button>
-        )}
-      </div>
-    );
-  };
-
   return (
     <Popover>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent className="sm:w-[400px] w-screen sm:relative sm:translate-y-0 -translate-y-1/2 px-0 py-4">
-        {isTrainer ? <TrainerView /> : <TraineeView />}
+        {isTrainer ? TrainerView : TraineeView}
       </PopoverContent>
     </Popover>
   );
 }
+
+const NotificationTitle = ({
+  onMarkAll,
+  showMarkAll,
+}: {
+  onMarkAll?: () => void;
+  showMarkAll: boolean;
+}) => {
+  return (
+    <div className="flex items-center justify-between h-8 w-full">
+      <h2 className="text-lg font-semibold ml-0.5">Notifications</h2>
+      {showMarkAll && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-foreground hover:text-primary"
+          onClick={onMarkAll}
+        >
+          Mark all as read
+        </Button>
+      )}
+    </div>
+  );
+};
