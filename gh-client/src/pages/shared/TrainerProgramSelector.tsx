@@ -20,20 +20,24 @@ import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { ChevronsUpDownIcon, Loader2Icon, XIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type TrainerProgramSelectorProps = {
   onProgramSelected: (program?: TrainerProgram) => void;
   text: string;
   className?: string;
+  editTrainingProgram?: TrainerProgram;
 };
 
 export default function TrainerProgramSelector(
   props: TrainerProgramSelectorProps
 ) {
-  const { onProgramSelected, text, className } = props;
+  const { onProgramSelected, text, className, editTrainingProgram } = props;
   const [open, setOpen] = useState(false);
-  const [selectedProgram, setSelectedProgram] = useState<TrainerProgram>();
+  const [selectedProgram, setSelectedProgram] = useState<
+    TrainerProgram | undefined
+  >(editTrainingProgram ?? undefined);
+
   const userId = 2;
   const {
     data: programs,
@@ -45,6 +49,12 @@ export default function TrainerProgramSelector(
       return getPageableProgramsForTrainer(userId, state.page);
     },
   });
+
+  useEffect(() => {
+    if (editTrainingProgram) {
+      setSelectedProgram(editTrainingProgram);
+    }
+  }, [editTrainingProgram]);
 
   const handeProgramSelected = (program?: TrainerProgram) => {
     setOpen(false);
