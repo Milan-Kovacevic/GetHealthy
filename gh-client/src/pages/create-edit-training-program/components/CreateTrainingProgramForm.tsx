@@ -42,7 +42,7 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
     const exercisesPlanData = data.exercisePlan.exercises;
 
     const trainingProgramExercisesData = {
-      exercises: exercisesPlanData.map((elem, index) => ({
+      trainingProgramExercises: exercisesPlanData.map((elem, index) => ({
         position: index + 1,
         exerciseId: elem.id,
         exerciseSets: elem.sets,

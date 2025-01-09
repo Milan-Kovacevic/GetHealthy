@@ -192,31 +192,36 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
         Trainer trainer = trainerRepository.findById(userId).orElseThrow(NotFoundException::new);
 
         TrainingProgram trainingProgram = new TrainingProgram();
-
         trainingProgram = modelMapper.map(trainingProgramRequest, TrainingProgram.class);
-
         trainingProgram.setTrainer(trainer);
         trainingProgram.setCreatedAt(Instant.now());
-        trainingProgramRepository.saveAndFlush(trainingProgram);
+
+        List<TrainingProgramExercise> trainingProgramExercises = new ArrayList<>();
 
         for (TrainingProgramExerciseRequest exercisesRequest : trainingProgramExercisesRequest
                 .getTrainingProgramExercises()) {
             TrainingProgramExercise trainingProgramExercise = modelMapper.map(exercisesRequest,
                     TrainingProgramExercise.class);
             trainingProgramExercise.setProgram(trainingProgram);
-            trainingProgramExerciseRepository.saveAndFlush(trainingProgramExercise);
 
+            List<ExerciseSet> exerciseSets = new ArrayList<>();
             for (ExerciseSetRequest setRequest : exercisesRequest.getExerciseSets()) {
                 ExerciseSet exerciseSet = modelMapper.map(setRequest, ExerciseSet.class);
                 exerciseSet.setProgramExercise(trainingProgramExercise);
-                exerciseSetRepository.saveAndFlush(exerciseSet);
+                exerciseSets.add(exerciseSet);
             }
 
+            trainingProgramExercise.setExerciseSets(exerciseSets);
+
+            trainingProgramExercises.add(trainingProgramExercise);
         }
+
+        trainingProgram.setTrainingProgramExercises(trainingProgramExercises);
 
         saveFile(file, trainingProgram);
 
         trainingProgramRepository.saveAndFlush(trainingProgram);
+
     }
 
     @Override
