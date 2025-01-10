@@ -7,14 +7,9 @@ import java.time.LocalTime;
 
 @Data
 public class TrainingScheduleRequest {
-
     private LocalTime startTime;
-
-    private LocalTime endTime;
 
     private DayOfWeek dayOfWeek;
 
     private Integer programId;
-
-    private Integer userId;
 }

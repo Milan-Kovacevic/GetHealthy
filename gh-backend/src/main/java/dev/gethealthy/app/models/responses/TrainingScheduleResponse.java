@@ -11,11 +11,7 @@ public class TrainingScheduleResponse {
 
     private LocalTime startTime;
 
-    private LocalTime endTime;
-
     private Byte dayOfWeek;
 
     private Integer programId;
-
-    private Integer userId;
 }

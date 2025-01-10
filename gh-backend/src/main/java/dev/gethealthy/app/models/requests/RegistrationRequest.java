@@ -29,6 +29,4 @@ public class RegistrationRequest {
 
     @NotBlank
     private String LastName;
-
-    private MultipartFile file;
 }

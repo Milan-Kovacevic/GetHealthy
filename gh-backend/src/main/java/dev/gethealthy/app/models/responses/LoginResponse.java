@@ -10,5 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginResponse extends UserAccountResponse {
-    private String token;
+    private TokensResponse tokens;
+    private AuthUserResponse user;
 }
