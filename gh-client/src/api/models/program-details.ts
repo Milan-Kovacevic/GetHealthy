@@ -46,7 +46,7 @@ export type SingleProgramTrainer = {
   lastName: string;
   email: string;
   dateOfBirth?: string;
-  gender?: number;
+  gender?: string;
   profilePictureFilePath?: string;
   contactInfo?: string;
   biography?: string;

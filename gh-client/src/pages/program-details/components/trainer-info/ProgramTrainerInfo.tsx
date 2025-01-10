@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import trainerImg from "@/assets/trainer.png";
 import { useParams } from "react-router-dom";
 import TrainerInfoLoader from "./TrainerInfoLoader";
+import { format } from "date-fns";
+import { capitalize } from "@/lib/utils";
 
 export default function ProgramTrainerInfo() {
   const params = useParams();
@@ -68,34 +70,48 @@ export default function ProgramTrainerInfo() {
               </Avatar>
               <div className="flex-1">
                 <div>
-                  <h2 className="text-xl font-bold">
+                  <h2 className="text-xl font-semibold">
                     {trainer.firstName + " " + trainer.lastName}
                   </h2>
                   <p className="text-sm text-muted-foreground">
                     {trainer.email}
                   </p>
                 </div>
-                <div className="flex items-center mt-2">
-                  <div>
-                    <p className="text-sm font-semibold text-foreground/90">
-                      {trainer.dateOfBirth}
+                <div className="flex items-center mt-3">
+                  {trainer.dateOfBirth ? (
+                    <p className="text-sm text-foreground/90">
+                      {format(trainer.dateOfBirth, "P")}
                     </p>
-                  </div>
+                  ) : (
+                    <p className="text-sm text-foreground/90 italic">
+                      "No date of birth"
+                    </p>
+                  )}
+
                   <span className="mx-3 w-0.5 h-4 bg-muted-foreground" />
-                  <div>
+                  {trainer.gender ? (
                     <p className="text-sm font-normal text-foreground/80">
-                      {trainer.gender}
+                      {capitalize<string>(trainer.gender)}
                     </p>
-                  </div>
+                  ) : (
+                    <p className="text-sm font-normal text-foreground/80 italic">
+                      "No gender"
+                    </p>
+                  )}
                 </div>
-                <div className="mt-2 flex items-center gap-2">
+                <div className="flex items-center gap-2 mt-0.5">
                   <span className="text-sm text-muted-foreground">
                     Contact info:{" "}
                   </span>
-                  <p className="text-sm font-medium text-foreground/90">
-                    {trainer.contactInfo ||
-                      "No contact phone information available."}
-                  </p>
+                  {trainer.contactInfo ? (
+                    <p className="text-sm font-medium text-foreground/90">
+                      {trainer.contactInfo}
+                    </p>
+                  ) : (
+                    <p className="text-sm font-normal text-foreground/90 italic">
+                      "No contact phone information available."
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
