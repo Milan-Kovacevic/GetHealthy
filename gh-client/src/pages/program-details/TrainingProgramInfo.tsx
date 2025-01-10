@@ -145,8 +145,8 @@ export default function TrainingProgramInfo() {
                   </Badge>
                 ))
               ) : (
-                <p className="text-muted-foreground text-sm">
-                  There are no defined categories
+                <p className="text-muted-foreground text-sm italic">
+                  There are no categories for this program
                 </p>
               )}
             </div>

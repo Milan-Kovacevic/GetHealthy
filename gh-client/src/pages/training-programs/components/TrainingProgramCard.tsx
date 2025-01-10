@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import noImage from "@/assets/no-image.jpg";
-import { cn } from "@/lib/utils";
+import { capitalize, cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 
 type TrainingProgramCardProps = {
@@ -55,7 +55,7 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
           className="absolute m-3 z-10 pointer-events-none border-primary/80"
           variant={"secondary"}
         >
-          {props.difficulty}
+          {capitalize(props.difficulty)}
         </Badge>
         <Badge
           variant="secondary"

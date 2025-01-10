@@ -2,10 +2,11 @@ import { ApiEndpoints } from "@/utils/constants";
 import { CategoryDTO } from "../contracts/category-contract";
 import { sendAxiosRequest } from "./base-service";
 import { Category } from "../models/category";
+import { delay } from "@/lib/utils";
 
 const getAllCategories = async () => {
   var url = ApiEndpoints.Categories;
-
+  await delay(1000);
   return sendAxiosRequest<void, CategoryDTO[]>({
     method: "GET",
     url: url,
@@ -16,21 +17,3 @@ const getAllCategories = async () => {
 };
 
 export { getAllCategories };
-
-
-  /*// Mock response for now
-  return Promise.resolve<Category[]>([
-    {
-      id: 1,
-      categoryName: "HIIT",
-    },
-    {
-      id: 2,
-      categoryName: "Cardio",
-    },
-    {
-      id: 3,
-      categoryName: "Strength",
-    },
-  ]);
-};*/

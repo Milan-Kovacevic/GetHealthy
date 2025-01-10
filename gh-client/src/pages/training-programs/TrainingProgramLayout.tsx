@@ -25,12 +25,14 @@ import useFeaturedTrainingPrograms from "./hooks/use-featured-programs";
 import noResults from "@/assets/no-results.png";
 
 type TrainingProgramLayoutProps = {
-  myTrainingPrograms: boolean;
+  showFeatures: boolean;
+  editable: boolean;
 };
 
 export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
-  const [myTrainingPrograms, setMyTrainingPrograms] = useState(false);
+  const { showFeatures, editable } = props;
   const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
   const {
     trainingPrograms,
     currentProgramPage,
@@ -49,24 +51,23 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
   const { loadingFeaturedPrograms, featuredPrograms, isEmpty } =
     useFeaturedTrainingPrograms();
 
-  // TODO: nemam pojma sta ovo radi
   useEffect(() => {
-    getAllCategories().then((categories) => {
-      setCategories(categories);
-    });
-
-    setMyTrainingPrograms(props.myTrainingPrograms);
-    return () => {};
-  }, [myTrainingPrograms]);
+    setLoadingCategories(true);
+    getAllCategories()
+      .then((categories) => {
+        setCategories(categories);
+      })
+      .finally(() => setLoadingCategories(false));
+  }, []);
 
   return (
     <section className="overflow-hidden relative sm:px-5 px-4 md:pt-6 pt-4 pb-10">
       <BackgroundBlurs />
       <div className="container mx-auto h-full space-y-5 z-10 relative">
         <div className="mx-auto flex flex-col">
-          <TrainingProgramsPageTitle showCreate={myTrainingPrograms} />
+          <TrainingProgramsPageTitle showCreate={editable} />
           <Separator className="my-4" />
-          {!myTrainingPrograms && (
+          {showFeatures && (
             <FeaturedTrainingPrograms
               loading={loadingFeaturedPrograms}
               featuredPrograms={featuredPrograms}
@@ -77,7 +78,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
             <div className="flex flex-col my-4 mb-0 pr-4 lg:border-r lg:border-b-0 border-b pb-4">
               <SearchBar
                 query={programsSearchQuery}
-                setQuery={setProgramsSearchQuery} // todo
+                setQuery={setProgramsSearchQuery}
                 onSearch={onSearchTrainingPrograms}
               />
 
@@ -85,6 +86,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
               <TrainingProgramFilters
                 filters={programFilters}
                 categories={categories}
+                loadingCategories={loadingCategories}
                 onFilterApply={onApplyProgramFilters}
               />
             </div>
@@ -109,7 +111,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                     rating={item.rating}
                     categories={item.categories.map((c) => c.name)}
                     key={item.id}
-                    editable={props.myTrainingPrograms}
+                    editable={editable}
                     title={item.name}
                     description={item.description}
                     id={item.id}
@@ -117,7 +119,7 @@ export const TrainingProgramLayout = (props: TrainingProgramLayoutProps) => {
                     difficulty={item.difficulty}
                     image={item.imageFilePath}
                     trainer={`${item.trainerFirstName} ${item.trainerLastName}`}
-                  ></TrainingProgramCard>
+                  />
                 ))}
               </div>
             )}
