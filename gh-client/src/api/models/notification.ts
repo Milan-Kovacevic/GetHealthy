@@ -9,3 +9,7 @@ export type Notification = {
 };
 
 export type PageableNotifications = Page<Notification>;
+
+export type NotificationsSummary = {
+  totalUnread: number;
+};

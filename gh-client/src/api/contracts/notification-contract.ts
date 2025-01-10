@@ -18,3 +18,7 @@ export type NotificationType =
   | "PROGRAM_REMOVED_FROM_SCHEDULE";
 
 export type PageableNotificationsDTO = Page<NotificationDTO>;
+
+export type NotificationsSummaryDTO = {
+  totalUnread: number;
+};

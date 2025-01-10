@@ -116,7 +116,7 @@ export default function ProgramTrainerInfo() {
               </div>
             </div>
             <div className="mt-4 max-w-screen-lg">
-              <p className="text-sm text-muted-foreground text-justify text-pretty">
+              <p className="text-[15px] text-muted-foreground text-justify text-pretty">
                 {trainer.biography}
               </p>
             </div>

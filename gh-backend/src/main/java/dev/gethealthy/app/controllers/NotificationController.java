@@ -1,6 +1,7 @@
 package dev.gethealthy.app.controllers;
 
 import dev.gethealthy.app.models.responses.NotificationResponse;
+import dev.gethealthy.app.models.responses.NotificationsSummaryResponse;
 import dev.gethealthy.app.services.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,29 +17,30 @@ public class NotificationController {
 
     @GetMapping("/users/{userId}/notifications")
     public Page<NotificationResponse> getAllNotificationsForUser(@PathVariable(name = "userId") Integer userId, Pageable page) {
-        //checkIfUserIsAuthorized(auth, userId);
         return notificationService.getNotificationsForUser(userId, page);
     }
 
     @GetMapping("/users/{userId}/notifications/{notificationId}")
     public NotificationResponse getNotificationForUser(@PathVariable(name = "userId") Integer userId,
                                                @PathVariable(name = "notificationId") Integer notificationId) {
-        //checkIfUserIsAuthorized(auth, userId);
         return notificationService.getUserNotification(userId, notificationId);
+    }
+
+    @GetMapping("/users/{userId}/notifications/summary")
+    public NotificationsSummaryResponse getNotificationSummaryForUser(@PathVariable(name = "userId") Integer userId) {
+        return notificationService.getUserNotificationSummary(userId);
     }
 
     @DeleteMapping("/users/{userId}/notifications/{notificationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUserNotification(@PathVariable(name = "userId") Integer userId,
                                        @PathVariable(name = "notificationId") Integer notificationId) {
-        //checkIfUserIsAuthorized(auth, userId);
         notificationService.deleteUserNotification(userId, notificationId);
     }
 
     @DeleteMapping("/users/{userId}/notifications")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAllUserNotifications(@PathVariable(name = "userId") Integer userId) {
-        //checkIfUserIsAuthorized(auth, userId);
         notificationService.deleteAllUserNotifications(userId);
     }
 
@@ -46,22 +48,12 @@ public class NotificationController {
     @ResponseStatus(HttpStatus.OK)
     public void markUserNotificationAsRead(@PathVariable(name = "userId") Integer userId,
                                            @PathVariable(name = "notificationId") Integer notificationId) {
-       // checkIfUserIsAuthorized(auth, userId);
         notificationService.markUserNotificationAsRead(userId, notificationId);
     }
 
     @PostMapping("/users/{userId}/notifications/mark-read")
     @ResponseStatus(HttpStatus.OK)
     public void markAllUserNotificationsAsRead(@PathVariable(name = "userId") Integer userId) {
-        //checkIfUserIsAuthorized(auth, userId);
         notificationService.markAllUserNotificationsAsRead(userId);
     }
-
-    /*private void checkIfUserIsAuthorized(Authentication auth, Integer userId) {
-        if (auth == null)
-            throw new UnauthorizedException();
-        JWTUser jwtUser = (JWTUser) auth.getPrincipal();
-        if (!jwtUser.getUserId().equals(userId))
-            throw new ForbiddenException();
-    }*/
 }

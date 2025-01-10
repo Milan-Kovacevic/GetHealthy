@@ -14,6 +14,7 @@ import {
   SendProgramComment,
   SendProgramRating,
 } from "../models/program-review";
+import { delay } from "@/lib/utils";
 
 const getPageableProgramComments = async (
   programId: number,
@@ -25,6 +26,7 @@ const getPageableProgramComments = async (
     `${programId}`
   );
   url += `?page=${page}&size=${pageSize}`;
+  await delay(1500);
   return sendAxiosRequest<void, PageableProgramCommentsDTO>({
     method: "GET",
     url: url,
@@ -40,7 +42,7 @@ const sendTrainingProgramComment = async (
     "{programId}",
     `${programId}`
   );
-
+  await delay(1500);
   return sendAxiosRequest<SendProgramCommentDTO, ProgramCommentDTO>({
     method: "POST",
     url: url,

@@ -4,10 +4,11 @@ import dev.gethealthy.app.base.CrudService;
 import dev.gethealthy.app.models.entities.User;
 import dev.gethealthy.app.models.enums.NotificationType;
 import dev.gethealthy.app.models.responses.NotificationResponse;
+import dev.gethealthy.app.models.responses.NotificationsSummaryResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface NotificationService extends CrudService<Integer> {
+public interface NotificationService  {
 
     Page<NotificationResponse> getNotificationsForUser(Integer userId, Pageable page);
 
@@ -22,4 +23,6 @@ public interface NotificationService extends CrudService<Integer> {
     void markUserNotificationAsRead(Integer userId, Integer notificationId);
 
     void markAllUserNotificationsAsRead(Integer userId);
+
+    NotificationsSummaryResponse getUserNotificationSummary(Integer userId);
 }

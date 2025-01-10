@@ -2,16 +2,18 @@ import { Notification } from "@/api/models/notification";
 import {
   deleteUserNotification,
   getPageableUserNotifications,
+  getNotificationsSummary,
   markAllUserNotificationsAsRead,
   markUserNotificationAsRead,
 } from "@/api/services/notification-service";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function useNotifications() {
   const userId = 2;
   const [pending, setPending] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const {
     data: notifications,
     setData: setNotifications,
@@ -28,6 +30,15 @@ export function useNotifications() {
     },
   });
 
+  useEffect(() => {
+    setPending(true);
+    getNotificationsSummary(userId)
+      .then((response) => {
+        setUnreadCount(response.totalUnread);
+      })
+      .finally(() => setPending(false));
+  }, []);
+
   const onMarkNotificationAsRead = async (id: number) => {
     setPending(true);
     markUserNotificationAsRead(userId, id)
@@ -37,6 +48,7 @@ export function useNotifications() {
             notif.id === id ? { ...notif, isRead: true } : notif
           ),
         ]);
+        setUnreadCount((prev) => Math.max(prev - 1, 0));
       })
       .catch(() => {
         toast.error("Unexpected error", {
@@ -81,6 +93,7 @@ export function useNotifications() {
   };
 
   return {
+    unreadCount,
     notifications,
     setNotifications,
     hasMoreNotifications,
