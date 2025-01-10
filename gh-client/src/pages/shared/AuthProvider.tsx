@@ -43,12 +43,16 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
   };
 
   const logout = async () => {
-    return logoutUser().then(() => {
-      setAuthUser(null);
-      localStorage.removeItem(AUTH_USER_STORAGE_KEY);
-      localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
-      localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
-    });
+    // return logoutUser().then(() => {
+    //   setAuthUser(null);
+    //   localStorage.removeItem(AUTH_USER_STORAGE_KEY);
+    //   localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+    //   localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
+    // });
+    setAuthUser(null);
+    localStorage.removeItem(AUTH_USER_STORAGE_KEY);
+    localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
   };
 
   const getUserId = () => {

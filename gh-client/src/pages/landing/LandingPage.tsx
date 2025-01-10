@@ -1,15 +1,24 @@
 import { ExternalLink, MoveRight } from "lucide-react";
 import appIcon from "@/assets/applogo.png";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "@/components/primitives/ThemeToggle";
 import { Badge } from "@/components/ui/badge";
 import {
   CircleBackgroundBlob,
   TopBackgroundBlob,
 } from "@/pages/shared/BackgroundBlobs";
+import useAuth from "@/hooks/use-auth";
+import { useEffect } from "react";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+  const auth = useAuth();
+
+  useEffect(() => {
+    if (auth.isLoggedIn()) navigate("/schedule");
+  }, []);
+
   return (
     <section className="relative overflow-hidden px-2 h-full">
       <div className="container mx-auto my-auto h-full">

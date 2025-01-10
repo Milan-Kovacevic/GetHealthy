@@ -28,12 +28,12 @@ export default function NotificationsPopover({
     hasMoreRequests,
     isLoadingRequests,
     onRequestPageChange,
-    pending: pendingRequests,
     onRequestApprove,
     onRequestReject,
-    searchQuery,
-    setSearchQuery,
-    onSearchRequests,
+    selectedRequest,
+    onLoadRequestDetails,
+    onCloseRequestDetails,
+    loadingDetails: loadingRequestDetails,
   } = useProgramRequests();
 
   const {
@@ -75,21 +75,18 @@ export default function NotificationsPopover({
           )}
         </TabsContent>
         <TabsContent value="requests">
-          {pendingRequests ? (
-            <ListItemSkeleton />
-          ) : (
-            <RequestList
-              requests={requests}
-              isLoading={isLoadingRequests}
-              hasMore={hasMoreRequests}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              onPageChange={onRequestPageChange}
-              onAcceptRequest={onRequestApprove}
-              onRejectRequest={onRequestReject}
-              onSearchRequests={onSearchRequests}
-            />
-          )}
+          <RequestList
+            requests={requests}
+            isLoading={isLoadingRequests}
+            hasMore={hasMoreRequests}
+            onPageChange={onRequestPageChange}
+            onAcceptRequest={onRequestApprove}
+            onRejectRequest={onRequestReject}
+            selectedRequest={selectedRequest}
+            onLoadRequestDetails={onLoadRequestDetails}
+            onCloseRequestDetails={onCloseRequestDetails}
+            loadingDetails={loadingRequestDetails}
+          />
         </TabsContent>
       </Tabs>
     </>

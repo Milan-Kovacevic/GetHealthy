@@ -18,17 +18,6 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "trainee")
 public class Trainee extends User implements BaseEntity<Integer> {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "UserId", nullable = false)
-//    private Integer id;
-
-//    @MapsId
-//    @OneToOne(fetch = FetchType.LAZY, optional = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JoinColumn(name = "UserId", nullable = false)
-//    private User user;
-
     @Column(name = "Height", precision = 6, scale = 2)
     private BigDecimal height;
 

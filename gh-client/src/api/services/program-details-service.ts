@@ -6,21 +6,7 @@ import {
   PageableProgramParticipants,
   SingleProgramDetails,
 } from "../models/program-details";
-import { ExerciseMetric } from "../models/exercise";
 import { delay } from "@/lib/utils";
-
-const metrics: ExerciseMetric[] = [
-  {
-    id: 1,
-    name: "Reps",
-    unit: "",
-  },
-  {
-    id: 2,
-    name: "Weight",
-    unit: "kg",
-  },
-];
 import {
   SingleTrainingProgramDTO,
   SingleProgramTrainerDTO,

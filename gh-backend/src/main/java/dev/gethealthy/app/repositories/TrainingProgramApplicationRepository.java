@@ -8,21 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TrainingProgramApplicationRepository extends JpaRepository<TrainingProgramApplication, TrainingProgramApplicationId> {
     Page<TrainingProgramApplication> findByProgram_Trainer_IdOrderByMarkReadAsc(Integer trainerId, Pageable page);
-
-    List<TrainingProgramApplication> findByProgram_IdOrderByMarkReadAsc(Integer programId);
-
-    Boolean existsByProgram_IdAndUser_Id(Integer programId, Integer userId);
-
+    Boolean existsByProgram_IdAndTrainee_Id(Integer programId, Integer traineeId);
+    void deleteByProgram_IdAndTrainee_Id(Integer programId, Integer traineeId);
+    Optional<TrainingProgramApplication> findByProgram_IdAndTrainee_Id(Integer programId, Integer traineeId);
     @Query("SELECT e from TrainingProgramApplication e WHERE e.program.trainer.id=:userId " +
-            "and (e.program.name like %:filter% or e.user.firstName like %:filter% or e.user.lastName like %:filter%) order by e.markRead asc")
+            "and (e.program.name like %:filter% or e.trainee.firstName like %:filter% or e.trainee.lastName like %:filter%) order by e.markRead asc")
     Page<TrainingProgramApplication> findAllTrainerApplicationsFiltered(Integer userId, String filter, Pageable page);
-
-    @Query("SELECT COUNT(e.id) from TrainingProgramApplication e WHERE e.program.id = ?1")
-    Integer calculateNumberOfTrainingProgramApplications(Integer programId);
-
-    @Query("SELECT COUNT(e.id) from TrainingProgramApplication e WHERE e.program.trainer.id = ?1 and e.markRead=false")
-    Long calculateTotalNumberOfUnreadProgramApplicationsForTrainer(Integer trainerId);
 }

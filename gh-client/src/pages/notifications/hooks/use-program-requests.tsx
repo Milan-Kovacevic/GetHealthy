@@ -1,9 +1,11 @@
 import {
   ProcessProgramApplication,
   ProgramRequest,
+  ProgramRequestDetails,
 } from "@/api/models/program-request";
 import {
   getPageableTrainingProgramApplications,
+  getProgramApplicationDetails,
   processTrainingProgramApplication,
 } from "@/api/services/program-application-service";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
@@ -12,7 +14,9 @@ import { toast } from "sonner";
 
 export function useProgramRequests() {
   const userId = 2;
-  const [pending, setPending] = useState(false);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+  const [selectedRequest, setSelectedRequest] =
+    useState<ProgramRequestDetails>();
 
   const [searchQuery, setSearchQuery] = useState("");
   const {
@@ -35,67 +39,62 @@ export function useProgramRequests() {
     },
   });
 
-  const onSearchRequests = async () => {
-    if (searchQuery == "") {
-      onRequestPageChange();
-      return;
-    }
+  const onCloseRequestDetails = () => {
+    setSelectedRequest(undefined);
+  };
 
-    setIsLoadingRequests(true);
-    setRequestsPage(0);
-    getPageableTrainingProgramApplications(userId, searchQuery, 0)
-      .then((response) => {
-        if (response.pageable.pageNumber > 0)
-          setRequests((prev) => [...prev, ...response.content]);
-        else setRequests([...response.content]);
-        setRequestsPage((prev) => prev + 1);
-
-        if (response.last) {
-          setHasMoreRequests(false);
-        }
+  const onLoadRequestDetails = (programId: number, traineeId: number) => {
+    setLoadingDetails(true);
+    getProgramApplicationDetails(programId, traineeId)
+      .then((request) => {
+        setSelectedRequest(request);
       })
       .catch(() => {
-        setHasMoreRequests(false);
+        toast.error("Unexpected error", {
+          description: "Unable to load program request details",
+        });
       })
-      .finally(() => setIsLoadingRequests(false));
+      .finally(() => setLoadingDetails(false));
   };
 
   const onRequestApprove = async (programId: number, traineeId: number) => {
     var payload = createProcessingPayload(programId, traineeId, true);
-    setPending(true);
+    setLoadingDetails(true);
     processTrainingProgramApplication(payload)
       .then(() => {
         setRequests((prev) => [
           ...prev.filter(
-            (r) => r.programId == programId && r.traineeId == traineeId
+            (r) => r.programId != programId || r.traineeId != traineeId
           ),
         ]);
+        setSelectedRequest(undefined);
       })
       .catch(() => {
         toast.error("Unexpected error", {
           description: "Unable to process selected program request",
         });
       })
-      .finally(() => setPending(false));
+      .finally(() => setLoadingDetails(false));
   };
 
   const onRequestReject = async (programId: number, traineeId: number) => {
     var payload = createProcessingPayload(programId, traineeId, false);
-    setPending(true);
+    setLoadingDetails(true);
     processTrainingProgramApplication(payload)
       .then(() => {
         setRequests((prev) => [
           ...prev.filter(
-            (r) => r.programId == programId && r.traineeId == traineeId
+            (r) => r.programId != programId || r.traineeId != traineeId
           ),
         ]);
+        setSelectedRequest(undefined);
       })
       .catch(() => {
         toast.error("Unexpected error", {
           description: "Unable to process selected program request",
         });
       })
-      .finally(() => setPending(false));
+      .finally(() => setLoadingDetails(false));
   };
 
   // Private method...
@@ -121,13 +120,12 @@ export function useProgramRequests() {
     setIsLoadingRequests,
     requestsPage,
     setRequestsPage,
-    pending,
-    setPending,
-    searchQuery,
-    setSearchQuery,
     onRequestPageChange,
     onRequestApprove,
     onRequestReject,
-    onSearchRequests,
+    selectedRequest,
+    onLoadRequestDetails,
+    onCloseRequestDetails,
+    loadingDetails,
   };
 }

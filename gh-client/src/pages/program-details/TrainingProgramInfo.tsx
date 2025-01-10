@@ -26,9 +26,9 @@ export default function TrainingProgramInfo() {
       setLoading(false);
       return;
     }
+    if (parseInt(programId) == program?.id) return;
 
     setLoading(true);
-
     getSingleTrainingProgram(parseInt(programId))
       .then((value) => {
         setProgram(value);
@@ -39,7 +39,7 @@ export default function TrainingProgramInfo() {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [params]);
 
   if (loading) {
     return <SingleTrainingProgramLoader />;

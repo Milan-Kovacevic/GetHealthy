@@ -126,7 +126,7 @@ const Navbar = () => {
     auth
       .logout()
       .then(() => {
-        navigate("/login");
+        navigate("/");
       })
       .catch(() => {
         toast.error("Unable to logout", {

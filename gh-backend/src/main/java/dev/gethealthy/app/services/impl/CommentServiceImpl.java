@@ -42,6 +42,7 @@ public class CommentServiceImpl extends CrudJpaService<Comment, Integer> impleme
                     comment.setAuthorFirstName(e.getUser().getFirstName());
                     comment.setAuthorLastName(e.getUser().getLastName());
                     comment.setAuthorId(e.getUser().getId());
+                    comment.setAuthorProfilePictureFilePath(e.getUser().getProfilePictureFilePath());
                     return comment;
                 });
     }
@@ -59,6 +60,7 @@ public class CommentServiceImpl extends CrudJpaService<Comment, Integer> impleme
         comment.setAuthorFirstName(trainee.getFirstName());
         comment.setAuthorLastName(trainee.getLastName());
         comment.setAuthorId(trainee.getId());
+        comment.setAuthorProfilePictureFilePath(trainee.getProfilePictureFilePath());
 
         notificationService.createNotification(
                 trainingProgram.getTrainer(),

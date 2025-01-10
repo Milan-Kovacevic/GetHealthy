@@ -29,12 +29,12 @@ export default function NotificationItem({
       <div
         className={cn(
           "flex items-start space-x-4 py-2",
-          !notification.isRead && "bg-muted/50 pl-3.5 pr-1 rounded-md mb-2"
+          !notification.isRead && "bg-muted/80 pl-3.5 pr-1 rounded-md mb-2"
         )}
       >
         <div className="flex-1 space-y-1">
           <h3
-            className={`text-sm font-medium ${
+            className={`text-sm font-medium leading-tight tracking-tight ${
               !notification.isRead ? "text-foreground" : "text-foreground/85"
             }`}
           >

@@ -6,20 +6,30 @@ import ProgramCommentForm from "./ProgramCommentForm";
 import { sendTrainingProgramRating } from "@/api/services/program-review-service";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useParams } from "react-router-dom";
+import useAuth from "@/hooks/use-auth";
 
 export default function TrainingProgramReviews() {
-  const programId = 1; // Mocked for now...
+  const params = useParams();
+  const auth = useAuth();
+
+  const id = params["id"];
+  const userId = auth.getUserId();
+  if (userId == null || !id) return;
+
+  const programId = parseInt(id);
+
   const {
     comments,
     isLoadingComments,
     hasMoreComments,
     onCommentPageChange,
     onSendProgramComment,
-  } = useProgramComments({ programId });
+  } = useProgramComments({ programId, userId });
 
   const [rating, setRating] = useState(0);
   const handleSubmitProgramRating = (rating: number) => {
-    sendTrainingProgramRating(programId, { rate: rating })
+    sendTrainingProgramRating(userId, programId, { rate: rating })
       .then((response) => {
         setRating(response.rate);
       })
