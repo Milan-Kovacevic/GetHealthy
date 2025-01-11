@@ -18,7 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DeleteAlert } from "@/pages/shared/DeleteAlert";
+import { SimpleAlertDialog } from "@/pages/shared/SimpleAlertDialog";
 import { differenceInCalendarYears, format } from "date-fns";
 import {
   CircleIcon,
@@ -168,7 +168,7 @@ const ParticipantCardActions = ({
             <span>Move to Different Program</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DeleteAlert
+          <SimpleAlertDialog
             onConfirm={() => {
               onRemove(participant.id);
             }}
@@ -182,7 +182,7 @@ const ParticipantCardActions = ({
               <UserMinusIcon className="mr-2 h-4 w-4 text-destructive" />
               <span>Remove from Program</span>
             </DropdownMenuItem>
-          </DeleteAlert>
+          </SimpleAlertDialog>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

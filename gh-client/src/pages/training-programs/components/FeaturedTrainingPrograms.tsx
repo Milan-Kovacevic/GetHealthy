@@ -9,18 +9,19 @@ import FeaturedProgramCard from "./FeaturedProgramCard";
 import Autoplay from "embla-carousel-autoplay";
 import { CircleIcon } from "lucide-react";
 import { FeaturedProgramCardSkeleton } from "./TrainingProgramsLoaders";
-import { FeaturedTrainingProgram } from "@/api/models/training-program";
+import useFeaturedTrainingPrograms from "../hooks/use-featured-programs";
 
-type FeaturedTrainingProgramsProps = {
-  loading: boolean;
-  featuredPrograms: FeaturedTrainingProgram[];
-  isEmpty: boolean;
-};
+type FeaturedTrainingProgramsProps = {};
 
 export default function FeaturedTrainingPrograms(
   props: FeaturedTrainingProgramsProps
 ) {
-  const { loading, featuredPrograms, isEmpty } = props;
+  const {
+    loadingFeaturedPrograms: loading,
+    featuredPrograms,
+    isEmpty,
+  } = useFeaturedTrainingPrograms();
+
   const plugins: any = [];
 
   plugins.push(
@@ -34,7 +35,7 @@ export default function FeaturedTrainingPrograms(
 
   return (
     !isEmpty && (
-      <section className="py-2">
+      <section className="py-2 pb-6">
         <div className="mx-auto">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
@@ -44,7 +45,7 @@ export default function FeaturedTrainingPrograms(
               </h2>
             </div>
             <p className="text-sm text-muted-foreground">
-              Discover recently created training programs...
+              Discover most recent training programs...
             </p>
           </div>
 

@@ -1,12 +1,12 @@
 package dev.gethealthy.app.models.responses;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
-public class SingleProgramDetailsResponse extends TrainingProgramResponse {
-    private Integer id;
+public class SingleProgramDetailsResponse {
     private String requirements;
     private Integer trainingDuration;
     private List<ProgramExerciseDetailsResponse> exercises;

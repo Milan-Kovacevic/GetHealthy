@@ -3,7 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { ActivityIcon, UserXIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StarRating from "@/components/primitives/StarRating";
-import { getSingleTrainingProgram } from "@/api/services/program-details-service";
+import {
+  getSingleTrainingProgram,
+  leaveTrainingProgram,
+} from "@/api/services/program-details-service";
 import { SingleTrainingProgram } from "@/api/models/program-details";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -13,11 +16,21 @@ import TrainingProgramApplicationModal from "./components/TrainingProgramApplica
 import { capitalize, cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { sendTrainingProgramApplication } from "@/api/services/program-application-service";
+import useAuth from "@/hooks/use-auth";
+import { SimpleAlertDialog } from "../shared/SimpleAlertDialog";
+import { SendProgramApplication } from "@/api/models/program-request";
 
 export default function TrainingProgramInfo() {
+  const auth = useAuth();
+  const isTrainer = auth.isTrainer();
+  const userId = auth.getUserId();
+
+  if (!userId) return;
+
   const params = useParams();
   const [program, setProgram] = useState<SingleTrainingProgram>();
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const programId = params["id"];
@@ -53,18 +66,42 @@ export default function TrainingProgramInfo() {
     );
   }
 
-  const handleApplicationModalSubmit = (application: string) => {
-    toast(
-      <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-        <code className="text-white">
-          {JSON.stringify(application, null, 2)}
-        </code>
-      </pre>
-    );
+  const handleApplicationModalSubmit = (note: string) => {
+    const request: SendProgramApplication = {
+      programId: program.id,
+      note: note,
+    };
+    setSubmitting(true);
+    sendTrainingProgramApplication(userId, request)
+      .then(() => {
+        toast.info("Application submitted!", {
+          description: `Your request to join program '${program.name}' has been submitted. Check your inbox for status update.`,
+        });
+      })
+      .catch(() => {
+        toast.error("Unexpected error", {
+          description: "Unable to send request. Please, try again later.",
+        });
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
+  };
 
-    // send request
-    var request = { programId: 1, traineeId: 1, note: application };
-    sendTrainingProgramApplication(request);
+  const handleLeaveTrainingProgram = () => {
+    setSubmitting(true);
+    leaveTrainingProgram(userId, program.id)
+      .then(() => {
+        toast.message(`You have left '${program.name}'.`);
+      })
+      .catch(() => {
+        toast.error("Unexpected error", {
+          description: "Unable to leave program. Please, try again later.",
+        });
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   };
 
   return (
@@ -81,14 +118,14 @@ export default function TrainingProgramInfo() {
       </div>
 
       <div className="w-full lg:w-2/3 pl-0 lg:pl-8 relative flex flex-col">
-        <div className="flex flex-col justify-between mt-1.5 flex-1">
+        <div className="flex flex-col mt-1.5 flex-1">
           <div className="relative flex items-center justify-between gap-5">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-semibold leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-semibold mb-0.5">
                 {program.name}
               </h1>
               <div className="flex items-center gap-2 text-muted-foreground">
-                <div className="flex sm:flex-row flex-col sm:items-center gap-x-2 sm:mt-0 mt-1">
+                <div className="flex sm:flex-row flex-col sm:items-center gap-x-2">
                   <div className="flex items-center gap-1">
                     <ActivityIcon className="h-4 w-4" />
                     <p className="text-sm sm:text-base text-muted-foreground font-semibold">
@@ -151,23 +188,30 @@ export default function TrainingProgramInfo() {
               )}
             </div>
           </div>
-          <div className="flex items-center flex-wrap gap-2 lg:mt-auto mt-auto mb-0.5">
-            {/* <Button
-              variant="secondary"
-              className="h-auto items-center min-w-32"
-            >
-              <UserPlus className="h-5 w-5 text-primary" />
-              <span>Join</span>
-            </Button> */}
-
-            <TrainingProgramApplicationModal
-              onSubmit={handleApplicationModalSubmit}
-            />
-            <Button variant="outline" className="h-auto items-center min-w-32">
-              <UserXIcon className="h-5 w-5 text-destructive" />
-              <span>Leave</span>
-            </Button>
-          </div>
+          {isTrainer && (
+            <div className="flex items-center flex-wrap gap-2 lg:mt-auto mt-auto mb-0.5">
+              <TrainingProgramApplicationModal
+                onSubmit={handleApplicationModalSubmit}
+                disabled={submitting}
+              />
+              <SimpleAlertDialog
+                title="Are you sure?"
+                description="Are you sure you want to leave this training program?"
+                cancelText="No"
+                submitText="Yes"
+                onConfirm={handleLeaveTrainingProgram}
+              >
+                <Button
+                  disabled={submitting}
+                  variant="outline"
+                  className="h-auto items-center min-w-32 w-auto"
+                >
+                  <UserXIcon className="h-5 w-5 text-destructive" />
+                  <span>Leave</span>
+                </Button>
+              </SimpleAlertDialog>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -15,7 +15,7 @@ public interface TrainingProgramApplicationService  {
     Page<ProgramApplicationResponse> getAllApplicationsForTrainer(Integer trainerId, Pageable page);
     Page<ProgramApplicationResponse> getAllApplicationsForTrainerFiltered(Integer userId, String filter, Pageable page);
     SingleProgramApplicationResponse getProgramApplication(Integer traineeId, Integer programId);
-    ProgramApplicationResponse createTrainingProgramApplication(TrainingProgramApplicationRequest request);
+    ProgramApplicationResponse createTrainingProgramApplication(Integer traineeId, TrainingProgramApplicationRequest request);
     void processTrainingProgramApplication(Integer traineeId, Integer programId,
             TrainingProgramApplicationProcessRequest request);
     void markTrainingProgramApplicationAsRead(TrainingProgramApplicationId id);

@@ -14,12 +14,10 @@ public class TrainingProgramResponse {
     private Integer id;
     private String name;
     private TrainingProgramDifficulty difficulty;
-    private Integer trainingDuration;
     private String description;
-    private String requirements;
     private Instant createdAt;
     private String imageFilePath;
-    private double rating;
+    private Double rating;
     private List<CategoryResponse> categories;
     private Integer trainerId;
     private String trainerFirstName;

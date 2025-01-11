@@ -37,10 +37,11 @@ public class TrainingProgramApplicationController {
        return trainingProgramApplicationService.getProgramApplication(userId, programId);
     }
 
-    @PostMapping("/training-program-applications")
+    @PostMapping("/users/{userId}/applications")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProgramApplicationResponse addTrainingProgramApplication(@RequestBody @Valid TrainingProgramApplicationRequest request) {
-        return trainingProgramApplicationService.createTrainingProgramApplication(request);
+    public ProgramApplicationResponse addTrainingProgramApplication(@PathVariable(name = "userId") Integer userId,
+                                                                    @RequestBody @Valid TrainingProgramApplicationRequest request) {
+        return trainingProgramApplicationService.createTrainingProgramApplication(userId, request);
     }
 
     @PostMapping("/users/{userId}/applications/{programId}/process")
@@ -51,15 +52,15 @@ public class TrainingProgramApplicationController {
         trainingProgramApplicationService.processTrainingProgramApplication(userId, programId, request);
     }
 
-    @PostMapping("/training-program-applications/mark-read") // TODO: ???
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void markTrainingProgramApplicationAsRead(
-            @PathVariable Integer userId, // U request body
-            @PathVariable Integer programId) {
-        TrainingProgramApplicationId id = new TrainingProgramApplicationId();
-        id.setUserId(userId);
-        id.setProgramId(programId);
-        trainingProgramApplicationService.markTrainingProgramApplicationAsRead(id);
-    }
+//    @PostMapping("/training-program-applications/mark-read") // TODO: ???
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void markTrainingProgramApplicationAsRead(
+//            @PathVariable Integer userId, // U request body
+//            @PathVariable Integer programId) {
+//        TrainingProgramApplicationId id = new TrainingProgramApplicationId();
+//        id.setUserId(userId);
+//        id.setProgramId(programId);
+//        trainingProgramApplicationService.markTrainingProgramApplicationAsRead(id);
+//    }
 
 }

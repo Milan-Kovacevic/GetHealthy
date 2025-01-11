@@ -113,6 +113,25 @@ const moveParticipantToAnotherTrainingProgram = async (
   });
 };
 
+const leaveTrainingProgram = async (
+  userId: number,
+  programId: number
+): Promise<void> => {
+  var url = ApiEndpoints.SingleUserTrainingPrograms.replace(
+    "{userId}",
+    `${userId}`
+  ).replace("{programId}", `${programId}`);
+  url += "/leave";
+
+  await delay(1500);
+  return sendAxiosRequest<void, void>({
+    method: "POST",
+    url: url,
+  }).then((response) => {
+    return response.data;
+  });
+};
+
 export {
   getSingleTrainingProgramDetails,
   getPageableTrainingProgramParticipants,
@@ -120,4 +139,5 @@ export {
   getSingleProgramTrainer,
   removeParticipantFromTrainingProgram,
   moveParticipantToAnotherTrainingProgram,
+  leaveTrainingProgram,
 };

@@ -38,6 +38,7 @@ export type SingleTrainingProgram = {
   trainerLastName: string;
   categories: Category[];
   currentlyEnrolled: number;
+  joined?: boolean;
 };
 
 export type SingleProgramTrainer = {

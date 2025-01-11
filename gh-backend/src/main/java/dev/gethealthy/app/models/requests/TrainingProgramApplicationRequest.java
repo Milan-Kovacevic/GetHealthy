@@ -7,7 +7,5 @@ import lombok.Data;
 public class TrainingProgramApplicationRequest {
     @NotNull
     private Integer programId;
-    @NotNull
-    private Integer traineeId;
     private String note;
 }

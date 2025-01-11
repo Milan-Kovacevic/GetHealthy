@@ -1,11 +1,5 @@
 package dev.gethealthy.app.services.impl;
 
-import java.io.IOException;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import dev.gethealthy.app.exceptions.BadRequestException;
 import dev.gethealthy.app.exceptions.ForbiddenException;
 import dev.gethealthy.app.exceptions.NotFoundException;
@@ -18,17 +12,17 @@ import dev.gethealthy.app.models.enums.StorageType;
 import dev.gethealthy.app.models.requests.TraineeUpdateRequest;
 import dev.gethealthy.app.models.requests.TrainerUpdateRequest;
 import dev.gethealthy.app.models.requests.UserUpdateRequest;
-import dev.gethealthy.app.models.responses.SingleUserResponse;
-import dev.gethealthy.app.models.responses.TraineeInfoResponse;
-import dev.gethealthy.app.models.responses.TraineeResponse;
-import dev.gethealthy.app.models.responses.TrainerInfoResponse;
-import dev.gethealthy.app.models.responses.TrainerResponse;
-import dev.gethealthy.app.models.responses.UserAccountResponse;
-import dev.gethealthy.app.models.responses.UserInfoResponse;
+import dev.gethealthy.app.models.responses.*;
+import dev.gethealthy.app.repositories.TraineeOnTrainingProgramRepository;
 import dev.gethealthy.app.repositories.UserRepository;
 import dev.gethealthy.app.services.StorageAccessService;
 import dev.gethealthy.app.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final StorageAccessService storageAccessService;
+    private final TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository;
 
     // @Override
     // public SingleUserResponse getUser(Integer userId) {
@@ -171,5 +166,14 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAndFlush(user);
         return fileName;
     }
+
+    @Override
+    public void leaveTrainingProgram(Integer userId, Integer programId) {
+        var exists = traineeOnTrainingProgramRepository.existsByProgram_IdAndUser_Id(programId, userId);
+        if (!exists)
+            throw new NotFoundException();
+        traineeOnTrainingProgramRepository.deleteByProgram_IdAndUser_Id(programId, userId);
+    }
+
 
 }

@@ -24,7 +24,6 @@ export type PageableProgramRequests = Page<ProgramRequest>;
 
 export type SendProgramApplication = {
   programId: number;
-  traineeId: number;
   note: string;
 };
 

@@ -1,38 +1,25 @@
 package dev.gethealthy.app.controllers;
 
-import java.util.List;
-
+import dev.gethealthy.app.models.entities.TrainingProgram;
+import dev.gethealthy.app.models.requests.TrainingProgramExercisesRequest;
+import dev.gethealthy.app.models.requests.TrainingProgramRequest;
+import dev.gethealthy.app.models.responses.*;
+import dev.gethealthy.app.services.TrainingProgramService;
+import dev.gethealthy.app.specifications.TrainingProgramSpecification;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import dev.gethealthy.app.models.entities.TrainingProgram;
-import dev.gethealthy.app.models.requests.TrainingProgramExercisesRequest;
-import dev.gethealthy.app.models.requests.TrainingProgramRequest;
-import dev.gethealthy.app.models.responses.FeaturedProgramResponse;
-import dev.gethealthy.app.models.responses.SingleProgramDetailsResponse;
-import dev.gethealthy.app.models.responses.SingleTrainingProgramResponse;
-import dev.gethealthy.app.models.responses.TrainerResponse;
-import dev.gethealthy.app.models.responses.TrainingProgramResponse;
-import dev.gethealthy.app.services.TrainingProgramService;
-import dev.gethealthy.app.specifications.TrainingProgramSpecification;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
+import static dev.gethealthy.app.specifications.TrainingProgramSpecification.constructSpecification;
 
 @RestController
 @RequestMapping("${gethealthy.base-url}/training-programs")
@@ -63,14 +50,6 @@ public class TrainingProgramController {
     public List<FeaturedProgramResponse> getFeaturedTrainingPrograms() {
         return trainingProgramService.getFeaturedTrainingPrograms();
     }
-
-    // @PutMapping("{programId}")
-    // public TrainingProgramResponse updateTrainingProgram(@PathVariable Integer
-    // programId,
-    // @RequestBody TrainingProgramRequest request) {
-    // return trainingProgramService.update(programId, request,
-    // TrainingProgramResponse.class);
-    // }
 
     @PostMapping(path = "{userId}", consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
@@ -115,15 +94,4 @@ public class TrainingProgramController {
         return trainingProgramService.getTrainingProgramDetails(programId);
     }
 
-    private static Specification<TrainingProgram> constructSpecification(String searchWord, List<String> categories,
-            double ratingUpper,
-            double ratingLower, long participantsUpper, long participantsLower, int difficulty) {
-        return Specification
-                .where(TrainingProgramSpecification.nameContains(searchWord))
-                .and(TrainingProgramSpecification.hasRatingBetween(ratingLower, ratingUpper))
-                .and(TrainingProgramSpecification.hasParticipantCountBetween(participantsLower, participantsUpper))
-                .and(TrainingProgramSpecification.belongsToCategories(categories))
-                .and(TrainingProgramSpecification.hasDifficulty(difficulty))
-                .and(TrainingProgramSpecification.isNotDeleted());
-    }
 }

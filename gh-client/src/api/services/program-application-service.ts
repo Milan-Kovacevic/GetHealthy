@@ -20,7 +20,7 @@ const getPageableTrainingProgramApplications = async (
   page: number = 0,
   limit: number = 12
 ) => {
-  var url = ApiEndpoints.TrainerProgramApplications.replace(
+  var url = ApiEndpoints.UserProgramApplications.replace(
     "{userId}",
     `${userId}`
   );
@@ -66,9 +66,13 @@ const getProgramApplicationDetails = async (
 };
 
 const sendTrainingProgramApplication = async (
+  traineeId: number,
   request: SendProgramApplication
 ): Promise<void> => {
-  const url = `${ApiEndpoints.TrainingProgramApplications}`;
+  const url = ApiEndpoints.UserProgramApplications.replace(
+    "{userId}",
+    `${traineeId}`
+  );
 
   await delay(1000);
   return sendAxiosRequest<CreateTrainingProgramApplicationDTO, void>({

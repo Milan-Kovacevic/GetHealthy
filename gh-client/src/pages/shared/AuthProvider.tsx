@@ -8,6 +8,7 @@ import {
 } from "@/utils/constants";
 import { useState } from "react";
 import { loginUser, logoutUser } from "@/api/services/auth-service";
+import { UserRole } from "@/api/enums/user-role";
 
 type AuthProviderProps = {
   children: React.ReactNode;
@@ -64,6 +65,9 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
   const isLoggedIn = () => {
     return authUser != undefined;
   };
+  const isTrainer = () => {
+    return authUser?.role == UserRole.TRAINER;
+  };
 
   const value = {
     user: authUser,
@@ -72,6 +76,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
     getUserId: getUserId,
     getUserRole: getUserRole,
     isLoggedIn: isLoggedIn,
+    isTrainer: isTrainer,
   };
 
   return (

@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,18 +7,26 @@ import {
   CardFooter,
   CardTitle,
 } from "@/components/ui/card";
-import { ClockIcon, Star, StarOffIcon } from "lucide-react";
+import { SimpleAlertDialog } from "@/pages/shared/SimpleAlertDialog";
+import {
+  ClockIcon,
+  Edit2Icon,
+  Star,
+  StarOffIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import noImage from "@/assets/no-image.jpg";
 import { capitalize, cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { TrainingProgram } from "@/api/models/training-program";
 
-type TrainingProgramCardProps = {
+type ManagedProgramCardProps = {
   program: TrainingProgram;
+  onRemoveTrainingProgram: (programId: number) => void;
 };
 
-export function TrainingProgramCard(props: TrainingProgramCardProps) {
+export function ManagedProgramCard(props: ManagedProgramCardProps) {
   const { program } = props;
   const navigate = useNavigate();
 
@@ -25,15 +34,24 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
     navigate(`/programs/${program.id}`);
   };
 
+  const handleEditProgramClicked = () => {
+    navigate(`/programs/${program.id}/edit`);
+  };
+
+  const handleRemoveTrainingProgram = () => {
+    props.onRemoveTrainingProgram(program.id);
+  };
   const categories = program.categories.map((c) => c.name);
 
   return (
     <Card
       key={program.id}
       className="group transform md:max-h-[400px] md:max-w-xl rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-all duration-200 relative"
-      onClick={handleCardClicked}
     >
-      <div className="border-b hover:cursor-pointer">
+      <div
+        className="border-b hover:cursor-pointer"
+        onClick={handleCardClicked}
+      >
         <Badge
           className="absolute m-3 z-10 pointer-events-none border-primary/80"
           variant={"secondary"}
@@ -73,6 +91,31 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
           <CardTitle className="xl:text-lg font-semibold xl:leading-tight text-base leading-none">
             {program.name}
           </CardTitle>
+          <div className="flex gap-0 justify-between">
+            <SimpleAlertDialog
+              title="Are you sure?"
+              description="Are you sure you want to remove selected program? This action cannot be undone!"
+              cancelText="No"
+              submitText="Yes"
+              onConfirm={handleRemoveTrainingProgram}
+            >
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-auto py-2 px-2.5 text-destructive/80 hover:text-destructive"
+              >
+                <TrashIcon />
+              </Button>
+            </SimpleAlertDialog>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-auto py-2 px-2.5"
+              onClick={() => handleEditProgramClicked()}
+            >
+              <Edit2Icon />
+            </Button>
+          </div>
         </div>
 
         <div className="flex items-center mt-1 mb-1.5">

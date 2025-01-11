@@ -1,33 +1,27 @@
 package dev.gethealthy.app.controllers;
 
-import dev.gethealthy.app.models.responses.TrainerProgramResponse;
-import dev.gethealthy.app.services.TrainingProgramService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import dev.gethealthy.app.exceptions.BadRequestException;
-import dev.gethealthy.app.models.requests.TrainingProgramApplicationRequest;
+import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.requests.UserUpdateRequest;
 import dev.gethealthy.app.models.responses.SingleUserResponse;
+import dev.gethealthy.app.models.responses.ProgramListingResponse;
+import dev.gethealthy.app.models.responses.TrainingProgramResponse;
 import dev.gethealthy.app.models.responses.UserInfoResponse;
-import dev.gethealthy.app.services.TrainingProgramApplicationService;
+import dev.gethealthy.app.services.TrainingProgramService;
 import dev.gethealthy.app.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static dev.gethealthy.app.specifications.TrainingProgramSpecification.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,7 +29,6 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final TrainingProgramService trainingProgramService;
-    private final TrainingProgramApplicationService trainingProgramApplicationService;
 
     @GetMapping("/{userId}")
     public SingleUserResponse getUser(@PathVariable(name = "userId") Integer userId, Authentication auth) {
@@ -61,14 +54,43 @@ public class UserController {
 
     @PostMapping(path = "/{userId}/updateProfilePicture", consumes = "multipart/form-data")
     public String updateProfilePicture(@PathVariable(name = "userId") Integer userId,
-            @RequestParam(name = "file", required = true) MultipartFile file) {
+                                       @RequestParam(name = "file", required = true) MultipartFile file) {
         return userService.updateProfilePicture(userId, file);
     }
 
+    @GetMapping("/{userId}/training-programs")
+    public Page<TrainingProgramResponse> getPageableTrainingProgramsForTrainer(Pageable page,
+                                                                            @RequestParam(defaultValue = "") String searchWord,
+                                                                            @RequestParam(defaultValue = "name") String sortBy,
+                                                                            @RequestParam(defaultValue = "asc") String sortDir,
+                                                                            @RequestParam(required = false) List<String> categories,
+                                                                            @RequestParam(required = false, defaultValue = "5.0") double ratingUpper,
+                                                                            @RequestParam(required = false, defaultValue = "0.0") double ratingLower,
+                                                                            @RequestParam(required = false, defaultValue = "1000") long participantsUpper,
+                                                                            @RequestParam(required = false, defaultValue = "0") long participantsLower,
+                                                                            @RequestParam(required = false, defaultValue = "0") int difficulty,
+                                                                            @PathVariable(name = "userId") Integer userId) {
+        Specification<TrainingProgram> spec;
+        // TODO: Based on role from Principal determine it its trainer or trainee...
+        if(true)
+            spec = constructSpecificationForTrainer(userId, searchWord, categories, ratingUpper,
+                ratingLower, participantsUpper, participantsLower, difficulty);
+        else spec = constructSpecificationForTrainee(userId, searchWord, categories, ratingUpper,
+                ratingLower, participantsUpper, participantsLower, difficulty);
 
-    @GetMapping("{userId}/training-programs")
-    public Page<TrainerProgramResponse> getTrainingProgramsForTrainer(@PathVariable Integer userId, Pageable page) {
-        return trainingProgramService.getTrainingProgramsForTrainer(userId, page);
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
+        return trainingProgramService.getFilteredTrainingPrograms(spec, sort, page);
+    }
+
+    @GetMapping("{userId}/training-programs/brief")
+    public Page<ProgramListingResponse> getTrainingProgramsListedForUser(@PathVariable Integer userId, Pageable page) {
+        return trainingProgramService.getTrainingProgramsListedForUser(userId, page);
+    }
+
+    @PostMapping("{userId}/training-programs/{programId}/leave")
+    public void leaveTrainingProgram(@PathVariable(name = "userId") Integer userId,
+                                     @PathVariable(name = "programId") Integer programId) {
+        userService.leaveTrainingProgram(userId, programId);
     }
 
 }

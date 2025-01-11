@@ -17,7 +17,7 @@ public interface TrainingProgramService extends CrudService<Integer> {
     Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort,
             Pageable page);
 
-    Page<TrainerProgramResponse> getTrainingProgramsForTrainer(Integer userId, Pageable page);
+    Page<ProgramListingResponse> getTrainingProgramsListedForUser(Integer userId, Pageable page);
 
     SingleTrainingProgramResponse getSingleTrainingProgram(Integer programId);
 
@@ -35,7 +35,4 @@ public interface TrainingProgramService extends CrudService<Integer> {
 
     void updateTrainingProgramGeneralInfo(Integer programId, TrainingProgramRequest trainingProgramRequest,
             MultipartFile file);
-
-    void updateTrainingProgramExercisePlan(Integer programId,
-            TrainingProgramExercisesRequest trainingProgramExercisesRequest);
 }

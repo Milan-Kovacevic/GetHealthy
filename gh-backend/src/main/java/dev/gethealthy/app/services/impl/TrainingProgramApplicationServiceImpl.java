@@ -63,9 +63,9 @@ public class TrainingProgramApplicationServiceImpl implements TrainingProgramApp
     }
 
     @Override
-    public ProgramApplicationResponse createTrainingProgramApplication(
+    public ProgramApplicationResponse createTrainingProgramApplication(Integer traineeId,
             TrainingProgramApplicationRequest request) {
-        if (trainingProgramApplicationRepository.existsByProgram_IdAndTrainee_Id(request.getProgramId(), request.getTraineeId()))
+        if (trainingProgramApplicationRepository.existsByProgram_IdAndTrainee_Id(request.getProgramId(), traineeId))
             throw new ConflictException();
 
         TrainingProgramApplication entity = modelMapper.map(request, TrainingProgramApplication.class);
@@ -73,7 +73,7 @@ public class TrainingProgramApplicationServiceImpl implements TrainingProgramApp
         entity.setSubmissionDate(Utility.getInstantCurrentDate());
         TrainingProgram trainingProgram = trainingProgramRepository.findById(request.getProgramId())
                 .orElseThrow(NotFoundException::new);
-        Trainee trainee = traineeRepository.findById(request.getTraineeId()).orElseThrow(NotFoundException::new);
+        Trainee trainee = traineeRepository.findById(traineeId).orElseThrow(NotFoundException::new);
 
         entity.setProgram(trainingProgram);
         entity.setTrainee(trainee);

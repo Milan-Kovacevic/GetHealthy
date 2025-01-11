@@ -17,6 +17,7 @@ import { UserPlus } from "lucide-react";
 import TextareaFormField from "@/components/primitives/TextareaFormField";
 
 type TrainingProgramApplicationModalProps = {
+  disabled: boolean;
   onSubmit?: (application: string) => void;
 };
 
@@ -55,7 +56,11 @@ export default function TrainingProgramApplicationModal(
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" className="h-auto items-center min-w-32">
+        <Button
+          disabled={props.disabled}
+          variant="secondary"
+          className="h-auto items-center min-w-32"
+        >
           <UserPlus className="h-5 w-5 text-primary" />
           <span>Join</span>
         </Button>
