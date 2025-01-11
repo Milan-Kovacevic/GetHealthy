@@ -81,6 +81,7 @@ public class TrainingProgramController {
 
     @GetMapping("{programId}")
     public SingleTrainingProgramResponse getSingleTrainingProgram(@PathVariable Integer programId) {
+        // TODO: Include joined flag for trainee, based of if he already joined to that program or not
         return trainingProgramService.getSingleTrainingProgram(programId);
     }
 

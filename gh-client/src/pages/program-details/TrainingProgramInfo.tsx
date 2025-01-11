@@ -188,7 +188,7 @@ export default function TrainingProgramInfo() {
               )}
             </div>
           </div>
-          {isTrainer && (
+          {!isTrainer && (
             <div className="flex items-center flex-wrap gap-2 lg:mt-auto mt-auto mb-0.5">
               <TrainingProgramApplicationModal
                 onSubmit={handleApplicationModalSubmit}

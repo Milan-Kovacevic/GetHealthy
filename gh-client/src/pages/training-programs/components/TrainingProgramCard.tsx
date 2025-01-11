@@ -30,10 +30,10 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
   return (
     <Card
       key={program.id}
-      className="group transform md:max-h-[400px] md:max-w-xl rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-all duration-200 relative"
+      className="group transform hover:cursor-pointer md:max-h-[400px] md:max-w-xl rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-all duration-200 relative"
       onClick={handleCardClicked}
     >
-      <div className="border-b hover:cursor-pointer">
+      <div className="border-b">
         <Badge
           className="absolute m-3 z-10 pointer-events-none border-primary/80"
           variant={"secondary"}
