@@ -7,8 +7,6 @@ import lombok.Setter;
 import java.util.List;
 
 @Data
-@Getter
-@Setter
 public class TrainingProgramExercisesRequest {
     private List<TrainingProgramExerciseRequest> trainingProgramExercises;
 }

@@ -230,7 +230,7 @@ export const CreateEditProgramOnScheduleModal = ({
                         <TrainerProgramSelector
                           onProgramSelected={changeProgram}
                           text={text}
-                          editTrainingProgram={programOnSchedule?.program}
+                          initialValue={programOnSchedule?.program}
                         />
                       </div>
                     </FormControl>

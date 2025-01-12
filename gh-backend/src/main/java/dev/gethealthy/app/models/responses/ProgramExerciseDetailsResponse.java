@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ProgramExerciseDetailsResponse {
+public class ProgramExerciseDetailsResponse  {
     private Integer id;
     private String name;
     private String description;

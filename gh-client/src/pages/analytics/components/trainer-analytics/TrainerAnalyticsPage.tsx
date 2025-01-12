@@ -6,6 +6,7 @@ import TrainerAnalyticsSelector from "./TrainerAnalyticsSelector";
 import useTrainerCharts from "../../hooks/use-trainer-charts";
 import useTrainerAnalytics from "../../hooks/use-trainer-analytics";
 import { cn } from "@/lib/utils";
+import useAuth from "@/hooks/use-auth";
 
 export default function TrainerAnalyticsPage() {
   const {

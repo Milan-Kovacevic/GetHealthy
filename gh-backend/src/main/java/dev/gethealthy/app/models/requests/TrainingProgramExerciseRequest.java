@@ -15,5 +15,5 @@ public class TrainingProgramExerciseRequest {
     private Integer position;
     private Integer programId;
     private List<ExerciseSetRequest> exerciseSets;
-    private Integer programExerciseId;
+    private Integer programExerciseId; // TODO: ???
 }

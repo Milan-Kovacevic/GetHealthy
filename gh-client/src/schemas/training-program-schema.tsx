@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+// TODO: Fix setSchema???
+export type SetFormSchema = z.infer<typeof setSchema>;
+export type ExercisePlanFormSchema = z.infer<typeof exercisePlanSchema>;
+export type GeneralInfoFormSchema = z.infer<typeof generalInfoSchema>;
+
 const setSchema = z.object({
   reps: z.number().min(1, "Reps must be at least one").optional(),
   weight: z.number().min(0, "Weight must be non-negative").optional(),
@@ -23,8 +28,6 @@ const exerciseSchema = z.object({
 export const exercisePlanSchema = z.object({
   exercises: z.array(exerciseSchema).min(1, "Select at least one exercise"),
 });
-
-export type ExercisePlanValues = z.infer<typeof exercisePlanSchema>;
 
 export const generalInfoSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),

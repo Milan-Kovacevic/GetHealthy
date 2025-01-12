@@ -24,3 +24,12 @@ export type ExerciseSetDTO = {
 };
 
 export type PageableExercisesDTO = Page<ExerciseDTO>;
+
+export type ExerciseListingDTO = {
+  id: number;
+  exerciseName: string;
+  firstExerciseMetric: ExerciseMetricDTO;
+  secondExerciseMetric: ExerciseMetricDTO;
+};
+
+export type PageableExerciseListingDTO = Page<ExerciseListingDTO>;

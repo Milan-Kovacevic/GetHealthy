@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   exercisePlanSchema,
   generalInfoSchema,
-} from "@/schemas/training-program-schemas";
+} from "@/schemas/training-program-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

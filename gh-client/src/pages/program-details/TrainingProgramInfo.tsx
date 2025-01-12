@@ -4,10 +4,10 @@ import { ActivityIcon, UserXIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StarRating from "@/components/primitives/StarRating";
 import {
-  getSingleTrainingProgram,
+  getSingleTrainingProgramInfo,
   leaveTrainingProgram,
 } from "@/api/services/program-details-service";
-import { SingleTrainingProgram } from "@/api/models/program-details";
+import { SingleTrainingProgramInfo } from "@/api/models/program-details";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SingleTrainingProgramLoader from "./components/SingleTrainingProgramLoader";
@@ -28,7 +28,7 @@ export default function TrainingProgramInfo() {
   if (!userId) return;
 
   const params = useParams();
-  const [program, setProgram] = useState<SingleTrainingProgram>();
+  const [program, setProgram] = useState<SingleTrainingProgramInfo>();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
@@ -42,7 +42,7 @@ export default function TrainingProgramInfo() {
     if (parseInt(programId) == program?.id) return;
 
     setLoading(true);
-    getSingleTrainingProgram(parseInt(programId))
+    getSingleTrainingProgramInfo(parseInt(programId))
       .then((value) => {
         setProgram(value);
       })
@@ -148,7 +148,7 @@ export default function TrainingProgramInfo() {
               <p className="text-xs mb-0.5">
                 {program.totalRates + " reviews"}
               </p>
-              <StarRating readonly={true} rating={program.rating} />
+              <StarRating readonly={true} rating={program.rating ?? 0} />
             </div>
           </div>
 

@@ -285,7 +285,9 @@ const SignUpButtons = ({
   const navigate = useNavigate();
 
   return !isLoggedIn ? (
-    <div className={cn(mobile && "flex flex-col gap-2.5")}>
+    <div
+      className={cn(mobile ? "flex flex-col gap-2.5" : "flex flex-row gap-2")}
+    >
       <Button
         onClick={() => {
           navigate("/login");

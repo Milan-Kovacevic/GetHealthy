@@ -1,11 +1,11 @@
 package dev.gethealthy.app.controllers;
 
 import dev.gethealthy.app.models.entities.TrainingProgram;
+import dev.gethealthy.app.models.requests.CreateTrainingProgramRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramExercisesRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.*;
 import dev.gethealthy.app.services.TrainingProgramService;
-import dev.gethealthy.app.specifications.TrainingProgramSpecification;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -51,15 +51,16 @@ public class TrainingProgramController {
         return trainingProgramService.getFeaturedTrainingPrograms();
     }
 
-    @PostMapping(path = "{userId}", consumes = "multipart/form-data")
+    @PostMapping(consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
     public void createTrainingProgram(
-            @PathVariable Integer userId,
-            @RequestPart(name = "training-program") @Valid TrainingProgramRequest trainingProgramRequest,
+            @RequestPart(name = "training-program") @Valid CreateTrainingProgramRequest trainingProgramRequest,
             @RequestPart(name = "training-program-exercises") @Valid TrainingProgramExercisesRequest trainingProgramExercisesRequest,
             @RequestPart(name = "file", required = false) MultipartFile file,
             Authentication auth) {
-        trainingProgramService.createTrainingProgram(userId, trainingProgramRequest, trainingProgramExercisesRequest,
+        // TODO: Compare userId from auth object and request
+
+        trainingProgramService.createTrainingProgram(trainingProgramRequest, trainingProgramExercisesRequest,
                 file);
     }
 
@@ -74,15 +75,20 @@ public class TrainingProgramController {
 
     @DeleteMapping("{programId}")
     public void removeTrainingProgram(@PathVariable Integer programId) {
-        trainingProgramService.delete(programId);
+        trainingProgramService.deleteTrainingProgram(programId);
     }
 
     // Program details endpoints
 
     @GetMapping("{programId}")
     public SingleTrainingProgramResponse getSingleTrainingProgram(@PathVariable Integer programId) {
-        // TODO: Include joined flag for trainee, based of if he already joined to that program or not
         return trainingProgramService.getSingleTrainingProgram(programId);
+    }
+
+    @GetMapping("{programId}/info")
+    public TrainingProgramInfoResponse getTrainingProgramInfo(@PathVariable Integer programId) {
+        // TODO: Include joined flag for trainee, based of if he already joined to that program or not
+        return trainingProgramService.getTrainingProgramInfo(programId);
     }
 
     @GetMapping("{programId}/trainer-info")

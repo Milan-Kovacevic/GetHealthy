@@ -1,20 +1,21 @@
-import { getTrainingProgram } from "@/api/services/training-program-service";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import EditTrainingProgramForm from "./components/EditTrainingProgramForm";
-import { TrainingProgram } from "@/api/models/training-program";
+import { toast } from "sonner";
+import { getSingleTrainingProgram } from "@/api/services/program-details-service";
 
 export default function EditTrainingProgramPage() {
   const { id } = useParams();
   const [programGeneralInfo, setProgramGeneralInfo] = useState<any>(null);
   const [programExercises, setProgramExercises] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTrainingProgram = async () => {
       if (!id) return;
 
       try {
-        const data: TrainingProgram = await getTrainingProgram(Number(id));
+        const data = await getSingleTrainingProgram(parseInt(id));
         console.log(data);
         const { exercises, ...generalInfo } = data;
         const transformedExercises = exercises.map((exercise) => ({
@@ -35,7 +36,11 @@ export default function EditTrainingProgramPage() {
         setProgramGeneralInfo(generalInfo);
         setProgramExercises(transformedExercises);
       } catch (error) {
+        toast.error(
+          "Unable to load training program data. Please, try again later."
+        );
         console.error("Error fetching training program:", error);
+        navigate(-1);
       }
     };
 

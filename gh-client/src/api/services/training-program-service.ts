@@ -14,6 +14,14 @@ import {
   TrainingProgram,
 } from "../models/training-program";
 import { sendAxiosRequest } from "./base-service";
+import {
+  SingleProgramDetailsDTO,
+  SingleTrainingProgramDTO,
+} from "../contracts/program-details-contract";
+import {
+  SingleProgramDetails,
+  SingleTrainingProgram,
+} from "../models/program-details";
 
 const getPageableTrainingPrograms = async (
   searchString: string = "",
@@ -72,26 +80,27 @@ const getPageableTrainingProgramsForUser = async (
   });
 };
 
+// TODO: FIX
 const getTrainingProgram = async (
   programId: number
-): Promise<TrainingProgram> => {
-  var url = `${ApiEndpoints.TrainingPrograms}/${programId}/details`;
-  return sendAxiosRequest<void, TrainingProgramDTO>({
+): Promise<SingleTrainingProgram> => {
+  var url = `${ApiEndpoints.TrainingPrograms}/${programId}`;
+  return sendAxiosRequest<void, SingleTrainingProgramDTO>({
     method: "GET",
     url: url,
   }).then((response) => {
-    return response.data as TrainingProgram;
+    return response.data as SingleTrainingProgram;
   });
 };
 
-const createTrainingProgram = async (userId: number, formData: FormData) => {
-  var url = `${ApiEndpoints.TrainingPrograms}/${userId}`;
-  return sendAxiosRequest<any, object>({
+const createTrainingProgram = async (formData: FormData) => {
+  var url = `${ApiEndpoints.TrainingPrograms}`;
+  return sendAxiosRequest<FormData, void>({
     method: "POST",
     url: url,
     data: formData,
   }).then((response) => {
-    return response.data as object;
+    return response.data;
   });
 };
 

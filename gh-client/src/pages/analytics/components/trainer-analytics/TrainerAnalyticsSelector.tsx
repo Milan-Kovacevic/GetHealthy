@@ -4,6 +4,7 @@ import TrainerProgramSelector from "@/pages/shared/TrainerProgramSelector";
 import useTrainerAnalytics from "../../hooks/use-trainer-analytics";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import useAuth from "@/hooks/use-auth";
 
 type TrainerAnalyticsSelectorProps = {};
 

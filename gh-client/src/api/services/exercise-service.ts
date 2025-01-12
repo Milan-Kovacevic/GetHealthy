@@ -2,11 +2,13 @@ import { ApiEndpoints } from "@/utils/constants";
 import {
   ExerciseDTO,
   ExerciseMetricDTO,
+  PageableExerciseListingDTO,
   PageableExercisesDTO,
 } from "../contracts/exercise-contract";
 import {
   Exercise,
   ExerciseMetric,
+  PageableExerciseListing,
   PageableExercises,
 } from "../models/exercise";
 import { sendAxiosRequest } from "./base-service";
@@ -20,6 +22,22 @@ const getAllExcercises = async () => {
     url: url,
   }).then((response) => {
     return response.data as Exercise[];
+  });
+};
+
+const getPageableExerciseListing = async (
+  query: string = "",
+  page: number = 0,
+  pageSize: number = 10
+) => {
+  var url = ApiEndpoints.Exercises;
+  url += `/brief?query=${query}&page=${page}&size=${pageSize}`;
+  await delay(1500);
+  return sendAxiosRequest<void, PageableExerciseListingDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    return response.data as PageableExerciseListing;
   });
 };
 
@@ -50,4 +68,9 @@ const getPageableExcercises = async (
   });
 };
 
-export { getAllExcercises, getPageableExcercises, getAllExerciseMetrics };
+export {
+  getPageableExerciseListing,
+  getAllExcercises,
+  getPageableExcercises,
+  getAllExerciseMetrics,
+};

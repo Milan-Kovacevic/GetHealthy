@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   exercisePlanSchema,
   generalInfoSchema,
-} from "@/schemas/training-program-schemas";
+} from "@/schemas/training-program-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -13,6 +13,8 @@ import { toast } from "sonner";
 import { z } from "zod";
 import ExercisePlanBuilder from "./ExercisePlanBuilder";
 import GeneralInformationForm from "./GeneralInformationForm";
+import useAuth from "@/hooks/use-auth";
+import { useNavigate } from "react-router-dom";
 
 const createTrainingProgramSchema = z.object({
   generalInfo: generalInfoSchema,
@@ -22,6 +24,11 @@ const createTrainingProgramSchema = z.object({
 type CreateTrainingProgramFormProps = {};
 
 const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const userId = auth.getUserId();
+  if (!userId) return;
+
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
   const createTrainingProgramForm = useForm<
     z.infer<typeof createTrainingProgramSchema>
@@ -55,9 +62,14 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
       formData.append("file", selectedFile);
     }
 
+    var generalInfoFormData = {
+      ...generalInfoData,
+      trainerId: userId,
+    };
+
     formData.append(
       "training-program",
-      new Blob([JSON.stringify(generalInfoData)], {
+      new Blob([JSON.stringify(generalInfoFormData)], {
         type: "application/json",
       })
     );
@@ -72,10 +84,14 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
     console.log("Exercise data", trainingProgramExercisesData);
 
     try {
-      await createTrainingProgram(2, formData); // hardcoded userId for trainer
+      await createTrainingProgram(formData);
       toast.success("Training program successfully created!");
+      navigate(-1);
     } catch (error) {
       console.log(error);
+      toast.error(
+        "Unable to create training program. Please, try again later."
+      );
     }
   };
 

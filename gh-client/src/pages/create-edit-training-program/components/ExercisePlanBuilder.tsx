@@ -11,7 +11,7 @@ import { CheckIcon, DumbbellIcon, HashIcon, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import ExerciseCard from "./ExerciseCard";
 import ExerciseForm from "./ExerciseForm";
-import ExerciseSelector from "./ExerciseSelector";
+import ExerciseFormFieldSelector from "./ExerciseFormFieldSelector";
 import FormSectionTitle from "./FormSectionTitle";
 import { useFieldArray } from "react-hook-form";
 
@@ -43,7 +43,6 @@ const ExercisePlanBuilder = ({
           secondExerciseMetric: item.secondExerciseMetric,
         }))
       );
-      console.log(exercises);
     }
     fetchExercises();
   }, []);
@@ -55,13 +54,10 @@ const ExercisePlanBuilder = ({
   const [selectedExerciseIndex, setSelectedExerciseIndex] = useState<
     number | null
   >(null);
-  const [comboBoxOpen, setComboBoxOpen] = useState(false);
-  const [selectedExercises, setSelectedExercises] = useState(null);
 
-  const handleSelect = (item: any) => {
+  const handleSelectExercise = (item: any) => {
     console.log("Item", item);
     form.setValue(exercisesPath, [...form.getValues(exercisesPath), item]);
-    setComboBoxOpen(false);
     setSelectedExerciseIndex(form.getValues(exercisesPath).length - 1);
   };
 
@@ -91,31 +87,6 @@ const ExercisePlanBuilder = ({
 
     console.log(form.getValues(exercisesPath));
   };
-
-  // const handleRemoveExercise = (index: any) => {
-  //   const currentExercises = form.getValues(exercisesPath);
-
-  //   const updatedExercises = currentExercises.filter((elem: any, i: any) => {
-  //     if (i !== index) {
-  //       return elem;
-  //     }
-
-  //     elem.sets = [];
-  //   });
-  //   form.setValue(exercisesPath, updatedExercises);
-  //   // form.reset({
-  //   //   exercises: updatedExercises,
-  //   // });
-
-  //   if (selectedExerciseIndex === index) {
-  //     setSelectedExerciseIndex(null);
-  //   } else if (
-  //     selectedExerciseIndex !== null &&
-  //     selectedExerciseIndex > index
-  //   ) {
-  //     setSelectedExerciseIndex(selectedExerciseIndex - 1);
-  //   }
-  // };
 
   const handleDragStart = (e: React.DragEvent, draggedIndex: number) => {
     e.dataTransfer.setData("draggedIndex", String(draggedIndex));
@@ -148,16 +119,13 @@ const ExercisePlanBuilder = ({
       <div className="flex flex-col space-y-4">
         <div className="flex flex-col lg:flex-row flex-1 space-y-4 lg:space-y-0 gap-6">
           <div className="flex flex-col w-full lg:min-w-[340px] lg:max-w-[340px] md:min-w-[400px] md:max-w-[400px] overflow-hidden space-y-4">
-            <div className="w-full pr-3 pl-1">
-              <ExerciseSelector
+            <div className="w-full max-w-xs">
+              <ExerciseFormFieldSelector
                 form={form}
                 formPath={formPath}
-                comboBoxOpen={comboBoxOpen}
-                setComboBoxOpen={setComboBoxOpen}
                 exercises={exercises}
-                onSelect={handleSelect}
+                onSelect={handleSelectExercise}
                 placeholder="Search exercise ..."
-                selectedExercises={selectedExercises}
               />
             </div>
             <ScrollArea className="">

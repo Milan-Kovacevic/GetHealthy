@@ -2,6 +2,7 @@ package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.models.entities.Exercise;
+import dev.gethealthy.app.models.responses.ExerciseListingResponse;
 import dev.gethealthy.app.models.responses.ExerciseResponse;
 import dev.gethealthy.app.repositories.ExerciseRepository;
 import dev.gethealthy.app.services.ExerciseService;
@@ -28,5 +29,12 @@ public class ExerciseServiceImpl extends CrudJpaService<Exercise, Integer> imple
         return exerciseRepository
                 .getAllExercisesFiltered(searchQuery, page)
                 .map(e -> modelMapper.map(e, ExerciseResponse.class));
+    }
+
+    @Override
+    public Page<ExerciseListingResponse> getExercisesListed(Pageable page) {
+        return exerciseRepository
+                .getAllExercisesFiltered("", page)
+                .map(e -> modelMapper.map(e, ExerciseListingResponse.class));
     }
 }

@@ -4,14 +4,12 @@ import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.*;
 import dev.gethealthy.app.models.enums.StorageType;
-import dev.gethealthy.app.models.requests.ExerciseSetRequest;
-import dev.gethealthy.app.models.requests.TrainingProgramExerciseRequest;
-import dev.gethealthy.app.models.requests.TrainingProgramExercisesRequest;
-import dev.gethealthy.app.models.requests.TrainingProgramRequest;
+import dev.gethealthy.app.models.requests.*;
 import dev.gethealthy.app.models.responses.*;
 import dev.gethealthy.app.repositories.*;
 import dev.gethealthy.app.services.StorageAccessService;
 import dev.gethealthy.app.services.TrainingProgramService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +27,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, Integer>
+@RequiredArgsConstructor
+public class TrainingProgramServiceImpl
         implements TrainingProgramService {
     private final TrainingProgramRepository trainingProgramRepository;
     private final TrainingProgramExerciseRepository trainingProgramExerciseRepository;
@@ -37,20 +36,6 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
     private final TrainerRepository trainerRepository;
     private final StorageAccessService storageAccessService;
     private final CategoryRepository categoryRepository;
-
-
-    public TrainingProgramServiceImpl(TrainingProgramRepository trainingProgramRepository,
-                                      TrainingProgramExerciseRepository trainingProgramExerciseRepository,
-                                      ModelMapper modelMapper, TrainerRepository trainerRepository,
-                                      StorageAccessService storageAccessService, CategoryRepository categoryRepository) {
-        super(trainingProgramRepository, modelMapper, TrainingProgram.class);
-        this.trainingProgramRepository = trainingProgramRepository;
-        this.trainingProgramExerciseRepository = trainingProgramExerciseRepository;
-        this.modelMapper = modelMapper;
-        this.trainerRepository = trainerRepository;
-        this.storageAccessService = storageAccessService;
-        this.categoryRepository = categoryRepository;
-    }
 
     @Override
     public Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort,
@@ -65,8 +50,7 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
         return result;
     }
 
-    @Override
-    public void delete(Integer id) {
+    public void deleteTrainingProgram(Integer id) {
         var trainingProgram = trainingProgramRepository.findById(id).orElse(null);
         if (trainingProgram == null)
             throw new NotFoundException();
@@ -91,7 +75,35 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
         TrainingProgram program = trainingProgramRepository.findById(programId)
                 .orElseThrow(NotFoundException::new);
 
-        SingleTrainingProgramResponse programResponse = modelMapper.map(program, SingleTrainingProgramResponse.class);
+        var programResponse = modelMapper.map(program, SingleTrainingProgramResponse.class);
+
+        programResponse.setCurrentlyEnrolled(getTrainingProgramCurrentlyEnrolled(programId));
+        programResponse.setTotalRates(getTrainingProgramTotalRates(programId));
+        programResponse.setRating(getTrainingProgramAverageRate(programId));
+
+        var exercises = trainingProgramExerciseRepository
+                .findAllByProgram_Id(programId)
+                .stream()
+                .sorted(Comparator.comparingInt(TrainingProgramExercise::getPosition))
+                .map(e -> {
+                    var respObj = modelMapper.map(e, ProgramExerciseDetailsResponse.class);
+                    respObj.setProgramExerciseId(e.getId());
+                    modelMapper.map(e.getExercise(), respObj);
+                    modelMapper.map(e.getExerciseSets(), respObj);
+                    return respObj;
+                })
+                .collect(Collectors.toList());
+        programResponse.setExercises(exercises);
+
+        return programResponse;
+    }
+
+    @Override
+    public TrainingProgramInfoResponse getTrainingProgramInfo(Integer programId) {
+        TrainingProgram program = trainingProgramRepository.findById(programId)
+                .orElseThrow(NotFoundException::new);
+
+        var programResponse = modelMapper.map(program, TrainingProgramInfoResponse.class);
 
         programResponse.setCurrentlyEnrolled(getTrainingProgramCurrentlyEnrolled(programId));
         programResponse.setTotalRates(getTrainingProgramTotalRates(programId));
@@ -160,9 +172,9 @@ public class TrainingProgramServiceImpl extends CrudJpaService<TrainingProgram, 
     }
 
     @Override
-    public void createTrainingProgram(Integer userId, TrainingProgramRequest trainingProgramRequest,
+    public void createTrainingProgram(CreateTrainingProgramRequest trainingProgramRequest,
                                       TrainingProgramExercisesRequest trainingProgramExercisesRequest, MultipartFile file) {
-        Trainer trainer = trainerRepository.findById(userId).orElseThrow(NotFoundException::new);
+        Trainer trainer = trainerRepository.findById(trainingProgramRequest.getTrainerId()).orElseThrow(NotFoundException::new);
 
         var trainingProgram = modelMapper.map(trainingProgramRequest, TrainingProgram.class);
         trainingProgram.setTrainer(trainer);
