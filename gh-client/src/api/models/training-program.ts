@@ -1,23 +1,19 @@
 import { Page } from "../contracts/pageable-contract";
 import { ProgramDifficulty } from "../enums/program-difficulty";
 import { Category } from "./category";
-import { Exercise } from "./exercise";
 
 export type TrainingProgram = {
   id: number;
   name: string;
   difficulty: ProgramDifficulty;
-  trainingDuration: number;
   description: string;
-  requirements?: string;
   createdAt: string;
-  categories: Category[];
-  rating?: number;
   imageFilePath?: string;
+  rating?: number;
+  categories: Category[];
   trinerId: number;
   trainerFirstName: string;
   trainerLastName: string;
-  exercises: Exercise[];
 };
 
 export type PageableTrainingPrograms = Page<TrainingProgram>;

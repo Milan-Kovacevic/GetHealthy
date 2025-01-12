@@ -1,6 +1,7 @@
 import AnalyticsDashboardCard from "../shared/AnalyticsDashboardCard";
 import { DollarSignIcon } from "lucide-react";
 import AnalyticsPeriodSelector from "../shared/AnalyticsPeriodSelector";
+import TraineeExerciseProgress from "./TraineeExerciseProgress";
 
 export default function TraineeAnalyticsSection() {
   return (
@@ -25,9 +26,14 @@ export default function TraineeAnalyticsSection() {
         />
       </div>
 
-      <div className="flex-1 mt-8">
-        <AnalyticsPeriodSelector onPeriodChange={() => {}} />
-        // TODO
+      <div className="flex-1 mt-8 w-full flex flex-col gap-4">
+        <AnalyticsPeriodSelector
+          className="sm:mr-20 self-start"
+          onPeriodChange={() => {}}
+        />
+        <div className="">
+          <TraineeExerciseProgress />
+        </div>
       </div>
     </div>
   );

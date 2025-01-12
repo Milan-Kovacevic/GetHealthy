@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, StarIcon, StarOffIcon, Users } from "lucide-react";
 import noImage from "@/assets/no-image.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { capitalize, cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 
 type FeatureProgramCardProps = {
@@ -30,7 +30,7 @@ export default function FeaturedProgramCard(props: FeatureProgramCardProps) {
         <div className="relative max-h-48 h-48 flex">
           <div className="flex justify-between items-center p-4 absolute w-full z-10">
             <Badge variant="secondary" className="border-primary">
-              {program.difficulty}
+              {capitalize(program.difficulty)}
             </Badge>
           </div>
           <AspectRatio
@@ -78,8 +78,8 @@ export default function FeaturedProgramCard(props: FeatureProgramCardProps) {
           </div>
           <div className="mb-2 flex flex-wrap gap-x-1.5 gap-y-1.5">
             {program.categories.slice(0, 4).map((category) => (
-              <Badge key={category.id} variant="secondary" className="">
-                {category.categoryName}
+              <Badge key={category.categoryId} variant="secondary" className="">
+                {category.name}
               </Badge>
             ))}
           </div>

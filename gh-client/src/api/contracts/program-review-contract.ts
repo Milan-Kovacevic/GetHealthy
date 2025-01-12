@@ -7,6 +7,7 @@ export type ProgramCommentDTO = {
   authorId: number;
   authorFirstName: string;
   authorLastName: string;
+  authorProfilePictureFilePath?: string;
 };
 
 export type SendProgramCommentDTO = {

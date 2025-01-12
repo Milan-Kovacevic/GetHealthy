@@ -4,7 +4,6 @@ import {
   FeaturedTrainingProgramDTO,
   PageableTrainerProgramsDTO,
   PageableTrainingProgramsDTO,
-  TrainerProgramDTO,
   TrainingProgramDTO,
 } from "../contracts/training-program-contract";
 import {
@@ -12,7 +11,6 @@ import {
   PageableTrainerPrograms,
   PageableTrainingPrograms,
   ProgramFilters,
-  TrainerProgram,
   TrainingProgram,
 } from "../models/training-program";
 import { sendAxiosRequest } from "./base-service";
@@ -21,9 +19,38 @@ const getPageableTrainingPrograms = async (
   searchString: string = "",
   page: number = 0,
   filters: ProgramFilters,
-  limit: number = 6
+  limit: number = 8
 ) => {
   var url = ApiEndpoints.TrainingPrograms;
+  const sortOpt = filters.sort.split("-");
+  url += `?searchWord=${searchString}&page=${page}&size=${limit}&sortBy=${
+    sortOpt[0]
+  }&sortDir=${sortOpt[1]}&categories=${filters.categories.join(
+    ","
+  )}&ratingUpper=${filters.ratingRange[1]}&ratingLower=${
+    filters.ratingRange[0]
+  }&participantsLower=${filters.participantsRange[0]}&participantsUpper=${
+    filters.participantsRange[1]
+  }&difficulty=${filters.difficulty}`;
+
+  await delay(500);
+  return sendAxiosRequest<void, PageableTrainingProgramsDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    // Perform neccessary mappings etc...
+    return response.data as PageableTrainingPrograms;
+  });
+};
+
+const getPageableTrainingProgramsForUser = async (
+  userId: number,
+  searchString: string = "",
+  page: number = 0,
+  filters: ProgramFilters,
+  limit: number = 8
+) => {
+  var url = ApiEndpoints.UserTrainingPrograms.replace("{userId}", `${userId}`);
   const sortOpt = filters.sort.split("-");
   url += `?searchWord=${searchString}&page=${page}&size=${limit}&sortBy=${
     sortOpt[0]
@@ -101,6 +128,20 @@ const updateTrainingProgramExercisePlan = async (
   });
 };
 
+const removeTrainingProgram = async (programId: number) => {
+  var url = ApiEndpoints.SingleTrainingProgram.replace(
+    "{programId}",
+    `${programId}`
+  );
+  await delay(1000);
+  return sendAxiosRequest<any, any>({
+    method: "DELETE",
+    url: url,
+  }).then((response) => {
+    return response.data;
+  });
+};
+
 const getFeaturedTrainingPrograms = async () => {
   var url = ApiEndpoints.TrainingPrograms;
   url += `/featured`;
@@ -115,20 +156,6 @@ const getFeaturedTrainingPrograms = async () => {
   });
 };
 
-// const getAllTrainingProgramsForTrainer = (trainerId: number) => {
-//   var url = ApiEndpoints.UserTrainingPrograms.replace(
-//     "{userId}",
-//     `${trainerId}`
-//   );
-
-//   return sendAxiosRequest<void, TrainerProgramDTO[]>({
-//     method: "GET",
-//     url: url,
-//   }).then((response) => {
-//     return response.data as TrainerProgram[];
-//   });
-// };
-
 const getPageableProgramsForTrainer = (
   trainerId: number,
   page: number = 0,
@@ -138,7 +165,7 @@ const getPageableProgramsForTrainer = (
     "{userId}",
     `${trainerId}`
   );
-  url += `?page=${page}&size=${limit}`;
+  url += `/brief?page=${page}&size=${limit}`;
 
   return sendAxiosRequest<void, PageableTrainerProgramsDTO>({
     method: "GET",
@@ -150,8 +177,10 @@ const getPageableProgramsForTrainer = (
 
 export {
   getPageableTrainingPrograms,
+  getPageableTrainingProgramsForUser,
   getPageableProgramsForTrainer,
   createTrainingProgram,
+  removeTrainingProgram,
   getFeaturedTrainingPrograms,
   getTrainingProgram,
   updateTrainingProgramExercisePlan,

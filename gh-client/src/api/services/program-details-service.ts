@@ -6,21 +6,7 @@ import {
   PageableProgramParticipants,
   SingleProgramDetails,
 } from "../models/program-details";
-import { ExerciseMetric } from "../models/exercise";
 import { delay } from "@/lib/utils";
-
-const metrics: ExerciseMetric[] = [
-  {
-    id: 1,
-    name: "Reps",
-    unit: "",
-  },
-  {
-    id: 2,
-    name: "Weight",
-    unit: "kg",
-  },
-];
 import {
   SingleTrainingProgramDTO,
   SingleProgramTrainerDTO,
@@ -127,6 +113,25 @@ const moveParticipantToAnotherTrainingProgram = async (
   });
 };
 
+const leaveTrainingProgram = async (
+  userId: number,
+  programId: number
+): Promise<void> => {
+  var url = ApiEndpoints.SingleUserTrainingPrograms.replace(
+    "{userId}",
+    `${userId}`
+  ).replace("{programId}", `${programId}`);
+  url += "/leave";
+
+  await delay(1500);
+  return sendAxiosRequest<void, void>({
+    method: "POST",
+    url: url,
+  }).then((response) => {
+    return response.data;
+  });
+};
+
 export {
   getSingleTrainingProgramDetails,
   getPageableTrainingProgramParticipants,
@@ -134,4 +139,5 @@ export {
   getSingleProgramTrainer,
   removeParticipantFromTrainingProgram,
   moveParticipantToAnotherTrainingProgram,
+  leaveTrainingProgram,
 };

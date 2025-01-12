@@ -8,7 +8,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class SingleTrainingProgramResponse extends TrainingProgramResponse {
-    private int currentlyEnrolled;
-    private int totalRates;
+    private Integer currentlyEnrolled;
+    private Integer totalRates;
+    private Boolean joined;
     List<ExerciseResponse> exercises;
 }

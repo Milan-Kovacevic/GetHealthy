@@ -7,8 +7,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
-import { CalendarDaysIcon, CalendarRangeIcon } from "lucide-react";
+import { CalendarDaysIcon, CalendarRangeIcon, Nfc } from "lucide-react";
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
 
@@ -16,12 +17,13 @@ type AnalyticsPeriodSelectorProps = {
   onPeriodChange: (period?: DateRange) => void;
   initialPeriod?: DateRange;
   loading?: boolean;
+  className?: string;
 };
 
 export default function AnalyticsPeriodSelector(
   props: AnalyticsPeriodSelectorProps
 ) {
-  const { onPeriodChange, initialPeriod, loading } = props;
+  const { onPeriodChange, initialPeriod, loading, className } = props;
   const [selectedDate, setSelectedDate] = React.useState<DateRange | undefined>(
     initialPeriod
   );
@@ -32,7 +34,12 @@ export default function AnalyticsPeriodSelector(
   };
 
   return loading ? (
-    <div className="flex sm:flex-row-reverse flex-col-reverse lg:mr-0 gap-2 sm:mr-auto">
+    <div
+      className={cn(
+        "flex sm:flex-row-reverse flex-col-reverse lg:mr-0 gap-2 sm:mr-auto",
+        className
+      )}
+    >
       <div className="flex space-x-2">
         <Skeleton className="h-10 w-10" />
         <Skeleton className="h-10 w-10" />
@@ -40,7 +47,12 @@ export default function AnalyticsPeriodSelector(
       <Skeleton className="sm:w-[300px] w-full h-10" />
     </div>
   ) : (
-    <div className="flex sm:flex-row-reverse flex-col-reverse lg:mr-0 gap-2 sm:mr-auto">
+    <div
+      className={cn(
+        "flex sm:flex-row-reverse flex-col-reverse lg:mr-0 gap-2 sm:mr-auto",
+        className
+      )}
+    >
       <PeriodShortcutButtons onPeriodChange={handlePeriodChange} />
       <RangedDatePicker
         placeholder="Select date range..."

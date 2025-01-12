@@ -14,7 +14,7 @@ import TrainingProgramDetails from "@/pages/program-details/components/exercises
 import TrainingProgramReviews from "@/pages/program-details/components/reviews/TrainingProgramReviews";
 import TrainingProgramTrainees from "@/pages/program-details/components/participants/TrainingProgramTrainees";
 import RegisterPage from "@/pages/register/RegisterPage";
-import { ManageTrainingProgramsPage } from "@/pages/training-programs/ManageTrainingProgramsPage";
+import { PersonalTrainingProgramsPage } from "@/pages/training-programs/PersonalTrainingProgramsPage";
 import { TrainingProgramsPage } from "@/pages/training-programs/TrainingProgramsPage";
 import TrainingProgramSchedulePage from "@/pages/training-schedule/TrainingProgramSchedulePage";
 import ProfilePage from "@/pages/profile/components/ProfilePage";
@@ -49,7 +49,7 @@ const router = createBrowserRouter([
               },
               {
                 path: "manage",
-                element: <ManageTrainingProgramsPage />,
+                element: <PersonalTrainingProgramsPage />,
               },
               {
                 path: "create",

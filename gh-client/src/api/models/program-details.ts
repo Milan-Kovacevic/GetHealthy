@@ -38,6 +38,7 @@ export type SingleTrainingProgram = {
   trainerLastName: string;
   categories: Category[];
   currentlyEnrolled: number;
+  joined?: boolean;
 };
 
 export type SingleProgramTrainer = {
@@ -46,7 +47,7 @@ export type SingleProgramTrainer = {
   lastName: string;
   email: string;
   dateOfBirth?: string;
-  gender?: number;
+  gender?: string;
   profilePictureFilePath?: string;
   contactInfo?: string;
   biography?: string;

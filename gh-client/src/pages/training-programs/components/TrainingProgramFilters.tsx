@@ -13,14 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import {
-  CheckCheckIcon,
-  CheckIcon,
-  FilterIcon,
-  ListCheckIcon,
-  ListChecksIcon,
-  XIcon,
-} from "lucide-react";
+import { FilterIcon, ListCheckIcon, XIcon } from "lucide-react";
 import { Category } from "@/api/models/category";
 import { ProgramFilters } from "@/api/models/training-program";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -28,12 +21,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 type TrainingProgramFiltersProps = {
   filters: ProgramFilters;
   categories: Category[];
+  loadingCategories: boolean;
   onFilterApply: (filters: ProgramFilters) => void;
 };
 
 export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
-  const { filters, categories, onFilterApply } = props;
-
+  const { filters, categories, onFilterApply, loadingCategories } = props;
   const [sortBy, setSortBy] = useState(filters.sort);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<string>();
@@ -110,53 +103,64 @@ export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
         <div>
           <div className="flex items-center gap-2 mb-2 relative">
             <h3 className="text-sm font-medium">Categories</h3>
-            <div className="flex items-center gap-0 h-6 right-0">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-auto py-1.5 px-1.5 translate-y-0.5"
-                onClick={() => handleSelectAllCategories()}
-              >
-                <ListCheckIcon className="text-foreground/80" />
-              </Button>
-              {selectedCategories.length > 0 && (
+            {!loadingCategories && categories.length > 0 && (
+              <div className="flex items-center gap-0 h-6 right-0">
                 <Button
                   size="sm"
                   variant="ghost"
                   className="h-auto py-1.5 px-1.5 translate-y-0.5"
-                  onClick={handleClearAllSelectedCategories}
+                  onClick={() => handleSelectAllCategories()}
                 >
-                  <XIcon className="text-foreground/70" />
+                  <ListCheckIcon className="text-foreground/80" />
                 </Button>
-              )}
-            </div>
-          </div>
-
-          <ScrollArea className="">
-            <div className="space-y-2.5 max-h-[200px]">
-              {categories.map((category) => (
-                <div
-                  key={category.categoryId}
-                  className="flex items-center space-x-2"
-                >
-                  <Checkbox
-                    className="border-primary/75"
-                    id={`category-${category.categoryId.toString()}`}
-                    checked={selectedCategories.includes(category.name)}
-                    onCheckedChange={() =>
-                      handleCategoryChange(category.categoryId)
-                    }
-                  />
-                  <Label
-                    className="cursor-pointer"
-                    htmlFor={`category-${category.categoryId.toString()}`}
+                {selectedCategories.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-auto py-1.5 px-1.5 translate-y-0.5"
+                    onClick={handleClearAllSelectedCategories}
                   >
-                    {category.name}
-                  </Label>
-                </div>
-              ))}
+                    <XIcon className="text-foreground/70" />
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
+          {loadingCategories ? (
+            <div className="pb-5">
+              <p className="text-muted-foreground italic text-sm">Loading...</p>
             </div>
-          </ScrollArea>
+          ) : categories.length == 0 ? (
+            <p className="text-sm italic text-muted-foreground">
+              No categories to show...
+            </p>
+          ) : (
+            <ScrollArea className="">
+              <div className="space-y-2.5 max-h-[200px]">
+                {categories.map((category) => (
+                  <div
+                    key={category.categoryId}
+                    className="flex items-center space-x-2"
+                  >
+                    <Checkbox
+                      className="border-primary/75"
+                      id={`category-${category.categoryId.toString()}`}
+                      checked={selectedCategories.includes(category.name)}
+                      onCheckedChange={() =>
+                        handleCategoryChange(category.categoryId)
+                      }
+                    />
+                    <Label
+                      className="cursor-pointer font-normal"
+                      htmlFor={`category-${category.categoryId.toString()}`}
+                    >
+                      {category.name}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
         </div>
       </div>
 
@@ -166,15 +170,24 @@ export function TrainingProgramFilters(props: TrainingProgramFiltersProps) {
           <RadioGroup value={difficulty} onValueChange={setDifficulty}>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="0" id="beginner" />
-              <Label htmlFor="beginner">Beginner</Label>
+              <Label className="font-normal cursor-pointer" htmlFor="beginner">
+                Beginner
+              </Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="1" id="intermediate" />
-              <Label htmlFor="intermediate">Intermediate</Label>
+              <Label
+                className="font-normal cursor-pointer"
+                htmlFor="intermediate"
+              >
+                Intermediate
+              </Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="2" id="advanced" />
-              <Label htmlFor="advanced">Advanced</Label>
+              <Label className="font-normal cursor-pointer" htmlFor="advanced">
+                Advanced
+              </Label>
             </div>
           </RadioGroup>
         </div>

@@ -126,7 +126,7 @@ const Navbar = () => {
     auth
       .logout()
       .then(() => {
-        navigate("/login");
+        navigate("/");
       })
       .catch(() => {
         toast.error("Unable to logout", {
@@ -149,7 +149,13 @@ const Navbar = () => {
           pending={pending}
         />
       </div>
-      <MobileNavbar navbarMenuItems={navBarMenu} />
+      <MobileNavbar
+        navbarMenuItems={navBarMenu}
+        isTrainer={isTrainer}
+        isLoggedIn={isLoggedIn ?? false}
+        onLogout={handleLogout}
+        pending={pending}
+      />
     </section>
   );
 };
@@ -185,8 +191,6 @@ const DesktopNavbar = ({
   onLogout,
   pending,
 }: NavbarProps) => {
-  const navigate = useNavigate();
-
   return (
     <nav className="hidden justify-between lg:flex">
       <div className="flex items-center gap-6">
@@ -254,78 +258,76 @@ const DesktopNavbar = ({
           </NavigationMenu>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <NotificationsPopover isTrainer={isTrainer}>
-          <Button
-            disabled={pending}
-            size="sm"
-            variant="ghost"
-            className={cn(
-              "relative",
-              navigationMenuTriggerStyle,
-              buttonVariants({
-                variant: "ghost",
-              }),
-              "h-auto mr-3 [&_svg]:h-5 [&_svg]:w-5"
-            )}
-          >
-            <Badge
-              variant="secondary"
-              className="absolute border-none top-0.5 -right-0.5 rounded-full pointer-events-none text-primary-foreground leading-none bg-primary text-[10px] px-1.5 py-1 h-auto"
-            >
-              <span className="font-semibold leading-none">4</span>
-            </Badge>
-            <BellIcon strokeWidth={2} className="w-full h-full" />
-          </Button>
-        </NotificationsPopover>
+      <div className="flex items-center gap-1">
+        <NotificationsPopover isTrainer={isTrainer} />
 
-        {!isLoggedIn ? (
-          <>
-            <Button
-              onClick={() => {
-                navigate("/login");
-              }}
-              size="sm"
-              variant={"outline"}
-            >
-              Log in
-            </Button>
-            <Button
-              onClick={() => {
-                navigate("/register");
-              }}
-              size="sm"
-            >
-              Sign up
-            </Button>
-          </>
-        ) : (
-          <Button
-            disabled={pending}
-            onClick={onLogout}
-            size="sm"
-            variant={"outline"}
-            className="min-w-20"
-          >
-            {pending ? (
-              <Loader2Icon className="animate-spin" />
-            ) : (
-              <span className="mb-0.5">Log out</span>
-            )}
-          </Button>
-        )}
+        <SignUpButtons
+          isLoggedIn={isLoggedIn}
+          pending={pending}
+          onLogout={onLogout}
+        />
       </div>
     </nav>
   );
 };
 
-const MobileNavbar = ({
-  navbarMenuItems,
+const SignUpButtons = ({
+  isLoggedIn,
+  pending,
+  onLogout,
+  mobile,
 }: {
-  navbarMenuItems: NavbarMenuItem[];
+  isLoggedIn: boolean;
+  pending: boolean;
+  onLogout: () => void;
+  mobile?: boolean;
 }) => {
   const navigate = useNavigate();
 
+  return !isLoggedIn ? (
+    <div className={cn(mobile && "flex flex-col gap-2.5")}>
+      <Button
+        onClick={() => {
+          navigate("/login");
+        }}
+        size="sm"
+        variant={"outline"}
+      >
+        Log in
+      </Button>
+      <Button
+        onClick={() => {
+          navigate("/register");
+        }}
+        size="sm"
+      >
+        Sign up
+      </Button>
+    </div>
+  ) : (
+    <Button
+      disabled={pending}
+      onClick={onLogout}
+      size="sm"
+      variant={"secondary"}
+      className={cn("min-w-20", mobile && "w-full")}
+    >
+      {pending ? (
+        <Loader2Icon className="animate-spin" />
+      ) : (
+        <span className="mb-0.5">Log out</span>
+      )}
+    </Button>
+  );
+};
+
+const MobileNavbar = ({
+  navbarMenuItems,
+  isTrainer,
+  isLoggedIn,
+  onLogout,
+  pending,
+}: NavbarProps) => {
   return (
     <div className="block lg:hidden px-4">
       <div className="flex items-center justify-between">
@@ -396,49 +398,15 @@ const MobileNavbar = ({
                 })}
               </Accordion>
 
-              <NotificationsPopover isTrainer={true}>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className={cn(
-                    "relative",
-                    navigationMenuTriggerStyle,
-                    buttonVariants({
-                      variant: "ghost",
-                    }),
-                    "h-auto mr-3 w-full border [&_svg]:h-5 [&_svg]:w-5"
-                  )}
-                >
-                  <Badge
-                    variant="secondary"
-                    className="absolute border-none top-0.5 -right-0.5 rounded-full pointer-events-none text-primary-foreground leading-none bg-primary text-[10px] px-1.5 py-1 h-auto"
-                  >
-                    <span className="font-semibold leading-none">4</span>
-                  </Badge>
-                  <BellIcon strokeWidth={2} className="w-full h-full" />
-                </Button>
-              </NotificationsPopover>
+              <NotificationsPopover isTrainer={isTrainer} />
             </div>
             <div className="">
-              <div className="mt-2 flex flex-col gap-3">
-                <Button
-                  onClick={() => {
-                    navigate("/login");
-                  }}
-                  size="sm"
-                  variant={"outline"}
-                >
-                  Log in
-                </Button>
-                <Button
-                  onClick={() => {
-                    navigate("/register");
-                  }}
-                  size="sm"
-                >
-                  Sign up
-                </Button>
-              </div>
+              <SignUpButtons
+                mobile={true}
+                isLoggedIn={isLoggedIn}
+                pending={pending}
+                onLogout={onLogout}
+              />
             </div>
           </SheetContent>
         </Sheet>

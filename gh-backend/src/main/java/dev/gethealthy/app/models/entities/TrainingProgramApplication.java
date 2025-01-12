@@ -23,7 +23,7 @@ public class TrainingProgramApplication implements BaseEntity<TrainingProgramApp
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "UserId", nullable = false)
-    private Trainee user;
+    private Trainee trainee;
 
     @MapsId("programId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

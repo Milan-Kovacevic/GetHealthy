@@ -10,6 +10,7 @@ type UserAuthState = {
   isLoggedIn: () => boolean;
   getUserId: () => number | null;
   getUserRole: () => UserRole | null;
+  isTrainer: () => boolean;
 };
 
 export const UserAuthContext = createContext<UserAuthState | null>(null);

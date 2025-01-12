@@ -1,20 +1,10 @@
-import { ProgramDifficulty } from "../enums/program-difficulty";
-import { CategoryDTO } from "./category-contract";
 import { ProgramExerciseDetailsDTO } from "./program-exercise-contract";
+import { TrainingProgramDTO } from "./training-program-contract";
 
-export type SingleTrainingProgramDTO = {
-  id: number;
-  name: string;
-  imageFilePath?: string;
-  difficulty: ProgramDifficulty;
-  rating: number;
-  createdAt: string;
+export type SingleTrainingProgramDTO = TrainingProgramDTO & {
   totalRates: number;
-  description: string;
-  trainerFirstName: string;
-  trainerLastName: string;
-  categories: CategoryDTO[];
   currentlyEnrolled: number;
+  joined?: boolean;
 };
 
 export type SingleProgramDetailsDTO = {
@@ -30,7 +20,7 @@ export type SingleProgramTrainerDTO = {
   lastName: string;
   email: string;
   dateOfBirth?: string;
-  gender?: number;
+  gender?: string;
   profilePictureFilePath?: string;
   contactInfo?: string;
   biography?: string;

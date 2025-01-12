@@ -1,27 +1,16 @@
-import { ProgramFilters, TrainingProgram } from "@/api/models/training-program";
+import { TrainingProgram } from "@/api/models/training-program";
 import { usePagination } from "@/hooks/use-pagination";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useProgramFilters from "./use-program-filters";
-import { getPageableTrainingPrograms } from "@/api/services/training-program-service";
+import {
+  getPageableTrainingProgramsForUser,
+  removeTrainingProgram,
+} from "@/api/services/training-program-service";
+import { TrainingProgramsState } from "./use-training-programs";
+import { toast } from "sonner";
 
-export type TrainingProgramsState = {
-  programs: TrainingProgram[];
-  loading: boolean;
-  totalPages: number;
-  isLastPage: boolean;
-  isFirstPage: boolean;
-  currentPage: number;
-  filters: ProgramFilters;
-  searchQuery: string;
-  setSearchQuery: (value: string) => void;
-  onPageChange: (page: number) => void;
-  onApplyFilters: (filters: ProgramFilters) => void;
-  onSearch: () => void;
-  onMoreTrainingPrograms: () => void;
-};
-
-export default function useTrainingPrograms() {
+export default function usePersonalTrainingPrograms(userId: number) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get("q");
@@ -42,6 +31,13 @@ export default function useTrainingPrograms() {
     setCurrentProgramPage(page);
   };
 
+  const onRemoveTrainingProgram = (programId: number) => {
+    removeTrainingProgram(programId).then(() => {
+      loadMoreTrainingPrograms();
+      toast.info("Selected program removed successfully.");
+    });
+  };
+
   useEffect(() => {
     loadMoreTrainingPrograms();
   }, [filters]);
@@ -57,7 +53,12 @@ export default function useTrainingPrograms() {
     setPage: setCurrentProgramPage,
   } = usePagination<TrainingProgram>({
     fetchData: (state) => {
-      return getPageableTrainingPrograms(searchQuery, state.page, filters);
+      return getPageableTrainingProgramsForUser(
+        userId,
+        searchQuery,
+        state.page,
+        filters
+      );
     },
     initialPage: parseInt(page ?? "0"),
   });
@@ -76,5 +77,8 @@ export default function useTrainingPrograms() {
     onApplyFilters: onApplyProgramFilters,
     onSearch: onSearchTrainingPrograms,
     onMoreTrainingPrograms: loadMoreTrainingPrograms,
-  } as TrainingProgramsState;
+    onRemoveTrainingProgram,
+  } as TrainingProgramsState & {
+    onRemoveTrainingProgram: (programId: number) => void;
+  };
 }

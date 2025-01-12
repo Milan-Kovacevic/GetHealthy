@@ -8,8 +8,8 @@ import dev.gethealthy.app.models.entities.*;
 import dev.gethealthy.app.models.enums.NotificationType;
 import dev.gethealthy.app.models.requests.TrainingProgramApplicationProcessRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramApplicationRequest;
-import dev.gethealthy.app.models.responses.SingleTrainingProgramApplicationResponse;
-import dev.gethealthy.app.models.responses.TrainingProgramApplicationResponse;
+import dev.gethealthy.app.models.responses.SingleProgramApplicationResponse;
+import dev.gethealthy.app.models.responses.ProgramApplicationResponse;
 import dev.gethealthy.app.repositories.TraineeOnTrainingProgramRepository;
 import dev.gethealthy.app.repositories.TraineeRepository;
 import dev.gethealthy.app.repositories.TrainingProgramApplicationRepository;
@@ -17,162 +17,100 @@ import dev.gethealthy.app.repositories.TrainingProgramRepository;
 import dev.gethealthy.app.services.NotificationService;
 import dev.gethealthy.app.services.TrainingProgramApplicationService;
 import dev.gethealthy.app.util.Utility;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class TrainingProgramApplicationServiceImpl
-        extends CrudJpaService<TrainingProgramApplication, TrainingProgramApplicationId>
-        implements TrainingProgramApplicationService {
+@RequiredArgsConstructor
+public class TrainingProgramApplicationServiceImpl implements TrainingProgramApplicationService {
     private final TrainingProgramApplicationRepository trainingProgramApplicationRepository;
     private final TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository;
     private final TrainingProgramRepository trainingProgramRepository;
     private final TraineeRepository traineeRepository;
     private final NotificationService notificationService;
-
-    public TrainingProgramApplicationServiceImpl(
-            TrainingProgramApplicationRepository trainingProgramApplicationRepository, ModelMapper modelMapper,
-            TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository,
-            TrainingProgramRepository trainingProgramRepository, TraineeRepository traineeRepository,
-            NotificationService notificationService) {
-        super(trainingProgramApplicationRepository, modelMapper, TrainingProgramApplication.class);
-        this.trainingProgramApplicationRepository = trainingProgramApplicationRepository;
-        this.traineeOnTrainingProgramRepository = traineeOnTrainingProgramRepository;
-        this.trainingProgramRepository = trainingProgramRepository;
-        this.traineeRepository = traineeRepository;
-        this.notificationService = notificationService;
-    }
+    private final ModelMapper modelMapper;
 
     @Override
-    public List<TrainingProgramApplicationResponse> getAllApplicationsForTrainingProgram(Integer programId) {
-        TrainingProgram trainingProgram = trainingProgramRepository.findById(programId)
-                .orElseThrow(NotFoundException::new);
-        /*
-         * JWTUser user = Utility.getJwtUser();
-         * if (user == null)
-         * throw new UnauthorizedException();
-         * if (!user.getUserId().equals(trainingProgram.getTrainer().getUserId()))
-         * throw new ForbiddenException();
-         */
-
-        return trainingProgramApplicationRepository
-                .findByProgram_IdOrderByMarkReadAsc(programId)
-                .stream()
-                .map(e -> modelMapper.map(e, TrainingProgramApplicationResponse.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Page<TrainingProgramApplicationResponse> getAllApplicationsForTrainer(Integer trainerId, Pageable page) {
+    public Page<ProgramApplicationResponse> getAllApplicationsForTrainer(Integer trainerId, Pageable page) {
         return trainingProgramApplicationRepository
                 .findByProgram_Trainer_IdOrderByMarkReadAsc(trainerId, page)
-                .map(e -> {
-                    var response = modelMapper.map(e, TrainingProgramApplicationResponse.class);
-                    modelMapper.map(e.getProgram(), response);
-                    modelMapper.map(e.getUser(), response);
-                    return response;
-                });
+                .map(e -> modelMapper.map(e, ProgramApplicationResponse.class));
     }
 
     @Override
-    public Page<TrainingProgramApplicationResponse> getAllApplicationsForTrainerFiltered(Integer userId, String filter,
-            Pageable page) {
+    public Page<ProgramApplicationResponse> getAllApplicationsForTrainerFiltered(Integer userId, String filter,
+                                                                                 Pageable page) {
         return trainingProgramApplicationRepository
                 .findAllTrainerApplicationsFiltered(userId, filter, page)
-                .map(e -> {
-                    var response = modelMapper.map(e, TrainingProgramApplicationResponse.class);
-                    modelMapper.map(e.getProgram(), response);
-                    modelMapper.map(e.getUser(), response);
-                    return response;
-                });
+                .map(e -> modelMapper.map(e, ProgramApplicationResponse.class));
     }
 
     @Override
-    public SingleTrainingProgramApplicationResponse getProgramApplication(TrainingProgramApplicationId id) {
+    public SingleProgramApplicationResponse getProgramApplication(Integer traineeId, Integer programId) {
         TrainingProgramApplication entity = trainingProgramApplicationRepository
-                .findById((id))
+                .findByProgram_IdAndTrainee_Id(programId, traineeId)
                 .orElseThrow(NotFoundException::new);
-        /*
-         * JWTUser user = Utility.getJwtUser();
-         * if (user == null)
-         * throw new UnauthorizedException();
-         * if
-         * (!user.getUserId().equals(entity.getTrainingProgram().getTrainer().getUserId(
-         * )))
-         * throw new ForbiddenException();
-         */
 
-        return modelMapper.map(entity, SingleTrainingProgramApplicationResponse.class);
+        return modelMapper.map(entity, SingleProgramApplicationResponse.class);
     }
 
     @Override
-    public TrainingProgramApplicationResponse createTrainingProgramApplication(
+    public ProgramApplicationResponse createTrainingProgramApplication(Integer traineeId,
             TrainingProgramApplicationRequest request) {
+        if (trainingProgramApplicationRepository.existsByProgram_IdAndTrainee_Id(request.getProgramId(), traineeId))
+            throw new ConflictException();
+
         TrainingProgramApplication entity = modelMapper.map(request, TrainingProgramApplication.class);
         entity.setMarkRead(false);
         entity.setSubmissionDate(Utility.getInstantCurrentDate());
         TrainingProgram trainingProgram = trainingProgramRepository.findById(request.getProgramId())
                 .orElseThrow(NotFoundException::new);
-        Trainee trainee = traineeRepository.findById(request.getTraineeId()).orElseThrow(NotFoundException::new);
-
-        if (traineeOnTrainingProgramRepository.existsByProgram_IdAndUser_Id(trainingProgram.getId(), trainee.getId()))
-            throw new BadRequestException();
-
-        if (trainingProgramApplicationRepository.existsByProgram_IdAndUser_Id(trainingProgram.getId(), trainee.getId()))
-            throw new ConflictException();
+        Trainee trainee = traineeRepository.findById(traineeId).orElseThrow(NotFoundException::new);
 
         entity.setProgram(trainingProgram);
-        entity.setUser(trainee);
+        entity.setTrainee(trainee);
         trainingProgramApplicationRepository.saveAndFlush(entity);
 
-        return modelMapper.map(entity, TrainingProgramApplicationResponse.class);
+        return modelMapper.map(entity, ProgramApplicationResponse.class);
     }
 
     @Override
-    public void processTrainingProgramApplication(TrainingProgramApplicationId id,
+    public void processTrainingProgramApplication(Integer traineeId, Integer programId,
             TrainingProgramApplicationProcessRequest request) {
         TrainingProgramApplication application = trainingProgramApplicationRepository
-                .findById(id)
+                .findByProgram_IdAndTrainee_Id(programId, traineeId)
                 .orElseThrow(NotFoundException::new);
-        /*
-         * JWTUser user = Utility.getJwtUser();
-         * if (user == null)
-         * throw new UnauthorizedException();
-         * if (!user.getUserId().equals(application.getTrainingProgram().getTrainer().
-         * getUserId()))
-         * throw new ForbiddenException();
-         */
 
         if (request.getApprove()) {
             TraineeOnTrainingProgram entity = new TraineeOnTrainingProgram();
             entity.setJoinDate(Utility.getInstantCurrentDate());
             entity.setProgram(application.getProgram());
-            entity.setUser(application.getUser());
+            entity.setUser(application.getTrainee());
             traineeOnTrainingProgramRepository.saveAndFlush(entity);
 
             notificationService.createNotification(
-                    application.getUser(),
+                    application.getTrainee(),
                     application.getProgram().getTrainer(),
                     application.getProgram().getName(),
                     NotificationType.PROGRAM_APPLICATION_ACCEPTED,
                     application.getNote());
         } else {
             notificationService.createNotification(
-                    application.getUser(),
+                    application.getTrainee(),
                     application.getProgram().getTrainer(),
                     application.getProgram().getName(),
                     NotificationType.PROGRAM_APPLICATION_ACCEPTED,
                     application.getNote());
         }
-        trainingProgramApplicationRepository.deleteById(id);
+        trainingProgramApplicationRepository.deleteByProgram_IdAndTrainee_Id(programId, traineeId);
     }
 
     @Override
@@ -180,18 +118,8 @@ public class TrainingProgramApplicationServiceImpl
         TrainingProgramApplication application = trainingProgramApplicationRepository
                 .findById(id)
                 .orElseThrow(NotFoundException::new);
-        /*
-         * JWTUser user = Utility.getJwtUser();
-         * if (user == null)
-         * throw new UnauthorizedException();
-         * if (!user.getUserId().equals(application.getTrainingProgram().getTrainer().
-         * getUserId()))
-         * throw new ForbiddenException();
-         */
-
         application.setMarkRead(true);
         trainingProgramApplicationRepository.saveAndFlush(application);
-
     }
 
 }

@@ -7,6 +7,7 @@ export type ProgramComment = {
   authorId: number;
   authorFirstName: string;
   authorLastName: string;
+  authorProfilePictureFilePath?: string;
 };
 
 export type PageableProgramComments = Page<ProgramComment>;

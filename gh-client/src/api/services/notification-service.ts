@@ -1,8 +1,12 @@
 import { sendAxiosRequest } from "./base-service";
 import { ApiEndpoints } from "@/utils/constants";
-import { PageableNotifications } from "../models/notification";
+import {
+  NotificationsSummary,
+  PageableNotifications,
+} from "../models/notification";
 import {
   NotificationDTO,
+  NotificationsSummaryDTO,
   PageableNotificationsDTO,
 } from "../contracts/notification-contract";
 import { formatDistanceToNow } from "date-fns";
@@ -46,7 +50,6 @@ const getPageableUserNotifications = async (
   userId: number,
   page: number = 0
 ) => {
-  // TODO: Obtain this information from jwt or session storage...
   var url = ApiEndpoints.UserNotifications.replace("{userId}", `${userId}`);
   url += `?page=${page}&size=${pageSize}`;
 
@@ -76,7 +79,7 @@ const markAllUserNotificationsAsRead = (userId: number) => {
   var url = ApiEndpoints.UserNotifications.replace("{userId}", `${userId}`);
   url += "/mark-read";
 
-  return sendAxiosRequest<void, PageableNotifications>({
+  return sendAxiosRequest<void, void>({
     method: "POST",
     url: url,
   });
@@ -86,7 +89,7 @@ const markUserNotificationAsRead = (userId: number, notificationId: number) => {
   var url = ApiEndpoints.UserNotifications.replace("{userId}", `${userId}`);
   url += `/${notificationId}/mark-read`;
 
-  return sendAxiosRequest<void, PageableNotifications>({
+  return sendAxiosRequest<void, void>({
     method: "POST",
     url: url,
   });
@@ -96,10 +99,22 @@ const deleteUserNotification = (userId: number, notificationId: number) => {
   var url = ApiEndpoints.UserNotifications.replace("{userId}", `${userId}`);
   url += `/${notificationId}`;
 
-  return sendAxiosRequest<void, PageableNotifications>({
+  return sendAxiosRequest<void, void>({
     method: "DELETE",
     url: url,
   });
+};
+
+const getNotificationsSummary = async (
+  userId: number
+): Promise<NotificationsSummary> => {
+  var url = ApiEndpoints.UserNotifications.replace("{userId}", `${userId}`);
+  url += `/summary`;
+  await delay(1000);
+  return sendAxiosRequest<void, NotificationsSummaryDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => response.data as NotificationsSummary);
 };
 
 export {
@@ -107,4 +122,5 @@ export {
   markAllUserNotificationsAsRead,
   markUserNotificationAsRead,
   deleteUserNotification,
+  getNotificationsSummary,
 };

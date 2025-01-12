@@ -1,24 +1,26 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import NotificationList from "./components/NotificationList";
 import ListItemSkeleton from "./components/ListItemSkeleton";
 import RequestList from "./components/RequestList";
 import { useNotifications } from "./hooks/use-notifications";
 import { useProgramRequests } from "./hooks/use-program-requests";
+import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { BellIcon } from "lucide-react";
 
 type NotificationsPopoverProps = {
-  children: ReactNode;
   isTrainer: boolean;
 };
 
 export default function NotificationsPopover({
-  children,
   isTrainer,
 }: NotificationsPopoverProps) {
   const [activeTab, setActiveTab] = useState("inbox");
@@ -28,15 +30,16 @@ export default function NotificationsPopover({
     hasMoreRequests,
     isLoadingRequests,
     onRequestPageChange,
-    pending: pendingRequests,
     onRequestApprove,
     onRequestReject,
-    searchQuery,
-    setSearchQuery,
-    onSearchRequests,
+    selectedRequest,
+    onLoadRequestDetails,
+    onCloseRequestDetails,
+    loadingDetails: loadingRequestDetails,
   } = useProgramRequests();
 
   const {
+    unreadCount,
     notifications,
     hasMoreNotifications,
     isLoadingNotifications,
@@ -75,21 +78,18 @@ export default function NotificationsPopover({
           )}
         </TabsContent>
         <TabsContent value="requests">
-          {pendingRequests ? (
-            <ListItemSkeleton />
-          ) : (
-            <RequestList
-              requests={requests}
-              isLoading={isLoadingRequests}
-              hasMore={hasMoreRequests}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              onPageChange={onRequestPageChange}
-              onAcceptRequest={onRequestApprove}
-              onRejectRequest={onRequestReject}
-              onSearchRequests={onSearchRequests}
-            />
-          )}
+          <RequestList
+            requests={requests}
+            isLoading={isLoadingRequests}
+            hasMore={hasMoreRequests}
+            onPageChange={onRequestPageChange}
+            onAcceptRequest={onRequestApprove}
+            onRejectRequest={onRequestReject}
+            selectedRequest={selectedRequest}
+            onLoadRequestDetails={onLoadRequestDetails}
+            onCloseRequestDetails={onCloseRequestDetails}
+            loadingDetails={loadingRequestDetails}
+          />
         </TabsContent>
       </Tabs>
     </>
@@ -114,7 +114,37 @@ export default function NotificationsPopover({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild>
+        <Button
+          size="sm"
+          variant="ghost"
+          className={cn(
+            "relative",
+            navigationMenuTriggerStyle,
+            buttonVariants({
+              variant: "ghost",
+            }),
+            "h-auto py-1.5 mr-1 px-2.5 w-full lg:border-none border [&_svg]:h-6 [&_svg]:w-6"
+          )}
+        >
+          {unreadCount > 0 && (
+            <Badge
+              variant="secondary"
+              className="absolute -top-px border-[2px] border-background translate-x-2.5 rounded-full pointer-events-none text-primary-foreground leading-none bg-primary text-[10px] px-[5px] py-0.5 h-auto"
+            >
+              {pendingNotifications ? (
+                <span className="font-medium leading-none">..</span>
+              ) : (
+                <span className="font-medium leading-none">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </Badge>
+          )}
+
+          <BellIcon strokeWidth={2} className="w-full h-full" />
+        </Button>
+      </PopoverTrigger>
       <PopoverContent className="sm:w-[400px] w-screen sm:relative px-0 py-4">
         {isTrainer ? TrainerView : TraineeView}
       </PopoverContent>

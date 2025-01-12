@@ -40,6 +40,7 @@ export function usePagination<TData>(props: UsePaginationProps<TData>) {
 
   return {
     data,
+    setData,
     isLoading,
     setIsLoading,
     first,

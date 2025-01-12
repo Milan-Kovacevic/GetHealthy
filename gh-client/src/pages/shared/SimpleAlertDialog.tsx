@@ -9,7 +9,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
 } from "@/components/ui/alert-dialog";
-import React, { ReactNode } from "react";
+import { InfoIcon } from "lucide-react";
+import { ReactNode } from "react";
 
 type AlertDialogProps = {
   description: string;
@@ -21,24 +22,32 @@ type AlertDialogProps = {
   submitText?: string;
 };
 
-export const DeleteAlert = (props: AlertDialogProps) => {
+export const SimpleAlertDialog = (props: AlertDialogProps) => {
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="w-full">
+      <AlertDialogTrigger asChild className="">
         {props.children}
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-[460px]">
         <AlertDialogHeader>
-          <AlertDialogTitle>{props.title}</AlertDialogTitle>
+          <AlertDialogTitle>
+            <div className="flex items-center gap-1 sm:justify-start justify-center">
+              <InfoIcon className="h-[18px] w-[18px] mt-0.5 text-destructive" />
+              <p className="text-xl">{props.title}</p>
+            </div>
+          </AlertDialogTitle>
           <AlertDialogDescription>{props.description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={props.onCancel}>
+          <AlertDialogCancel
+            className="h-auto py-2 font-normal"
+            onClick={props.onCancel}
+          >
             {props.cancelText ?? "Cancel"}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={props.onConfirm}
-            className="bg-destructive/95 hover:bg-destructive"
+            className="bg-destructive/85 hover:bg-destructive h-auto py-2 font-normal text-destructive-foreground"
           >
             {props.submitText ?? "Continue"}
           </AlertDialogAction>

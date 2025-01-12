@@ -4,18 +4,16 @@ import dev.gethealthy.app.models.enums.Gender;
 import lombok.Data;
 
 import java.time.Instant;
-import java.util.Date;
 
 @Data
-public class TrainingProgramApplicationResponse {
+public class ProgramApplicationResponse {
     private Integer programId;
     private Integer traineeId;
     private Boolean markRead;
     private Instant submissionDate;
     private String note;
-    private Integer trainingProgramId;
     private String trainingProgramName;
     private String traineeFirstName;
     private String traineeLastName;
-    private Gender traineeGender;
+    private String traineeProfilePictureFilePath;
 }

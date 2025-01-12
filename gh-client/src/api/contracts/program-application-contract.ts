@@ -1,29 +1,32 @@
 import { Page } from "./pageable-contract";
 
-export type TrainingProgramApplicationDTO = {
+export type ProgramApplicationDTO = {
   programId: number;
   traineeId: number;
-  markRead: boolean;
   submissionDate: string;
-  note: string;
-  trainingProgramId: number;
+  note?: string;
+  markRead: boolean;
   trainingProgramName: string;
   traineeFirstName: string;
   traineeLastName: string;
-  traineeGender: string;
+  traineeProfilePictureFilePath?: string;
 };
 
-export type PageableProgramApplicationsDTO =
-  Page<TrainingProgramApplicationDTO>;
+export type ProgramApplicationDetailsDTO = ProgramApplicationDTO & {
+  traineeDateOfBirth?: string;
+  traineeGender?: string;
+  traineeHeight?: number;
+  traineeWeight?: number;
+  traineeMedicalHistory?: string;
+};
+
+export type PageableProgramApplicationsDTO = Page<ProgramApplicationDTO>;
 
 export type CreateTrainingProgramApplicationDTO = {
   programId: number;
-  traineeId: number;
   note: string;
 };
 
 export type ProcessTrainingProgramApplicationDTO = {
-  programId: number;
-  userId: number;
   approve: boolean;
 };

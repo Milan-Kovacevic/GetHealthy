@@ -60,13 +60,21 @@ public class TrainingProgramExerciseServiceImpl implements TrainingProgramExerci
         }
 
         // Map and add new TrainingProgramExercises and ExerciseSets
+        mapAndAddNewProgramExercises(trainingProgramExercisesRequest, trainingProgram, exerciseRepository);
+
+        // Save the updated training program
+        trainingProgramRepository.saveAndFlush(trainingProgram);
+    }
+
+
+    static void mapAndAddNewProgramExercises(TrainingProgramExercisesRequest trainingProgramExercisesRequest, TrainingProgram trainingProgram, ExerciseRepository exerciseRepository) {
         List<TrainingProgramExercise> trainingProgramExercises = new ArrayList<>();
         for (TrainingProgramExerciseRequest exerciseRequest : trainingProgramExercisesRequest
                 .getTrainingProgramExercises()) {
             // Find the exercise by ID (Exercise itself should not be removed)
             Exercise exercise = exerciseRepository.findById(exerciseRequest.getExerciseId())
-                    .orElseThrow(() -> new NotFoundException("Exercise not found: " + exerciseRequest.getExerciseId()));
-
+                    .orElseThrow(
+                            () -> new NotFoundException("Exercise not found: " + exerciseRequest.getExerciseId()));
 
             // Create a new TrainingProgramExercise and set the position and programId
             TrainingProgramExercise trainingProgramExercise = new TrainingProgramExercise();
@@ -76,9 +84,7 @@ public class TrainingProgramExerciseServiceImpl implements TrainingProgramExerci
 
             // Map the exercise sets
             if (exerciseRequest.getExerciseSets() != null) {
-                List<ExerciseSet> exerciseSets = exerciseRequest
-                        .getExerciseSets()
-                        .stream()
+                List<ExerciseSet> exerciseSets = exerciseRequest.getExerciseSets().stream()
                         .map(exerciseSetRequest -> {
                             ExerciseSet exerciseSet = new ExerciseSet();
                             exerciseSet.setRestTime(exerciseSetRequest.getRestTime());
@@ -96,8 +102,5 @@ public class TrainingProgramExerciseServiceImpl implements TrainingProgramExerci
         }
 
         trainingProgram.getTrainingProgramExercises().addAll(trainingProgramExercises);
-
-        // Save the updated training program
-        trainingProgramRepository.saveAndFlush(trainingProgram);
     }
 }

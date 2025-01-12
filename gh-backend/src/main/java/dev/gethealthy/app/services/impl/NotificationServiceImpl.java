@@ -6,9 +6,11 @@ import dev.gethealthy.app.models.entities.Notification;
 import dev.gethealthy.app.models.entities.User;
 import dev.gethealthy.app.models.enums.NotificationType;
 import dev.gethealthy.app.models.responses.NotificationResponse;
+import dev.gethealthy.app.models.responses.NotificationsSummaryResponse;
 import dev.gethealthy.app.repositories.NotificationRepository;
 import dev.gethealthy.app.services.NotificationService;
 import dev.gethealthy.app.util.Utility;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,12 +18,10 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 @Service
-public class NotificationServiceImpl extends CrudJpaService<Notification, Integer> implements NotificationService {
+@RequiredArgsConstructor
+public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
-    public NotificationServiceImpl(NotificationRepository notificationRepository, ModelMapper modelMapper) {
-        super(notificationRepository, modelMapper, Notification.class);
-        this.notificationRepository=notificationRepository;
-    }
+    private final ModelMapper modelMapper;
 
     @Override
     public Page<NotificationResponse> getNotificationsForUser(Integer userId, Pageable page) {
@@ -79,5 +79,13 @@ public class NotificationServiceImpl extends CrudJpaService<Notification, Intege
     @Override
     public void markAllUserNotificationsAsRead(Integer userId) {
         notificationRepository.markAllUserNotificationsAsRead(userId);
+    }
+
+    @Override
+    public NotificationsSummaryResponse getUserNotificationSummary(Integer userId) {
+        var totalUnread = notificationRepository.calculateNumberOfUnreadNotificationsForUser(userId);
+        var response = new NotificationsSummaryResponse();
+        response.setTotalUnread(totalUnread);
+        return response;
     }
 }

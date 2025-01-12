@@ -1,7 +1,8 @@
 import { ProgramComment } from "@/api/models/program-review";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { formatDistanceToNow } from "date-fns";
 import { Loader2Icon } from "lucide-react";
 
 type TrainingProgramCommentsProps = {
@@ -35,12 +36,16 @@ const TrainingProgramComments = (props: TrainingProgramCommentsProps) => {
                 className="flex items-start space-x-4 pb-2"
               >
                 <Avatar className="h-14 w-14">
+                  <AvatarImage
+                    src={comment.authorProfilePictureFilePath}
+                    alt={""}
+                  />
                   <AvatarFallback>
                     {comment.authorFirstName[0]}
                     {comment.authorLastName[0]}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1 space-y-1">
+                <div className="flex-1 space-y-0.5">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-semibold">
                       {comment.authorFirstName} {comment.authorLastName}
@@ -51,7 +56,9 @@ const TrainingProgramComments = (props: TrainingProgramCommentsProps) => {
                       {comment.content}
                     </p>
                     <time className="text-xs text-muted-foreground">
-                      {comment.datePosted}
+                      {formatDistanceToNow(comment.datePosted, {
+                        addSuffix: true,
+                      })}
                     </time>
                   </div>
                 </div>

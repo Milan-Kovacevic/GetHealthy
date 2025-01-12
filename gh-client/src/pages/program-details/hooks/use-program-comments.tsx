@@ -6,16 +6,19 @@ import {
   getPageableProgramComments,
   sendTrainingProgramComment,
 } from "@/api/services/program-review-service";
+import useAuth from "@/hooks/use-auth";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 type UseProgramCommentsProps = {
   programId: number;
+  userId: number;
 };
 
 export function useProgramComments(props: UseProgramCommentsProps) {
-  const { programId } = props;
+  const { programId, userId } = props;
+
   const [pending, setPending] = useState(false);
   const {
     data: comments,
@@ -35,7 +38,7 @@ export function useProgramComments(props: UseProgramCommentsProps) {
 
   const onSendProgramComment = (comment: SendProgramComment) => {
     setPending(true);
-    sendTrainingProgramComment(programId, comment)
+    sendTrainingProgramComment(userId, programId, comment)
       .then((commentResponse) => {
         setComments((prev) => [commentResponse, ...prev]);
       })

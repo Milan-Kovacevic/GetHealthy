@@ -3,21 +3,27 @@ import { Page } from "../contracts/pageable-contract";
 export type ProgramRequest = {
   programId: number;
   traineeId: number;
-  markRead: boolean;
   submissionDate: string;
   note?: string;
-  trainingProgramId: number;
-  trainingProgramName: string;
+  markRead: boolean;
+  programName: string;
   traineeFirstName: string;
   traineeLastName: string;
-  traineeGender: string;
+  traineeProfilePictureFilePath?: string;
+};
+
+export type ProgramRequestDetails = ProgramRequest & {
+  traineeDateOfBirth?: string;
+  traineeGender?: string;
+  traineeHeight?: number;
+  traineeWeight?: number;
+  traineeMedicalHistory?: string;
 };
 
 export type PageableProgramRequests = Page<ProgramRequest>;
 
 export type SendProgramApplication = {
   programId: number;
-  traineeId: number;
   note: string;
 };
 
