@@ -78,6 +78,14 @@ public class TrainingProgram implements BaseEntity<Integer> {
         @JoinColumn(name = "ProgramId")
         private List<TrainingProgramExercise> trainingProgramExercises;
 
+        @OneToMany(fetch = FetchType.LAZY)
+        @JoinColumn(name = "ProgramId")
+        private List<TraineeOnTrainingProgram> traineeOnTrainingProgram;
+
+        @OneToMany(fetch = FetchType.LAZY)
+        @JoinColumn(name = "ProgramId")
+        private List<Comment> comments;
+
         @Column(name = "Deleted")
         private Boolean deleted = false;
 
