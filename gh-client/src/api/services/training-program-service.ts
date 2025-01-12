@@ -1,4 +1,4 @@
-import { delay } from "@/lib/utils";
+import { delay, pictureUrl } from "@/lib/utils";
 import { ApiEndpoints } from "@/utils/constants";
 import {
   FeaturedTrainingProgramDTO,
@@ -47,7 +47,15 @@ const getPageableTrainingPrograms = async (
     url: url,
   }).then((response) => {
     // Perform neccessary mappings etc...
-    return response.data as PageableTrainingPrograms;
+    return {
+      ...response.data,
+      content: response.data.content.map((item) => {
+        return {
+          ...item,
+          imageFilePath: pictureUrl(item.imageFilePath),
+        };
+      }),
+    } as PageableTrainingPrograms;
   });
 };
 
@@ -75,8 +83,15 @@ const getPageableTrainingProgramsForUser = async (
     method: "GET",
     url: url,
   }).then((response) => {
-    // Perform neccessary mappings etc...
-    return response.data as PageableTrainingPrograms;
+    return {
+      ...response.data,
+      content: response.data.content.map((item) => {
+        return {
+          ...item,
+          imageFilePath: pictureUrl(item.imageFilePath),
+        };
+      }),
+    } as PageableTrainingPrograms;
   });
 };
 
@@ -89,7 +104,10 @@ const getTrainingProgram = async (
     method: "GET",
     url: url,
   }).then((response) => {
-    return response.data as SingleTrainingProgram;
+    return {
+      ...response.data,
+      imageFilePath: pictureUrl(response.data.imageFilePath),
+    } as SingleTrainingProgram;
   });
 };
 
@@ -161,7 +179,12 @@ const getFeaturedTrainingPrograms = async () => {
     url: url,
   }).then((response) => {
     // Perform neccessary mappings etc...
-    return response.data as FeaturedTrainingProgram[];
+    return response.data.map((item) => {
+      return {
+        ...item,
+        imageFilePath: pictureUrl(item.imageFilePath),
+      };
+    }) as FeaturedTrainingProgram[];
   });
 };
 

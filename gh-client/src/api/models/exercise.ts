@@ -34,4 +34,10 @@ export type ExerciseListing = {
 
 export type PageableExerciseListing = Page<ExerciseListing>;
 
-export type ExerciseSetBuilder = {};
+export type ExercisePlanItem = {
+  id: number;
+  name: string;
+  firstExerciseMetric: ExerciseMetric;
+  secondExerciseMetric?: ExerciseMetric;
+  sets: ExerciseSet[];
+};

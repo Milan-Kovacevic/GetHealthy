@@ -10,10 +10,11 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { ClipboardListIcon } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray } from "react-hook-form";
-import SetForm from "./SetForm";
+import ExerciseSetForm from "./ExerciseSetForm";
+import { ExercisePlanItem } from "@/api/models/exercise";
 
 type ExerciseFormProps = {
-  exercise: any;
+  exercise: ExercisePlanItem;
   index: number;
   form: any;
   formPath?: string;
@@ -98,24 +99,15 @@ const ExerciseForm = ({
       <ScrollArea className="w-full flex-1">
         <div className="mr-3 flex flex-col gap-0 max-w-screen-md">
           {fields.map((field, setIndex) => (
-            <SetForm
+            <ExerciseSetForm
               key={field.id}
               exerciseIndex={index}
               setIndex={setIndex}
               form={form}
               formPath={formPath}
-              exerciseType={exercise?.type}
               onRemove={onExerciseSetRemoved}
-              metrics={[
-                {
-                  ...exercise?.firstExerciseMetric,
-                  metricName: "firstMetricValue",
-                },
-                {
-                  ...exercise?.secondExerciseMetric,
-                  metricName: "secondMetricValue",
-                },
-              ]}
+              firstMetricValue={exercise.firstExerciseMetric}
+              secondMetricValue={exercise.secondExerciseMetric}
             />
           ))}
         </div>

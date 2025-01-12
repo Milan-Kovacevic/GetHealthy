@@ -1,3 +1,4 @@
+import { ExercisePlanItem } from "@/api/models/exercise";
 import React, { useState } from "react";
 import { useFieldArray } from "react-hook-form";
 
@@ -18,8 +19,7 @@ export default function useExercisePlanBuilder({
     name: `${exercisesPath}`,
   });
 
-  const handleSelectExercise = (item: any) => {
-    console.log("Item", item);
+  const handleSelectExercise = (item: ExercisePlanItem) => {
     form.setValue(exercisesPath, [...form.getValues(exercisesPath), item]);
     setSelectedExerciseIndex(form.getValues(exercisesPath).length - 1);
   };

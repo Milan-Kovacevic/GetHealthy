@@ -2,6 +2,7 @@ import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import {
   exercisePlanSchema,
+  GeneralInfoFormSchema,
   generalInfoSchema,
 } from "@/schemas/training-program-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,10 +16,12 @@ import {
   updateTrainingProgramExercisePlan,
   updateTrainingProgramGeneralInfo,
 } from "@/api/services/training-program-service";
+import { ExercisePlanItem } from "@/api/models/exercise";
 
 type EditTrainingProgramFormProps = {
-  exercises: any;
-  generalInfo: any;
+  exercises: ExercisePlanItem[];
+  generalInfo: GeneralInfoFormSchema;
+  programPicture?: string;
   programId: number;
 };
 
@@ -26,6 +29,7 @@ const EditTrainingProgramForm = ({
   exercises,
   generalInfo,
   programId,
+  programPicture,
 }: EditTrainingProgramFormProps) => {
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
   const editGeneralInfoForm = useForm<z.infer<typeof generalInfoSchema>>({
@@ -33,18 +37,25 @@ const EditTrainingProgramForm = ({
     defaultValues: generalInfo ? generalInfo : {},
   });
 
+  const mappedExercises = exercises.map((exercise) => ({
+    ...exercise,
+    sets: exercise.sets.map((set) => ({
+      ...set,
+      firstMetricValue: Number(set.firstMetricValue),
+      secondMetricValue: set.secondMetricValue
+        ? Number(set.secondMetricValue)
+        : undefined,
+      restTime: set.restTime ?? 0,
+    })),
+  }));
+
   const editExercisePlanForm = useForm<z.infer<typeof exercisePlanSchema>>({
     resolver: zodResolver(exercisePlanSchema),
     defaultValues: {
-      exercises: exercises ? exercises : [],
+      exercises: mappedExercises,
     },
     mode: "onChange",
   });
-
-  useEffect(() => {
-    console.log("General Info", generalInfo);
-    console.log("Exercises", exercises);
-  }, []);
 
   const onGeneralInfoSubmit = async (
     data: z.infer<typeof generalInfoSchema>
@@ -98,14 +109,14 @@ const EditTrainingProgramForm = ({
       <Form {...editGeneralInfoForm}>
         <form
           onSubmit={editGeneralInfoForm.handleSubmit(onGeneralInfoSubmit)}
-          className="space-y-8"
+          className=""
         >
-          <Separator className="my-4" />
           <GeneralInformationForm
             isEdit={true}
             form={editGeneralInfoForm}
             formPath=""
             defaultValueCategories={generalInfo.categories}
+            defaultPicture={programPicture}
             onSelectFile={setSelectedFile}
           />
         </form>

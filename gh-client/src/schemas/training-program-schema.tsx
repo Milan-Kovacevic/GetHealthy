@@ -33,7 +33,9 @@ export const generalInfoSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
   difficulty: z.string().min(1, { message: "Program difficulty is required." }),
   trainingDuration: z
-    .number()
+    .number({
+      invalid_type_error: "Training duration must be positive number",
+    })
     .min(1, { message: "Training duration must be positive number" }),
   description: z.string().min(1, { message: "Description is required." }),
   requirements: z.preprocess(
@@ -47,5 +49,6 @@ export const generalInfoSchema = z.object({
         name: z.string().min(1, { message: "Category name is required." }),
       })
     )
-    .min(1, { message: "At least one category is required." }),
+    .min(1, { message: "At least one category is required." })
+    .max(4, { message: "Maximum of 4 categories are allowed" }),
 });

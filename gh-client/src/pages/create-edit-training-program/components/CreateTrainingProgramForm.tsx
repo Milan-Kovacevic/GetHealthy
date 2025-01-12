@@ -37,7 +37,14 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
   >({
     resolver: zodResolver(createTrainingProgramSchema),
     defaultValues: {
-      generalInfo: {},
+      generalInfo: {
+        name: "",
+        description: "",
+        difficulty: undefined,
+        categories: [],
+        requirements: "",
+        trainingDuration: undefined,
+      },
       exercisePlan: {
         exercises: [],
       },
@@ -88,8 +95,8 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
 
     try {
       await createTrainingProgram(formData);
-      toast.success("Training program successfully created!");
       navigate(-1);
+      toast.success("Training program successfully created!");
     } catch (error) {
       console.log(error);
       toast.error(
@@ -105,7 +112,6 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
         className="space-y-8"
       >
         <div>
-          <Separator className="my-4" />
           <GeneralInformationForm
             onSelectFile={setSelectedFile}
             form={createTrainingProgramForm}

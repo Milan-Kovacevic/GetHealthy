@@ -26,6 +26,8 @@ import { CheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import FormSectionTitle from "./FormSectionTitle";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import ImageSelectorWithPreview from "./ImageSelectorWithPreview";
 
 type GeneralInformationFormProps = {
   isEdit?: boolean;
@@ -33,6 +35,7 @@ type GeneralInformationFormProps = {
   onSelectFile: (file: File | undefined) => void;
   formPath?: string;
   defaultValueCategories?: Category[];
+  defaultPicture?: string;
 };
 
 const GeneralInformationForm = ({
@@ -41,6 +44,7 @@ const GeneralInformationForm = ({
   formPath = "",
   onSelectFile,
   defaultValueCategories,
+  defaultPicture,
 }: GeneralInformationFormProps) => {
   const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
 
@@ -65,7 +69,7 @@ const GeneralInformationForm = ({
       </div>
       <div className="">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-10">
-          <div className="flex flex-col gap-4 col-span-3">
+          <div className="flex flex-col gap-4 lg:col-span-3">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               <InputFormField
                 control={form.control}
@@ -87,8 +91,16 @@ const GeneralInformationForm = ({
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select an option" />
+                        <SelectTrigger
+                          className={cn(
+                            "text-muted-foreground font-normal",
+                            field.value && "text-foreground"
+                          )}
+                        >
+                          <SelectValue
+                            className=""
+                            placeholder="Select an option"
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -117,9 +129,8 @@ const GeneralInformationForm = ({
 
                     <FormControl>
                       <MultiSelect
-                        className=""
+                        className="bg-background"
                         options={categoryOptions}
-                        // value={field.value || []}
                         defaultValue={defaultValueCategories ?? undefined}
                         onValueChange={(categories) =>
                           field.onChange(categories)
@@ -168,19 +179,18 @@ const GeneralInformationForm = ({
               className="col-span-full w-full"
             />
           </div>
-          <div className="col-span-full md:col-span-2  w-full ">
-            <FileInputField
+          <div className="lg:col-span-2">
+            <ImageSelectorWithPreview
               title="Training Program Picture *"
               name="files"
               description="Upload a picture for the training program."
-              formats=".png, .jpeg"
-              formatLabel=".png | .jpeg"
+              formats=".png, .jpeg, .jpg"
               onFileSelect={handleFileSelection}
-              className="lg:h-56 h-48"
+              initialPicture={defaultPicture}
             />
           </div>
         </div>
-        <div className="flex md:flex-row flex-col flex-wrap justify-between md:items-end items-start pt-4 gap-x-2 gap-y-6">
+        <div className="flex md:flex-row flex-col flex-wrap justify-between md:items-end items-start pt-4 gap-x-2 gap-y-6 h-12">
           <div className="flex flex-row items-start gap-1">
             <span className="text-xs font-bold text-muted-foreground uppercase">
               note:

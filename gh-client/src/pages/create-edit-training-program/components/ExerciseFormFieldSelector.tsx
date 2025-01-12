@@ -8,13 +8,13 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown, Loader2Icon } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import {
   FormControl,
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
+  FormMessage,
 } from "../../../components/ui/form";
 import {
   Popover,
@@ -22,46 +22,52 @@ import {
   PopoverTrigger,
 } from "../../../components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import InfiniteScroll from "@/components/ui/infinite-scroll";
-import { ExerciseListing } from "@/api/models/exercise";
-import { useState } from "react";
+import { ExercisePlanItem } from "@/api/models/exercise";
+import { useEffect, useState } from "react";
+import { getAllExcercises } from "@/api/services/exercise-service";
 
 type ExerciseFormFieldSelectorProps = {
-  exercises: any[];
   form: any;
   formPath?: string;
   disableSearch?: boolean;
-  placeholder?: string;
-  onSelect?: (exercise: any) => void;
-  initialValue?: any;
+  onSelect?: (exercise: ExercisePlanItem) => void;
 };
 
 const ExerciseFormFieldSelector = ({
-  exercises,
   form,
   formPath = "",
   disableSearch,
-  placeholder,
   onSelect,
-  initialValue,
 }: ExerciseFormFieldSelectorProps) => {
   const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
-  const [selectedExercise, setSelectedExercise] = useState<any | undefined>(
-    initialValue ?? undefined
-  );
+  const [selectedExercise, setSelectedExercise] = useState<ExercisePlanItem>();
   const [open, setOpen] = useState(false);
+  const [exercises, setExercises] = useState<ExercisePlanItem[]>([]);
 
-  const handeExerciseSelected = (exercise?: any) => {
+  useEffect(() => {
+    getAllExcercises().then((exercises) => {
+      var mappedExercises: ExercisePlanItem[] = exercises.map((item) => ({
+        name: item.exerciseName,
+        id: item.id,
+        firstExerciseMetric: item.firstExerciseMetric,
+        secondExerciseMetric: item.secondExerciseMetric,
+        sets: [],
+      }));
+      setExercises(mappedExercises);
+    });
+  }, []);
+
+  const handeExerciseSelected = (exercise?: ExercisePlanItem) => {
+    if (!exercise) return;
     setOpen(false);
-
-    const newExercise = {
-      ...exercise,
-      name: exercise.label,
-      sets: [],
-    };
-    onSelect?.(newExercise);
+    onSelect?.(exercise);
     setSelectedExercise(exercise);
   };
+
+  const hasError =
+    form.watch(exercisesPath)?.length == 0 &&
+    (form.formState.errors.exercisePlan?.exercises.message ||
+      form.formState.errors.exercisePlan?.exercises?.root?.message);
 
   return (
     <FormField
@@ -75,7 +81,10 @@ const ExerciseFormFieldSelector = ({
                 <Button
                   variant="outline"
                   role="combobox"
-                  className={cn("justify-between w-full font-normal truncate")}
+                  className={cn(
+                    "justify-between w-full font-normal truncate text-foreground/75",
+                    selectedExercise && "text-foreground"
+                  )}
                 >
                   Select exercises
                   <ChevronsUpDown className="opacity-50" />
@@ -84,7 +93,7 @@ const ExerciseFormFieldSelector = ({
               <PopoverContent className="w-[20rem] p-0">
                 <Command>
                   {!disableSearch && (
-                    <CommandInput placeholder={`${placeholder}`} />
+                    <CommandInput placeholder="Search exercise ..." />
                   )}
                   <CommandList>
                     <CommandEmpty className="text-muted-foreground p-5 text-center text-sm">
@@ -97,15 +106,11 @@ const ExerciseFormFieldSelector = ({
                             {exercises.map((item) => (
                               <CommandItem
                                 key={item.id}
-                                value={item.label}
-                                className={cn(
-                                  "w-full",
-                                  selectedExercise?.id == item.id &&
-                                    "bg-accent/50 text-accent-foreground border-primary border-b rounded-b-none"
-                                )}
+                                value={item.name}
+                                className={cn("w-full")}
                                 onSelect={() => handeExerciseSelected(item)}
                               >
-                                {item.label}
+                                {item.name}
                               </CommandItem>
                             ))}
                             {/* <InfiniteScroll
@@ -127,13 +132,16 @@ const ExerciseFormFieldSelector = ({
               </PopoverContent>
             </Popover>
           </FormControl>
-          <FormDescription className="text-xs ml-0.5">
-            Add exercises to workout
-          </FormDescription>
-          {form.formState.errors?.[exercisesPath]?.message && (
-            <p className="text-sm font-medium text-destructive">
-              {form.formState.errors?.[exercisesPath]?.message}
+
+          {hasError ? (
+            <p className="text-xs font-normal text-destructive">
+              {form.formState.errors.exercisePlan?.exercises?.message ??
+                form.formState.errors.exercisePlan?.exercises?.root?.message}
             </p>
+          ) : (
+            <FormDescription className="text-xs ml-0.5">
+              Add exercises to workout
+            </FormDescription>
           )}
         </FormItem>
       )}
