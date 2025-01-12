@@ -25,6 +25,7 @@ import { handleIntegerOnValueChange } from "@/utils/form-input-utils";
 import { CheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import FormSectionTitle from "./FormSectionTitle";
+import { toast } from "sonner";
 
 type GeneralInformationFormProps = {
   isEdit?: boolean;
@@ -44,10 +45,13 @@ const GeneralInformationForm = ({
   const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
 
   useEffect(() => {
-    async function fetchCategories() {
-      setCategoryOptions(await getAllCategories());
-    }
-    fetchCategories();
+    getAllCategories()
+      .then((response) => {
+        setCategoryOptions(response);
+      })
+      .catch(() => {
+        toast.error("Unable to load program categories");
+      });
   }, []);
 
   const handleFileSelection = (file: File | undefined) => {
@@ -56,7 +60,7 @@ const GeneralInformationForm = ({
 
   return (
     <div className="mt-5 w-full">
-      <div className="my-6">
+      <div className="mb-3">
         <FormSectionTitle title="General information" />
       </div>
       <div className="">

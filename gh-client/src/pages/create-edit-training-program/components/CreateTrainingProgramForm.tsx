@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import {
+  ExercisePlanFormSchema,
   exercisePlanSchema,
+  GeneralInfoFormSchema,
   generalInfoSchema,
 } from "@/schemas/training-program-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -45,15 +47,21 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
   const onSubmit = async (
     data: z.infer<typeof createTrainingProgramSchema>
   ) => {
-    const generalInfoData = data.generalInfo;
-    const exercisesPlanData = data.exercisePlan.exercises;
+    const generalInfoData: GeneralInfoFormSchema = data.generalInfo;
+    const exercisesPlanData: ExercisePlanFormSchema = data.exercisePlan;
 
-    const trainingProgramExercisesData = {
-      trainingProgramExercises: exercisesPlanData.map((elem, index) => ({
-        position: index + 1,
-        exerciseId: elem.id,
-        exerciseSets: elem.sets,
-      })),
+    const programExercisesFormData = {
+      trainingProgramExercises: exercisesPlanData.exercises.map(
+        (elem, index) => ({
+          position: index + 1,
+          exerciseId: elem.id,
+          exerciseSets: elem.sets,
+        })
+      ),
+    };
+    const generalInfoFormData = {
+      ...generalInfoData,
+      trainerId: userId,
     };
 
     const formData = new FormData();
@@ -61,11 +69,6 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
     if (selectedFile) {
       formData.append("file", selectedFile);
     }
-
-    var generalInfoFormData = {
-      ...generalInfoData,
-      trainerId: userId,
-    };
 
     formData.append(
       "training-program",
@@ -76,12 +79,12 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
 
     formData.append(
       "training-program-exercises",
-      new Blob([JSON.stringify(trainingProgramExercisesData)], {
+      new Blob([JSON.stringify(programExercisesFormData)], {
         type: "application/json",
       })
     );
 
-    console.log("Exercise data", trainingProgramExercisesData);
+    console.log("Exercise data", programExercisesFormData);
 
     try {
       await createTrainingProgram(formData);

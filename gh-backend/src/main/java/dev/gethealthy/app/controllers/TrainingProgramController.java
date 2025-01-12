@@ -85,6 +85,7 @@ public class TrainingProgramController {
         return trainingProgramService.getSingleTrainingProgram(programId);
     }
 
+    // TODO: Fix Response object (dont include sensitive data in response...)
     @GetMapping("{programId}/info")
     public TrainingProgramInfoResponse getTrainingProgramInfo(@PathVariable Integer programId) {
         // TODO: Include joined flag for trainee, based of if he already joined to that program or not

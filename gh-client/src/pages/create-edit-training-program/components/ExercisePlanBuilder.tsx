@@ -14,6 +14,7 @@ import ExerciseForm from "./ExerciseForm";
 import ExerciseFormFieldSelector from "./ExerciseFormFieldSelector";
 import FormSectionTitle from "./FormSectionTitle";
 import { useFieldArray } from "react-hook-form";
+import useExercisePlanBuilder from "../hooks/use-exercise-builder";
 
 type ExercisePlanBuilderProps = {
   isEdit?: boolean;
@@ -28,10 +29,10 @@ const ExercisePlanBuilder = ({
 }: ExercisePlanBuilderProps) => {
   const [exercises, setExercises] = useState<any[]>([]);
   const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: `${exercisesPath}`,
-  });
+  // const { fields, append, remove } = useFieldArray({
+  //   control: form.control,
+  //   name: `${exercisesPath}`,
+  // });
 
   useEffect(() => {
     async function fetchExercises() {
@@ -51,69 +52,79 @@ const ExercisePlanBuilder = ({
     console.log(exercises);
   }, [exercises]);
 
-  const [selectedExerciseIndex, setSelectedExerciseIndex] = useState<
-    number | null
-  >(null);
+  const {
+    onExerciseDragDrop,
+    onExerciseDragOver,
+    onExerciseDragStart,
+    onRemoveExercise,
+    onSelectExercise,
+    selectedExerciseIndex,
+    onChangeSelectedExerciseIndex,
+  } = useExercisePlanBuilder({ form, exercisesPath });
 
-  const handleSelectExercise = (item: any) => {
-    console.log("Item", item);
-    form.setValue(exercisesPath, [...form.getValues(exercisesPath), item]);
-    setSelectedExerciseIndex(form.getValues(exercisesPath).length - 1);
-  };
+  // const [selectedExerciseIndex, setSelectedExerciseIndex] = useState<
+  //   number | null
+  // >(null);
 
-  const handleRemoveExercise = (index: number) => {
-    const currentExercises = form.getValues(exercisesPath);
-    const updatedExercises = currentExercises.filter(
-      (_: any, i: any) => i !== index
-    );
+  // const handleSelectExercise = (item: any) => {
+  //   console.log("Item", item);
+  //   form.setValue(exercisesPath, [...form.getValues(exercisesPath), item]);
+  //   setSelectedExerciseIndex(form.getValues(exercisesPath).length - 1);
+  // };
 
-    const unregisterSets = (index: number) =>
-      form.unregister(`${exercisesPath}.${index}.sets`);
+  // const handleRemoveExercise = (index: number) => {
+  //   const currentExercises = form.getValues(exercisesPath);
+  //   const updatedExercises = currentExercises.filter(
+  //     (_: any, i: any) => i !== index
+  //   );
 
-    unregisterSets(index);
-    remove(index);
-    unregisterSets(fields.length - 1);
+  //   const unregisterSets = (index: number) =>
+  //     form.unregister(`${exercisesPath}.${index}.sets`);
 
-    form.setValue(exercisesPath, updatedExercises);
+  //   unregisterSets(index);
+  //   remove(index);
+  //   unregisterSets(fields.length - 1);
 
-    if (selectedExerciseIndex === index) {
-      setSelectedExerciseIndex(null);
-    } else if (
-      selectedExerciseIndex !== null &&
-      selectedExerciseIndex > index
-    ) {
-      setSelectedExerciseIndex(selectedExerciseIndex - 1);
-    }
+  //   form.setValue(exercisesPath, updatedExercises);
 
-    console.log(form.getValues(exercisesPath));
-  };
+  //   if (selectedExerciseIndex === index) {
+  //     setSelectedExerciseIndex(null);
+  //   } else if (
+  //     selectedExerciseIndex !== null &&
+  //     selectedExerciseIndex > index
+  //   ) {
+  //     setSelectedExerciseIndex(selectedExerciseIndex - 1);
+  //   }
 
-  const handleDragStart = (e: React.DragEvent, draggedIndex: number) => {
-    e.dataTransfer.setData("draggedIndex", String(draggedIndex));
-  };
+  //   console.log(form.getValues(exercisesPath));
+  // };
 
-  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
-    const draggedIndex = parseInt(e.dataTransfer.getData("draggedIndex"));
+  // const handleDragStart = (e: React.DragEvent, draggedIndex: number) => {
+  //   e.dataTransfer.setData("draggedIndex", String(draggedIndex));
+  // };
 
-    if (draggedIndex === targetIndex) return;
+  // const handleDrop = (e: React.DragEvent, targetIndex: number) => {
+  //   const draggedIndex = parseInt(e.dataTransfer.getData("draggedIndex"));
 
-    const exercises = form.getValues(exercisesPath);
+  //   if (draggedIndex === targetIndex) return;
 
-    const [draggedItem] = exercises.splice(draggedIndex, 1);
+  //   const exercises = form.getValues(exercisesPath);
 
-    exercises.splice(targetIndex, 0, draggedItem);
+  //   const [draggedItem] = exercises.splice(draggedIndex, 1);
 
-    form.setValue(exercisesPath, exercises);
-    setSelectedExerciseIndex(targetIndex);
-  };
+  //   exercises.splice(targetIndex, 0, draggedItem);
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
+  //   form.setValue(exercisesPath, exercises);
+  //   setSelectedExerciseIndex(targetIndex);
+  // };
+
+  // const handleDragOver = (e: React.DragEvent) => {
+  //   e.preventDefault();
+  // };
 
   return (
     <div className="mt-8 w-full">
-      <div className="mb-5">
+      <div className="mb-4">
         <FormSectionTitle title="Exercise plan" />
       </div>
       <div className="flex flex-col space-y-4">
@@ -124,7 +135,7 @@ const ExercisePlanBuilder = ({
                 form={form}
                 formPath={formPath}
                 exercises={exercises}
-                onSelect={handleSelectExercise}
+                onSelect={onSelectExercise}
                 placeholder="Search exercise ..."
               />
             </div>
@@ -151,9 +162,9 @@ const ExercisePlanBuilder = ({
                       <div
                         key={index}
                         draggable
-                        onDragStart={(e) => handleDragStart(e, index)}
-                        onDragOver={(e) => handleDragOver(e)}
-                        onDrop={(e) => handleDrop(e, index)}
+                        onDragStart={(e) => onExerciseDragStart(e, index)}
+                        onDragOver={(e) => onExerciseDragOver(e)}
+                        onDrop={(e) => onExerciseDragDrop(e, index)}
                         className="cursor-move"
                       >
                         <ExerciseCard
@@ -161,15 +172,9 @@ const ExercisePlanBuilder = ({
                           exercise={exercise}
                           index={index}
                           isSelected={selectedExerciseIndex === index}
-                          onSelect={() =>
-                            selectedExerciseIndex !== null
-                              ? selectedExerciseIndex === index
-                                ? setSelectedExerciseIndex(null)
-                                : setSelectedExerciseIndex(index)
-                              : setSelectedExerciseIndex(index)
-                          }
+                          onSelect={() => onChangeSelectedExerciseIndex(index)}
                           form={form}
-                          onRemove={handleRemoveExercise}
+                          onRemove={onRemoveExercise}
                         />
                       </div>
                     ))}
@@ -204,7 +209,7 @@ const ExercisePlanBuilder = ({
                           className="h-8 w-8 flex-shrink-0"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setSelectedExerciseIndex(null);
+                            onChangeSelectedExerciseIndex(null);
                           }}
                         >
                           <X className="h-4 w-4" />
