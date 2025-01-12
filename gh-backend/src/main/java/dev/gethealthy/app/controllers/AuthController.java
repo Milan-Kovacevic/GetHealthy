@@ -6,6 +6,7 @@ import dev.gethealthy.app.models.requests.LoginRequest;
 import dev.gethealthy.app.models.requests.RegistrationRequest;
 import dev.gethealthy.app.models.requests.TokensRequest;
 import dev.gethealthy.app.models.responses.LoginResponse;
+import dev.gethealthy.app.models.responses.TokensResponse;
 import dev.gethealthy.app.services.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,10 @@ public class AuthController {
     }
 
     @PostMapping("refresh")
-    public void refresh(@RequestBody @Valid TokensRequest request) {
-
+    public TokensResponse refresh(@RequestBody @Valid TokensRequest request) {
+        TokensResponse response = new TokensResponse();
+        response.setRefreshToken(request.getRefreshToken());
+        response.setAccessToken(request.getRefreshToken());
+        return response;
     }
 }

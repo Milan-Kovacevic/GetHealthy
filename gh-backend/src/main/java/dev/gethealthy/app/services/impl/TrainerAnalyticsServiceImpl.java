@@ -123,6 +123,11 @@ public class TrainerAnalyticsServiceImpl implements TrainerAnalyticsService {
                     .filter(ef -> ef.getExercise().getId() == request.getExerciseId())
                     .flatMap(ef -> ef.getExerciseSetsFeedback().stream()).toList();
 
+            long completed = exerciseSets
+                    .stream()
+                    .filter(esf -> esf.getCompleted())
+                    .count();
+
             long skipped = exerciseSets
                     .stream()
                     .filter(esf -> esf.getSkipped() || esf.getExerciseFeedback().getSkipped())
@@ -130,8 +135,8 @@ public class TrainerAnalyticsServiceImpl implements TrainerAnalyticsService {
 
             long total = exerciseSets.size();
 
-            double percentSkipped = (double) skipped / total;
-            double percentCompleted = 1 - percentSkipped;
+            double percentSkipped = total == 0 ? 0 : (double) skipped / total;
+            double percentCompleted =  total == 0 ? 0 : (double) completed / total;
 
             response.getData().add(new TrainerEngagementAnalyticsResponse.AnalyticsEngagementData(current, percentSkipped, percentCompleted));
         }
