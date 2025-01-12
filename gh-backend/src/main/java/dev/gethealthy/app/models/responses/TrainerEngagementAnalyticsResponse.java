@@ -21,7 +21,7 @@ public class TrainerEngagementAnalyticsResponse {
     public static class AnalyticsEngagementData
     {
             private Instant date;
-            private long skipped;
-            private long completed;
+            private double skipped;
+            private double completed;
     }
 }

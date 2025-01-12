@@ -117,23 +117,23 @@ public class TrainerAnalyticsServiceImpl implements TrainerAnalyticsService {
         for (Instant current = request.getFrom(); current.isBefore(request.getTo()) || current.equals(request.getTo()); current = current.plus(Duration.ofDays(1))) {
             Instant finalCurrent = current;
 
-            long skipped = traineeExercising.stream()
+            var exerciseSets = traineeExercising.stream()
                     .filter(te -> te.getDateTaken().isBefore(finalCurrent) || te.getDateTaken().equals(finalCurrent))
                     .flatMap(te -> te.getExercisesFeedback().stream())
-                    .filter(ef -> ef.getSkipped() && ef.getExercise().getId() == request.getExerciseId())
-                    //.flatMap(ef -> ef.getExerciseSetsFeedback().stream()) - ako treba po setovima
-                    //.filter(ExerciseSetFeedback::getSkipped)
+                    .filter(ef -> ef.getExercise().getId() == request.getExerciseId())
+                    .flatMap(ef -> ef.getExerciseSetsFeedback().stream()).toList();
+
+            long skipped = exerciseSets
+                    .stream()
+                    .filter(esf -> esf.getSkipped() || esf.getExerciseFeedback().getSkipped())
                     .count();
 
-            long completed = traineeExercising.stream()
-                    .filter(te -> te.getDateTaken().isBefore(finalCurrent) || te.getDateTaken().equals(finalCurrent))
-                    .flatMap(te -> te.getExercisesFeedback().stream())
-                    .filter(ef -> !ef.getSkipped() && ef.getExercise().getId() == request.getExerciseId())
-                    //.flatMap(ef -> ef.getExerciseSetsFeedback().stream()) - ako treba po setovima
-                    //.filter(ExerciseSetFeedback::getCompleted)
-                    .count();
+            long total = exerciseSets.size();
 
-            response.getData().add(new TrainerEngagementAnalyticsResponse.AnalyticsEngagementData(current, skipped, completed));
+            double percentSkipped = (double) skipped / total;
+            double percentCompleted = 1 - percentSkipped;
+
+            response.getData().add(new TrainerEngagementAnalyticsResponse.AnalyticsEngagementData(current, percentSkipped, percentCompleted));
         }
 
         return response;
