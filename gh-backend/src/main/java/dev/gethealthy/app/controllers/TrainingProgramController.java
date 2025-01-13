@@ -1,6 +1,7 @@
 package dev.gethealthy.app.controllers;
 
 import dev.gethealthy.app.models.entities.TrainingProgram;
+import dev.gethealthy.app.models.requests.CreateProgramExercisesRequest;
 import dev.gethealthy.app.models.requests.CreateTrainingProgramRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramExercisesRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
@@ -55,7 +56,7 @@ public class TrainingProgramController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createTrainingProgram(
             @RequestPart(name = "training-program") @Valid CreateTrainingProgramRequest trainingProgramRequest,
-            @RequestPart(name = "training-program-exercises") @Valid TrainingProgramExercisesRequest trainingProgramExercisesRequest,
+            @RequestPart(name = "training-program-exercises") @Valid CreateProgramExercisesRequest trainingProgramExercisesRequest,
             @RequestPart(name = "file", required = false) MultipartFile file,
             Authentication auth) {
         // TODO: Compare userId from auth object and request

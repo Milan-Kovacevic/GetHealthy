@@ -87,7 +87,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
         private List<Comment> comments;
 
         @Column(name = "Deleted")
-        private Boolean deleted = false;
+        private Boolean deleted;
 
         @Size(max = 255)
         @Column(name = "ImageFilePath")

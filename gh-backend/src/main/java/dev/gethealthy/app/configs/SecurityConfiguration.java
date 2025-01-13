@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                 //.authorizeHttpRequests(requests -> requests.anyRequest().permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(this::createRules)
+//                .authorizeHttpRequests(this::createRules)
                 .userDetailsService(jwtUserDetailsService)
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

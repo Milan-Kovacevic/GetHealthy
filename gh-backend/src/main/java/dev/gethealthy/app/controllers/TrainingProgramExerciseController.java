@@ -1,17 +1,8 @@
 package dev.gethealthy.app.controllers;
 
-import dev.gethealthy.app.base.CrudController;
-import dev.gethealthy.app.base.CrudService;
-import dev.gethealthy.app.models.entities.ExerciseSet;
-import dev.gethealthy.app.models.entities.TrainingProgramExercise;
-import dev.gethealthy.app.models.requests.TrainingProgramExerciseRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramExercisesRequest;
-import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.ProgramExerciseResponse;
-import dev.gethealthy.app.models.responses.TrainingProgramResponse;
-import dev.gethealthy.app.services.ExerciseSetService;
 import dev.gethealthy.app.services.TrainingProgramExerciseService;
-import dev.gethealthy.app.services.ExerciseSetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

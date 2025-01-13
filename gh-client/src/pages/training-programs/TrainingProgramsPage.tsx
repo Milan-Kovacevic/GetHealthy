@@ -1,4 +1,3 @@
-import useAuth from "@/hooks/use-auth";
 import { TrainingProgramLayout } from "./TrainingProgramLayout";
 import useTrainingPrograms, {
   TrainingProgramsState,

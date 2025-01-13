@@ -2,6 +2,7 @@ package dev.gethealthy.app.services;
 
 import dev.gethealthy.app.base.CrudService;
 import dev.gethealthy.app.models.entities.TrainingProgram;
+import dev.gethealthy.app.models.requests.CreateProgramExercisesRequest;
 import dev.gethealthy.app.models.requests.CreateTrainingProgramRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramExercisesRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
@@ -14,9 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public interface TrainingProgramService  {
+public interface TrainingProgramService {
     Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort,
-            Pageable page);
+                                                              Pageable page);
 
     Page<ProgramListingResponse> getTrainingProgramsListedForUser(Integer userId, Pageable page);
 
@@ -33,8 +34,8 @@ public interface TrainingProgramService  {
     List<FeaturedProgramResponse> getFeaturedTrainingPrograms();
 
     void createTrainingProgram(CreateTrainingProgramRequest trainingProgramRequest,
-            TrainingProgramExercisesRequest trainingProgramExercisesRequest, MultipartFile file);
+                               CreateProgramExercisesRequest trainingProgramExercisesRequest, MultipartFile file);
 
     void updateTrainingProgramGeneralInfo(Integer programId, TrainingProgramRequest trainingProgramRequest,
-            MultipartFile file);
+                                          MultipartFile file);
 }

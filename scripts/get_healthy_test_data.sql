@@ -113,8 +113,6 @@ VALUES
     'A barbell, weight plates, a power rack, and a flat bench are essential. Participants should have prior experience with heavy lifting and understand basic safety techniques, such as spotting and bracing.', 
     '2024-12-29 13:00:00', 2, null);
     
-    delete from training_program where ProgramId=1;
-    
 
 -- Test data for get_healthy.TRAINING_PROGRAM_EXERCISE
 INSERT INTO get_healthy.training_program_exercise (Id, Position, ExerciseId, ProgramId)
@@ -201,9 +199,9 @@ VALUES
   (1, 'Great program for beginners!', '2024-12-20 12:00:00', 3, 1);
 
 -- Test data for get_healthy.PROGRAM_RATING
-INSERT INTO get_healthy.program_rating (Rate, ProgramId, UserId)
+INSERT INTO get_healthy.program_rating (Rate, ProgramId, UserId, DateRated)
 VALUES 
-  (5, 1, 3);
+  (5, 1, 3, '2025-01-05 14:45:00');
 
 -- Test data for get_healthy.TRAINEE_ON_TRAINING_PROGRAM
 INSERT INTO get_healthy.trainee_on_training_program (UserId, ProgramId, JoinDate)

@@ -9,10 +9,6 @@ export type CreateProgramFormSchema = z.infer<
 >;
 
 const setSchema = z.object({
-  reps: z.number().min(1, "Reps must be at least one").optional(),
-  weight: z.number().min(0, "Weight must be non-negative").optional(),
-  time: z.number().min(1, "Time must be at least one second").optional(),
-  distance: z.number().optional(),
   firstMetricValue: z.number().min(1, "Value must greater than 0."),
   secondMetricValue: z.number().optional(),
   restTime: z.number().min(0, "Pause time must be greater than 0"),
