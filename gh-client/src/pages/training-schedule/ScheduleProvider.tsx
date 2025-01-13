@@ -12,8 +12,8 @@ const mockPrograms: TrainingProgramOnSchedule[] = [
   {
     id: 1,
     dayOfWeek: 1,
-    startTime: "10:00",
-    trainingDuration: 100,
+    startTime: "13:00",
+    trainingDuration: 300,
     program: {
       id: 1,
       name: "Morning Yoga",
@@ -40,6 +40,19 @@ const mockPrograms: TrainingProgramOnSchedule[] = [
     dayOfWeek: 4,
     startTime: "00:00",
     trainingDuration: 100,
+    program: {
+      id: 3,
+      name: "Strength Training",
+      createdAt: "2025-01-01T00:00:00.000Z",
+      description: "Build muscle and strength with our structured workout.",
+      trainerName: "Anna Smith",
+    },
+  },
+  {
+    id: 4,
+    dayOfWeek: 6,
+    startTime: "20:00",
+    trainingDuration: 240,
     program: {
       id: 3,
       name: "Strength Training",

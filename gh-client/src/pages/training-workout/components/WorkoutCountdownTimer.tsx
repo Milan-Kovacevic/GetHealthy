@@ -10,8 +10,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { HomeIcon } from "lucide-react";
-import { Set } from "@/api/models/trainee-exercising";
+import {
+  ExerciseSetFeedbackRequest,
+  Set,
+} from "@/api/models/trainee-exercising";
 import { ExerciseMetric } from "@/api/models/exercise";
+import { giveSetFeedback } from "@/api/services/trainee-exercising-service";
 
 type WorkoutCountdownTimerProps = {
   showFeedback: boolean;
@@ -56,12 +60,14 @@ export default function WorkoutCountdownTimer({
     };
   }, [isActive, secondsLeft]);
 
-  const handleFeedbackSubmit = () => {
-    // do something with the feedback
-    if (secondsLeft > 0) {
+  //TODOO
+  const handleFeedbackSubmit = async (feedback: ExerciseSetFeedbackRequest) => {
+    try {
+      await giveSetFeedback(feedback);
       setFeedback(true);
-    } else {
-      onComplete();
+      if (secondsLeft === 0) onComplete();
+    } catch (error) {
+      console.error("Failed to submit feedback:", error);
     }
   };
 
@@ -119,9 +125,12 @@ export default function WorkoutCountdownTimer({
           firstMetric={firstMetric}
           secondMetric={secondMetric}
           disabled={feedback}
-          onSubmit={handleFeedbackSubmit}
+          onSubmit={(feedbackData: ExerciseSetFeedbackRequest) =>
+            handleFeedbackSubmit(feedbackData)
+          }
           targetFirstMatric={set.firstMetricValue}
           targetSecondMatric={set.secondMetricValue}
+          //giveSetFeedback={giveSetFeedback}
         />
       )}
       <Button

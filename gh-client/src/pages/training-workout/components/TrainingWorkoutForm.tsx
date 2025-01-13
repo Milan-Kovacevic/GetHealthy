@@ -7,7 +7,14 @@ import CurrentExerciseView from "./CurrentExerciseView";
 import { ArrowRight, SkipForward } from "lucide-react";
 import ExerciseSummary from "./ExerciseSummary";
 import { useNavigate, useParams } from "react-router-dom";
-import { TraineeExercising } from "@/api/models/trainee-exercising";
+import {
+  ExerciseFeedbackRequest,
+  TraineeExercising,
+} from "@/api/models/trainee-exercising";
+import {
+  giveExerciseFeedback,
+  startWorkout,
+} from "@/api/services/trainee-exercising-service";
 
 type TrainingWorkoutFormProps = {
   traineeExercising: TraineeExercising;
@@ -27,17 +34,56 @@ export default function TrainingWorkoutForm({
   const navigate = useNavigate();
   const params = useParams();
 
-  const startWorkout = () => {
+  const start = async () => {
+    const programId = params["programId"];
+    const userId = params["userId"];
+
+    if (programId && userId) {
+      try {
+        const response = await startWorkout(
+          parseInt(programId),
+          parseInt(userId)
+        );
+        console.log("Workout started:", response);
+      } catch (error) {
+        console.error("Failed to start workout:", error);
+      }
+    } else {
+      console.error("Invalid programId or userId");
+    }
+
     setShowSummary(false);
 
     if (currentSetIndex == 0) setShowExerciseSummary(true);
   };
 
+  //TODOO
   const continueWorkout = () => {
-    setShowSummary(false);
-
-    if (currentSetIndex == 0) setShowExerciseSummary(true);
+    if (
+      currentSetIndex <
+      workout.exercises[currentExerciseIndex].exerciseSets.length - 1
+    ) {
+      setCurrentSetIndex((prev) => prev + 1);
+      setShowRestTimer(true);
+      setShowFeedback(true);
+    } else if (currentExerciseIndex < workout.exercises.length - 1) {
+      setCurrentExerciseIndex((prev) => prev + 1);
+      setCurrentSetIndex(0);
+      setShowExerciseSummary(true);
+      setShowFeedback(false);
+      setShowRestTimer(false);
+    } else {
+      setShowSummary(true);
+      setShowRestTimer(false);
+      setShowFeedback(false);
+    }
   };
+
+  // const continueWorkout = () => {
+  //   setShowSummary(false);
+
+  //   if (currentSetIndex == 0) setShowExerciseSummary(true);
+  // };
 
   const nextSet = () => {
     const updatedWorkout = { ...workout };
@@ -119,7 +165,22 @@ export default function TrainingWorkoutForm({
     setShowExerciseSummary(false);
   };
 
-  const handleSkipExercise = () => {
+  const handleSkipExercise = async () => {
+    // Kreirajte objekat povratnih informacija
+    const feedback: ExerciseFeedbackRequest = {
+      skipped: true,
+      traineeExercisingId: 0, //TODOOOOO
+      exerciseId: workout.exercises[currentExerciseIndex].id,
+      programExerciseId: currentExerciseIndex, //indeks, ne id???
+    };
+
+    try {
+      await giveExerciseFeedback(feedback);
+      console.log("Feedback sent successfully for skipped exercise");
+    } catch (error) {
+      console.error("Failed to send feedback for skipped exercise:", error);
+    }
+
     moveToNextExercise();
     setShowExerciseSummary(true);
   };
@@ -134,7 +195,7 @@ export default function TrainingWorkoutForm({
         {showSummary ? (
           <WorkoutSummary
             workout={workout}
-            onStart={startWorkout}
+            onStart={start}
             currentExerciseIndex={currentExerciseIndex}
             onFinish={finishWorkout}
             onContinue={continueWorkout}

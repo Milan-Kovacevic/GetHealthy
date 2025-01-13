@@ -1,4 +1,4 @@
-import { ProgramExerciseDetails } from "@/api/models/exercise";
+import { ProgramExerciseDetails } from "@/api/models/program-exercise";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {

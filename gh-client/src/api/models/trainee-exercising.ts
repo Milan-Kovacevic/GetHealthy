@@ -2,6 +2,7 @@ import { ProgramDifficulty } from "../enums/program-difficulty";
 import { Category } from "./category";
 import { ExerciseMetric } from "./exercise";
 
+//TODOO
 export type TraineeExercising = {
   traineeExercisingId: number;
   programName: string;
@@ -32,4 +33,19 @@ export type Exercise = {
   firstExerciseMetric: ExerciseMetric;
   secondExerciseMetric?: ExerciseMetric;
   exerciseSets: Set[];
+};
+
+export type ExerciseSetFeedbackRequest = {
+  exerciseFeedbackId: number;
+  skipped: boolean;
+  completed: boolean;
+  firstMetricValueFeedback: string;
+  secondMetricValueFeedback?: string;
+};
+
+export type ExerciseFeedbackRequest = {
+  skipped: boolean;
+  traineeExercisingId: number;
+  exerciseId: number;
+  programExerciseId: number;
 };

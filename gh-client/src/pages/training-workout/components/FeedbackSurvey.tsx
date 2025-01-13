@@ -7,14 +7,17 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { MessageCircleQuestionIcon } from "lucide-react";
 import { ExerciseMetric } from "@/api/models/exercise";
+import { ExerciseSetFeedbackRequest } from "@/api/models/trainee-exercising";
+import { giveSetFeedback } from "@/api/services/trainee-exercising-service";
 
 type FeedbackSurveyProps = {
-  onSubmit: () => void;
+  onSubmit: (feedback: ExerciseSetFeedbackRequest) => void;
   disabled: boolean;
   targetFirstMatric: string;
   targetSecondMatric?: string;
   firstMetric: ExerciseMetric;
   secondMetric?: ExerciseMetric;
+  //giveSetFeedback: (feedback: ExerciseSetFeedbackRequest) => Promise<void>;
 };
 
 export default function FeedbackSurvey({
@@ -24,19 +27,38 @@ export default function FeedbackSurvey({
   targetSecondMatric,
   firstMetric,
   secondMetric,
-}: FeedbackSurveyProps) {
+}: //giveSetFeedback,
+FeedbackSurveyProps) {
   const [completedAsPlanned, setCompletedAsPlanned] = useState(true);
-  const [actualFirstMetricValue, setActualFirstMetricValue] = useState<
-    number | undefined
-  >(undefined);
+  const [actualFirstMetricValue, setActualFirstMetricValue] =
+    useState<string>("");
+  //number(string)
   const [actualSecondMetricValue, setActualSecondMetricValue] = useState<
-    number | undefined
+    string | undefined
   >(undefined);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    // Here you can add logic to save the feedback if needed
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit();
+
+    //TODOO
+    const feedback: ExerciseSetFeedbackRequest = {
+      exerciseFeedbackId: 0,
+      skipped: false,
+      completed: completedAsPlanned,
+      firstMetricValueFeedback: completedAsPlanned
+        ? targetFirstMatric
+        : actualFirstMetricValue,
+      secondMetricValueFeedback: completedAsPlanned
+        ? targetSecondMatric
+        : actualSecondMetricValue,
+    };
+
+    try {
+      await giveSetFeedback(feedback);
+      onSubmit(feedback);
+    } catch (error) {
+      console.error("Failed to submit feedback:", error);
+    }
   };
 
   return (
@@ -84,11 +106,7 @@ export default function FeedbackSurvey({
                         placeholder={targetFirstMatric.toString()}
                         value={actualFirstMetricValue ?? ""}
                         onChange={(e) =>
-                          setActualFirstMetricValue(
-                            e.target.value
-                              ? parseInt(e.target.value, 10)
-                              : undefined
-                          )
+                          setActualFirstMetricValue(e.target.value)
                         }
                       />
                     </div>
@@ -103,11 +121,7 @@ export default function FeedbackSurvey({
                         placeholder={targetSecondMatric?.toString()}
                         value={actualSecondMetricValue ?? ""}
                         onChange={(e) =>
-                          setActualSecondMetricValue(
-                            e.target.value
-                              ? parseInt(e.target.value, 10)
-                              : undefined
-                          )
+                          setActualSecondMetricValue(e.target.value)
                         }
                       />
                     </div>

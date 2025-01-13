@@ -1,6 +1,8 @@
 import { ApiEndpoints } from "@/utils/constants";
-import { TraineeExercising } from "../models/trainee-exercising";
+import { ExerciseFeedbackRequest, ExerciseSetFeedbackRequest, TraineeExercising } from "../models/trainee-exercising";
 import {
+  ExerciseFeedbackRequestDTO,
+  ExerciseSetFeedbackRequestDTO,
   TraineeExercisingDTO,
   TraineeExercisingRequestDTO,
 } from "../contracts/trainee-exercising-contract";
@@ -10,6 +12,8 @@ import { ExerciseMetric } from "../models/exercise";
 import { Set, Exercise } from "../models/trainee-exercising";
 import { ProgramDifficulty } from "../enums/program-difficulty";
 
+
+//TODOO
 const getWorkoutSummary = async () =>
   // programId: number
   //userId: number
@@ -30,19 +34,44 @@ const getWorkoutSummary = async () =>
     return Promise.resolve<TraineeExercising>(mockTraineeExercising);
   };
 
-// const startWorkout = async (
-//   programId: number,
-//   userId: number
-//   ) => {
-//     var url = ApiEndpoints.TraineeExercising + `/start`;
-//     return sendAxiosRequest<TraineeExercisingRequestDTO, TraineeExercisingDTO>({
-//       method: "POST",
-//       url: url,
-//       data: {programId, userId},
-//     }).then((response) => response.data as TraineeExercising);
-//   };
+const startWorkout = async (
+  programId: number,
+  userId: number
+  ) => {
+    var url = ApiEndpoints.TraineeExercising + `/start`;
+    return sendAxiosRequest<TraineeExercisingRequestDTO, TraineeExercisingDTO>({
+      method: "POST",
+      url: url,
+      data: {programId, userId},
+    }).then((response) => response.data as TraineeExercising);
+  };
 
-// const giveSetFeedback = async ()=>{};
+  const giveSetFeedback = async (
+    feedback: ExerciseSetFeedbackRequest
+  ) => {
+    var url = ApiEndpoints.TraineeExercising + `/exercise-set-feedback`;
+    try {
+      return sendAxiosRequest<ExerciseSetFeedbackRequestDTO, void>({
+        method: "POST",
+        url: url,
+        data: feedback,
+      });
+    } catch (error) {
+      console.error("Failed to submit set feedback:", error);
+    }
+  };
+
+  const giveExerciseFeedback = async (
+    feedback: ExerciseFeedbackRequest
+  ) => {
+    var url = ApiEndpoints.TraineeExercising + `/exercise-feedback`;
+
+      return sendAxiosRequest<ExerciseFeedbackRequestDTO, void>({
+        method: "POST",
+        url: url,
+        data: feedback,
+      });
+  };
 
 // Mock podaci za ExerciseMetric
 const mockExerciseMetrics: ExerciseMetric[] = [
@@ -156,4 +185,4 @@ const mockTraineeExercising: TraineeExercising = {
   traineeExercisingId: 0,
 };
 
-export { getWorkoutSummary };
+export { getWorkoutSummary, startWorkout, giveSetFeedback, giveExerciseFeedback };

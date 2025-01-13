@@ -47,7 +47,7 @@ export default function WorkoutSummary({
           <div className="flex flex-wrap gap-2 mb-2">
             {workout.programCategories.map((category, index) => (
               <Badge key={index} variant="secondary">
-                {category.categoryName}
+                {category.name}
               </Badge>
             ))}
             <div className="text-sm flex items-center gap-1.5 w-full mb-0.5 mx-0.5">
