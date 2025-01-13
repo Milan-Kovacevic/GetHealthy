@@ -2,21 +2,12 @@ import { useState } from "react";
 import ExerciseList from "./components/ExerciseList";
 import ExerciseMetricsSection from "./components/ExerciseMetricsSection";
 import ExercisesTitleSection from "./components/ExercisesTitleSection";
-import useExercises from "./hooks/use-exercises";
+import useExercises, { ExercisesState } from "./hooks/use-exercises";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
 
 export default function ExercisesPage() {
   const [showVideos, setShowVideos] = useState(false);
-  const {
-    exercises,
-    loadingExercises,
-    firstExercisePage,
-    lastExercisePage,
-    exercisePage,
-    totalExercisePages,
-    setExercisePage,
-    onSearchExercises,
-  } = useExercises();
+  const state: ExercisesState = useExercises();
 
   return (
     <section className="overflow-hidden relative sm:px-5 px-4 pt-8 pb-10 h-full">
@@ -24,7 +15,7 @@ export default function ExercisesPage() {
       <div className="container mx-auto h-full z-10 relative">
         <div className="py-4">
           <ExercisesTitleSection
-            onSearchExercises={onSearchExercises}
+            onSearchExercises={state.onSearch}
             showVideos={showVideos}
             setShowVideos={setShowVideos}
           />
@@ -33,13 +24,13 @@ export default function ExercisesPage() {
           <ExerciseMetricsSection />
           <ExerciseList
             showVideoEmbedded={showVideos}
-            exercises={exercises}
-            loading={loadingExercises}
-            isFirstPage={firstExercisePage}
-            isLastPage={lastExercisePage}
-            page={exercisePage}
-            totalPages={totalExercisePages}
-            onPageChange={setExercisePage}
+            exercises={state.exercises}
+            loading={state.loading}
+            isFirstPage={state.isFirstPage}
+            isLastPage={state.isLastPage}
+            page={state.currentPage}
+            totalPages={state.totalPages}
+            onPageChange={state.onPageChange}
           />
         </div>
       </div>
