@@ -2,7 +2,7 @@ import noResults from "@/assets/no-results.png";
 
 export default function NoTrainingProgramsAnimation() {
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <div className="w-full flex flex-col items-center justify-center py-16">
       <img
         src={noResults}
         className="dark:filter-white h-20 w-20 animate-bounce"

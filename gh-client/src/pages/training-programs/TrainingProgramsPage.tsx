@@ -17,7 +17,7 @@ export const TrainingProgramsPage = () => {
   ) : (
     <div className="grid mt-5 gap-x-6 gap-y-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 flex-1">
       {state.programs.map((item) => (
-        <TrainingProgramCard program={item} />
+        <TrainingProgramCard key={item.id} program={item} />
       ))}
     </div>
   );
