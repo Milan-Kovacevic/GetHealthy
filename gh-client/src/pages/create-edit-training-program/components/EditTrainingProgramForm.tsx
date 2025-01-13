@@ -127,7 +127,7 @@ const EditTrainingProgramForm = ({
       <Form {...editExercisePlanForm}>
         <form
           onSubmit={editExercisePlanForm.handleSubmit(onExercisePlanSubmit)}
-          className="space-y-8"
+          className=""
         >
           <ExercisePlanBuilder form={editExercisePlanForm} isEdit={true} />
         </form>

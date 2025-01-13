@@ -95,7 +95,7 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
         />
 
         <ExercisePlanBuilder isEdit={false} form={createTrainingProgramForm} />
-        <div className="flex w-full justify-end">
+        <div className="flex w-full justify-end -translate-y-4">
           <Button type="submit" variant="default">
             Create Program
           </Button>

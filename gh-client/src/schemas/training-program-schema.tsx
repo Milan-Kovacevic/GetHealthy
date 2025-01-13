@@ -34,10 +34,13 @@ export const exercisePlanSchema = z.object({
 
 export const generalInfoSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
-  difficulty: z.string().min(1, { message: "Program difficulty is required." }),
+  difficulty: z
+    .string({ required_error: "Program difficulty is required." })
+    .min(1, { message: "Program difficulty is required." }),
   trainingDuration: z
     .number({
-      invalid_type_error: "Training duration must be positive number",
+      invalid_type_error: "Training duration must be positive number.",
+      required_error: "Training duration is required.",
     })
     .min(1, { message: "Training duration must be positive number" }),
   description: z.string().min(1, { message: "Description is required." }),
@@ -64,10 +67,8 @@ export const createProgramSchemaDefaultValues = {
   generalInfo: {
     name: "",
     description: "",
-    difficulty: undefined,
     categories: [],
     requirements: "",
-    trainingDuration: undefined,
   },
   exercisePlan: {
     exercises: [],

@@ -4,24 +4,14 @@ import {
   FeaturedTrainingProgramDTO,
   PageableTrainerProgramsDTO,
   PageableTrainingProgramsDTO,
-  TrainingProgramDTO,
 } from "../contracts/training-program-contract";
 import {
   FeaturedTrainingProgram,
   PageableTrainerPrograms,
   PageableTrainingPrograms,
   ProgramFilters,
-  TrainingProgram,
 } from "../models/training-program";
 import { sendAxiosRequest } from "./base-service";
-import {
-  SingleProgramDetailsDTO,
-  SingleTrainingProgramDTO,
-} from "../contracts/program-details-contract";
-import {
-  SingleProgramDetails,
-  SingleTrainingProgram,
-} from "../models/program-details";
 
 const getPageableTrainingPrograms = async (
   searchString: string = "",
@@ -92,21 +82,6 @@ const getPageableTrainingProgramsForUser = async (
         };
       }),
     } as PageableTrainingPrograms;
-  });
-};
-
-const getTrainingProgram = async (
-  programId: number
-): Promise<SingleTrainingProgram> => {
-  var url = `${ApiEndpoints.TrainingPrograms}/${programId}`;
-  return sendAxiosRequest<void, SingleTrainingProgramDTO>({
-    method: "GET",
-    url: url,
-  }).then((response) => {
-    return {
-      ...response.data,
-      imageFilePath: pictureUrl(response.data.imageFilePath),
-    } as SingleTrainingProgram;
   });
 };
 
@@ -213,7 +188,6 @@ export {
   createTrainingProgram,
   removeTrainingProgram,
   getFeaturedTrainingPrograms,
-  getTrainingProgram,
   updateTrainingProgramExercisePlan,
   updateTrainingProgramGeneralInfo,
 };
