@@ -17,7 +17,7 @@ const loginUser = async (data: UserLogin): Promise<AuthUserContext> => {
     id: 2,
     firstName: "Marko",
     lastName: "Markovic",
-    role: UserRole.TRAINEE,
+    role: UserRole.TRAINER,
   };
   const tokensMock = {
     accessToken: "123-sha256",

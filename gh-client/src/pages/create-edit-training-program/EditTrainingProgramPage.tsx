@@ -6,6 +6,8 @@ import { getSingleTrainingProgram } from "@/api/services/program-details-service
 import { Separator } from "@/components/ui/separator";
 import { GeneralInfoFormSchema } from "@/schemas/training-program-schema";
 import { ExercisePlanItem } from "@/api/models/exercise";
+import GeneralInformationFormSkeleton from "./components/GeneralInformationFormSkeleton";
+import ExercisePlanBuilderSkeleton from "./components/ExercisePlanBuilderSkeleton";
 
 export default function EditTrainingProgramPage() {
   const { id } = useParams();
@@ -45,6 +47,7 @@ export default function EditTrainingProgramPage() {
     fetchTrainingProgram();
   }, [id]);
 
+  const loading = !programGeneralInfo || !programExercises;
   return (
     <section className="overflow-hidden relative sm:px-5 px-4 md:pt-6 pt-4 pb-10">
       <div className="container mx-auto h-full space-y-5 z-10 relative">
@@ -56,7 +59,7 @@ export default function EditTrainingProgramPage() {
           </p>
         </div>
         <Separator className="my-4" />
-        {programGeneralInfo && programExercises ? (
+        {!loading ? (
           <EditTrainingProgramForm
             generalInfo={programGeneralInfo}
             exercises={programExercises}
@@ -64,7 +67,10 @@ export default function EditTrainingProgramPage() {
             programId={Number(id)}
           />
         ) : (
-          <p className="">Loading...</p>
+          <div>
+            <GeneralInformationFormSkeleton />
+            <ExercisePlanBuilderSkeleton />
+          </div>
         )}
       </div>
     </section>
