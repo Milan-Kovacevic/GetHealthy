@@ -28,18 +28,19 @@ import { getAllExcercises } from "@/api/services/exercise-service";
 
 type ExerciseFormFieldSelectorProps = {
   form: any;
-  formPath?: string;
+  errors?: any;
+  exercisesPath: string;
   disableSearch?: boolean;
   onSelect?: (exercise: ExercisePlanItem) => void;
 };
 
 const ExerciseFormFieldSelector = ({
   form,
-  formPath = "",
+  errors,
+  exercisesPath,
   disableSearch,
   onSelect,
 }: ExerciseFormFieldSelectorProps) => {
-  const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
   const [selectedExercise, setSelectedExercise] = useState<ExercisePlanItem>();
   const [open, setOpen] = useState(false);
   const [exercises, setExercises] = useState<ExercisePlanItem[]>([]);
@@ -66,8 +67,7 @@ const ExerciseFormFieldSelector = ({
 
   const hasError =
     form.watch(exercisesPath)?.length == 0 &&
-    (form.formState.errors.exercisePlan?.exercises.message ||
-      form.formState.errors.exercisePlan?.exercises?.root?.message);
+    (errors?.message || errors?.root?.message);
 
   return (
     <FormField
@@ -135,8 +135,7 @@ const ExerciseFormFieldSelector = ({
 
           {hasError ? (
             <p className="text-xs font-normal text-destructive">
-              {form.formState.errors.exercisePlan?.exercises?.message ??
-                form.formState.errors.exercisePlan?.exercises?.root?.message}
+              {errors?.message ?? errors?.root?.message}
             </p>
           ) : (
             <FormDescription className="text-xs ml-0.5">

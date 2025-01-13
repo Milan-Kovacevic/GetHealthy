@@ -6,23 +6,22 @@ import { X } from "lucide-react";
 
 type ExerciseCardProps = {
   exercise: ExercisePlanItem;
+  errors?: any;
   index: number;
   isSelected: boolean;
   onSelect: () => void;
-  form?: any;
   onRemove: (value: any) => void;
 };
 
 export default function ExerciseCard({
   exercise,
+  errors,
   index,
   isSelected,
   onSelect,
-  form,
   onRemove,
 }: ExerciseCardProps) {
-  const exerciseErrors =
-    form?.formState.errors?.exercisePlan?.exercises?.[index];
+  const exerciseErrors = errors?.[index];
 
   return (
     <Card

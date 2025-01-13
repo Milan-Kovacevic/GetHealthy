@@ -17,6 +17,7 @@ import {
   updateTrainingProgramGeneralInfo,
 } from "@/api/services/training-program-service";
 import { ExercisePlanItem } from "@/api/models/exercise";
+import { useNavigate } from "react-router-dom";
 
 type EditTrainingProgramFormProps = {
   exercises: ExercisePlanItem[];
@@ -31,6 +32,7 @@ const EditTrainingProgramForm = ({
   programId,
   programPicture,
 }: EditTrainingProgramFormProps) => {
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
   const editGeneralInfoForm = useForm<z.infer<typeof generalInfoSchema>>({
     resolver: zodResolver(generalInfoSchema),
@@ -74,6 +76,7 @@ const EditTrainingProgramForm = ({
 
     try {
       await updateTrainingProgramGeneralInfo(programId, formData);
+      navigate("/programs");
       toast.success("Training program general info successfully updated!");
     } catch (error) {
       console.log(error);
@@ -96,6 +99,7 @@ const EditTrainingProgramForm = ({
 
     try {
       await updateTrainingProgramExercisePlan(programId, exercisesData);
+      navigate("/programs");
       toast.success("Training program exercise plan successfully updated!");
     } catch (error) {
       console.log(error);
@@ -114,7 +118,6 @@ const EditTrainingProgramForm = ({
           <GeneralInformationForm
             isEdit={true}
             form={editGeneralInfoForm}
-            formPath=""
             defaultValueCategories={generalInfo.categories}
             defaultPicture={programPicture}
             onSelectFile={setSelectedFile}
@@ -126,12 +129,7 @@ const EditTrainingProgramForm = ({
           onSubmit={editExercisePlanForm.handleSubmit(onExercisePlanSubmit)}
           className="space-y-8"
         >
-          <Separator className="my-4" />
-          <ExercisePlanBuilder
-            form={editExercisePlanForm}
-            formPath=""
-            isEdit={true}
-          />
+          <ExercisePlanBuilder form={editExercisePlanForm} isEdit={true} />
         </form>
       </Form>
     </>

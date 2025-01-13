@@ -3,25 +3,20 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import {
+  CreateProgramFormSchema,
+  createProgramSchemaDefaultValues,
+  createTrainingProgramSchema,
   ExercisePlanFormSchema,
-  exercisePlanSchema,
   GeneralInfoFormSchema,
-  generalInfoSchema,
 } from "@/schemas/training-program-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import ExercisePlanBuilder from "./ExercisePlanBuilder";
 import GeneralInformationForm from "./GeneralInformationForm";
 import useAuth from "@/hooks/use-auth";
 import { useNavigate } from "react-router-dom";
-
-const createTrainingProgramSchema = z.object({
-  generalInfo: generalInfoSchema,
-  exercisePlan: exercisePlanSchema,
-});
 
 type CreateTrainingProgramFormProps = {};
 
@@ -32,28 +27,12 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
   if (!userId) return;
 
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
-  const createTrainingProgramForm = useForm<
-    z.infer<typeof createTrainingProgramSchema>
-  >({
+  const createTrainingProgramForm = useForm<CreateProgramFormSchema>({
     resolver: zodResolver(createTrainingProgramSchema),
-    defaultValues: {
-      generalInfo: {
-        name: "",
-        description: "",
-        difficulty: undefined,
-        categories: [],
-        requirements: "",
-        trainingDuration: undefined,
-      },
-      exercisePlan: {
-        exercises: [],
-      },
-    },
+    defaultValues: createProgramSchemaDefaultValues,
   });
 
-  const onSubmit = async (
-    data: z.infer<typeof createTrainingProgramSchema>
-  ) => {
+  const onSubmit = async (data: CreateProgramFormSchema) => {
     const generalInfoData: GeneralInfoFormSchema = data.generalInfo;
     const exercisesPlanData: ExercisePlanFormSchema = data.exercisePlan;
 
@@ -91,8 +70,6 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
       })
     );
 
-    console.log("Exercise data", programExercisesFormData);
-
     try {
       await createTrainingProgram(formData);
       navigate(-1);
@@ -111,18 +88,13 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
         onSubmit={createTrainingProgramForm.handleSubmit(onSubmit)}
         className="space-y-8"
       >
-        <div>
-          <GeneralInformationForm
-            onSelectFile={setSelectedFile}
-            form={createTrainingProgramForm}
-            formPath="generalInfo"
-          />
-          <Separator className="my-4" />
-          <ExercisePlanBuilder
-            form={createTrainingProgramForm}
-            formPath="exercisePlan"
-          />
-        </div>
+        <GeneralInformationForm
+          isEdit={false}
+          onSelectFile={setSelectedFile}
+          form={createTrainingProgramForm}
+        />
+
+        <ExercisePlanBuilder isEdit={false} form={createTrainingProgramForm} />
         <div className="flex w-full justify-end">
           <Button type="submit" variant="default">
             Create Program

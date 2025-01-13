@@ -6,7 +6,6 @@ import { getSingleTrainingProgram } from "@/api/services/program-details-service
 import { Separator } from "@/components/ui/separator";
 import { GeneralInfoFormSchema } from "@/schemas/training-program-schema";
 import { ExercisePlanItem } from "@/api/models/exercise";
-import { pictureUrl } from "@/lib/utils";
 
 export default function EditTrainingProgramPage() {
   const { id } = useParams();
@@ -24,7 +23,6 @@ export default function EditTrainingProgramPage() {
 
       try {
         const data = await getSingleTrainingProgram(parseInt(id));
-        console.log(data);
         const { exercises, ...generalInfo } = data;
         const transformedExercises = exercises.map((exercise) => ({
           ...exercise,

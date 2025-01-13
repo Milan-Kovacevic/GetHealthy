@@ -95,7 +95,6 @@ const getPageableTrainingProgramsForUser = async (
   });
 };
 
-// TODO: FIX
 const getTrainingProgram = async (
   programId: number
 ): Promise<SingleTrainingProgram> => {

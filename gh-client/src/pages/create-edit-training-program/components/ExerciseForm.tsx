@@ -17,16 +17,17 @@ type ExerciseFormProps = {
   exercise: ExercisePlanItem;
   index: number;
   form: any;
-  formPath?: string;
+  errors?: any;
+  exercisesPath: string;
 };
 
 const ExerciseForm = ({
   exercise,
   index,
   form,
-  formPath = "",
+  errors,
+  exercisesPath,
 }: ExerciseFormProps) => {
-  const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: `${exercisesPath}.${index}.sets`,
@@ -78,9 +79,9 @@ const ExerciseForm = ({
               <FormDescription className="text-xs ml-0.5">
                 Enter the number of sets for this exercise.
               </FormDescription>
-              {form.formState.errors?.[exercisesPath]?.[index]?.sets && (
+              {errors?.[index]?.sets && (
                 <p className="text-xs ml-0.5 font-medium text-destructive ">
-                  {form.formState.errors?.[exercisesPath]?.[index].sets.message}
+                  {errors?.[index]?.sets?.message}
                 </p>
               )}
             </FormItem>
@@ -104,7 +105,8 @@ const ExerciseForm = ({
               exerciseIndex={index}
               setIndex={setIndex}
               form={form}
-              formPath={formPath}
+              errors={errors}
+              exercisesPath={exercisesPath}
               onRemove={onExerciseSetRemoved}
               firstMetricValue={exercise.firstExerciseMetric}
               secondMetricValue={exercise.secondExerciseMetric}

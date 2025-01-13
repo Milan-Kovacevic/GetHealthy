@@ -6,33 +6,25 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  CheckIcon,
-  CircleOffIcon,
-  DumbbellIcon,
-  HashIcon,
-  X,
-} from "lucide-react";
+import { CheckIcon, CircleOffIcon, HashIcon, X } from "lucide-react";
 import ExerciseCard from "./ExerciseCard";
 import ExerciseForm from "./ExerciseForm";
 import ExerciseFormFieldSelector from "./ExerciseFormFieldSelector";
 import FormSectionTitle from "./FormSectionTitle";
 import useExercisePlanBuilder from "../hooks/use-exercise-builder";
 import { ExercisePlanItem } from "@/api/models/exercise";
+import {
+  resolveExerciseFormErrorObject,
+  resolveExerciseFormPrefixPath,
+} from "@/schemas/training-program-schema";
 
 type ExercisePlanBuilderProps = {
-  isEdit?: boolean;
+  isEdit: boolean;
   form: any;
-  formPath?: string;
 };
 
-const ExercisePlanBuilder = ({
-  isEdit = false,
-  form,
-  formPath = "",
-}: ExercisePlanBuilderProps) => {
-  const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
-
+const ExercisePlanBuilder = ({ isEdit, form }: ExercisePlanBuilderProps) => {
+  const exercisesPath = resolveExerciseFormPrefixPath(isEdit);
   const {
     onExerciseDragDrop,
     onExerciseDragOver,
@@ -44,6 +36,8 @@ const ExercisePlanBuilder = ({
   } = useExercisePlanBuilder({ form, exercisesPath });
 
   var formExercises: ExercisePlanItem[] = form.watch(exercisesPath);
+  var exerciseErrors = resolveExerciseFormErrorObject(form, isEdit);
+  console.log(exerciseErrors);
 
   return (
     <div className="mt-8 w-full">
@@ -51,12 +45,13 @@ const ExercisePlanBuilder = ({
         <FormSectionTitle title="Exercise plan" />
       </div>
       <div className="flex flex-col space-y-4">
-        <div className="flex flex-col lg:flex-row flex-1 space-y-6 lg:space-y-0 gap-2">
+        <div className="flex flex-col lg:flex-row flex-1 sm:space-y-6 space-y-3 lg:space-y-0 gap-2">
           <div className="flex flex-col w-full lg:max-w-[340px] overflow-hidden space-y-4">
             <div className="w-full lg:max-w-xs lg:pr-0 pr-5">
               <ExerciseFormFieldSelector
                 form={form}
-                formPath={formPath}
+                errors={exerciseErrors}
+                exercisesPath={exercisesPath}
                 onSelect={onSelectExercise}
               />
             </div>
@@ -94,7 +89,7 @@ const ExercisePlanBuilder = ({
                         index={index}
                         isSelected={selectedExerciseIndex === index}
                         onSelect={() => onChangeSelectedExerciseIndex(index)}
-                        form={form}
+                        errors={exerciseErrors}
                         onRemove={onRemoveExercise}
                       />
                     </div>
@@ -146,9 +141,10 @@ const ExercisePlanBuilder = ({
                 <div className="m-1 mt-3 flex-1 flex">
                   <ExerciseForm
                     key={selectedExerciseIndex}
-                    formPath={formPath}
+                    exercisesPath={exercisesPath}
                     exercise={form.watch(exercisesPath)[selectedExerciseIndex]}
                     index={selectedExerciseIndex}
+                    errors={exerciseErrors}
                     form={form}
                   />
                 </div>

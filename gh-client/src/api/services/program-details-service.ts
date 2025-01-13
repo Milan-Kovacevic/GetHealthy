@@ -10,7 +10,7 @@ import {
   SingleProgramDetails,
   SingleTrainingProgramInfo,
 } from "../models/program-details";
-import { delay } from "@/lib/utils";
+import { delay, pictureUrl } from "@/lib/utils";
 import {
   SingleTrainingProgramDTO,
   SingleProgramTrainerDTO,
@@ -33,7 +33,12 @@ const getSingleTrainingProgram = async (programId: number) => {
   return sendAxiosRequest<void, SingleTrainingProgramDTO>({
     method: "GET",
     url: url,
-  }).then((response) => response.data as SingleTrainingProgram);
+  }).then((response) => {
+    return {
+      ...response.data,
+      imageFilePath: pictureUrl(response.data.imageFilePath),
+    } as SingleTrainingProgram;
+  });
 };
 
 const getSingleTrainingProgramInfo = async (programId: number) => {

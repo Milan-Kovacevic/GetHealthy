@@ -28,25 +28,25 @@ import FormSectionTitle from "./FormSectionTitle";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import ImageSelectorWithPreview from "./ImageSelectorWithPreview";
+import { Separator } from "@/components/ui/separator";
 
 type GeneralInformationFormProps = {
-  isEdit?: boolean;
+  isEdit: boolean;
   form: any;
   onSelectFile: (file: File | undefined) => void;
-  formPath?: string;
   defaultValueCategories?: Category[];
   defaultPicture?: string;
 };
 
 const GeneralInformationForm = ({
-  isEdit = false,
+  isEdit,
   form,
-  formPath = "",
   onSelectFile,
   defaultValueCategories,
   defaultPicture,
 }: GeneralInformationFormProps) => {
   const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
+  const formNamePrefix = !isEdit ? "generalInfo" : "";
 
   useEffect(() => {
     getAllCategories()
@@ -73,7 +73,7 @@ const GeneralInformationForm = ({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               <InputFormField
                 control={form.control}
-                name={`${formPath}.name`}
+                name={`${formNamePrefix}.name`}
                 type="text"
                 description="Enter a training program name."
                 placeholder="ex. HIIT"
@@ -82,7 +82,7 @@ const GeneralInformationForm = ({
               />
               <FormField
                 control={form.control}
-                name={`${formPath}.difficulty`}
+                name={`${formNamePrefix}.difficulty`}
                 render={({ field }) => (
                   <FormItem className="space-y-0.5 max-w-lg">
                     <FormLabel>Difficulty *</FormLabel>
@@ -122,7 +122,7 @@ const GeneralInformationForm = ({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               <FormField
                 control={form.control}
-                name={`${formPath}.categories`}
+                name={`${formNamePrefix}.categories`}
                 render={({ field }) => (
                   <FormItem className="space-y-0.5 max-w-lg">
                     <FormLabel className="">Categories *</FormLabel>
@@ -151,7 +151,7 @@ const GeneralInformationForm = ({
 
               <InputFormField
                 control={form.control}
-                name={`${formPath}.trainingDuration`}
+                name={`${formNamePrefix}.trainingDuration`}
                 type="text"
                 description="Enter a duration in minutes."
                 placeholder="ex. 100"
@@ -162,7 +162,7 @@ const GeneralInformationForm = ({
             </div>
             <TextareaFormField
               control={form.control}
-              name={`${formPath}.description`}
+              name={`${formNamePrefix}.description`}
               display="Description *"
               label="Description *"
               description="Enter a description for training program."
@@ -171,7 +171,7 @@ const GeneralInformationForm = ({
             />
             <TextareaFormField
               control={form.control}
-              name={`${formPath}.requirements`}
+              name={`${formNamePrefix}.requirements`}
               display="Requirements"
               label="Requirements"
               description="Enter requirements for training program."
@@ -181,7 +181,7 @@ const GeneralInformationForm = ({
           </div>
           <div className="lg:col-span-2">
             <ImageSelectorWithPreview
-              title="Training Program Picture *"
+              title="Training program picture *"
               name="files"
               description="Upload a picture for the training program."
               formats=".png, .jpeg, .jpg"
@@ -190,7 +190,12 @@ const GeneralInformationForm = ({
             />
           </div>
         </div>
-        <div className="flex md:flex-row flex-col flex-wrap justify-between md:items-end items-start pt-4 gap-x-2 gap-y-6 h-12">
+        <div
+          className={cn(
+            "flex md:flex-row flex-col flex-wrap justify-between md:items-end items-start gap-x-2 gap-y-6 pt-9",
+            isEdit && "pt-3"
+          )}
+        >
           <div className="flex flex-row items-start gap-1">
             <span className="text-xs font-bold text-muted-foreground uppercase">
               note:
@@ -200,17 +205,16 @@ const GeneralInformationForm = ({
               new training program
             </p>
           </div>
-          {isEdit ? (
+          {isEdit && (
             <div className="flex self-end">
               <Button type="submit" variant="secondary" className="min-w-32">
                 <CheckIcon />
                 {isEdit ? "Save Changes" : "Submit"}
               </Button>
             </div>
-          ) : (
-            <></>
           )}
         </div>
+        <Separator className="my-4" />
       </div>
     </div>
   );

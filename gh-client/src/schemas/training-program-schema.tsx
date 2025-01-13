@@ -4,6 +4,9 @@ import { z } from "zod";
 export type SetFormSchema = z.infer<typeof setSchema>;
 export type ExercisePlanFormSchema = z.infer<typeof exercisePlanSchema>;
 export type GeneralInfoFormSchema = z.infer<typeof generalInfoSchema>;
+export type CreateProgramFormSchema = z.infer<
+  typeof createTrainingProgramSchema
+>;
 
 const setSchema = z.object({
   reps: z.number().min(1, "Reps must be at least one").optional(),
@@ -22,7 +25,7 @@ const exerciseSchema = z.object({
   sets: z
     .array(setSchema)
     .min(1, "At least one set is required")
-    .max(3, "Must have less then 4 sets"),
+    .max(6, "Must have less then 7 sets"),
 });
 
 export const exercisePlanSchema = z.object({
@@ -52,3 +55,29 @@ export const generalInfoSchema = z.object({
     .min(1, { message: "At least one category is required." })
     .max(4, { message: "Maximum of 4 categories are allowed" }),
 });
+
+export const createTrainingProgramSchema = z.object({
+  generalInfo: generalInfoSchema,
+  exercisePlan: exercisePlanSchema,
+});
+export const createProgramSchemaDefaultValues = {
+  generalInfo: {
+    name: "",
+    description: "",
+    difficulty: undefined,
+    categories: [],
+    requirements: "",
+    trainingDuration: undefined,
+  },
+  exercisePlan: {
+    exercises: [],
+  },
+};
+export const resolveExerciseFormPrefixPath = (isEdit: boolean) => {
+  return !isEdit ? `exercisePlan.exercises` : "exercises";
+};
+export const resolveExerciseFormErrorObject = (form: any, isEdit: boolean) => {
+  return !isEdit
+    ? form?.formState.errors?.exercisePlan?.exercises
+    : form?.formState.errors?.exercises;
+};

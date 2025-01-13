@@ -15,7 +15,8 @@ type ExerciseSetFormProps = {
   exerciseIndex: number;
   setIndex: number;
   form: any;
-  formPath?: string;
+  errors?: any;
+  exercisesPath: string;
   onRemove: (index: number) => void;
   firstMetricValue: ExerciseMetric;
   secondMetricValue?: ExerciseMetric;
@@ -25,23 +26,18 @@ const ExerciseSetForm = ({
   exerciseIndex,
   setIndex,
   form,
-  formPath = "",
+  exercisesPath,
+  errors,
   onRemove,
   firstMetricValue,
   secondMetricValue,
 }: ExerciseSetFormProps) => {
-  const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
-
   const currentSet = form.watch(
     `${exercisesPath}.${exerciseIndex}.sets.${setIndex}`
   );
   const exercise = form.watch(`${exercisesPath}.${exerciseIndex}`);
 
   const setAttributes = Object.keys(currentSet);
-
-  useEffect(() => {
-    // console.log(metrics);
-  }, []);
 
   return (
     <Accordion type="single" collapsible className="w-full mx-1 mt-1">
@@ -53,17 +49,14 @@ const ExerciseSetForm = ({
         <AccordionTrigger
           className={cn(
             "flex flex-row items-center mb-2 border p-2 rounded-md px-3 bg-muted/20 border-foreground/30 hover:border-foreground/55 hover:no-underline hover:bg-muted/50 transition-colors",
-            form.formState.errors?.[exercisesPath]?.[exerciseIndex]?.sets[
-              setIndex
-            ] && "border-destructive hover:border-destructive"
+            errors?.[exerciseIndex]?.sets[setIndex] &&
+              "border-destructive hover:border-destructive"
           )}
         >
           <div
             className={cn(
               "flex flex-row items-center flex-1",
-              form.formState.errors?.[exercisesPath]?.[exerciseIndex]?.sets[
-                setIndex
-              ] && "border-destructive"
+              errors?.[exerciseIndex]?.sets[setIndex] && "border-destructive"
             )}
           >
             <span className="font-semibold text-foreground/80 text-sm ml-1">
