@@ -1,0 +1,154 @@
+{
+  "rules": [
+    {
+      "methods": ["GET"],
+      "pattern": "/storage/**",
+      "roles": ["ADMIN", "TRAINEE", "TRAINER"]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/accounts/*",
+      "roles": ["TRAINEE", "TRAINER"]
+    },
+    {
+      "methods": ["POST"],
+      "pattern": "/accounts/**",
+      "roles": ["TRAINEE", "TRAINER"]
+    },
+    {
+      "methods": ["POST"],
+      "pattern": "/auth/refresh",
+      "roles": ["ADMIN", "TRAINEE", "TRAINER"]
+    },
+    {
+      "methods": ["POST"],
+      "pattern": "/trainee-exercising/**",
+      "roles": ["TRAINEE"]
+    },
+    {
+      "methods": ["POST"],
+      "pattern": "/training-program-applications",
+      "roles": ["TRAINEE"]
+    },
+    {
+      "methods": ["POST"],
+      "pattern": "/training-program-applications/*",
+      "roles": ["TRAINER"]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*/applications",
+      "roles": ["TRAINER"]
+    },
+
+    {
+      "methods": ["GET", "POST"],
+      "pattern": "/users/*/analytics/*",
+      "roles": ["TRAINER"]
+    },
+    {
+      "methods": ["GET", "DELETE"],
+      "pattern": "/users/*/notifications",
+      "roles": ["TRAINER", "TRAINEE"]
+    },
+    {
+      "methods": ["GET", "DELETE"],
+      "pattern": "/users/*/notifications/*",
+      "roles": ["TRAINER", "TRAINEE"]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*",
+      "roles": ["TRAINER", "TRAINEE"]
+    },
+    {
+      "methods": ["GET", "POST"],
+      "pattern": "/users/**",
+      "roles": ["TRAINER", "TRAINEE"]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/categories/**",
+      "roles": ["TRAINER", "TRAINEE"]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/exercises/**",
+      "roles": ["TRAINER", "TRAINEE"]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/metrics/**",
+      "roles": ["TRAINER"]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/schedules/**",
+      "roles": ["TRAINER", "TRAINEE"]
+    },
+    {
+      "methods": ["POST", "PUT", "DELETE"],
+      "pattern": "/schedules/**",
+      "roles": ["TRAINER"]
+    },
+    {
+      "methods": ["POST"],
+      "pattern": "/users/*/notifications/**",
+      "roles": ["TRAINER", "TRAINEE"]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/training-program/*/comments",
+      "roles": ["TRAINEE", "TRAINER"]
+    },
+    {
+      "methods": ["POST"],
+      "pattern": "/training-program/*/comments",
+      "roles": ["TRAINEE"]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/training-program/*/exercises",
+      "roles": ["TRAINEE", "TRAINER"]
+    },
+    {
+      "methods": ["PUT"],
+      "pattern": "/training-program/*/exercises",
+      "roles": ["TRAINER"]
+    },
+    {
+      "methods": ["PUT"],
+      "pattern": "/training-program/*/exercises",
+      "roles": ["TRAINER"]
+    },
+    {
+      "methods": ["PUT", "GET", "DELETE"],
+      "pattern": "/training-program/*/participants/**",
+      "roles": ["TRAINER"]
+    },
+    {
+      "methods": ["PUT", "POST", "DELETE"],
+      "pattern": "/training-program/**",
+      "roles": ["TRAINER"]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/training-program/**",
+      "roles": ["TRAINEE", "TRAINER"]
+    },
+    {
+      "methods": [
+        "POST"
+      ],
+      "pattern": "/training-program/*/ratings",
+      "roles": [
+        "TRAINEE"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/training-program/*/user-ratings/*",
+      "roles": ["TRAINEE"]
+    }
+  ]
+}

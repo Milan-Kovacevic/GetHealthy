@@ -35,5 +35,4 @@ public class TrainingProgramOnSchedule implements BaseEntity<Integer> {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "ProgramId", nullable = false)
     private TrainingProgram program;
-
 }

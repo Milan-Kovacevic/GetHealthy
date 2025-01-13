@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @Entity
@@ -32,4 +34,8 @@ public class ProgramRating implements BaseEntity<ProgramRatingId> {
     @NotNull
     @Column(name = "Rate", nullable = false)
     private Integer rate;
+
+    @NotNull
+    @Column(name = "DateRated", nullable = false)
+    private Instant dateRated;
 }
