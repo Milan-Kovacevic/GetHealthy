@@ -1,7 +1,6 @@
 import { Page } from "../contracts/pageable-contract";
-import { ProgramDifficulty } from "../enums/program-difficulty";
-import { Category } from "./category";
 import { ProgramExerciseDetails } from "./program-exercise";
+import { TrainingProgram } from "./training-program";
 
 export type SingleProgramDetails = {
   id: number;
@@ -25,20 +24,18 @@ export type SingleProgramParticipant = {
 
 export type PageableProgramParticipants = Page<SingleProgramParticipant>;
 
-export type SingleTrainingProgram = {
-  id: number;
-  name: string;
-  imageFilePath: string;
-  difficulty: ProgramDifficulty;
-  rating: number;
-  createdAt: string;
+export type SingleTrainingProgramInfo = TrainingProgram & {
   totalRates: number;
-  description: string;
-  trainerFirstName: string;
-  trainerLastName: string;
-  categories: Category[];
   currentlyEnrolled: number;
   joined?: boolean;
+};
+
+export type SingleTrainingProgram = TrainingProgram & {
+  totalRates: number;
+  currentlyEnrolled: number;
+  requirements: string;
+  trainingDuration: number;
+  exercises: ProgramExerciseDetails[];
 };
 
 export type SingleProgramTrainer = {

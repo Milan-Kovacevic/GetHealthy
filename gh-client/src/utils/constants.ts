@@ -40,5 +40,6 @@ export const ApiEndpoints = {
   Metrics: `${API_PREFIX}/metrics`,
   Exercises: `${API_PREFIX}/exercises`,
   TraineeExercising: `${API_PREFIX}/trainee-exercising`,
-  TrainerAnalytics: `${API_PREFIX}/users/{userId}/analytics`,
+  TrainerAnalytics: `${API_PREFIX}/users/{userId}/trainer-analytics`,
+  TraineeAnalytics: `${API_PREFIX}/users/{userId}/trainee-analytics`,
 };

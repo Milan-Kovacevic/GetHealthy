@@ -24,3 +24,20 @@ export type ExerciseSet = {
 };
 
 export type PageableExercises = Page<Exercise>;
+
+export type ExerciseListingItem = {
+  id: number;
+  exerciseName: string;
+  firstExerciseMetric: ExerciseMetric;
+  secondExerciseMetric: ExerciseMetric;
+};
+
+export type PageableExerciseListing = Page<ExerciseListingItem>;
+
+export type ExercisePlanItem = {
+  id: number;
+  name: string;
+  firstExerciseMetric: ExerciseMetric;
+  secondExerciseMetric?: ExerciseMetric;
+  sets: ExerciseSet[];
+};

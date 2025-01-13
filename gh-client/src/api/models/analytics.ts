@@ -29,6 +29,7 @@ export type AnalyticsEngagementData = {
   skipped: number;
   completed: number;
 };
+/***********************************/
 
 // Trainer Popularity chart models
 export type TrainerPopularityAnalytics = {
@@ -40,6 +41,7 @@ export type AnalyticsPopularityData = {
   date: string;
   value: number;
 };
+/***********************************/
 
 // Trainer Dashboard chart models
 export type TrainerDashboardAnalytics = {
@@ -59,3 +61,35 @@ export type TotalProgramsDashboardData = {
   intermediate: number;
   advanced: number;
 };
+/***********************************/
+
+// Trainee Popularity chart models
+export type TraineeProgressAnalytics = {
+  data: TraineeProgressData[];
+};
+
+export type TraineeProgressData = {
+  date: string;
+  firstMetric: number;
+  secondMetric?: number;
+};
+/***********************************/
+
+// Trainee Dashboard chart models
+export type TraineeDashboardAnalytics = {
+  totalJoined: TotalJoinedProgramsData[];
+  topInteractedPrograms: TopProgramsDashboardData[];
+  topSkippedExercises: TopExercisesDashboardData[];
+  topFavoriteExercises: TopExercisesDashboardData[];
+};
+
+export type TopExercisesDashboardData = {
+  exercise: string;
+  value: number;
+};
+
+export type TotalJoinedProgramsData = {
+  interacted: number;
+  nonInteracted: number;
+};
+/***********************************/

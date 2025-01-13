@@ -1,12 +1,16 @@
 import { ApiEndpoints } from "@/utils/constants";
 import { sendAxiosRequest } from "./base-service";
-import { SingleProgramDetailsDTO } from "../contracts/program-details-contract";
+import {
+  SingleProgramDetailsDTO,
+  SingleTrainingProgramInfoDTO,
+} from "../contracts/program-details-contract";
 import {
   MoveProgramParticipant,
   PageableProgramParticipants,
   SingleProgramDetails,
+  SingleTrainingProgramInfo,
 } from "../models/program-details";
-import { delay } from "@/lib/utils";
+import { delay, pictureUrl } from "@/lib/utils";
 import {
   SingleTrainingProgramDTO,
   SingleProgramTrainerDTO,
@@ -29,7 +33,25 @@ const getSingleTrainingProgram = async (programId: number) => {
   return sendAxiosRequest<void, SingleTrainingProgramDTO>({
     method: "GET",
     url: url,
-  }).then((response) => response.data as SingleTrainingProgram);
+  }).then((response) => {
+    return {
+      ...response.data,
+      imageFilePath: pictureUrl(response.data.imageFilePath),
+    } as SingleTrainingProgram;
+  });
+};
+
+const getSingleTrainingProgramInfo = async (programId: number) => {
+  var url = ApiEndpoints.SingleTrainingProgram.replace(
+    "{programId}",
+    `${programId}`
+  );
+  url += "/info";
+  await delay(2000);
+  return sendAxiosRequest<void, SingleTrainingProgramInfoDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => response.data as SingleTrainingProgramInfo);
 };
 
 const getSingleProgramTrainer = async (programId: number) => {
@@ -135,6 +157,7 @@ const leaveTrainingProgram = async (
 export {
   getSingleTrainingProgramDetails,
   getPageableTrainingProgramParticipants,
+  getSingleTrainingProgramInfo,
   getSingleTrainingProgram,
   getSingleProgramTrainer,
   removeParticipantFromTrainingProgram,

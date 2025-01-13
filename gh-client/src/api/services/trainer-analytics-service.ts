@@ -6,16 +6,15 @@ import {
   TrainerDashboardAnalyticsDTO,
   TrainerEngagementAnalyticsDTO,
   TrainerPopularityAnalyticsDTO,
-} from "../contracts/trainer-analytics-contract";
+} from "../contracts/analytics-contract";
 import {
   AnalyticsProgramExercise,
   AnalyticsProgramParticipant,
   TrainerDashboardAnalytics,
   TrainerEngagementAnalytics,
   TrainerPopularityAnalytics,
-} from "../models/trainer-analytics";
+} from "../models/analytics";
 import { delay } from "@/lib/utils";
-import { DateRange } from "react-day-picker";
 import { ProgramParticipantDTO } from "../contracts/program-participant-contract";
 import { getTrainingProgramExercises } from "./training-program-exercise-service";
 

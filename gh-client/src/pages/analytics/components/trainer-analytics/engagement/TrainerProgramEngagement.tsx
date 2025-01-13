@@ -3,8 +3,7 @@ import useTrainerAnalytics from "../../../hooks/use-trainer-analytics";
 import {
   AnalyticsEngagementData,
   AnalyticsProgramExercise,
-  AnalyticsProgramParticipant,
-} from "@/api/models/trainer-analytics";
+} from "@/api/models/analytics";
 import ProgramEngagementChart from "./ProgramEngagementChart";
 import {
   Card,

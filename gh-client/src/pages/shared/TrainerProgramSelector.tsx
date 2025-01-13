@@ -16,6 +16,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import useAuth from "@/hooks/use-auth";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
@@ -26,19 +27,21 @@ type TrainerProgramSelectorProps = {
   onProgramSelected: (program?: TrainerProgram) => void;
   text: string;
   className?: string;
-  editTrainingProgram?: TrainerProgram;
+  selectedValue?: TrainerProgram; // Controlled vs Uncontrolled component...
 };
 
 export default function TrainerProgramSelector(
   props: TrainerProgramSelectorProps
 ) {
-  const { onProgramSelected, text, className, editTrainingProgram } = props;
+  const { onProgramSelected, text, className, selectedValue } = props;
   const [open, setOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<
     TrainerProgram | undefined
-  >(editTrainingProgram ?? undefined);
+  >(selectedValue ?? undefined);
+  const auth = useAuth();
+  const userId = auth.getUserId();
+  if (!userId) return;
 
-  const userId = 2;
   const {
     data: programs,
     hasMore: hasMorePrograms,
@@ -51,10 +54,10 @@ export default function TrainerProgramSelector(
   });
 
   useEffect(() => {
-    if (editTrainingProgram) {
-      setSelectedProgram(editTrainingProgram);
+    if (selectedValue) {
+      setSelectedProgram(selectedValue);
     }
-  }, [editTrainingProgram]);
+  }, [selectedValue]);
 
   const handeProgramSelected = (program?: TrainerProgram) => {
     setOpen(false);
@@ -91,7 +94,7 @@ export default function TrainerProgramSelector(
             <CommandInput placeholder="Search for programs ..." />
           )}
           <CommandList className="w-[320px]">
-            <CommandEmpty className="text-sm font-mediun italic text-muted-foreground p-3 px-4">
+            <CommandEmpty className="text-sm text-center italic text-muted-foreground p-5">
               No training programs to show.
             </CommandEmpty>
             <CommandGroup>

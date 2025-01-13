@@ -1,4 +1,4 @@
-import { TotalProgramsDashboardData } from "@/api/models/analytics";
+import { TotalJoinedProgramsData } from "@/api/models/analytics";
 import {
   ChartConfig,
   ChartContainer,
@@ -8,30 +8,26 @@ import {
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 
 const chartConfig = {
-  beginner: {
-    label: "Beginner",
-    color: "hsl(var(--chart-1)/0.6)",
-  },
-  intermediate: {
-    label: "Intermediate",
-    color: "hsl(var(--chart-3)/0.6)",
-  },
-  advanced: {
-    label: "Advanced",
+  interacted: {
+    label: "Interacted",
     color: "hsl(var(--primary)/0.6)",
+  },
+  nonInteracted: {
+    label: "Non interacted",
+    color: "hsl(var(--chart-1)/0.6)",
   },
 } satisfies ChartConfig;
 
-type TotalProgramsDashboardChartProps = {
-  chartData: TotalProgramsDashboardData[];
+type TotalJoinedProgramsChartProps = {
+  chartData: TotalJoinedProgramsData[];
 };
 
-export default function TotalProgramsDashboardChart({
+export default function TotalJoinedProgramsChart({
   chartData,
-}: TotalProgramsDashboardChartProps) {
+}: TotalJoinedProgramsChartProps) {
   if (chartData.length == 0) return;
-  const totalPrograms =
-    chartData[0].beginner + chartData[0].intermediate + chartData[0].advanced;
+  const totalJoinedPrograms =
+    chartData[0].interacted + chartData[0].nonInteracted;
 
   return (
     <ChartContainer
@@ -59,7 +55,7 @@ export default function TotalProgramsDashboardChart({
                       y={(viewBox.cy || 0) - 16}
                       className="fill-foreground text-2xl font-bold"
                     >
-                      {totalPrograms.toLocaleString()}
+                      {totalJoinedPrograms.toLocaleString()}
                     </tspan>
                     <tspan
                       x={viewBox.cx}
@@ -76,24 +72,17 @@ export default function TotalProgramsDashboardChart({
         </PolarRadiusAxis>
 
         <RadialBar
-          dataKey="beginner"
+          dataKey="interacted"
           stackId="a"
           cornerRadius={5}
-          fill="var(--color-beginner)"
+          fill="var(--color-interacted)"
           className="stroke-transparent stroke-2"
         />
         <RadialBar
-          dataKey="intermediate"
+          dataKey="nonInteracted"
           stackId="a"
           cornerRadius={5}
-          fill="var(--color-intermediate)"
-          className="stroke-transparent stroke-2"
-        />
-        <RadialBar
-          dataKey="advanced"
-          fill="var(--color-advanced)"
-          stackId="a"
-          cornerRadius={5}
+          fill="var(--color-nonInteracted)"
           className="stroke-transparent stroke-2"
         />
       </RadialBarChart>

@@ -10,6 +10,7 @@ import java.util.List;
 public class SingleTrainingProgramResponse extends TrainingProgramResponse {
     private Integer currentlyEnrolled;
     private Integer totalRates;
-    private Boolean joined;
-    List<ExerciseResponse> exercises;
+    private String requirements;
+    private Integer trainingDuration;
+    private List<ProgramExerciseDetailsResponse> exercises;
 }

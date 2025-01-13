@@ -1,17 +1,15 @@
-import { delay } from "@/lib/utils";
+import { delay, pictureUrl } from "@/lib/utils";
 import { ApiEndpoints } from "@/utils/constants";
 import {
   FeaturedTrainingProgramDTO,
   PageableTrainerProgramsDTO,
   PageableTrainingProgramsDTO,
-  TrainingProgramDTO,
 } from "../contracts/training-program-contract";
 import {
   FeaturedTrainingProgram,
   PageableTrainerPrograms,
   PageableTrainingPrograms,
   ProgramFilters,
-  TrainingProgram,
 } from "../models/training-program";
 import { sendAxiosRequest } from "./base-service";
 
@@ -39,7 +37,15 @@ const getPageableTrainingPrograms = async (
     url: url,
   }).then((response) => {
     // Perform neccessary mappings etc...
-    return response.data as PageableTrainingPrograms;
+    return {
+      ...response.data,
+      content: response.data.content.map((item) => {
+        return {
+          ...item,
+          imageFilePath: pictureUrl(item.imageFilePath),
+        };
+      }),
+    } as PageableTrainingPrograms;
   });
 };
 
@@ -67,31 +73,26 @@ const getPageableTrainingProgramsForUser = async (
     method: "GET",
     url: url,
   }).then((response) => {
-    // Perform neccessary mappings etc...
-    return response.data as PageableTrainingPrograms;
+    return {
+      ...response.data,
+      content: response.data.content.map((item) => {
+        return {
+          ...item,
+          imageFilePath: pictureUrl(item.imageFilePath),
+        };
+      }),
+    } as PageableTrainingPrograms;
   });
 };
 
-const getTrainingProgram = async (
-  programId: number
-): Promise<TrainingProgram> => {
-  var url = `${ApiEndpoints.TrainingPrograms}/${programId}/details`;
-  return sendAxiosRequest<void, TrainingProgramDTO>({
-    method: "GET",
-    url: url,
-  }).then((response) => {
-    return response.data as TrainingProgram;
-  });
-};
-
-const createTrainingProgram = async (userId: number, formData: FormData) => {
-  var url = `${ApiEndpoints.TrainingPrograms}/${userId}`;
-  return sendAxiosRequest<any, object>({
+const createTrainingProgram = async (formData: FormData) => {
+  var url = `${ApiEndpoints.TrainingPrograms}`;
+  return sendAxiosRequest<FormData, void>({
     method: "POST",
     url: url,
     data: formData,
   }).then((response) => {
-    return response.data as object;
+    return response.data;
   });
 };
 
@@ -152,7 +153,12 @@ const getFeaturedTrainingPrograms = async () => {
     url: url,
   }).then((response) => {
     // Perform neccessary mappings etc...
-    return response.data as FeaturedTrainingProgram[];
+    return response.data.map((item) => {
+      return {
+        ...item,
+        imageFilePath: pictureUrl(item.imageFilePath),
+      };
+    }) as FeaturedTrainingProgram[];
   });
 };
 
@@ -182,7 +188,6 @@ export {
   createTrainingProgram,
   removeTrainingProgram,
   getFeaturedTrainingPrograms,
-  getTrainingProgram,
   updateTrainingProgramExercisePlan,
   updateTrainingProgramGeneralInfo,
 };

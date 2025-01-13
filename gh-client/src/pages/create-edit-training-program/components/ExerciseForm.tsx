@@ -10,22 +10,24 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { ClipboardListIcon } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray } from "react-hook-form";
-import SetForm from "./SetForm";
+import ExerciseSetForm from "./ExerciseSetForm";
+import { ExercisePlanItem } from "@/api/models/exercise";
 
 type ExerciseFormProps = {
-  exercise: any;
+  exercise: ExercisePlanItem;
   index: number;
   form: any;
-  formPath?: string;
+  errors?: any;
+  exercisesPath: string;
 };
 
 const ExerciseForm = ({
   exercise,
   index,
   form,
-  formPath = "",
+  errors,
+  exercisesPath,
 }: ExerciseFormProps) => {
-  const exercisesPath = formPath ? `${formPath}.exercises` : "exercises";
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: `${exercisesPath}.${index}.sets`,
@@ -77,9 +79,9 @@ const ExerciseForm = ({
               <FormDescription className="text-xs ml-0.5">
                 Enter the number of sets for this exercise.
               </FormDescription>
-              {form.formState.errors?.[exercisesPath]?.[index]?.sets && (
+              {errors?.[index]?.sets && (
                 <p className="text-xs ml-0.5 font-medium text-destructive ">
-                  {form.formState.errors?.[exercisesPath]?.[index].sets.message}
+                  {errors?.[index]?.sets?.message}
                 </p>
               )}
             </FormItem>
@@ -98,24 +100,16 @@ const ExerciseForm = ({
       <ScrollArea className="w-full flex-1">
         <div className="mr-3 flex flex-col gap-0 max-w-screen-md">
           {fields.map((field, setIndex) => (
-            <SetForm
+            <ExerciseSetForm
               key={field.id}
               exerciseIndex={index}
               setIndex={setIndex}
               form={form}
-              formPath={formPath}
-              exerciseType={exercise?.type}
+              errors={errors}
+              exercisesPath={exercisesPath}
               onRemove={onExerciseSetRemoved}
-              metrics={[
-                {
-                  ...exercise?.firstExerciseMetric,
-                  metricName: "firstMetricValue",
-                },
-                {
-                  ...exercise?.secondExerciseMetric,
-                  metricName: "secondMetricValue",
-                },
-              ]}
+              firstMetricValue={exercise.firstExerciseMetric}
+              secondMetricValue={exercise.secondExerciseMetric}
             />
           ))}
         </div>

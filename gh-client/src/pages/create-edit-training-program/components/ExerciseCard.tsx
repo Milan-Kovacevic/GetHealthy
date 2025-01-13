@@ -1,31 +1,35 @@
+import { ExercisePlanItem } from "@/api/models/exercise";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 
 type ExerciseCardProps = {
-  exercise: any;
+  exercise: ExercisePlanItem;
+  errors?: any;
   index: number;
   isSelected: boolean;
   onSelect: () => void;
-  form?: any;
   onRemove: (value: any) => void;
 };
 
 export default function ExerciseCard({
   exercise,
+  errors,
   index,
   isSelected,
   onSelect,
-  form,
   onRemove,
 }: ExerciseCardProps) {
-  const exerciseErrors = form?.formState.errors?.exercises?.[index];
+  const exerciseErrors = errors?.[index];
 
   return (
     <Card
-      className={`relative cursor-pointer transition-all ${
-        isSelected ? "ring-2 ring-primary" : ""
-      } ${exerciseErrors ? "ring-2 ring-destructive" : ""}`}
+      className={cn(
+        `relative cursor-pointer transition-all`,
+        exerciseErrors && "ring-1 ring-destructive",
+        isSelected && "ring-2 ring-primary"
+      )}
       onClick={onSelect}
     >
       <CardContent className="p-3 flex items-center">
@@ -36,7 +40,6 @@ export default function ExerciseCard({
           <div>
             <h3 className="font-semibold text-base mb-1">{exercise.name}</h3>
             <div className="flex items-center text-xs text-muted-foreground space-x-2">
-              <span>{exercise.type}</span>
               <span>•</span>
               <span>{exercise?.sets?.length} sets</span>
             </div>

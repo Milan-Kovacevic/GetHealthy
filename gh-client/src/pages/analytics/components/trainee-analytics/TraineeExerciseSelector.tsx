@@ -1,4 +1,5 @@
-import { AnalyticsProgramParticipant } from "@/api/models/trainer-analytics";
+import { ExerciseListingItem } from "@/api/models/exercise";
+import { getPageableExerciseListing } from "@/api/services/exercise-service";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -8,38 +9,51 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { cn } from "@/lib/utils";
-import { format, formatDate, formatDistanceToNow } from "date-fns";
-import { ChevronsDownIcon, ChevronsUpDownIcon, XIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronsUpDownIcon, Loader2Icon, XIcon } from "lucide-react";
+import { useState } from "react";
 
 type TraineeExerciseSelectorProps = {
-  onExerciseSelected: (participant?: AnalyticsProgramParticipant) => void;
-  exercises: AnalyticsProgramParticipant[];
-  text: string;
-  placeholder: string;
+  onExerciseSelected: (exercise?: ExerciseListingItem) => void;
   className?: string;
 };
 
 export default function TraineeExerciseSelector(
   props: TraineeExerciseSelectorProps
 ) {
-  const { onExerciseSelected, text, placeholder, exercises, className } = props;
+  const { onExerciseSelected, className } = props;
   const [open, setOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] =
-    useState<AnalyticsProgramParticipant>();
+    useState<ExerciseListingItem>();
 
-  const handeExerciseSelected = (participant?: AnalyticsProgramParticipant) => {
+  const {
+    data: exercises,
+    hasMore,
+    isLoading,
+    onPageChange,
+  } = useInfiniteScroll<ExerciseListingItem>({
+    fetchData: (state) => {
+      return getPageableExerciseListing("", state.page);
+    },
+  });
+
+  const handeExerciseSelected = (exercise?: ExerciseListingItem) => {
     setOpen(false);
-    onExerciseSelected(participant);
-    setSelectedExercise(participant);
+    onExerciseSelected(exercise);
+    setSelectedExercise(exercise);
   };
+
+  const dropdownText = selectedExercise
+    ? `${selectedExercise.exerciseName}`
+    : "Select exercise ...";
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -49,7 +63,7 @@ export default function TraineeExerciseSelector(
           role="combobox"
           className={cn("justify-between font-normal truncate", className)}
         >
-          {text}
+          {dropdownText}
 
           {selectedExercise ? (
             <div
@@ -66,51 +80,63 @@ export default function TraineeExerciseSelector(
 
       <PopoverContent className="w-full p-0">
         <Command className="">
-          {exercises.length > 0 && <CommandInput placeholder={placeholder} />}
+          {exercises.length > 0 && (
+            <CommandInput placeholder="Search for exercises..." />
+          )}
           <CommandList className="w-[320px]">
-            <CommandEmpty className="text-sm font-mediun italic text-muted-foreground p-3 px-4">
-              {placeholder}
-            </CommandEmpty>
+            {!isLoading && (
+              <CommandEmpty className="text-sm font-mediun italic text-muted-foreground p-3 px-4">
+                There are no exercises to show ...
+              </CommandEmpty>
+            )}
+
             <CommandGroup>
               <ScrollArea>
                 <div className="max-h-[200px] w-full">
                   <div className="flex w-full flex-col items-center">
-                    {exercises.map((participant) => (
+                    {exercises.map((exercise) => (
                       <CommandItem
-                        key={participant.id}
-                        value={`${participant.firstName} ${participant.lastName}`}
-                        onSelect={() => {
-                          handeExerciseSelected(participant);
-                        }}
                         className={cn(
-                          "w-full cursor-pointer",
-                          selectedExercise?.id == participant.id &&
+                          "w-full",
+                          selectedExercise?.id == exercise.id &&
                             "bg-accent/50 text-accent-foreground border-primary border-b rounded-b-none"
                         )}
+                        key={exercise.id}
+                        value={exercise.exerciseName}
+                        onSelect={() => handeExerciseSelected(exercise)}
                       >
                         <div className="p-0.5">
-                          <div className="leading-tight flex flex-row gap-1.5 items-center">
-                            <p className="font-normal">
-                              {`${participant.firstName} ${participant.lastName}`}
-                            </p>
-                            <span className="text-muted-foreground text-sm">
-                              •
-                            </span>
-                            <span className="lowercase text-muted-foreground text-xs ml-1">
-                              {participant.gender} |{" "}
-                              {format(participant.dateOfBirth!, "dd.MM.yyyy")}
-                            </span>
-                          </div>
-
-                          <p className="text-muted-foreground text-[11px]">
-                            Joined:{" "}
-                            {formatDistanceToNow(participant.joinDate, {
-                              addSuffix: true,
-                            })}
+                          <p className="leading-none font-normal">
+                            {exercise.exerciseName}
                           </p>
+                          <div className="leading-tight flex flex-row gap-1.5 mt-0.5 items-center">
+                            <p className="text-muted-foreground text-xs lowercase">
+                              {`${exercise.firstExerciseMetric.name}`}
+                            </p>
+                            {exercise.secondExerciseMetric && (
+                              <>
+                                <span className="text-muted-foreground text-sm">
+                                  •
+                                </span>
+                                <span className="lowercase text-muted-foreground text-xs">
+                                  {exercise.secondExerciseMetric.name}
+                                </span>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </CommandItem>
                     ))}
+                    <InfiniteScroll
+                      hasMore={hasMore}
+                      isLoading={isLoading}
+                      next={onPageChange}
+                      threshold={1}
+                    >
+                      {hasMore && (
+                        <Loader2Icon className="my-4 h-5 w-5 animate-spin text-muted-foreground" />
+                      )}
+                    </InfiniteScroll>
                   </div>
                 </div>
               </ScrollArea>

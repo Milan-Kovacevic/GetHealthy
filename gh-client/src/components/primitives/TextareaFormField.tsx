@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { Textarea } from "../ui/textarea";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 type InputFormFieldProps = {
   control: any;
@@ -32,7 +31,7 @@ function TextareaFormField(props: InputFormFieldProps) {
 
           <FormControl>
             <Textarea
-              className="w-full resize-none p-2 border border-gray-300 rounded-md overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-hidden"
+              className="w-full resize-none p-2 border rounded-md overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-hidden"
               placeholder={props.placeholder}
               {...field}
               disabled={props.disabled}

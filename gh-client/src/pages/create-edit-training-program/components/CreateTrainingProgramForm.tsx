@@ -3,50 +3,51 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import {
-  exercisePlanSchema,
-  generalInfoSchema,
-} from "@/schemas/training-program-schemas";
+  CreateProgramFormSchema,
+  createProgramSchemaDefaultValues,
+  createTrainingProgramSchema,
+  ExercisePlanFormSchema,
+  GeneralInfoFormSchema,
+} from "@/schemas/training-program-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import ExercisePlanBuilder from "./ExercisePlanBuilder";
 import GeneralInformationForm from "./GeneralInformationForm";
-
-const createTrainingProgramSchema = z.object({
-  generalInfo: generalInfoSchema,
-  exercisePlan: exercisePlanSchema,
-});
+import useAuth from "@/hooks/use-auth";
+import { useNavigate } from "react-router-dom";
 
 type CreateTrainingProgramFormProps = {};
 
 const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const userId = auth.getUserId();
+  if (!userId) return;
+
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
-  const createTrainingProgramForm = useForm<
-    z.infer<typeof createTrainingProgramSchema>
-  >({
+  const createTrainingProgramForm = useForm<CreateProgramFormSchema>({
     resolver: zodResolver(createTrainingProgramSchema),
-    defaultValues: {
-      generalInfo: {},
-      exercisePlan: {
-        exercises: [],
-      },
-    },
+    defaultValues: createProgramSchemaDefaultValues,
   });
 
-  const onSubmit = async (
-    data: z.infer<typeof createTrainingProgramSchema>
-  ) => {
-    const generalInfoData = data.generalInfo;
-    const exercisesPlanData = data.exercisePlan.exercises;
+  const onSubmit = async (data: CreateProgramFormSchema) => {
+    const generalInfoData: GeneralInfoFormSchema = data.generalInfo;
+    const exercisesPlanData: ExercisePlanFormSchema = data.exercisePlan;
 
-    const trainingProgramExercisesData = {
-      trainingProgramExercises: exercisesPlanData.map((elem, index) => ({
-        position: index + 1,
-        exerciseId: elem.id,
-        exerciseSets: elem.sets,
-      })),
+    const programExercisesFormData = {
+      trainingProgramExercises: exercisesPlanData.exercises.map(
+        (elem, index) => ({
+          position: index + 1,
+          exerciseId: elem.id,
+          exerciseSets: elem.sets,
+        })
+      ),
+    };
+    const generalInfoFormData = {
+      ...generalInfoData,
+      trainerId: userId,
     };
 
     const formData = new FormData();
@@ -57,25 +58,27 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
 
     formData.append(
       "training-program",
-      new Blob([JSON.stringify(generalInfoData)], {
+      new Blob([JSON.stringify(generalInfoFormData)], {
         type: "application/json",
       })
     );
 
     formData.append(
       "training-program-exercises",
-      new Blob([JSON.stringify(trainingProgramExercisesData)], {
+      new Blob([JSON.stringify(programExercisesFormData)], {
         type: "application/json",
       })
     );
 
-    console.log("Exercise data", trainingProgramExercisesData);
-
     try {
-      await createTrainingProgram(2, formData); // hardcoded userId for trainer
+      await createTrainingProgram(formData);
+      navigate(-1);
       toast.success("Training program successfully created!");
     } catch (error) {
       console.log(error);
+      toast.error(
+        "Unable to create training program. Please, try again later."
+      );
     }
   };
 
@@ -85,20 +88,14 @@ const CreateTrainingProgramForm = ({}: CreateTrainingProgramFormProps) => {
         onSubmit={createTrainingProgramForm.handleSubmit(onSubmit)}
         className="space-y-8"
       >
-        <div>
-          <Separator className="my-4" />
-          <GeneralInformationForm
-            onSelectFile={setSelectedFile}
-            form={createTrainingProgramForm}
-            formPath="generalInfo"
-          />
-          <Separator className="my-4" />
-          <ExercisePlanBuilder
-            form={createTrainingProgramForm}
-            formPath="exercisePlan"
-          />
-        </div>
-        <div className="flex w-full justify-end">
+        <GeneralInformationForm
+          isEdit={false}
+          onSelectFile={setSelectedFile}
+          form={createTrainingProgramForm}
+        />
+
+        <ExercisePlanBuilder isEdit={false} form={createTrainingProgramForm} />
+        <div className="flex w-full justify-end -translate-y-4">
           <Button type="submit" variant="default">
             Create Program
           </Button>

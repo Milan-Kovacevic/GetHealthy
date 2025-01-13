@@ -8,38 +8,40 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { AnalyticsEngagementData } from "@/api/models/trainer-analytics";
+import { TraineeProgressData } from "@/api/models/analytics";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ExerciseListingItem } from "@/api/models/exercise";
 
 type ExerciseProgressChartProps = {
-  chartData: AnalyticsEngagementData[];
+  selectedExercise?: ExerciseListingItem;
+  chartData: TraineeProgressData[];
   loading?: boolean;
 };
 
 export default function ExerciseProgressChart(
   props: ExerciseProgressChartProps
 ) {
-  const { chartData, loading } = props;
+  const { chartData, loading, selectedExercise } = props;
   const isMobile = useIsMobile();
 
   return loading ? (
-    <Skeleton className="aspect-auto h-[400px] w-full" />
+    <Skeleton className="aspect-auto h-[420px] w-full" />
   ) : (
     <ChartContainer
       config={{
         yLabel: {
-          label: "Y Label",
+          label: "Metric values",
         },
-        skipped: {
-          label: "Skipped [%]",
+        firstMetric: {
+          label: `${selectedExercise?.firstExerciseMetric.name} [${selectedExercise?.firstExerciseMetric.unit}]`,
           color: "hsl(var(--chart-3)/0.8)",
         },
-        completed: {
-          label: "Completed [%]",
+        secondMetric: {
+          label: `${selectedExercise?.secondExerciseMetric?.name} [${selectedExercise?.secondExerciseMetric?.unit}]`,
           color: "hsl(var(--primary)/0.8)",
         },
       }}
-      className="aspect-auto h-[400px] w-full"
+      className="aspect-auto h-[420px] w-full"
     >
       <AreaChart
         accessibilityLayer
@@ -69,7 +71,7 @@ export default function ExerciseProgressChart(
         {!isMobile && (
           <YAxis
             label={{
-              value: "Y Label",
+              value: !selectedExercise ? "Metric value" : "Maximum value",
               angle: -90,
               position: "insideLeft",
             }}
@@ -93,40 +95,49 @@ export default function ExerciseProgressChart(
           }
         />
         <defs>
-          <linearGradient id="fillSkipped" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id="fillFirstMetric" x1="0" y1="0" x2="0" y2="1">
             <stop
               offset="15%"
-              stopColor="var(--color-skipped)"
+              stopColor="var(--color-firstMetric)"
               stopOpacity={0.8}
             />
             <stop
               offset="95%"
-              stopColor="var(--color-skipped)"
+              stopColor="var(--color-firstMetric)"
               stopOpacity={0.1}
             />
           </linearGradient>
-          <linearGradient id="fillCompleted" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id="fillSecondMetric" x1="0" y1="0" x2="0" y2="1">
             <stop
               offset="15%"
-              stopColor="var(--color-completed)"
+              stopColor="var(--color-secondMetric)"
               stopOpacity={0.8}
             />
             <stop
               offset="95%"
-              stopColor="var(--color-completed)"
+              stopColor="var(--color-secondMetric)"
               stopOpacity={0.1}
             />
           </linearGradient>
         </defs>
-        <ChartLegend content={<ChartLegendContent />} />
+        {selectedExercise && <ChartLegend content={<ChartLegendContent />} />}
 
         <Area
-          dataKey="skipped"
-          stroke="var(--color-skipped)"
-          fill="url(#fillSkipped)"
+          dataKey="firstMetric"
+          stroke="var(--color-firstMetric)"
+          fill="url(#fillFirstMetric)"
           fillOpacity={0.5}
-          type="bump"
+          type="monotone"
         />
+        {selectedExercise?.secondExerciseMetric && (
+          <Area
+            dataKey="secondMetric"
+            stroke="var(--color-secondMetric)"
+            fill="url(#fillSecondMetric)"
+            fillOpacity={0.5}
+            type="monotone"
+          />
+        )}
       </AreaChart>
     </ChartContainer>
   );
