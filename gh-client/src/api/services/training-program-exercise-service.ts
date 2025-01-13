@@ -20,6 +20,7 @@ const getTrainingProgramExercises = async (programId: number) => {
   }).then((response) => response.data as ProgramExercise[]);
 };
 
+// TODO: ?
 const sendExercises = async (data: AddTrainingProgramExerciseDTO[]) => {
   var url = ApiEndpoints.TrainingProgramExercises;
 

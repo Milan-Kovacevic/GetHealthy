@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AnalyticsProgram } from "@/api/models/trainer-analytics";
+import { AnalyticsProgram } from "@/api/models/analytics";
 import { DateRange } from "react-day-picker";
 import { TrainerAnalyticsContext } from "../../hooks/use-trainer-analytics";
 import { TrainerProgram } from "@/api/models/training-program";

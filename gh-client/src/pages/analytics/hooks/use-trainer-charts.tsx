@@ -5,7 +5,7 @@ import {
   AnalyticsProgramParticipant,
   TrainerEngagementAnalytics,
   TrainerPopularityAnalytics,
-} from "@/api/models/trainer-analytics";
+} from "@/api/models/analytics";
 import { useEffect, useState } from "react";
 import useTrainerAnalytics from "./use-trainer-analytics";
 import {

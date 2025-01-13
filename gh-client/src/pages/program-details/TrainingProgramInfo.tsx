@@ -133,9 +133,9 @@ export default function TrainingProgramInfo() {
                     </p>
                   </div>
 
-                  <span className="text-foreground/70 ml-2 text-sm">
+                  <span className="text-foreground/70 mt-0.5 text-[13px]">
                     • Created{" "}
-                    <span className="font-semibold">
+                    <span className="font-medium">
                       {formatDistanceToNow(program.createdAt)}
                     </span>{" "}
                     ago

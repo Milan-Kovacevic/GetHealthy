@@ -1,13 +1,4 @@
-"use client";
-
-import { DumbbellIcon } from "lucide-react";
-
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { ReactNode } from "react";
 
 type ChartDashboardCardFrameProps = {

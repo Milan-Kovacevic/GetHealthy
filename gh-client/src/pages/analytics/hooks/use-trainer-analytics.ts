@@ -1,4 +1,4 @@
-import { AnalyticsProgram } from "@/api/models/trainer-analytics";
+import { AnalyticsProgram } from "@/api/models/analytics";
 import { TrainerProgram } from "@/api/models/training-program";
 import { createContext, useContext } from "react";
 import { DateRange } from "react-day-picker";

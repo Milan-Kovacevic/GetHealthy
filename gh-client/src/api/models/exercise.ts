@@ -25,14 +25,14 @@ export type ExerciseSet = {
 
 export type PageableExercises = Page<Exercise>;
 
-export type ExerciseListing = {
+export type ExerciseListingItem = {
   id: number;
   exerciseName: string;
   firstExerciseMetric: ExerciseMetric;
   secondExerciseMetric: ExerciseMetric;
 };
 
-export type PageableExerciseListing = Page<ExerciseListing>;
+export type PageableExerciseListing = Page<ExerciseListingItem>;
 
 export type ExercisePlanItem = {
   id: number;

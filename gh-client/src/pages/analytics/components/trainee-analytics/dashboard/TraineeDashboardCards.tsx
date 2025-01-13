@@ -1,30 +1,26 @@
 import { useEffect, useState } from "react";
 import { DashboardCardLoader } from "../../shared/DashboardCardLoader";
-import TotalProgramsDashboardChart from "./TotalProgramsDashboardChart";
 import ChartDashboardCardFrame from "../../shared/ChartDashboardCardFrame";
-import { TopThreeVotedProgramsChart } from "./TopThreeVotedProgramsChart";
-import { TopThreeJoinedProgramsChart } from "./TopThreeJoinedProgramsChart";
 import { TopThreeInteractedProgramsChart } from "./TopThreeInteractedProgramsChart";
-import { TrainerDashboardAnalytics } from "@/api/models/analytics";
-import { getTrainerDashboardAnalytics } from "@/api/services/trainer-analytics-service";
-
-type TrainerDashboardCardsProps = {};
+import { TraineeDashboardAnalytics } from "@/api/models/analytics";
+import { getTraineeDashboardAnalytics } from "@/api/services/trainee-analytics-service";
+import TotalJoinedProgramsChart from "./TotalJoinedProgramsChart";
+import { TopThreeSkippedExercisesChart } from "./TopThreeSkippedExercisesChart";
+import { TopThreeFavoriteExercisesChart } from "./TopThreeFavoriteExercisesChart";
 
 type DashboardChartState = {
   loading: boolean;
-} & TrainerDashboardAnalytics;
+} & TraineeDashboardAnalytics;
 
-export default function TrainerDashboardCards(
-  props: TrainerDashboardCardsProps
-) {
+export default function TraineeDashboardCards() {
   // TODO: Hardcoded now
   const userId = 2;
   const [dashboardChartState, setDashboardChartState] =
     useState<DashboardChartState>({
-      topInteracted: [],
-      topJoined: [],
-      topVoted: [],
-      totalPrograms: [],
+      topFavoriteExercises: [],
+      topInteractedPrograms: [],
+      topSkippedExercises: [],
+      totalJoined: [],
       loading: true,
     });
 
@@ -32,7 +28,7 @@ export default function TrainerDashboardCards(
     setDashboardChartState((prev) => {
       return { ...prev, loading: true };
     });
-    getTrainerDashboardAnalytics(userId)
+    getTraineeDashboardAnalytics(userId)
       .then((response) => {
         setDashboardChartState((prev) => {
           return {
@@ -59,37 +55,37 @@ export default function TrainerDashboardCards(
       ) : (
         <>
           <ChartDashboardCardFrame
-            title="Total training programs"
-            description="Showing total number of training programs based on difficulty"
+            title="Total joined programs"
+            description="Showing total number of interacted and non-interacted training programs"
           >
-            <TotalProgramsDashboardChart
-              chartData={dashboardChartState.totalPrograms}
+            <TotalJoinedProgramsChart
+              chartData={dashboardChartState.totalJoined}
             />
           </ChartDashboardCardFrame>
 
           <ChartDashboardCardFrame
             title="Top interacted programs"
-            description="Showing top 3 interacted programs this week based on number of participants"
+            description="Showing top 3 interacted programs this month based on number of completed workouts"
           >
             <TopThreeInteractedProgramsChart
-              chartData={dashboardChartState.topInteracted}
+              chartData={dashboardChartState.topInteractedPrograms}
             />
           </ChartDashboardCardFrame>
 
           <ChartDashboardCardFrame
-            title="Top joined programs"
-            description="Showing top 3 programs based on number of participants"
+            title="Top skipped exercises"
+            description="Showing top 3 most skipped exercises this month when working out"
           >
-            <TopThreeJoinedProgramsChart
-              chartData={dashboardChartState.topJoined}
+            <TopThreeSkippedExercisesChart
+              chartData={dashboardChartState.topSkippedExercises}
             />
           </ChartDashboardCardFrame>
           <ChartDashboardCardFrame
-            title="Top voted programs"
-            description="Showing top 3 programs based on average rating"
+            title="Top best exercises"
+            description="Showing top 3 favorite exercises this month"
           >
-            <TopThreeVotedProgramsChart
-              chartData={dashboardChartState.topVoted}
+            <TopThreeFavoriteExercisesChart
+              chartData={dashboardChartState.topFavoriteExercises}
             />
           </ChartDashboardCardFrame>
         </>
