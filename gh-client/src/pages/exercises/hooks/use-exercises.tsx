@@ -33,7 +33,7 @@ export default function useExercises() {
   const onSearchExercises = (searchQuery: string) => {
     searchParams.set("q", searchQuery);
     setSearchParams(searchParams);
-    loadMoreExercises();
+    setSearchQuery(searchQuery);
   };
 
   const onExercisesPageChange = (page: number) => {

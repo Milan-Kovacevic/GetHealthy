@@ -2,7 +2,7 @@ import useAuth from "@/hooks/use-auth";
 import { TrainingProgramLayout } from "./TrainingProgramLayout";
 import usePersonalTrainingPrograms from "./hooks/use-personal-programs";
 import { TrainingProgramsLoader } from "./components/TrainingProgramsLoaders";
-import NoTrainingProgramsAnimation from "./components/NoTrainingProgramsAnimation";
+import NoTrainingProgramsAnimation from "../shared/NoListItemsAnimation";
 import { TrainingProgramCard } from "./components/TrainingProgramCard";
 import { ManagedProgramCard } from "./components/ManagedProgramCard";
 

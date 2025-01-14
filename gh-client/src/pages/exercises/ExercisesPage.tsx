@@ -4,6 +4,7 @@ import ExerciseMetricsSection from "./components/ExerciseMetricsSection";
 import ExercisesTitleSection from "./components/ExercisesTitleSection";
 import useExercises, { ExercisesState } from "./hooks/use-exercises";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
+import NoListItemsAnimation from "../shared/NoListItemsAnimation";
 
 export default function ExercisesPage() {
   const [showVideos, setShowVideos] = useState(false);
@@ -22,6 +23,12 @@ export default function ExercisesPage() {
         </div>
         <div className="mt-8 flex flex-col gap-6">
           <ExerciseMetricsSection />
+          {state.exercises.length == 0 && (
+            <NoListItemsAnimation
+              title="No results found"
+              description="Please, reload the page and try again later or adjust the filter criteria..."
+            />
+          )}
           <ExerciseList
             showVideoEmbedded={showVideos}
             exercises={state.exercises}
