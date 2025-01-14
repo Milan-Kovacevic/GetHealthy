@@ -18,10 +18,12 @@ import { BellIcon } from "lucide-react";
 
 type NotificationsPopoverProps = {
   isTrainer: boolean;
+  className?: string;
 };
 
 export default function NotificationsPopover({
   isTrainer,
+  className,
 }: NotificationsPopoverProps) {
   const [activeTab, setActiveTab] = useState("inbox");
 
@@ -124,7 +126,8 @@ export default function NotificationsPopover({
             buttonVariants({
               variant: "ghost",
             }),
-            "h-auto py-1.5 mr-1 px-2.5 w-full lg:border-none border [&_svg]:h-6 [&_svg]:w-6"
+            "h-auto py-1.5 px-2.5 w-full lg:border-none border [&_svg]:h-6 [&_svg]:w-6",
+            className
           )}
         >
           {unreadCount > 0 && (

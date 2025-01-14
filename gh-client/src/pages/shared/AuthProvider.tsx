@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { loginUser, logoutUser } from "@/api/services/auth-service";
 import { UserRole } from "@/api/enums/user-role";
+import { delay } from "@/lib/utils";
 
 type AuthProviderProps = {
   children: React.ReactNode;

@@ -99,7 +99,7 @@ export function TrainingProgramCard(props: TrainingProgramCardProps) {
           {program.description}
         </CardDescription>
       </CardContent>
-      <CardFooter className="px-4 mt-1 pb-3">
+      <CardFooter className="px-4 mt-3 pb-3">
         <span className="text-muted-foreground text-[11px] ml-auto flex items-center gap-1">
           <ClockIcon className="h-3 w-3" />
           <span className="font-semibold">

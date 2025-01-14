@@ -36,17 +36,17 @@ export default function TrainingProgramDetails() {
   }
 
   return (
-    <div className="my-4 mx-2 md:p-0 p-3">
+    <div className="sm:my-4 mx-2 md:p-0 p-3">
       {loading && <ProgramDetailsSkeletonLoader />}
       {!loading && programDetails && (
         <div className="flex flex-col gap-3 my-3">
-          <div className="space-y-1">
+          <div className="sm:space-y-1">
             <div className="flex flex-row items-center gap-1.5">
               <CircleIcon className="h-2 w-2 mb-0.5" />
               <p className="mb-1 font-medium">Requirements</p>
             </div>
 
-            <p className="text-muted-foreground text-base mx-4 max-w-screen-lg text-pretty leading-snug">
+            <p className="text-muted-foreground sm:text-base text-sm mx-4 max-w-screen-lg text-pretty leading-snug">
               {programDetails?.requirements}
             </p>
           </div>

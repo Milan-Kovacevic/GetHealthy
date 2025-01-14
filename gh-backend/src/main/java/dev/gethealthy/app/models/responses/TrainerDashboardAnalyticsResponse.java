@@ -34,7 +34,7 @@ public class TrainerDashboardAnalyticsResponse {
     private List<TopProgramDashboardData> topInteracted;
     private List<TopProgramDashboardData> topJoined;
     private List<TopProgramDashboardData> topVoted;
-    private TotalProgramDashboardData totalProgram;
+    private List<TotalProgramDashboardData> totalPrograms;
 }
 
 

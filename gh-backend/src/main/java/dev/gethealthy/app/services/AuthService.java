@@ -8,9 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface AuthService{
-    public LoginResponse login(LoginRequest loginRequest);
+    LoginResponse login(LoginRequest loginRequest);
 
-    public boolean logout();
+    boolean logout();
 
-    public boolean register(RegistrationRequest registrationRequest, MultipartFile file) throws IOException;
+    void register(RegistrationRequest registrationRequest, MultipartFile file) throws IOException;
 }

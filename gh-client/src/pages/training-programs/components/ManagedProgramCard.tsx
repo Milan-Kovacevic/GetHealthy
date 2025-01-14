@@ -46,7 +46,7 @@ export function ManagedProgramCard(props: ManagedProgramCardProps) {
   return (
     <Card
       key={program.id}
-      className="group transform md:max-h-[400px] md:max-w-xl rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-all duration-200 relative"
+      className="group transform md:max-h-[400px] md:max-w-xl rounded-lg overflow-hidden shadown-md hover:shadow-lg transition-all duration-200 relative flex flex-col"
     >
       <div
         className="border-b hover:cursor-pointer"
@@ -86,7 +86,7 @@ export function ManagedProgramCard(props: ManagedProgramCardProps) {
         </div>
       </div>
 
-      <CardContent className="p-3 px-4">
+      <CardContent className="p-3 px-4 flex-1">
         <div className="flex justify-between items-center gap-2">
           <CardTitle className="xl:text-lg font-semibold xl:leading-tight text-base leading-none">
             {program.name}
