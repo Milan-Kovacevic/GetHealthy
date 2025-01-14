@@ -1,6 +1,6 @@
 import noImage from "@/assets/no-image.jpg";
 import { Badge } from "@/components/ui/badge";
-import { ActivityIcon, UserXIcon } from "lucide-react";
+import { ActivityIcon, UsersIcon, UserXIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StarRating from "@/components/primitives/StarRating";
 import {
@@ -106,7 +106,12 @@ export default function TrainingProgramInfo() {
 
   return (
     <div className="my-4 flex flex-col lg:flex-row h-auto py-4 lg:px-0 px-4 relative">
-      <div className="bg-primary/10 dark:bg-primary/5 w-full sm:h-[400px] lg:w-2/5 xl:w-1/3 mb-4 lg:mb-0 lg:border-2 rounded-xl overflow-hidden">
+      <div
+        className={cn(
+          "bg-primary/10 dark:bg-primary/5 w-full sm:h-[400px] lg:w-2/5 xl:w-1/3 mb-2 lg:mb-0 lg:border-2 rounded-xl overflow-hidden",
+          !program.imageFilePath && "border-2"
+        )}
+      >
         <img
           src={program.imageFilePath || noImage}
           alt="Training Program"
@@ -121,7 +126,7 @@ export default function TrainingProgramInfo() {
         <div className="flex flex-col mt-1.5 flex-1">
           <div className="relative flex items-center justify-between gap-5">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-semibold mb-0.5">
+              <h1 className="text-2xl sm:text-3xl font-semibold mb-0.5 leading-tight">
                 {program.name}
               </h1>
               <div className="flex items-center gap-2 text-muted-foreground">
@@ -133,7 +138,7 @@ export default function TrainingProgramInfo() {
                     </p>
                   </div>
 
-                  <span className="text-foreground/70 mt-0.5 text-[13px]">
+                  <span className="text-foreground/70 mt-0.5  text-xs sm:text-[13px]">
                     • Created{" "}
                     <span className="font-medium">
                       {formatDistanceToNow(program.createdAt)}
@@ -152,7 +157,7 @@ export default function TrainingProgramInfo() {
             </div>
           </div>
 
-          <h2 className="text-sm sm:text-base text-muted-foreground text-justify mt-4">
+          <h2 className="text-[13px]  sm:text-sm lg:max-w-[80%] text-muted-foreground text-pretty mt-4">
             {program.description}
           </h2>
 
@@ -164,22 +169,33 @@ export default function TrainingProgramInfo() {
           </div>
 
           <div className="pb-4">
-            <p className="mt-1 text-sm text-foreground/80">
-              Currently enrolled:{" "}
+            <p className="mt-1 text-muted-foreground text-sm">
+              <div className="flex items-center">
+                <UsersIcon className="w-3.5 h-3.5 mr-1" />
+                <span>{program.currentlyEnrolled ?? "No "} participants</span>
+              </div>
+              {/* Currently enrolled:{" "}
               <span className="text-foreground">
                 {program.currentlyEnrolled}
-              </span>
+              </span> */}
             </p>
-            <div className="mt-4 mb-5 flex items-center flex-wrap gap-2">
+            <div className="mt-3 mb-5 flex items-center flex-wrap gap-2">
               {program.categories?.length > 0 ? (
                 program.categories.map((item) => (
                   <Badge
                     key={item.categoryId}
                     variant="secondary"
-                    className="text-sm px-3 border-foreground/30 font-normal py-0.5 h-auto transition-none"
+                    className="py-1 h-auto px-3 border border-foreground/5"
                   >
                     {item.name}
                   </Badge>
+                  // <Badge
+                  //   key={item.categoryId}
+                  //   variant="secondary"
+                  //   className="text-sm px-3 border-foreground/30 font-normal py-0.5 h-auto transition-none"
+                  // >
+                  //   {item.name}
+                  // </Badge>
                 ))
               ) : (
                 <p className="text-muted-foreground text-sm italic">

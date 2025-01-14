@@ -24,7 +24,6 @@ type MoveParticipantDialogProps = {
   participant: SingleProgramParticipant;
   onCancel: () => void;
   onSubmit: (newProgramId: number) => void;
-  trainerPrograms: TrainerProgram[];
 };
 
 const BREAKPOINT_XL = 1280;
@@ -32,7 +31,7 @@ const BREAKPOINT_XL = 1280;
 export default function MoveParticipantDialog(
   props: MoveParticipantDialogProps
 ) {
-  const { participant, trainerPrograms, onCancel, onSubmit } = props;
+  const { participant, onCancel, onSubmit } = props;
   const [selectedProgram, setSelectedProgram] = useState<TrainerProgram>();
   const showDialog = useMediaQuery(BREAKPOINT_XL);
 
@@ -77,7 +76,6 @@ export default function MoveParticipantDialog(
                   ? selectedProgram.name
                   : "Select training program"
               }
-              programs={trainerPrograms}
               onProgramSelected={setSelectedProgram}
             />
           </div>

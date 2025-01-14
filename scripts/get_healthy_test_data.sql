@@ -2,9 +2,9 @@
 INSERT INTO get_healthy.user_account (UserId, Username, Password, Email, Enabled, Role, CreatedAt, LastAccessed)
 VALUES 
   (1, 'admin1', '$2a$12$2FgxuDftoQZo4qBIXtkgI.1iSGadToaPm8.CWXRsnIs4m/EFZ7gya', 'admin1@example.com', 1, 0, '2024-12-01 10:00:00', '2024-12-20 15:30:00'),
-  (2, 'trainer1', '$2a$12$2FgxuDftoQZo4qBIXtkgI.1iSGadToaPm8.CWXRsnIs4m/EFZ7gya', 'trainer1@example.com', 1, 1, '2024-12-01 11:00:00', NULL),
-  (3, 'trainee1', '$2a$12$2FgxuDftoQZo4qBIXtkgI.1iSGadToaPm8.CWXRsnIs4m/EFZ7gya', 'trainee1@example.com', 1, 2, '2024-12-02 09:30:00', '2024-12-21 08:00:00'),
-  (4, 'trainee2', '$2a$12$2FgxuDftoQZo4qBIXtkgI.1iSGadToaPm8.CWXRsnIs4m/EFZ7gya', 'trainee2@example.com', 1, 2, '2025-01-08 10:31:26', NULL);
+  (2, 'trainer1', '$2a$12$2FgxuDftoQZo4qBIXtkgI.1iSGadToaPm8.CWXRsnIs4m/EFZ7gya', 'trainer1@example.com', 1, 2, '2024-12-01 11:00:00', NULL),
+  (3, 'trainee1', '$2a$12$2FgxuDftoQZo4qBIXtkgI.1iSGadToaPm8.CWXRsnIs4m/EFZ7gya', 'trainee1@example.com', 1, 1, '2024-12-02 09:30:00', NULL),
+  (4, 'trainee2', '$2a$12$2FgxuDftoQZo4qBIXtkgI.1iSGadToaPm8.CWXRsnIs4m/EFZ7gya', 'trainee2@example.com', 1, 1, '2025-01-08 10:31:26', NULL);
   
 
 -- Test data for get_healthy.ADMINISTRATOR

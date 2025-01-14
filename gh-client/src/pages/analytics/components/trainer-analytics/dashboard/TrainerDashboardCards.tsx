@@ -7,6 +7,8 @@ import { TopThreeJoinedProgramsChart } from "./TopThreeJoinedProgramsChart";
 import { TopThreeInteractedProgramsChart } from "./TopThreeInteractedProgramsChart";
 import { TrainerDashboardAnalytics } from "@/api/models/analytics";
 import { getTrainerDashboardAnalytics } from "@/api/services/trainer-analytics-service";
+import { toast } from "sonner";
+import useAuth from "@/hooks/use-auth";
 
 type TrainerDashboardCardsProps = {};
 
@@ -17,8 +19,10 @@ type DashboardChartState = {
 export default function TrainerDashboardCards(
   props: TrainerDashboardCardsProps
 ) {
-  // TODO: Hardcoded now
-  const userId = 2;
+  const auth = useAuth();
+  const userId = auth.getUserId();
+  if (!userId) return;
+
   const [dashboardChartState, setDashboardChartState] =
     useState<DashboardChartState>({
       topInteracted: [],
@@ -39,6 +43,11 @@ export default function TrainerDashboardCards(
             ...prev,
             ...response,
           };
+        });
+      })
+      .catch(() => {
+        toast.error("Unexpected error", {
+          description: "Unable to load trainer dashboard analytics",
         });
       })
       .finally(() => {

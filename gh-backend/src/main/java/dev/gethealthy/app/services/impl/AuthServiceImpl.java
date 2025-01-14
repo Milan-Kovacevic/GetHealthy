@@ -67,7 +67,8 @@ public class AuthServiceImpl implements AuthService {
                             )
                     );
             JwtUser user = (JwtUser) authenticate.getPrincipal();
-            AuthUserResponse userResponse = modelMapper.map(userAccountRepository.findById(user.getId()), AuthUserResponse.class);
+            AuthUserResponse userResponse = modelMapper.map(userRepository.findById(user.getId()), AuthUserResponse.class);
+            userResponse.setRole(user.getRole());
             TokensResponse tokens = new TokensResponse();
             tokens.setAccessToken(generateJwt(user));
             tokens.setRefreshToken(generateJwt(user));
@@ -96,7 +97,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(RegistrationRequest registrationRequest, MultipartFile file) throws IOException {
+    public void register(RegistrationRequest registrationRequest, MultipartFile file) throws IOException {
         var enabled = registrationRequest.getRole() != Role.TRAINER;
         var userAccount = modelMapper.map(registrationRequest, UserAccount.class);
         userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
@@ -120,6 +121,5 @@ public class AuthServiceImpl implements AuthService {
         {
             userRepository.save(user);
         }
-        return true;
     }
 }

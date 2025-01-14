@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { capitalize } from "@/lib/utils";
 import { SimpleAlertDialog } from "@/pages/shared/SimpleAlertDialog";
 import { differenceInCalendarYears, format } from "date-fns";
 import {
@@ -74,7 +75,9 @@ export default function ProgramParticipantItem(
             </div>
             <div className="flex items-center">
               <p className="text-xs sm:text-sm text-foreground/70">
-                {participant.gender ?? "Not set"}
+                {participant.gender
+                  ? capitalize(participant.gender)
+                  : "Not set"}
               </p>
             </div>
             <div className="col-span-1 lg:col-span-2">

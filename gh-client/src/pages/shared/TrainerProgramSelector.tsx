@@ -94,9 +94,12 @@ export default function TrainerProgramSelector(
             <CommandInput placeholder="Search for programs ..." />
           )}
           <CommandList className="w-[320px]">
-            <CommandEmpty className="text-sm text-center italic text-muted-foreground p-5">
-              No training programs to show.
-            </CommandEmpty>
+            {!isLoadingPrograms && (
+              <CommandEmpty className="text-sm text-center italic text-muted-foreground p-5">
+                No training programs to show ...
+              </CommandEmpty>
+            )}
+
             <CommandGroup>
               <ScrollArea>
                 <div className="max-h-[200px] w-full">
@@ -132,7 +135,7 @@ export default function TrainerProgramSelector(
                       threshold={1}
                     >
                       {hasMorePrograms && (
-                        <Loader2Icon className="my-2 h-5 w-5 animate-spin text-muted-foreground" />
+                        <Loader2Icon className="my-4 h-5 w-5 animate-spin text-muted-foreground" />
                       )}
                     </InfiniteScroll>
                   </div>

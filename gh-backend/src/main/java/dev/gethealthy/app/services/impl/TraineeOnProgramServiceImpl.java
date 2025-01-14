@@ -10,6 +10,7 @@ import dev.gethealthy.app.models.responses.ProgramParticipantResponse;
 import dev.gethealthy.app.repositories.TraineeOnTrainingProgramRepository;
 import dev.gethealthy.app.repositories.TrainingProgramRepository;
 import dev.gethealthy.app.services.TraineeOnProgramService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -61,6 +62,7 @@ public class TraineeOnProgramServiceImpl implements TraineeOnProgramService {
     }
 
     @Override
+    @Transactional
     public void moveTraineeToAnotherTrainingProgram(Integer programId, Integer traineeId, MoveProgramParticipantRequest request) {
         var traineeOnProgram = traineeOnTrainingProgramRepository.findByProgram_IdAndUser_Id(programId, traineeId).orElseThrow(NotFoundException::new);
         var programTrainer = traineeOnProgram.getProgram().getTrainer();
@@ -78,6 +80,7 @@ public class TraineeOnProgramServiceImpl implements TraineeOnProgramService {
         entity.setUser(traineeOnProgram.getUser());
         entity.setProgram(newTrainingProgram);
         entity.setJoinDate(Instant.now());
+        traineeOnTrainingProgramRepository.delete(traineeOnProgram);
         traineeOnTrainingProgramRepository.saveAndFlush(entity);
     }
 }

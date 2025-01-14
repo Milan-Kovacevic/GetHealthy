@@ -73,7 +73,7 @@ public class TrainerAnalyticsServiceImpl implements TrainerAnalyticsService {
         response.setTopInteracted(topInteracted);
         response.setTopJoined(topJoined);
         response.setTopVoted(topVoted);
-        response.setTotalProgram(totalProgram);
+        response.setTotalPrograms(List.of(totalProgram));
         return response;
     }
 

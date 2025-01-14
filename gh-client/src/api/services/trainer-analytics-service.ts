@@ -42,21 +42,21 @@ const getTrainerDashboardAnalytics = async (
 ): Promise<TrainerDashboardAnalytics> => {
   var url = ApiEndpoints.TrainerAnalytics.replace("{userId}", `${userId}`);
   url += "/general";
-
-  //   return sendAxiosRequest<void, TrainerDashboardAnalyticsDTO>({
-  //     method: "GET",
-  //     url: url,
-  //   }).then((response) => {
-  //     return response.data as TrainerDashboardAnalytics;
-  //   });
   await delay(1500);
+  return sendAxiosRequest<void, TrainerDashboardAnalyticsDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    return response.data as TrainerDashboardAnalytics;
+  });
+  //
 
-  return {
-    topInteracted: topInteractedMock,
-    topJoined: topJoinedMock,
-    topVoted: topVotedMock,
-    totalPrograms: totalProgramsMock,
-  };
+  // return {
+  //   topInteracted: topInteractedMock,
+  //   topJoined: topJoinedMock,
+  //   topVoted: topVotedMock,
+  //   totalPrograms: totalProgramsMock,
+  // };
 };
 
 const ratingData = [
@@ -88,22 +88,22 @@ const generateTrainerPopularityAnalytics = async (
     to: to.toISOString(),
     programId: programId,
   };
-  //   return sendAxiosRequest<
-  //     PopularityAnalyticsRequestDTO,
-  //     TrainerPopularityAnalyticsDTO
-  //   >({
-  //     method: "POST",
-  //     url: url,
-  //     data: body,
-  //   }).then((response) => {
-  //     return response.data as TrainerPopularityAnalytics;
-  //   });
   await delay(1500);
+  return sendAxiosRequest<
+    PopularityAnalyticsRequestDTO,
+    TrainerPopularityAnalyticsDTO
+  >({
+    method: "POST",
+    url: url,
+    data: body,
+  }).then((response) => {
+    return response.data as TrainerPopularityAnalytics;
+  });
 
-  return {
-    ratings: ratingData,
-    totalParticipants: participantData,
-  };
+  // return {
+  //   ratings: ratingData,
+  //   totalParticipants: participantData,
+  // };
 };
 
 const engagementData = [
@@ -158,21 +158,30 @@ const generateTrainerEngagementAnalytics = async (
     exerciseId: exerciseId,
     traineeId: participantId,
   };
-  //   return sendAxiosRequest<
-  //     EngagementAnalyticsRequestDTO,
-  //     TrainerEngagementAnalyticsDTO
-  //   >({
-  //     method: "POST",
-  //     url: url,
-  //     data: body,
-  //   }).then((response) => {
-  //     return response.data as TrainerEngagementAnalytics;
-  //   });
   await delay(1500);
+  return sendAxiosRequest<
+    EngagementAnalyticsRequestDTO,
+    TrainerEngagementAnalyticsDTO
+  >({
+    method: "POST",
+    url: url,
+    data: body,
+  }).then((response) => {
+    return {
+      ...response.data,
+      data: response.data.data.map((pair) => {
+        return {
+          ...pair,
+          completed: pair.completed * 100,
+          skipped: pair.skipped * 100,
+        };
+      }),
+    } as TrainerEngagementAnalytics;
+  });
 
-  return {
-    data: engagementData,
-  };
+  // return {
+  //   data: engagementData,
+  // };
 };
 
 const getAnalyticsProgramParticipants = async (programId: number) => {

@@ -13,6 +13,7 @@ import {
   generateTrainerPopularityAnalytics,
 } from "@/api/services/trainer-analytics-service";
 import { DateRange } from "react-day-picker";
+import { toast } from "sonner";
 
 export type PopularityChartState = {
   loading: boolean;
@@ -103,6 +104,12 @@ export default function useTrainerCharts() {
           };
         });
       })
+      .catch(() => {
+        toast.error("Unexpected error", {
+          description:
+            "Unable to load analytics data for program interaction. Please, try again later.",
+        });
+      })
       .finally(() => {
         setEngagementChartState((prev) => {
           return { ...prev, loading: false };
@@ -131,6 +138,12 @@ export default function useTrainerCharts() {
               ...prev,
               ...response,
             };
+          });
+        })
+        .catch(() => {
+          toast.error("Unexpected error", {
+            description:
+              "Unable to load analytics data for program popularity. Please, try again later.",
           });
         })
         .finally(() => {

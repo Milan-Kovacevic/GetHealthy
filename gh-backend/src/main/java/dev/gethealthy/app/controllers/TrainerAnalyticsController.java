@@ -16,18 +16,18 @@ public class TrainerAnalyticsController {
 
     private final TrainerAnalyticsService trainerAnalyticsService;
 
-    @GetMapping("users/{userId}/analytics/general")
+    @GetMapping("users/{userId}/trainer-analytics/general")
     public TrainerDashboardAnalyticsResponse getGeneralAnalytics(@PathVariable("userId") int userId) {
         return trainerAnalyticsService.getGeneralAnalytics(userId);
     }
 
-    @PostMapping("users/{userId}/analytics/popularity")
+    @PostMapping("users/{userId}/trainer-analytics/popularity")
     public TrainerPopularityAnalyticsResponse getPopularityAnalytics(@PathVariable("userId") int userId, @RequestBody PopularityAnalyticsRequest request)
     {
         return trainerAnalyticsService.getPopularityAnalytics(userId, request);
     }
 
-    @PostMapping("users/{userId}/analytics/engagement")
+    @PostMapping("users/{userId}/trainer-analytics/engagement")
     public TrainerEngagementAnalyticsResponse getEngagementAnalytics(@PathVariable("userId") int userId, @RequestBody EngagementAnalyticsRequest request)
     {
         return  trainerAnalyticsService.getEngagementAnalytics(userId, request);

@@ -1,5 +1,5 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Navbar from "@/pages/shared/Navbar";
+import Navbar from "@/pages/shared/navbar/Navbar";
 import { Outlet } from "react-router-dom";
 
 export default function MainLayout() {
