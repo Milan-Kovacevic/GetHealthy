@@ -23,7 +23,7 @@ export default function ExercisesPage() {
         </div>
         <div className="mt-8 flex flex-col gap-6">
           <ExerciseMetricsSection />
-          {state.exercises.length == 0 && (
+          {state.exercises.length == 0 && !state.loading && (
             <NoListItemsAnimation
               title="No results found"
               description="Please, reload the page and try again later or adjust the filter criteria..."
