@@ -63,16 +63,7 @@ export default function TrainingProgramCard({
                 )}
               </div>
               {programStatus === "live" && (
-                <TrainingWorkoutDialog>
-                  <Button
-                    // onClick={() => onViewDetails(program.id)}
-                    className="w-full text-xs"
-                    size="sm"
-                    variant="secondary"
-                  >
-                    Begin workout
-                  </Button>
-                </TrainingWorkoutDialog>
+                <TrainingWorkoutDialog programOnSchedule={programOnSchedule} />
               )}
             </CardContent>
           </Card>
@@ -83,7 +74,8 @@ export default function TrainingProgramCard({
           </div>
 
           <p className="text-xs text-muted-foreground font-medium">
-            Trainer: {programOnSchedule.program.trainerName}
+            Trainer: {programOnSchedule.program.trainerFirstName}{" "}
+            {programOnSchedule.program.trainerLastName}
           </p>
           <div className="flex justify-between items-center mt-1">
             <p className="text-xs text-muted-foreground">

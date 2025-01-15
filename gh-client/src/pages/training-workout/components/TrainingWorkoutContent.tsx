@@ -1,36 +1,34 @@
-import { TraineeExercising } from "@/api/models/trainee-exercising";
-import { getWorkoutSummary } from "@/api/services/trainee-exercising-service";
-import {
-  AlertDialogCancel,
-  AlertDialogHeader,
-} from "@/components/ui/alert-dialog";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { SquareArrowOutUpRight, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import TrainingWorkoutForm from "./TrainingWorkoutForm";
 import WorkoutContentLoader from "./WorkoutContentLoader";
+import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
+import { WorkoutSummary } from "@/api/models/trainee-exercising";
+import { getWorkoutSummary } from "@/api/services/trainee-exercising-service";
+import { toast } from "sonner";
 
-export default function TrainingWorkoutContent() {
+type TrainingWorkoutContentProps = {
+  scheduleProgram: TrainingProgramOnSchedule;
+};
+
+export default function TrainingWorkoutContent(
+  props: TrainingWorkoutContentProps
+) {
+  const { scheduleProgram } = props;
   const [loadingWorkout, setLoadingWorkout] = useState(true);
-  const [workout, setWorkout] = useState<TraineeExercising>();
+  const [workout, setWorkout] = useState<WorkoutSummary>();
 
+  // TODO: Hardcoded
+  const userId = 2;
+  // const programId = scheduleProgram.id;
+  const programId = 1;
   useEffect(() => {
     setLoadingWorkout(true);
-    getWorkoutSummary()
+    getWorkoutSummary(userId, programId)
       .then((value) => {
         setWorkout(value);
       })
       .catch((error) => {
-        console.error("Error fetching workout information:", error);
+        toast.error("Unable to load program workout, please try again later.");
       })
       .finally(() => {
         setLoadingWorkout(false);
@@ -41,46 +39,11 @@ export default function TrainingWorkoutContent() {
     <>
       {loadingWorkout && <WorkoutContentLoader />}
       {!loadingWorkout && workout && (
-        <>
-          <AlertDialogHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center flex-1 gap-2 flex-wrap mb-0.5">
-                <h2 className="text-2xl font-semibold tracking-tight">
-                  {workout.programName}
-                </h2>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-auto py-1.5 px-2 mt-1"
-                      >
-                        <Link to="../programs/1/details" target="_blank">
-                          <SquareArrowOutUpRight />
-                        </Link>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>View training program details</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-
-              <AlertDialogCancel
-                className={cn(
-                  buttonVariants({ variant: "ghost" }),
-                  "self-start h-auto py-1.5 px-2 border-none"
-                )}
-              >
-                <XIcon />
-              </AlertDialogCancel>
-            </div>
-            <Separator className="-translate-y-0.5" />
-          </AlertDialogHeader>
-          <TrainingWorkoutForm workoutSummary={workout} />
-        </>
+        <TrainingWorkoutForm
+          workoutSummary={workout}
+          scheduleProgram={scheduleProgram.program}
+          trainingDuration={scheduleProgram.trainingDuration}
+        />
       )}
     </>
   );

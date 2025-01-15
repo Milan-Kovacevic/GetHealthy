@@ -3,10 +3,10 @@ export type TrainingProgramOnScheduleDTO = {
   dayOfWeek: number;
   startTime: string; // HH:mm
   trainingDuration: number;
-  program: TrainingProgramDTO;
+  program: ScheduleTrainingProgramDTO;
 };
 
-type TrainingProgramDTO = {
+type ScheduleTrainingProgramDTO = {
   id: number;
   name: string;
   createdAt: string;
@@ -18,17 +18,16 @@ export type EditTrainingProgramOnScheduleDTO = {
   id: number;
   dayOfWeek: number;
   startTime: Date; // HH:mm
-  program: Omit<
-    TrainingProgramDTO,
-    "createdAt" | "description" | "trainerName"
-  >;
+  program: ManageScheduleProgramDTO;
 };
 
 export type CreateTrainingProgramOnScheduleDTO = {
   dayOfWeek: number;
   startTime: Date;
-  program: Omit<
-    TrainingProgramDTO,
-    "createdAt" | "description" | "trainerName"
-  >;
+  program: ManageScheduleProgramDTO;
+};
+
+export type ManageScheduleProgramDTO = {
+  id: number;
+  name: string;
 };

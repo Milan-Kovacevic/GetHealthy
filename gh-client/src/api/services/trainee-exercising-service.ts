@@ -2,7 +2,7 @@ import { ApiEndpoints } from "@/utils/constants";
 import {
   ExerciseFeedbackRequest,
   ExerciseSetFeedbackRequest,
-  TraineeExercising,
+  WorkoutSummary,
 } from "../models/trainee-exercising";
 import {
   ExerciseFeedbackRequestDTO,
@@ -13,178 +13,236 @@ import {
 import { sendAxiosRequest } from "./base-service";
 import { Category } from "../models/category";
 import { ExerciseMetric } from "../models/exercise";
-import { Set, Exercise } from "../models/trainee-exercising";
 import { ProgramDifficulty } from "../enums/program-difficulty";
 import { delay } from "@/lib/utils";
 
 //TODOO
-const getWorkoutSummary = async () =>
-  // programId: number
-  //userId: number
-  {
-    //TODOOO
-    // var url = ApiEndpoints.TraineeExercising.replace(
-    //   "{programId}",
-    //   `${programId}`
-    // );
+const getWorkoutSummary = async (
+  traineeId: number,
+  programScheduleId: number
+): Promise<WorkoutSummary> => {
+  console.log(programScheduleId);
+  // TODO
 
-    //   return sendAxiosRequest<void, TraineeExercisingDTO>({
-    //     method: "GET",
-    //     url: url,
-    //   }).then((response) => {
-    //     return response.data as TraineeExercising;
-    //   });
-    await delay(1000);
-    return Promise.resolve<TraineeExercising>(mockTraineeExercising);
-  };
-
-const startWorkout = async (programId: number, userId: number) => {
-  var url = ApiEndpoints.TraineeExercising + `/start`;
-  return sendAxiosRequest<TraineeExercisingRequestDTO, TraineeExercisingDTO>({
-    method: "POST",
-    url: url,
-    data: { programId, userId },
-  }).then((response) => response.data as TraineeExercising);
+  await delay(1000);
+  return Promise.resolve<WorkoutSummary>(
+    workoutSummaryMock[programScheduleId % 3]
+  );
 };
 
-const giveSetFeedback = async (feedback: ExerciseSetFeedbackRequest) => {
-  var url = ApiEndpoints.TraineeExercising + `/exercise-set-feedback`;
-  try {
-    return sendAxiosRequest<ExerciseSetFeedbackRequestDTO, void>({
-      method: "POST",
-      url: url,
-      data: feedback,
-    });
-  } catch (error) {
-    console.error("Failed to submit set feedback:", error);
-  }
-};
+// const startWorkout = async (programId: number, userId: number) => {
+//   var url = ApiEndpoints.TraineeExercising + `/start`;
+//   return sendAxiosRequest<TraineeExercisingRequestDTO, TraineeExercisingDTO>({
+//     method: "POST",
+//     url: url,
+//     data: { programId, userId },
+//   }).then((response) => response.data as TraineeExercising);
+// };
 
-const giveExerciseFeedback = async (feedback: ExerciseFeedbackRequest) => {
-  var url = ApiEndpoints.TraineeExercising + `/exercise-feedback`;
+// const giveSetFeedback = async (feedback: ExerciseSetFeedbackRequest) => {
+//   var url = ApiEndpoints.TraineeExercising + `/exercise-set-feedback`;
+//   try {
+//     return sendAxiosRequest<ExerciseSetFeedbackRequestDTO, void>({
+//       method: "POST",
+//       url: url,
+//       data: feedback,
+//     });
+//   } catch (error) {
+//     console.error("Failed to submit set feedback:", error);
+//   }
+// };
 
-  return sendAxiosRequest<ExerciseFeedbackRequestDTO, void>({
-    method: "POST",
-    url: url,
-    data: feedback,
-  });
-};
+// const giveExerciseFeedback = async (feedback: ExerciseFeedbackRequest) => {
+//   var url = ApiEndpoints.TraineeExercising + `/exercise-feedback`;
 
-// Mock podaci za ExerciseMetric
-const mockExerciseMetrics: ExerciseMetric[] = [
-  { id: 1, name: "Weight", unit: "kg" },
-  { id: 2, name: "Repetitions", unit: "reps" },
-  { id: 3, name: "Distance", unit: "meters" },
-  { id: 4, name: "Time", unit: "seconds" },
-];
+//   return sendAxiosRequest<ExerciseFeedbackRequestDTO, void>({
+//     method: "POST",
+//     url: url,
+//     data: feedback,
+//   });
+// };
 
-// Mock podaci za ExerciseSet
-const mockExerciseSets: Set[] = [
-  {
-    id: 1,
-    restTime: 60,
-    firstMetricValue: "20",
-    secondMetricValue: "10",
-    status: "pending",
-  },
-  {
-    id: 2,
-    restTime: 90,
-    firstMetricValue: "25",
-    secondMetricValue: "8",
-    status: "pending",
-  },
-  {
-    id: 3,
-    restTime: 120,
-    firstMetricValue: "30",
-    secondMetricValue: "6",
-    status: "pending",
-  },
-];
+export { getWorkoutSummary };
 
 // Mock podaci za ProgramExerciseDetails
-const mockProgramExercises: Exercise[] = [
+const workoutSummaryMock: WorkoutSummary[] = [
   {
     id: 1,
-    name: "Bench Press",
-    description:
-      "A compound exercise targeting the chest, shoulders, and triceps.",
-    videoLink: "https://example.com/bench-press",
-    firstExerciseMetric: mockExerciseMetrics[0],
-    secondExerciseMetric: mockExerciseMetrics[1],
-    exerciseSets: mockExerciseSets,
+    traineeExercisingId: 1,
+    programExercises: [
+      {
+        id: 101,
+        exerciseName: "Bench Press",
+        description:
+          "A strength exercise that targets the chest, shoulders, and triceps.",
+        videoLink: "https://www.example.com/bench-press-video",
+        firstExerciseMetric: { id: 1, name: "Weight", unit: "kg" },
+        secondExerciseMetric: { id: 2, name: "Reps", unit: "reps" },
+        exerciseSetsFeedback: [
+          {
+            id: 1,
+            restTime: 60,
+            firstMetricValue: "70",
+            secondMetricValue: "10",
+            setFeedbackId: 1,
+            firstMetricValueFeedback: "70",
+            secondMetricValueFeedback: "10",
+            completed: true,
+          },
+          {
+            id: 2,
+            restTime: 60,
+            firstMetricValue: "75",
+            secondMetricValue: "8",
+            setFeedbackId: 2,
+            firstMetricValueFeedback: "75",
+            secondMetricValueFeedback: "8",
+            completed: true,
+          },
+        ],
+        exerciseFeedbackId: 1001,
+      },
+      {
+        id: 102,
+        exerciseName: "Pull-Ups",
+        description: "A bodyweight exercise that targets the back and arms.",
+        videoLink: "https://www.example.com/pull-ups-video",
+        firstExerciseMetric: { id: 3, name: "Weight", unit: "kg" },
+        secondExerciseMetric: { id: 4, name: "Reps", unit: "reps" },
+        exerciseSetsFeedback: [
+          {
+            id: 3,
+            restTime: 90,
+            firstMetricValue: "10",
+            secondMetricValue: "12",
+            setFeedbackId: 3,
+            firstMetricValueFeedback: "5",
+            secondMetricValueFeedback: "12",
+            completed: true,
+          },
+          {
+            id: 4,
+            restTime: 90,
+            firstMetricValue: "15",
+            secondMetricValue: "10",
+            setFeedbackId: 4,
+            firstMetricValueFeedback: "10",
+            secondMetricValueFeedback: "10",
+            completed: true,
+          },
+        ],
+        exerciseFeedbackId: 1002,
+      },
+    ],
   },
   {
     id: 2,
-    name: "Deadlift",
-    description: "A compound movement working the entire posterior chain.",
-    videoLink: "https://example.com/deadlift",
-    firstExerciseMetric: mockExerciseMetrics[0],
-    secondExerciseMetric: mockExerciseMetrics[1],
-    exerciseSets: [
+    traineeExercisingId: 2,
+    programExercises: [
       {
-        id: 4,
-        restTime: 120,
-        firstMetricValue: "50",
-        secondMetricValue: "8",
-        status: "pending",
+        id: 201,
+        exerciseName: "Squats",
+        description:
+          "A lower-body strength exercise that targets the legs and glutes.",
+        videoLink: "https://www.example.com/squats-video",
+        firstExerciseMetric: { id: 5, name: "Weight", unit: "kg" },
+        secondExerciseMetric: { id: 6, name: "Reps", unit: "reps" },
+        exerciseSetsFeedback: [
+          {
+            id: 5,
+            restTime: 90,
+            firstMetricValue: "90",
+            secondMetricValue: "10",
+            setFeedbackId: 5,
+            firstMetricValueFeedback: "90",
+            secondMetricValueFeedback: "10",
+            completed: true,
+          },
+          {
+            id: 6,
+            restTime: 90,
+            firstMetricValue: "95",
+            secondMetricValue: "8",
+          },
+        ],
+        exerciseFeedbackId: 2001,
       },
       {
-        id: 5,
-        restTime: 150,
-        firstMetricValue: "60",
-        secondMetricValue: "6",
-        status: "pending",
+        id: 202,
+        exerciseName: "Plank",
+        description:
+          "A core-strengthening exercise that targets the abdominal muscles.",
+        videoLink: "https://www.example.com/plank-video",
+        firstExerciseMetric: { id: 7, name: "Time", unit: "seconds" },
+        secondExerciseMetric: { id: 8, name: "Sets", unit: "sets" },
+        exerciseSetsFeedback: [
+          { id: 7, restTime: 60, firstMetricValue: "60" },
+          { id: 8, restTime: 60, firstMetricValue: "90" },
+        ],
       },
     ],
   },
   {
     id: 3,
-    name: "Rowing Machine",
-    description: "A cardio exercise that engages the full body.",
-    videoLink: "https://example.com/rowing-machine",
-    firstExerciseMetric: mockExerciseMetrics[2],
-    secondExerciseMetric: mockExerciseMetrics[3],
-    exerciseSets: [
+    traineeExercisingId: undefined,
+    programExercises: [
       {
-        id: 6,
-        restTime: 30,
-        firstMetricValue: "500",
-        secondMetricValue: "120",
-        status: "pending",
+        id: 201,
+        exerciseName: "Squats",
+        description:
+          "A lower-body strength exercise that targets the legs and glutes.",
+        videoLink: "https://www.example.com/squats-video",
+        firstExerciseMetric: { id: 5, name: "Weight", unit: "kg" },
+        secondExerciseMetric: { id: 6, name: "Reps", unit: "reps" },
+        exerciseSetsFeedback: [
+          {
+            id: 5,
+            restTime: 90,
+            firstMetricValue: "90",
+            secondMetricValue: "10",
+          },
+          {
+            id: 6,
+            restTime: 90,
+            firstMetricValue: "95",
+            secondMetricValue: "8",
+          },
+        ],
+        // exerciseFeedbackId: 2001,
+        // exerciseSetsFeedback: [
+        //   {
+        //     setFeedbackId: 5,
+        //     firstMetricValueFeedback: "90",
+        //     secondMetricValueFeedback: "10",
+        //     completed: true,
+        //   },
+        //   {
+        //     setFeedbackId: 6,
+        //     firstMetricValueFeedback: "95",
+        //     secondMetricValueFeedback: "8",
+        //     completed: false,
+        //     skipped: true,
+        //   },
+        // ],
       },
       {
-        id: 7,
-        restTime: 45,
-        firstMetricValue: "750",
-        secondMetricValue: "180",
-        status: "pending",
+        id: 202,
+        exerciseName: "Plank",
+        description:
+          "A core-strengthening exercise that targets the abdominal muscles.",
+        videoLink: "https://www.example.com/plank-video",
+        firstExerciseMetric: { id: 7, name: "Time", unit: "seconds" },
+        secondExerciseMetric: { id: 8, name: "Sets", unit: "sets" },
+        exerciseSetsFeedback: [
+          { id: 7, restTime: 60, firstMetricValue: "60" },
+          { id: 8, restTime: 60, firstMetricValue: "90" },
+        ],
+        // exerciseFeedbackId: 2002,
+        // exerciseSetsFeedback: [
+        //   { setFeedbackId: 7, firstMetricValueFeedback: "60", completed: true },
+        //   { setFeedbackId: 8, firstMetricValueFeedback: "90", completed: true },
+        // ],
       },
     ],
   },
 ];
-
-// Mock podaci za Category
-const mockCategories: Category[] = [
-  { categoryId: 1, name: "Strength" },
-  { categoryId: 2, name: "Endurance" },
-  { categoryId: 3, name: "Cardio" },
-];
-
-// Mock podaci za TraineeExercising
-const mockTraineeExercising: TraineeExercising = {
-  programName: "Total Body Strength",
-  trainerName: "John Doe",
-  programCategories: [mockCategories[0], mockCategories[2]], // Strength i Cardio
-  programDifficulty: ProgramDifficulty.INTERMEDIATE,
-  exercises: mockProgramExercises,
-  traineeExercisingId: 0,
-};
-
-export {
-  getWorkoutSummary,
-  startWorkout,
-  giveSetFeedback,
-  giveExerciseFeedback,
-};

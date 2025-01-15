@@ -1,22 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import {
-  BicepsFlexedIcon,
-  CheckCircle,
-  DumbbellIcon,
-  UserIcon,
-  XCircle,
-} from "lucide-react";
-import { TraineeExercising } from "@/api/models/trainee-exercising";
+import { BicepsFlexedIcon, CheckCircle, UserIcon, XCircle } from "lucide-react";
+import { WorkoutSummary } from "@/api/models/trainee-exercising";
 import { capitalize } from "@/lib/utils";
+import { ScheduleTrainingProgram } from "@/api/models/training-program-on-schedule";
 
-type WorkoutSummaryProps = {
-  workout: TraineeExercising;
-  // onStart: (feedback: boolean) => void;
+type ProgramWorkoutSummaryProps = {
+  workoutSummary: WorkoutSummary;
+  scheduleProgram: ScheduleTrainingProgram;
+  trainingDuration: number;
+  isWorkoutStarted: boolean;
   currentExerciseIndex: number;
   onFinish: () => void;
   onStart: () => void;
@@ -25,22 +22,28 @@ type WorkoutSummaryProps = {
   onFeedbackChecked: (value: boolean) => void;
 };
 
-export default function WorkoutSummary({
-  workout,
-  onStart,
-  currentExerciseIndex,
-  onFinish,
-  onContinue,
-  giveFeedback,
-  onFeedbackChecked,
-}: WorkoutSummaryProps) {
-  const isWorkoutStarted = workout.exercises.some((exercise) =>
-    exercise.exerciseSets.some((set) => set.status !== "pending")
-  );
+export default function ProgramWorkoutSummary(
+  props: ProgramWorkoutSummaryProps
+) {
+  const {
+    workoutSummary,
+    scheduleProgram,
+    isWorkoutStarted,
+    trainingDuration,
+    onStart,
+    currentExerciseIndex,
+    onFinish,
+    onContinue,
+    giveFeedback,
+    onFeedbackChecked,
+  } = props;
 
-  const isWorkoutFinished = workout.exercises.every((exercise) =>
-    exercise.exerciseSets.every((set) => set.status !== "pending")
-  );
+  // const isWorkoutFinished = workout.exercises.every((exercise) =>
+  //   exercise.exerciseSets.every((set) => set.status !== "pending")
+  // );
+
+  // TODO
+  const isWorkoutFinished = false;
 
   return (
     <div className="space-y-3 flex flex-col">
@@ -50,20 +53,25 @@ export default function WorkoutSummary({
             <div className="flex items-center text-sm gap-1">
               <UserIcon className="text-muted-foreground fill-secondary h-4 w-4 mt-0.5" />
               <p className="text-foreground/80 text-base font-medium tracking-tight">
-                {workout.trainerName}
+                {scheduleProgram.trainerFirstName}{" "}
+                {scheduleProgram.trainerLastName}
               </p>
             </div>
             <span className="text-muted-foreground">•</span>
             <div className="flex items-center gap-1.5">
               <BicepsFlexedIcon className="text-foreground/75 fill-secondary h-4 w-4 mt-0.5" />
               <p className="font-normal">
-                {capitalize(workout.programDifficulty)}
+                {capitalize(scheduleProgram.difficulty)}
               </p>
             </div>
           </div>
           <div className="flex flex-wrap gap-2 mb-2">
-            {workout.programCategories.map((category, index) => (
-              <Badge key={index} variant="secondary" className="font-normal">
+            {scheduleProgram.categories.map((category) => (
+              <Badge
+                key={category.categoryId}
+                variant="secondary"
+                className="font-normal"
+              >
                 {category.name}
               </Badge>
             ))}
@@ -71,8 +79,8 @@ export default function WorkoutSummary({
         </div>
         <h3 className="text-xl font-medium">Exercises</h3>
         <ScrollArea className="">
-          <ul className="space-y-3 max-h-80">
-            {workout.exercises.map((exercise, index) => (
+          <ul className="space-y-3 h-80">
+            {workoutSummary.programExercises.map((exercise, index) => (
               <li key={index}>
                 <Card
                   className={
@@ -84,21 +92,17 @@ export default function WorkoutSummary({
                   }
                 >
                   <CardTitle className="text-lg px-4 py-2">
-                    {index + 1}. {exercise.name}
+                    {index + 1}. {exercise.exerciseName}
                   </CardTitle>
 
                   <CardContent className="p-4 pt-0">
                     <ul className="list-disc list-inside space-y-1">
-                      {exercise.exerciseSets.map((set, setIndex) => (
+                      {exercise.exerciseSetsFeedback.map((set, setIndex) => (
                         <li
                           key={setIndex}
                           className="text-sm flex items-center justify-between"
                         >
-                          <span
-                            className={
-                              set.status === "completed" ? "line-through" : ""
-                            }
-                          >
+                          <span className={set.completed ? "line-through" : ""}>
                             {set.firstMetricValue}{" "}
                             {exercise.firstExerciseMetric.unit}
                             {exercise.secondExerciseMetric && (
@@ -109,14 +113,14 @@ export default function WorkoutSummary({
                             )}
                             , {set.restTime}s rest
                           </span>
-                          {set.status === "completed" && (
+                          {set.completed && (
                             <CheckCircle
                               className="text-primary/85"
                               size={16}
                               aria-label="Completed"
                             />
                           )}
-                          {set.status === "skipped" && (
+                          {set.skipped && (
                             <XCircle
                               className="text-destructive"
                               size={16}
@@ -134,9 +138,9 @@ export default function WorkoutSummary({
           <ScrollBar orientation="vertical" />
         </ScrollArea>
       </div>
-      <p className="font-normal text-sm pb-2">
+      <p className="font-normal text-sm pb-1">
         Estimated workout time:{" "}
-        <span className="font-semibold text-base">50</span> min
+        <span className="font-semibold text-base">{trainingDuration}</span> min
       </p>
       {!isWorkoutFinished && (
         <div className="flex items-center space-x-2">
@@ -145,7 +149,9 @@ export default function WorkoutSummary({
             checked={giveFeedback}
             onCheckedChange={onFeedbackChecked}
           />
-          <Label htmlFor="feedback">Give feedback during workout</Label>
+          <Label htmlFor="feedback" className="cursor-pointer">
+            Give feedback during workout
+          </Label>
         </div>
       )}
       <Button

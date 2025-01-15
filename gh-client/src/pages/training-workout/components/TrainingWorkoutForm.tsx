@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { useState } from "react";
-import WorkoutSummary from "./WorkoutSummary";
 import WorkoutCountdownTimer from "./WorkoutCountdownTimer";
 import CurrentExerciseView from "./CurrentExerciseView";
 import { ArrowRight, SkipForward } from "lucide-react";
@@ -9,74 +8,93 @@ import ExerciseSummary from "./ExerciseSummary";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ExerciseFeedbackRequest,
-  TraineeExercising,
+  WorkoutSummary,
 } from "@/api/models/trainee-exercising";
-import {
-  giveExerciseFeedback,
-  startWorkout,
-} from "@/api/services/trainee-exercising-service";
+import {} from "@/api/services/trainee-exercising-service";
+import ProgramWorkoutSummary from "./ProgramWorkoutSummary";
+import { ScheduleTrainingProgram } from "@/api/models/training-program-on-schedule";
 
 type TrainingWorkoutFormProps = {
-  workoutSummary: TraineeExercising;
+  workoutSummary: WorkoutSummary;
+  scheduleProgram: ScheduleTrainingProgram;
+  trainingDuration: number;
 };
+
+type FormState = "summary" | "exercise-info" | "exercise" | "rest-time";
 
 export default function TrainingWorkoutForm({
   workoutSummary,
+  scheduleProgram,
+  trainingDuration,
 }: TrainingWorkoutFormProps) {
-  const [workout, setWorkout] = useState<TraineeExercising>(workoutSummary);
-  const [showSummary, setShowSummary] = useState(true);
-  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const [currentSetIndex, setCurrentSetIndex] = useState(0);
+  const [formState, setFormState] = useState<FormState>("summary");
   const [giveFeedback, setGiveFeedback] = useState(true);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [showRestTimer, setShowRestTimer] = useState(false);
-  const [showExerciseSummary, setShowExerciseSummary] = useState(false);
+
+  // TODO: Based on given summary, if trainee had already started workout,
+  // calculate the position of next exercise and/or set
+  var lastExerciseIndex = 0;
+
+  for (let i = 0; i < workoutSummary.programExercises.length; i++) {
+    const exercise = workoutSummary.programExercises[i];
+    if (exercise.skipped) continue;
+
+    if (
+      exercise.exerciseSetsFeedback[exercise.exerciseSetsFeedback.length - 1]
+        .setFeedbackId
+    ) {
+      lastExerciseIndex = Math.min(
+        workoutSummary.programExercises.length - 1,
+        lastExerciseIndex + 1
+      );
+    }
+  }
+
+  const currentExerciseIndex = lastExerciseIndex;
+
   const navigate = useNavigate();
   const params = useParams();
 
-  const start = async () => {
-    const programId = params["programId"];
-    const userId = params["userId"];
+  const isWorkoutStarted = workoutSummary.traineeExercisingId != undefined;
 
-    if (programId && userId) {
-      try {
-        const response = await startWorkout(
-          parseInt(programId),
-          parseInt(userId)
-        );
-        console.log("Workout started:", response);
-      } catch (error) {
-        console.error("Failed to start workout:", error);
-      }
-    } else {
-      console.error("Invalid programId or userId");
-    }
-
-    setShowSummary(false);
-
-    if (currentSetIndex == 0) setShowExerciseSummary(true);
+  const startWorkout = async () => {
+    // const programId = params["programId"];
+    // const userId = params["userId"];
+    // if (programId && userId) {
+    //   try {
+    //     const response = await startWorkout(
+    //       parseInt(programId),
+    //       parseInt(userId)
+    //     );
+    //     console.log("Workout started:", response);
+    //   } catch (error) {
+    //     console.error("Failed to start workout:", error);
+    //   }
+    // } else {
+    //   console.error("Invalid programId or userId");
+    // }
+    // setShowSummary(false);
+    // if (currentSetIndex == 0) setShowExerciseSummary(true);
   };
 
-  //TODOO
   const continueWorkout = () => {
-    if (
-      currentSetIndex <
-      workout.exercises[currentExerciseIndex].exerciseSets.length - 1
-    ) {
-      setCurrentSetIndex((prev) => prev + 1);
-      setShowRestTimer(true);
-      setShowFeedback(true);
-    } else if (currentExerciseIndex < workout.exercises.length - 1) {
-      setCurrentExerciseIndex((prev) => prev + 1);
-      setCurrentSetIndex(0);
-      setShowExerciseSummary(true);
-      setShowFeedback(false);
-      setShowRestTimer(false);
-    } else {
-      setShowSummary(true);
-      setShowRestTimer(false);
-      setShowFeedback(false);
-    }
+    // if (
+    //   currentSetIndex <
+    //   workout.exercises[currentExerciseIndex].exerciseSets.length - 1
+    // ) {
+    //   setCurrentSetIndex((prev) => prev + 1);
+    //   setShowRestTimer(true);
+    //   setShowFeedback(true);
+    // } else if (currentExerciseIndex < workout.exercises.length - 1) {
+    //   setCurrentExerciseIndex((prev) => prev + 1);
+    //   setCurrentSetIndex(0);
+    //   setShowExerciseSummary(true);
+    //   setShowFeedback(false);
+    //   setShowRestTimer(false);
+    // } else {
+    //   setShowSummary(true);
+    //   setShowRestTimer(false);
+    //   setShowFeedback(false);
+    // }
   };
 
   // const continueWorkout = () => {
@@ -86,57 +104,56 @@ export default function TrainingWorkoutForm({
   // };
 
   const nextSet = () => {
-    const updatedWorkout = { ...workout };
-    updatedWorkout.exercises[currentExerciseIndex].exerciseSets[
-      currentSetIndex
-    ].status = "completed";
-    setWorkout(updatedWorkout);
-
-    if (
-      currentSetIndex ===
-        workout.exercises[currentExerciseIndex].exerciseSets.length - 1 &&
-      currentExerciseIndex === workout.exercises.length - 1
-    )
-      setShowSummary(true);
-    else setShowRestTimer(true);
+    // const updatedWorkout = { ...workout };
+    // updatedWorkout.exercises[currentExerciseIndex].exerciseSets[
+    //   currentSetIndex
+    // ].status = "completed";
+    // setWorkout(updatedWorkout);
+    // if (
+    //   currentSetIndex ===
+    //     workout.exercises[currentExerciseIndex].exerciseSets.length - 1 &&
+    //   currentExerciseIndex === workout.exercises.length - 1
+    // )
+    //   setShowSummary(true);
+    // else setShowRestTimer(true);
   };
 
   const moveToNextSet = () => {
-    const currentExercise = workout.exercises[currentExerciseIndex];
-    if (currentSetIndex < currentExercise.exerciseSets.length - 1) {
-      setCurrentSetIndex(currentSetIndex + 1);
-    } else {
-      if (currentExerciseIndex < workout.exercises.length - 1) {
-        setCurrentExerciseIndex(currentExerciseIndex + 1);
-        setShowExerciseSummary(true);
-        setCurrentSetIndex(0);
-      } else {
-        setShowSummary(true);
-        setCurrentExerciseIndex(0);
-        setCurrentSetIndex(0);
-      }
-    }
-    setShowFeedback(false);
-    setShowRestTimer(false);
+    // const currentExercise = workout.exercises[currentExerciseIndex];
+    // if (currentSetIndex < currentExercise.exerciseSets.length - 1) {
+    //   setCurrentSetIndex(currentSetIndex + 1);
+    // } else {
+    //   if (currentExerciseIndex < workout.exercises.length - 1) {
+    //     setCurrentExerciseIndex(currentExerciseIndex + 1);
+    //     setShowExerciseSummary(true);
+    //     setCurrentSetIndex(0);
+    //   } else {
+    //     setShowSummary(true);
+    //     setCurrentExerciseIndex(0);
+    //     setCurrentSetIndex(0);
+    //   }
+    // }
+    // setShowFeedback(false);
+    // setShowRestTimer(false);
   };
 
   const moveToNextExercise = () => {
-    const updatedWorkout = { ...workout };
-    updatedWorkout.exercises[currentExerciseIndex].exerciseSets.forEach(
-      (s) => (s.status = "skipped")
-    );
-    setWorkout(updatedWorkout);
-    if (currentExerciseIndex < workout.exercises.length - 1) {
-      // Next exercise
-      setCurrentExerciseIndex(currentExerciseIndex + 1);
-      setShowExerciseSummary(true);
-      setCurrentSetIndex(0);
-    } else {
-      // Workout completed
-      setShowSummary(true);
-      setCurrentExerciseIndex(0);
-      setCurrentSetIndex(0);
-    }
+    // const updatedWorkout = { ...workout };
+    // updatedWorkout.exercises[currentExerciseIndex].exerciseSets.forEach(
+    //   (s) => (s.status = "skipped")
+    // );
+    // setWorkout(updatedWorkout);
+    // if (currentExerciseIndex < workout.exercises.length - 1) {
+    //   // Next exercise
+    //   setCurrentExerciseIndex(currentExerciseIndex + 1);
+    //   setShowExerciseSummary(true);
+    //   setCurrentSetIndex(0);
+    // } else {
+    //   // Workout completed
+    //   setShowSummary(true);
+    //   setCurrentExerciseIndex(0);
+    //   setCurrentSetIndex(0);
+    // }
   };
 
   const handleRestComplete = () => {
@@ -148,54 +165,66 @@ export default function TrainingWorkoutForm({
   };
 
   const skipSet = () => {
-    const updatedWorkout = { ...workout };
-    updatedWorkout.exercises[currentExerciseIndex].exerciseSets[
-      currentSetIndex
-    ].status = "skipped";
-    setWorkout(updatedWorkout);
-    moveToNextSet();
+    // const updatedWorkout = { ...workout };
+    // updatedWorkout.exercises[currentExerciseIndex].exerciseSets[
+    //   currentSetIndex
+    // ].status = "skipped";
+    // setWorkout(updatedWorkout);
+    // moveToNextSet();
   };
 
   const handleReturnToSummary = () => {
-    setShowExerciseSummary(false);
-    setShowSummary(true);
+    // setShowExerciseSummary(false);
+    // setShowSummary(true);
   };
 
   const handleStartExercise = () => {
-    setShowExerciseSummary(false);
+    // setShowExerciseSummary(false);
   };
 
   const handleSkipExercise = async () => {
-    // Kreirajte objekat povratnih informacija
-    const feedback: ExerciseFeedbackRequest = {
-      skipped: true,
-      traineeExercisingId: 0, //TODOOOOO
-      exerciseId: workout.exercises[currentExerciseIndex].id,
-      programExerciseId: currentExerciseIndex, //indeks, ne id???
-    };
-
-    try {
-      await giveExerciseFeedback(feedback);
-      console.log("Feedback sent successfully for skipped exercise");
-    } catch (error) {
-      console.error("Failed to send feedback for skipped exercise:", error);
-    }
-
-    moveToNextExercise();
-    setShowExerciseSummary(true);
+    // const feedback: ExerciseFeedbackRequest = {
+    //   skipped: true,
+    //   traineeExercisingId: 0, //TODOOOOO
+    //   exerciseId: workout.exercises[currentExerciseIndex].id,
+    //   programExerciseId: currentExerciseIndex, //indeks, ne id???
+    // };
+    // try {
+    //   await giveExerciseFeedback(feedback);
+    //   console.log("Feedback sent successfully for skipped exercise");
+    // } catch (error) {
+    //   console.error("Failed to send feedback for skipped exercise:", error);
+    // }
+    // moveToNextExercise();
+    // setShowExerciseSummary(true);
   };
 
   const finishWorkout = () => {
-    navigate(-1);
+    // navigate(-1);
   };
 
   return (
     <div className="w-full flex flex-col">
       <CardContent className="p-0 flex flex-col flex-1">
-        {showSummary ? (
-          <WorkoutSummary
-            workout={workout}
-            onStart={start}
+        {formState == "summary" && (
+          <ProgramWorkoutSummary
+            workoutSummary={workoutSummary}
+            scheduleProgram={scheduleProgram}
+            trainingDuration={trainingDuration}
+            isWorkoutStarted={isWorkoutStarted}
+            onStart={startWorkout}
+            currentExerciseIndex={currentExerciseIndex}
+            onFinish={finishWorkout}
+            onContinue={continueWorkout}
+            giveFeedback={giveFeedback}
+            onFeedbackChecked={setGiveFeedback}
+          />
+        )}
+
+        {/* {showSummary ? (
+          <ProgramWorkoutSummary
+            workout={workoutSummary}
+            onStart={startWorkout}
             currentExerciseIndex={currentExerciseIndex}
             onFinish={finishWorkout}
             onContinue={continueWorkout}
@@ -239,10 +268,10 @@ export default function TrainingWorkoutForm({
             }
             onReturnToSummary={handleReturnToSummary}
           />
-        )}
+        )} */}
       </CardContent>
 
-      {!showSummary &&
+      {/* {!showSummary &&
         !showRestTimer &&
         !showFeedback &&
         !showExerciseSummary && (
@@ -262,7 +291,7 @@ export default function TrainingWorkoutForm({
               </Button>
             </div>
           </CardFooter>
-        )}
+        )} */}
     </div>
   );
 }

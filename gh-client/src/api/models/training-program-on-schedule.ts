@@ -1,15 +1,21 @@
+import { ProgramDifficulty } from "../enums/program-difficulty";
+import { Category } from "./category";
+
 export type TrainingProgramOnSchedule = {
   id: number;
   dayOfWeek: number;
   startTime: string;
   trainingDuration: number;
-  program: TrainingProgram;
+  program: ScheduleTrainingProgram;
 };
 
-type TrainingProgram = {
+export type ScheduleTrainingProgram = {
   id: number;
   name: string;
   createdAt: string;
   description: string;
-  trainerName: string;
+  trainerFirstName: string;
+  trainerLastName: string;
+  difficulty: ProgramDifficulty;
+  categories: Category[];
 };
