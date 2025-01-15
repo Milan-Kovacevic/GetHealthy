@@ -20,7 +20,7 @@ export default function ExerciseItem({
   showVideo,
 }: ExerciseItemProps) {
   return (
-    <Card key={exercise.id}>
+    <Card key={exercise.id} className="">
       <CardHeader className="pb-2">
         <CardTitle>{exercise.exerciseName}</CardTitle>
         <CardDescription>{exercise.description}</CardDescription>

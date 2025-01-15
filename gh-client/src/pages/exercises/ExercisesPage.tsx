@@ -13,20 +13,22 @@ export default function ExercisesPage() {
   return (
     <section className="overflow-hidden relative sm:px-5 px-4 pt-8 pb-10 h-full">
       <BackgroundBlurs />
-      <div className="container mx-auto h-full z-10 relative">
+      <div className="container mx-auto h-full z-10 relative flex flex-col">
         <div className="py-4">
           <ExercisesTitleSection
             onSearchExercises={state.onSearch}
+            initialValue={state.searchQuery}
             showVideos={showVideos}
             setShowVideos={setShowVideos}
           />
         </div>
-        <div className="mt-8 flex flex-col gap-6">
+        <div className="mt-8 flex flex-col gap-6 flex-1">
           <ExerciseMetricsSection />
           {state.exercises.length == 0 && !state.loading && (
             <NoListItemsAnimation
+              className="sm:py-32"
               title="No results found"
-              description="Please, reload the page and try again later or adjust the filter criteria..."
+              description="Please, reload the page and try again later or adjust the search criteria..."
             />
           )}
           <ExerciseList

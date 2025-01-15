@@ -1,16 +1,24 @@
 import noResults from "@/assets/no-results.png";
+import { cn } from "@/lib/utils";
 
 type NoListItemsAnimationProps = {
   title: string;
   description: string;
+  className?: string;
 };
 
 export default function NoListItemsAnimation({
   title,
   description,
+  className,
 }: NoListItemsAnimationProps) {
   return (
-    <div className="w-full flex flex-col items-center justify-center py-16">
+    <div
+      className={cn(
+        "w-full flex flex-col items-center justify-center py-16",
+        className
+      )}
+    >
       <img
         src={noResults}
         className="dark:filter-white h-20 w-20 animate-bounce"

@@ -8,11 +8,12 @@ type ExercisesTitleSectionProps = {
   onSearchExercises: (query: string) => void;
   showVideos: boolean;
   setShowVideos: (value: boolean) => void;
+  initialValue?: string;
 };
 
 const ExercisesTitleSection = (props: ExercisesTitleSectionProps) => {
-  const { setShowVideos, onSearchExercises, showVideos } = props;
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const { setShowVideos, onSearchExercises, showVideos, initialValue } = props;
+  const [searchQuery, setSearchQuery] = useState<string>(initialValue ?? "");
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -37,6 +38,7 @@ const ExercisesTitleSection = (props: ExercisesTitleSectionProps) => {
                   name="search"
                   className="h-full"
                   placeholder="Search exercise..."
+                  value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
