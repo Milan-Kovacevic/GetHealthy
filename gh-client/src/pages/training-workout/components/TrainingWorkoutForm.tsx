@@ -17,13 +17,13 @@ import {
 } from "@/api/services/trainee-exercising-service";
 
 type TrainingWorkoutFormProps = {
-  traineeExercising: TraineeExercising;
+  workoutSummary: TraineeExercising;
 };
 
 export default function TrainingWorkoutForm({
-  traineeExercising,
+  workoutSummary,
 }: TrainingWorkoutFormProps) {
-  const [workout, setWorkout] = useState<TraineeExercising>(traineeExercising);
+  const [workout, setWorkout] = useState<TraineeExercising>(workoutSummary);
   const [showSummary, setShowSummary] = useState(true);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [currentSetIndex, setCurrentSetIndex] = useState(0);

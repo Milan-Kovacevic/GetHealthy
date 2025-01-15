@@ -174,10 +174,6 @@ export default function TrainingProgramInfo() {
                 <UsersIcon className="w-3.5 h-3.5 mr-1" />
                 <span>{program.currentlyEnrolled ?? "No "} participants</span>
               </div>
-              {/* Currently enrolled:{" "}
-              <span className="text-foreground">
-                {program.currentlyEnrolled}
-              </span> */}
             </p>
             <div className="mt-3 mb-5 flex items-center flex-wrap gap-2">
               {program.categories?.length > 0 ? (
@@ -189,13 +185,6 @@ export default function TrainingProgramInfo() {
                   >
                     {item.name}
                   </Badge>
-                  // <Badge
-                  //   key={item.categoryId}
-                  //   variant="secondary"
-                  //   className="text-sm px-3 border-foreground/30 font-normal py-0.5 h-auto transition-none"
-                  // >
-                  //   {item.name}
-                  // </Badge>
                 ))
               ) : (
                 <p className="text-muted-foreground text-sm italic">

@@ -24,9 +24,9 @@ const mockPrograms: TrainingProgramOnSchedule[] = [
   },
   {
     id: 2,
-    dayOfWeek: 4,
-    startTime: "18:00",
-    trainingDuration: 100,
+    dayOfWeek: 3,
+    startTime: "13:00",
+    trainingDuration: 500,
     program: {
       id: 2,
       name: "HIIT Workout",

@@ -1,5 +1,9 @@
 import { ApiEndpoints } from "@/utils/constants";
-import { ExerciseFeedbackRequest, ExerciseSetFeedbackRequest, TraineeExercising } from "../models/trainee-exercising";
+import {
+  ExerciseFeedbackRequest,
+  ExerciseSetFeedbackRequest,
+  TraineeExercising,
+} from "../models/trainee-exercising";
 import {
   ExerciseFeedbackRequestDTO,
   ExerciseSetFeedbackRequestDTO,
@@ -11,7 +15,7 @@ import { Category } from "../models/category";
 import { ExerciseMetric } from "../models/exercise";
 import { Set, Exercise } from "../models/trainee-exercising";
 import { ProgramDifficulty } from "../enums/program-difficulty";
-
+import { delay } from "@/lib/utils";
 
 //TODOO
 const getWorkoutSummary = async () =>
@@ -30,48 +34,41 @@ const getWorkoutSummary = async () =>
     //   }).then((response) => {
     //     return response.data as TraineeExercising;
     //   });
-
+    await delay(1000);
     return Promise.resolve<TraineeExercising>(mockTraineeExercising);
   };
 
-const startWorkout = async (
-  programId: number,
-  userId: number
-  ) => {
-    var url = ApiEndpoints.TraineeExercising + `/start`;
-    return sendAxiosRequest<TraineeExercisingRequestDTO, TraineeExercisingDTO>({
+const startWorkout = async (programId: number, userId: number) => {
+  var url = ApiEndpoints.TraineeExercising + `/start`;
+  return sendAxiosRequest<TraineeExercisingRequestDTO, TraineeExercisingDTO>({
+    method: "POST",
+    url: url,
+    data: { programId, userId },
+  }).then((response) => response.data as TraineeExercising);
+};
+
+const giveSetFeedback = async (feedback: ExerciseSetFeedbackRequest) => {
+  var url = ApiEndpoints.TraineeExercising + `/exercise-set-feedback`;
+  try {
+    return sendAxiosRequest<ExerciseSetFeedbackRequestDTO, void>({
       method: "POST",
       url: url,
-      data: {programId, userId},
-    }).then((response) => response.data as TraineeExercising);
-  };
+      data: feedback,
+    });
+  } catch (error) {
+    console.error("Failed to submit set feedback:", error);
+  }
+};
 
-  const giveSetFeedback = async (
-    feedback: ExerciseSetFeedbackRequest
-  ) => {
-    var url = ApiEndpoints.TraineeExercising + `/exercise-set-feedback`;
-    try {
-      return sendAxiosRequest<ExerciseSetFeedbackRequestDTO, void>({
-        method: "POST",
-        url: url,
-        data: feedback,
-      });
-    } catch (error) {
-      console.error("Failed to submit set feedback:", error);
-    }
-  };
+const giveExerciseFeedback = async (feedback: ExerciseFeedbackRequest) => {
+  var url = ApiEndpoints.TraineeExercising + `/exercise-feedback`;
 
-  const giveExerciseFeedback = async (
-    feedback: ExerciseFeedbackRequest
-  ) => {
-    var url = ApiEndpoints.TraineeExercising + `/exercise-feedback`;
-
-      return sendAxiosRequest<ExerciseFeedbackRequestDTO, void>({
-        method: "POST",
-        url: url,
-        data: feedback,
-      });
-  };
+  return sendAxiosRequest<ExerciseFeedbackRequestDTO, void>({
+    method: "POST",
+    url: url,
+    data: feedback,
+  });
+};
 
 // Mock podaci za ExerciseMetric
 const mockExerciseMetrics: ExerciseMetric[] = [
@@ -185,4 +182,9 @@ const mockTraineeExercising: TraineeExercising = {
   traineeExercisingId: 0,
 };
 
-export { getWorkoutSummary, startWorkout, giveSetFeedback, giveExerciseFeedback };
+export {
+  getWorkoutSummary,
+  startWorkout,
+  giveSetFeedback,
+  giveExerciseFeedback,
+};
