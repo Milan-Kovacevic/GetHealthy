@@ -1,12 +1,9 @@
 package dev.gethealthy.app.services.impl;
 
-import dev.gethealthy.app.models.entities.ExerciseSetFeedback;
 import dev.gethealthy.app.models.entities.ProgramRating;
-import dev.gethealthy.app.models.entities.TraineeExercising;
 import dev.gethealthy.app.models.enums.TrainingProgramDifficulty;
 import dev.gethealthy.app.models.requests.EngagementAnalyticsRequest;
 import dev.gethealthy.app.models.requests.PopularityAnalyticsRequest;
-import dev.gethealthy.app.models.responses.ProgramRatingResponse;
 import dev.gethealthy.app.models.responses.TrainerDashboardAnalyticsResponse;
 import dev.gethealthy.app.models.responses.TrainerEngagementAnalyticsResponse;
 import dev.gethealthy.app.models.responses.TrainerPopularityAnalyticsResponse;
@@ -17,8 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -44,6 +39,7 @@ public class TrainerAnalyticsServiceImpl implements TrainerAnalyticsService {
                 .stream()
                 .map(tp -> new TrainerDashboardAnalyticsResponse.TopProgramDashboardData(tp.getName(), tp.getComments().size() + tp.getTrainingProgramRatings().size()))
                 .sorted(Comparator.comparingDouble(TrainerDashboardAnalyticsResponse.TopProgramDashboardData::getValue).reversed())
+                .limit(3)
                 .toList();
 
         List<TrainerDashboardAnalyticsResponse.TopProgramDashboardData>
@@ -51,6 +47,7 @@ public class TrainerAnalyticsServiceImpl implements TrainerAnalyticsService {
                 programs.stream()
                 .map(tp -> new TrainerDashboardAnalyticsResponse.TopProgramDashboardData(tp.getName(), tp.getTraineeOnTrainingProgram().size()))
                 .sorted(Comparator.comparingDouble(TrainerDashboardAnalyticsResponse.TopProgramDashboardData::getValue).reversed())
+                .limit(3)
                 .toList();
 
         List<TrainerDashboardAnalyticsResponse.TopProgramDashboardData>
@@ -59,6 +56,7 @@ public class TrainerAnalyticsServiceImpl implements TrainerAnalyticsService {
                 .stream()
                 .map(tp -> new TrainerDashboardAnalyticsResponse.TopProgramDashboardData(tp.getName(), tp.getTrainingProgramRatings().stream().mapToDouble(ProgramRating::getRate).average().orElse(0)))
                 .sorted(Comparator.comparingDouble(TrainerDashboardAnalyticsResponse.TopProgramDashboardData::getValue).reversed())
+                .limit(3)
                 .toList();
 
         long beginnerCount = programs.stream().filter(p->p.getDifficulty() == TrainingProgramDifficulty.BEGINNER).count();
