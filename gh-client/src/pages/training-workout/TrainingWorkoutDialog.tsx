@@ -2,7 +2,9 @@ import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogHeader,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
@@ -31,52 +33,56 @@ export default function TrainingWorkoutDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger>
+      <AlertDialogTrigger asChild>
         <Button className="w-full text-xs" size="sm" variant="secondary">
           Begin workout
         </Button>
       </AlertDialogTrigger>
+
       <AlertDialogContent className="max-w-lg">
         <AlertDialogHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center flex-1 gap-2 flex-wrap mb-0.5">
-              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
-                {programOnSchedule.program.name}
-              </h2>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-auto py-1.5 px-2 mt-1"
-                    >
-                      <Link
-                        to={`/programs/${programOnSchedule.program.id}/details`}
-                        target="_blank"
+          <AlertDialogTitle>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center flex-1 gap-2 flex-wrap mb-0.5">
+                <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
+                  {programOnSchedule.program.name}
+                </h2>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto py-1.5 px-2 mt-1"
                       >
-                        <SquareArrowOutUpRight />
-                      </Link>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>View training program details</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+                        <Link
+                          to={`/programs/${programOnSchedule.program.id}/details`}
+                          target="_blank"
+                        >
+                          <SquareArrowOutUpRight />
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>View training program details</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
 
-            <AlertDialogCancel
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                "self-start h-auto py-1.5 px-2 border-none"
-              )}
-            >
-              <XIcon />
-            </AlertDialogCancel>
-          </div>
+              <AlertDialogCancel
+                className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  "self-start h-auto py-1.5 px-2 border-none"
+                )}
+              >
+                <XIcon />
+              </AlertDialogCancel>
+            </div>
+          </AlertDialogTitle>
           <Separator className="-translate-y-0.5" />
         </AlertDialogHeader>
+        <AlertDialogDescription className="p-0 m-0 hidden" />
 
         <TrainingWorkoutContent
           scheduleProgram={programOnSchedule}

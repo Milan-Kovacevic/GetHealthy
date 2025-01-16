@@ -7,27 +7,27 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Loader2Icon, MessageCircleQuestionIcon } from "lucide-react";
 import { ExerciseMetric } from "@/api/models/exercise";
-import { ExerciseSetFeedbackRequest } from "@/api/models/trainee-exercising";
+import {
+  SendExerciseSetFeedbackRequest,
+  WorkoutSet,
+} from "@/api/models/trainee-exercising";
 
 type FeedbackSurveyProps = {
-  onSubmit: (feedback: ExerciseSetFeedbackRequest) => void;
+  onSubmit: (feedback: SendExerciseSetFeedbackRequest) => void;
   disabled: boolean;
   pending: boolean;
-  targetFirstMatric: string;
-  targetSecondMatric?: string;
   firstMetric: ExerciseMetric;
   secondMetric?: ExerciseMetric;
-  //giveSetFeedback: (feedback: ExerciseSetFeedbackRequest) => Promise<void>;
+  completedSet: WorkoutSet;
 };
 
 export default function FeedbackSurvey({
   onSubmit,
   disabled,
   pending,
-  targetFirstMatric,
-  targetSecondMatric,
   firstMetric,
   secondMetric,
+  completedSet,
 }: //giveSetFeedback,
 FeedbackSurveyProps) {
   const [completedAsPlanned, setCompletedAsPlanned] = useState(true);
@@ -42,15 +42,14 @@ FeedbackSurveyProps) {
     e.preventDefault();
 
     //TODOO
-    const feedback: ExerciseSetFeedbackRequest = {
-      exerciseFeedbackId: 0,
-      skipped: false,
+    const feedback: SendExerciseSetFeedbackRequest = {
+      exerciseSetId: 0,
       completed: completedAsPlanned,
       firstMetricValueFeedback: completedAsPlanned
-        ? targetFirstMatric
+        ? completedSet.firstMetricValue
         : actualFirstMetricValue,
       secondMetricValueFeedback: completedAsPlanned
-        ? targetSecondMatric
+        ? completedSet.secondMetricValue
         : actualSecondMetricValue,
     };
 
@@ -91,8 +90,9 @@ FeedbackSurveyProps) {
                     disabled && "text-muted-foreground"
                   )}
                 >
-                  I have completed {targetFirstMatric} {firstMetric.unit} at{" "}
-                  {targetSecondMatric} {secondMetric?.unit}
+                  I have completed {completedSet.firstMetricValue}{" "}
+                  {firstMetric.unit} at {completedSet.secondMetricValue}{" "}
+                  {secondMetric?.unit}
                 </Label>
               </div>
               {!completedAsPlanned && (
@@ -106,28 +106,30 @@ FeedbackSurveyProps) {
                         disabled={disabled}
                         id="actualFirstMetric"
                         type="number"
-                        placeholder={targetFirstMatric.toString()}
+                        placeholder={completedSet.firstMetricValue.toString()}
                         value={actualFirstMetricValue ?? ""}
                         onChange={(e) =>
                           setActualFirstMetricValue(e.target.value)
                         }
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="actualSecondMetric">
-                        Actual {secondMetric?.name} ({secondMetric?.unit})
-                      </Label>
-                      <Input
-                        disabled={disabled}
-                        id="actualSecondMetric"
-                        type="number"
-                        placeholder={targetSecondMatric?.toString()}
-                        value={actualSecondMetricValue ?? ""}
-                        onChange={(e) =>
-                          setActualSecondMetricValue(e.target.value)
-                        }
-                      />
-                    </div>
+                    {completedSet.secondMetricValue && (
+                      <div className="space-y-2">
+                        <Label htmlFor="actualSecondMetric">
+                          Actual {secondMetric?.name} ({secondMetric?.unit})
+                        </Label>
+                        <Input
+                          disabled={disabled}
+                          id="actualSecondMetric"
+                          type="number"
+                          placeholder={completedSet.secondMetricValue?.toString()}
+                          value={actualSecondMetricValue ?? ""}
+                          onChange={(e) =>
+                            setActualSecondMetricValue(e.target.value)
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

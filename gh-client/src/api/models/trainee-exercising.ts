@@ -1,14 +1,20 @@
-import { Exercise, ExerciseSet } from "./exercise";
+import { ExerciseSet } from "./exercise";
+import { ProgramExerciseDetails } from "./program-exercise";
+
+export type GenerateWorkoutSummary = {
+  traineeId: number;
+  programScheduleId: number;
+};
 
 export type WorkoutSummary = {
   id: number; // Program on schedule id
-  traineeExercisingId?: number; // Will be present if trainee already started workout...
+  workoutId?: number; // traineeExercisingId - Will be present if trainee already started workout...
   dateTaken?: string; // -||-
   programExercises: WorkoutExercise[];
 };
 
 // This model combines exercise data and exercise feedback data ...
-export type WorkoutExercise = Omit<Exercise, "exerciseSets"> & {
+export type WorkoutExercise = Omit<ProgramExerciseDetails, "exerciseSets"> & {
   exerciseFeedbackId?: number;
   exerciseSetsFeedback: WorkoutSet[];
   skipped?: boolean;
@@ -22,32 +28,30 @@ export type WorkoutSet = ExerciseSet & {
   completed?: boolean;
 };
 
-//TODOO
-// export type TraineeExercising = {
-//   traineeExercisingId: number;
-//   programName: string;
-//   trainerName: string;
-//   programCategories: Category[];
-//   programDifficulty: ProgramDifficulty;
-//   exercises: Exercise[];
-// };
-
-export type TraineeExercisingRequest = {
-  programId: number;
-  userId: number;
+export type StartWorkoutRequest = {
+  traineeId: number;
+  programScheduleId: number;
 };
-
-export type ExerciseSetFeedbackRequest = {
-  exerciseFeedbackId: number;
-  skipped: boolean;
-  completed: boolean;
-  firstMetricValueFeedback: string;
-  secondMetricValueFeedback?: string;
+export type StartWorkoutResponse = {
+  workoutId: number; // traineeExercisingId
+  dateTaken: string;
 };
 
 export type ExerciseFeedbackRequest = {
-  skipped: boolean;
-  traineeExercisingId: number;
-  exerciseId: number;
   programExerciseId: number;
+};
+export type ExerciseFeedbackResponse = {
+  exerciseFeedbackId: number;
+};
+
+export type SkipExerciseSetFeedbackRequest = {
+  exerciseSetId: number;
+};
+export type SendExerciseSetFeedbackRequest = SkipExerciseSetFeedbackRequest & {
+  completed: boolean; // Trainee finished complete set
+  firstMetricValueFeedback?: string; // Optional value if trainee didnt complete 100% of set, or above 100%
+  secondMetricValueFeedback?: string; // Optional value if trainee didnt complete 100% of set, or above 100%
+};
+export type ExerciseSetFeedbackResponse = {
+  setFeedbackId: number;
 };

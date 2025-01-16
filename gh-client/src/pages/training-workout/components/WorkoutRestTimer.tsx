@@ -3,45 +3,33 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import FeedbackSurvey from "./FeedbackSurvey";
 import workoutAvatarRest from "@/assets/workout-avatar-rest.gif";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { HomeIcon } from "lucide-react";
-import {
-  ExerciseSetFeedbackRequest,
-  WorkoutExercise,
-  WorkoutSet,
-} from "@/api/models/trainee-exercising";
-import { giveExerciseSetFeedback } from "@/api/services/trainee-exercising-service";
 import { GoToSummaryButton } from "./ProgramWorkoutSummary";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
+import useProgramWorkout from "../hooks/use-program-workout";
+import { Loader2Icon } from "lucide-react";
 
-type WorkoutRestTimerProps = {
-  exercise: WorkoutExercise;
-  completedSet: WorkoutSet;
-  showFeedback: boolean;
-  onComplete: () => void;
-  onSkip: () => void;
-  onReturnToSummary: () => void;
-};
+type WorkoutRestTimerProps = {};
 
-export default function WorkoutRestTimer({
-  exercise,
-  completedSet,
-  showFeedback,
-  onComplete,
-  onSkip,
-  onReturnToSummary,
-}: WorkoutRestTimerProps) {
+export default function WorkoutRestTimer(props: WorkoutRestTimerProps) {
+  const {
+    workout,
+    pendingWorkout,
+    giveFeedback,
+    currentExerciseIndex,
+    currentSetIndex,
+    feedbackSubmitted,
+    onRestSkipped,
+    onRestFinished,
+    onReturnToSummary,
+    onFeedbackSubmit,
+  } = useProgramWorkout();
+
+  const exercise = workout.programExercises[currentExerciseIndex];
+  const completedSet = exercise.exerciseSetsFeedback[currentSetIndex];
   const totalSeconds = completedSet.restTime;
+
   const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [isActive, setIsActive] = useState(true);
-  const [pending, setPending] = useState(false);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -53,29 +41,14 @@ export default function WorkoutRestTimer({
     } else if (secondsLeft === 0) {
       setIsActive(false);
 
-      if (showFeedback && feedbackSubmitted) onComplete();
-      if (!showFeedback) onComplete();
+      if (giveFeedback && feedbackSubmitted) onRestFinished();
+      if (!giveFeedback) onRestFinished();
     }
 
     return () => {
       if (interval) clearInterval(interval);
     };
   }, [isActive, secondsLeft]);
-
-  const handleFeedbackSubmit = async (feedback: ExerciseSetFeedbackRequest) => {
-    setPending(true);
-    giveExerciseSetFeedback()
-      .then(() => {
-        setFeedbackSubmitted(true);
-        if (secondsLeft === 0) onComplete();
-      })
-      .catch(() => {
-        toast.error("Unable to send exercise set feedback...");
-      })
-      .finally(() => {
-        setPending(false);
-      });
-  };
 
   const formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -92,20 +65,19 @@ export default function WorkoutRestTimer({
         alt="workout avatar"
         className={cn(
           "w-14 h-14 self-center mx-2 absolute z-10 right-2 -translate-y-5",
-          showFeedback
+          giveFeedback
             ? "right-2 -translate-y-5"
             : "right-2 top-12 translate-y-1.5"
         )}
       />
-      {showFeedback && (
+      {giveFeedback && (
         <FeedbackSurvey
           firstMetric={exercise.firstExerciseMetric}
           secondMetric={exercise.secondExerciseMetric}
           disabled={feedbackSubmitted}
-          pending={pending}
-          onSubmit={handleFeedbackSubmit}
-          targetFirstMatric={completedSet.firstMetricValue}
-          targetSecondMatric={completedSet.secondMetricValue}
+          pending={pendingWorkout}
+          onSubmit={onFeedbackSubmit}
+          completedSet={completedSet}
         />
       )}
       <div className="w-full flex flex-row items-center gap-2">
@@ -133,10 +105,14 @@ export default function WorkoutRestTimer({
       </div>
 
       <Button
-        onClick={onSkip}
+        disabled={pendingWorkout}
+        onClick={onRestSkipped}
         variant="outline"
         className="w-full mt-2 self-end"
       >
+        {pendingWorkout && (
+          <Loader2Icon className="text-muted-foreground animate-spin" />
+        )}
         Skip Rest
       </Button>
     </div>

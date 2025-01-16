@@ -1,42 +1,187 @@
 import { ApiEndpoints } from "@/utils/constants";
-import { WorkoutSummary } from "../models/trainee-exercising";
+import {
+  ExerciseFeedbackRequest,
+  ExerciseFeedbackResponse,
+  ExerciseSetFeedbackResponse,
+  GenerateWorkoutSummary,
+  SendExerciseSetFeedbackRequest,
+  SkipExerciseSetFeedbackRequest,
+  StartWorkoutRequest,
+  StartWorkoutResponse,
+  WorkoutSummary,
+} from "../models/trainee-exercising";
 import { delay } from "@/lib/utils";
+import { sendAxiosRequest } from "./base-service";
 
 //TODOO
 const getWorkoutSummary = async (
   traineeId: number,
   programScheduleId: number
 ): Promise<WorkoutSummary> => {
-  // TODO
+  var url = ApiEndpoints.TraineeExercising;
+  url += "/summary";
+  var body: GenerateWorkoutSummary = {
+    traineeId: traineeId,
+    programScheduleId: programScheduleId,
+  };
+
+  // return sendAxiosRequest<GenerateWorkoutSummary, WorkoutSummary>({
+  //   method: "POST",
+  //   url: url,
+  //   data: body as GenerateWorkoutSummary,
+  // }).then((response) => {
+  //   return response.data as WorkoutSummary;
+  // });
 
   await delay(1000);
-  return Promise.resolve<WorkoutSummary>(
-    workoutSummaryMock[programScheduleId % 3]
-  );
+  return Promise.resolve<WorkoutSummary>({
+    ...workoutSummaryMock[programScheduleId % 3],
+  });
 };
 
 const startProgramWorkout = async (
   traineeId: number,
   programScheduleId: number
 ) => {
+  var url = ApiEndpoints.TraineeExercising;
+  url += "/start";
+  const body: StartWorkoutRequest = {
+    traineeId: traineeId,
+    programScheduleId: programScheduleId,
+  };
   await delay(1500);
+  // return sendAxiosRequest<StartWorkoutRequest, StartWorkoutResponse>({
+  //   method: "POST",
+  //   url: url,
+  //   data: body as StartWorkoutRequest,
+  // }).then((response) => {
+  //   return response.data as StartWorkoutResponse;
+  // });
+
+  return Promise.resolve<StartWorkoutResponse>({
+    workoutId: 1,
+    dateTaken: new Date().toUTCString(),
+  });
 };
 
-const giveExerciseSetFeedback = async () => {
-  var url = ApiEndpoints.TraineeExercising + `/exercise-set-feedback`;
+const skipWorkoutExercise = async (
+  workoutId: number,
+  programExerciseId: number
+) => {
+  var url = ApiEndpoints.TraineeExercising;
+  url += `/${workoutId}/exercises/skip`;
+  const body: ExerciseFeedbackRequest = {
+    programExerciseId: programExerciseId,
+  };
   await delay(1500);
+
+  // return sendAxiosRequest<ExerciseFeedbackRequest, ExerciseFeedbackResponse>({
+  //   method: "POST",
+  //   url: url,
+  //   data: body as ExerciseFeedbackRequest,
+  // }).then((response) => {
+  //   return response.data as ExerciseFeedbackResponse;
+  // });
+
+  return Promise.resolve<ExerciseFeedbackResponse>({
+    exerciseFeedbackId: 1001,
+  });
 };
 
-export { getWorkoutSummary, startProgramWorkout, giveExerciseSetFeedback };
+const beginWorkoutExercise = async (
+  workoutId: number,
+  programExerciseId: number
+) => {
+  var url = ApiEndpoints.TraineeExercising;
+  url += `/${workoutId}/exercises/begin`;
+  const body: ExerciseFeedbackRequest = {
+    programExerciseId: programExerciseId,
+  };
+  await delay(1500);
+
+  // return sendAxiosRequest<ExerciseFeedbackRequest, ExerciseFeedbackResponse>({
+  //   method: "POST",
+  //   url: url,
+  //   data: body as ExerciseFeedbackRequest,
+  // }).then((response) => {
+  //   return response.data as ExerciseFeedbackResponse;
+  // });
+
+  return Promise.resolve<ExerciseFeedbackResponse>({
+    exerciseFeedbackId: 1001,
+  });
+};
+
+const skipWorkoutExerciseSet = async (
+  workoutId: number,
+  exerciseFeedbackId: number,
+  exerciseSetId: number
+) => {
+  var url = ApiEndpoints.TraineeExercising;
+  url += `/${workoutId}/exercises/${exerciseFeedbackId}/sets/skip`;
+  const body: SkipExerciseSetFeedbackRequest = {
+    exerciseSetId: exerciseSetId,
+  };
+  await delay(1500);
+
+  // return sendAxiosRequest<
+  //   SkipExerciseSetFeedbackRequest,
+  //   ExerciseSetFeedbackResponse
+  // >({
+  //   method: "POST",
+  //   url: url,
+  //   data: body as SkipExerciseSetFeedbackRequest,
+  // }).then((response) => {
+  //   return response.data as ExerciseSetFeedbackResponse;
+  // });
+
+  return Promise.resolve<ExerciseSetFeedbackResponse>({
+    setFeedbackId: 101,
+  });
+};
+
+const giveExerciseSetFeedback = async (
+  workoutId: number,
+  exerciseFeedbackId: number,
+  data: SendExerciseSetFeedbackRequest
+) => {
+  var url = ApiEndpoints.TraineeExercising;
+  url += `/${workoutId}/exercises/${exerciseFeedbackId}/sets`;
+  await delay(1500);
+
+  // return sendAxiosRequest<
+  //   SendExerciseSetFeedbackRequest,
+  //   ExerciseSetFeedbackResponse
+  // >({
+  //   method: "POST",
+  //   url: url,
+  //   data: data as SendExerciseSetFeedbackRequest,
+  // }).then((response) => {
+  //   return response.data as ExerciseSetFeedbackResponse;
+  // });
+
+  return Promise.resolve<ExerciseSetFeedbackResponse>({
+    setFeedbackId: 101,
+  });
+};
+
+export {
+  getWorkoutSummary,
+  startProgramWorkout,
+  skipWorkoutExercise,
+  beginWorkoutExercise,
+  skipWorkoutExerciseSet,
+  giveExerciseSetFeedback,
+};
 
 const workoutSummaryMock: WorkoutSummary[] = [
   {
     id: 1,
-    traineeExercisingId: 1,
+    workoutId: 1,
     programExercises: [
       {
         id: 101,
-        exerciseName: "Bench Press",
+        name: "Bench Press",
         description:
           "A strength exercise that targets the chest, shoulders, and triceps.",
         videoLink: "https://www.example.com/bench-press-video",
@@ -68,7 +213,7 @@ const workoutSummaryMock: WorkoutSummary[] = [
       },
       {
         id: 102,
-        exerciseName: "Pull-Ups",
+        name: "Pull-Ups",
         description: "A bodyweight exercise that targets the back and arms.",
         videoLink: "https://www.example.com/pull-ups-video",
         firstExerciseMetric: { id: 3, name: "Weight", unit: "kg" },
@@ -98,14 +243,14 @@ const workoutSummaryMock: WorkoutSummary[] = [
         exerciseFeedbackId: 1002,
       },
     ],
-  },
+  } as const,
   {
     id: 2,
-    traineeExercisingId: 2,
+    workoutId: 2,
     programExercises: [
       {
         id: 201,
-        exerciseName: "Squats",
+        name: "Squats",
         description:
           "A lower-body strength exercise that targets the legs and glutes.",
         videoLink: "https://www.example.com/squats-video",
@@ -121,6 +266,7 @@ const workoutSummaryMock: WorkoutSummary[] = [
             firstMetricValueFeedback: "90",
             secondMetricValueFeedback: "10",
             completed: true,
+            skipped: false,
           },
           {
             id: 6,
@@ -129,30 +275,31 @@ const workoutSummaryMock: WorkoutSummary[] = [
             secondMetricValue: "8",
           },
         ],
+
         exerciseFeedbackId: 2001,
       },
       {
         id: 202,
-        exerciseName: "Plank",
+        name: "Plank",
         description:
           "A core-strengthening exercise that targets the abdominal muscles.",
         videoLink: "https://www.example.com/plank-video",
         firstExerciseMetric: { id: 7, name: "Time", unit: "seconds" },
-        secondExerciseMetric: { id: 8, name: "Sets", unit: "sets" },
+        secondExerciseMetric: undefined,
         exerciseSetsFeedback: [
           { id: 7, restTime: 60, firstMetricValue: "60" },
           { id: 8, restTime: 60, firstMetricValue: "90" },
         ],
       },
     ],
-  },
+  } as const,
   {
     id: 3,
-    traineeExercisingId: undefined,
+    workoutId: undefined,
     programExercises: [
       {
         id: 201,
-        exerciseName: "Squats",
+        name: "Squats",
         description:
           "A lower-body strength exercise that targets the legs and glutes.",
         videoLink: "https://www.example.com/squats-video",
@@ -191,7 +338,7 @@ const workoutSummaryMock: WorkoutSummary[] = [
       },
       {
         id: 202,
-        exerciseName: "Plank",
+        name: "Plank",
         description:
           "A core-strengthening exercise that targets the abdominal muscles.",
         videoLink: "https://www.example.com/plank-video",

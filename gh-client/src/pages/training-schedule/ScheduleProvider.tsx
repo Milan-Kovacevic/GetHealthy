@@ -14,7 +14,6 @@ const testData: TrainingProgramOnSchedule[] = [
     id: 1,
     dayOfWeek: 1, // Monday
     startTime: "08:00",
-    trainingDuration: 60,
     program: {
       id: 101,
       name: "Morning Yoga",
@@ -22,6 +21,7 @@ const testData: TrainingProgramOnSchedule[] = [
       description: "A relaxing yoga session to start your day.",
       trainerFirstName: "Alice",
       trainerLastName: "Smith",
+      trainingDuration: 60,
       difficulty: ProgramDifficulty.BEGINNER,
       categories: [
         { categoryId: 1, name: "Yoga" },
@@ -33,7 +33,6 @@ const testData: TrainingProgramOnSchedule[] = [
     id: 2,
     dayOfWeek: 3, // Wednesday
     startTime: "18:30",
-    trainingDuration: 120,
     program: {
       id: 102,
       name: "Strength Training",
@@ -41,6 +40,7 @@ const testData: TrainingProgramOnSchedule[] = [
       description: "A high-intensity strength training session.",
       trainerFirstName: "John",
       trainerLastName: "Doe",
+      trainingDuration: 120,
       difficulty: ProgramDifficulty.ADVANCED,
       categories: [
         { categoryId: 3, name: "Strength" },
@@ -49,10 +49,9 @@ const testData: TrainingProgramOnSchedule[] = [
     },
   },
   {
-    id: 3,
+    id: 7,
     dayOfWeek: 4, // Friday
-    startTime: "14:00",
-    trainingDuration: 180,
+    startTime: "18:00",
     program: {
       id: 103,
       name: "HIIT Workout",
@@ -60,6 +59,26 @@ const testData: TrainingProgramOnSchedule[] = [
       description: "A fast-paced, high-intensity interval training session.",
       trainerFirstName: "Michael",
       trainerLastName: "Johnson",
+      trainingDuration: 180,
+      difficulty: ProgramDifficulty.INTERMEDIATE,
+      categories: [
+        { categoryId: 5, name: "HIIT" },
+        { categoryId: 6, name: "Cardio" },
+      ],
+    },
+  },
+  {
+    id: 5,
+    dayOfWeek: 4, // Friday
+    startTime: "18:30",
+    program: {
+      id: 103,
+      name: "New Workout",
+      createdAt: "2025-01-10T10:00:00Z",
+      description: "A fast-paced, high-intensity interval training session.",
+      trainerFirstName: "Michael",
+      trainerLastName: "Johnson",
+      trainingDuration: 120,
       difficulty: ProgramDifficulty.INTERMEDIATE,
       categories: [
         { categoryId: 5, name: "HIIT" },
@@ -71,7 +90,6 @@ const testData: TrainingProgramOnSchedule[] = [
     id: 4,
     dayOfWeek: 6, // Saturday
     startTime: "10:00",
-    trainingDuration: 120,
     program: {
       id: 104,
       name: "Pilates Core",
@@ -79,6 +97,7 @@ const testData: TrainingProgramOnSchedule[] = [
       description: "A Pilates session focusing on core strength.",
       trainerFirstName: "Emily",
       trainerLastName: "Brown",
+      trainingDuration: 120,
       difficulty: ProgramDifficulty.BEGINNER,
       categories: [
         { categoryId: 7, name: "Pilates" },

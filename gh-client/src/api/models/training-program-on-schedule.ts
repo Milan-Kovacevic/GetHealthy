@@ -5,7 +5,6 @@ export type TrainingProgramOnSchedule = {
   id: number;
   dayOfWeek: number;
   startTime: string;
-  trainingDuration: number;
   program: ScheduleTrainingProgram;
 };
 
@@ -16,6 +15,7 @@ export type ScheduleTrainingProgram = {
   description: string;
   trainerFirstName: string;
   trainerLastName: string;
+  trainingDuration: number;
   difficulty: ProgramDifficulty;
   categories: Category[];
 };

@@ -6,7 +6,7 @@ export type Exercise = {
   description: string;
   videoLink: string;
   firstExerciseMetric: ExerciseMetric;
-  secondExerciseMetric: ExerciseMetric;
+  secondExerciseMetric?: ExerciseMetric;
   exerciseSets: ExerciseSet[];
 };
 

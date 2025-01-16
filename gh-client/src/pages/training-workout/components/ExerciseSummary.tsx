@@ -1,5 +1,3 @@
-import { ProgramExerciseDetails } from "@/api/models/program-exercise";
-import { WorkoutExercise } from "@/api/models/trainee-exercising";
 import {
   Accordion,
   AccordionContent,
@@ -8,37 +6,30 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { CircleIcon, HomeIcon, PlayIcon, XIcon } from "lucide-react";
+import { CircleIcon, PlayIcon, XIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { GoToSummaryButton } from "./ProgramWorkoutSummary";
+import useProgramWorkout from "../hooks/use-program-workout";
 
-type ExerciseSummaryProps = {
-  exercise: WorkoutExercise;
-  exerciseIndex: number;
-  setIndex: number;
-  onStart: () => void;
-  onResume: () => void;
-  onSkip: () => void;
-  onReturnToSummary: () => void;
-};
+type ExerciseSummaryProps = {};
 
-export default function ExerciseSummary({
-  exercise,
-  exerciseIndex,
-  setIndex,
-  onStart,
-  onResume,
-  onSkip,
-  onReturnToSummary,
-}: ExerciseSummaryProps) {
+export default function ExerciseSummary(props: ExerciseSummaryProps) {
+  const {
+    workout,
+    currentExerciseIndex,
+    currentSetIndex,
+    pendingWorkout,
+    onSkipExercise,
+    onBeginExercise,
+    onResumeExercise,
+    onReturnToSummary,
+  } = useProgramWorkout();
+
+  const exercise = workout.programExercises[currentExerciseIndex];
+  const exerciseIndex = currentExerciseIndex;
+  const setIndex = currentSetIndex;
+
   return (
     <div className="flex flex-col max-w-lg">
       <div className="flex items-center justify-between flex-wrap">
@@ -50,7 +41,7 @@ export default function ExerciseSummary({
           <div className="flex flex-row items-end gap-0.5 pb-2">
             <span className="text-xl font-medium">{exerciseIndex + 1}.</span>
             <h3 className="text-xl font-medium tracking-tight">
-              {exercise.exerciseName}
+              {exercise.name}
             </h3>
           </div>
         </div>
@@ -63,7 +54,7 @@ export default function ExerciseSummary({
             <SectionTitle title="Set details" />
             <div className="mt-1.5">
               {exercise.exerciseSetsFeedback.map((set, index) => (
-                <p className="text-sm text-foreground/80 ml-3">
+                <p key={index} className="text-sm text-foreground/80 ml-3">
                   <span
                     className={cn(
                       (set.completed || set.skipped) && "line-through"
@@ -132,27 +123,30 @@ export default function ExerciseSummary({
       {/* <Separator className="mb-4 mt-8" /> */}
       <div className="flex flex-wrap justify-between gap-3 mt-6">
         <Button
+          disabled={pendingWorkout}
           className="flex-1 [&_svg]:hover:scale-110"
           variant="outline"
-          onClick={onSkip}
+          onClick={onSkipExercise}
         >
           <XIcon />
           Skip exercise
         </Button>
-        {setIndex == 0 ? (
+        {!exercise.exerciseFeedbackId ? (
           <Button
+            disabled={pendingWorkout}
             className="flex-1 [&_svg]:hover:scale-110"
             variant="secondary"
-            onClick={onStart}
+            onClick={onBeginExercise}
           >
             <PlayIcon />
             Begin exercise
           </Button>
         ) : (
           <Button
+            disabled={pendingWorkout}
             className="flex-1 [&_svg]:hover:scale-110"
             variant="secondary"
-            onClick={onResume}
+            onClick={onResumeExercise}
           >
             <PlayIcon />
             Resume exercise

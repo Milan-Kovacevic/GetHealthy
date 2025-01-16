@@ -12,7 +12,6 @@ import {
   UserIcon,
   XCircle,
 } from "lucide-react";
-import { WorkoutSummary } from "@/api/models/trainee-exercising";
 import { capitalize, cn } from "@/lib/utils";
 import { ScheduleTrainingProgram } from "@/api/models/training-program-on-schedule";
 import { addMinutesToTime } from "@/utils/date-time-utils";
@@ -22,46 +21,29 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import useProgramWorkout from "../hooks/use-program-workout";
 
 type ProgramWorkoutSummaryProps = {
-  workoutSummary: WorkoutSummary;
   scheduleProgram: ScheduleTrainingProgram;
-  trainingDuration: number;
-  isWorkoutStarted: boolean;
-  currentExerciseIndex: number;
-  pending: boolean;
-  onFinish: () => void;
-  onStart: () => void;
-  onContinue: () => void;
-  giveFeedback: boolean;
-  onFeedbackChecked: (value: boolean) => void;
 };
 
 export default function ProgramWorkoutSummary(
   props: ProgramWorkoutSummaryProps
 ) {
-  const {
-    workoutSummary,
-    scheduleProgram,
-    isWorkoutStarted,
-    trainingDuration,
-    pending,
-    currentExerciseIndex,
-    onStart,
-    onFinish,
-    onContinue,
-    giveFeedback,
-    onFeedbackChecked,
-  } = props;
+  const { scheduleProgram } = props;
 
-  const isWorkoutFinished = workoutSummary.programExercises.every(
-    (exercise) => {
-      return (
-        exercise.skipped == true ||
-        exercise.exerciseSetsFeedback.every((set) => set.completed === true)
-      );
-    }
-  );
+  const {
+    workout,
+    isWorkoutFinished,
+    isWorkoutStarted,
+    pendingWorkout,
+    currentExerciseIndex,
+    onStartWorkout,
+    onFinishWorkout,
+    onContinueWorkout,
+    giveFeedback,
+    setGiveFeedback,
+  } = useProgramWorkout();
 
   return (
     <div className="space-y-3 flex flex-col">
@@ -98,7 +80,7 @@ export default function ProgramWorkoutSummary(
         <h3 className="text-xl font-medium">Exercises</h3>
         <ScrollArea className="">
           <ul className="space-y-2 h-80">
-            {workoutSummary.programExercises.map((exercise, index) => (
+            {workout.programExercises.map((exercise, index) => (
               <li key={index}>
                 <Card
                   className={
@@ -110,7 +92,7 @@ export default function ProgramWorkoutSummary(
                   }
                 >
                   <CardTitle className="text-lg px-4 py-2">
-                    {index + 1}. {exercise.exerciseName}
+                    {index + 1}. {exercise.name}
                   </CardTitle>
 
                   <CardContent className="p-4 pt-0">
@@ -158,12 +140,17 @@ export default function ProgramWorkoutSummary(
       </div>
       <p className="font-normal text-sm pb-1">
         Estimated workout time:{" "}
-        <span className="font-semibold text-base">{trainingDuration}</span> min
-        (
+        <span className="font-semibold text-base">
+          {scheduleProgram.trainingDuration}
+        </span>{" "}
+        min (
         <span className="text-xs font-semibold tracking-tight">
-          {workoutSummary.dateTaken
-            ? addMinutesToTime(workoutSummary.dateTaken, trainingDuration)
-            : addMinutesToTime(new Date(), trainingDuration)}
+          {workout.dateTaken
+            ? addMinutesToTime(
+                workout.dateTaken,
+                scheduleProgram.trainingDuration
+              )
+            : addMinutesToTime(new Date(), scheduleProgram.trainingDuration)}
         </span>
         )
       </p>
@@ -172,7 +159,7 @@ export default function ProgramWorkoutSummary(
           <Checkbox
             id="feedback"
             checked={giveFeedback}
-            onCheckedChange={onFeedbackChecked}
+            onCheckedChange={setGiveFeedback}
           />
           <Label htmlFor="feedback" className="cursor-pointer">
             Give feedback during workout
@@ -181,15 +168,15 @@ export default function ProgramWorkoutSummary(
       )}
       <Button
         variant="secondary"
-        disabled={pending}
+        disabled={pendingWorkout}
         onClick={() => {
-          if (isWorkoutFinished) onFinish();
-          else if (!isWorkoutStarted) onStart();
-          else onContinue();
+          if (isWorkoutFinished) onFinishWorkout();
+          else if (!isWorkoutStarted) onStartWorkout();
+          else onContinueWorkout();
         }}
         className="w-full"
       >
-        {pending && (
+        {pendingWorkout && (
           <Loader2Icon className="h-4 w-4 animate-spin text-muted-foreground" />
         )}
         <span>

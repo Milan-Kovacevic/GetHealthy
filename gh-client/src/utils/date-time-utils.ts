@@ -3,33 +3,6 @@ import { isPast, isWithinInterval } from "date-fns";
 
 export type ScheduleTrainingStatus = "completed" | "upcoming" | "live";
 
-export const getTrainingProgramTimeRange = (
-  programOnSchedule: TrainingProgramOnSchedule
-): string => {
-  const [startHour, startMinute] = programOnSchedule.startTime
-    .split(":")
-    .map(Number);
-
-  const programStart = new Date();
-  programStart.setHours(startHour, startMinute, 0, 0);
-
-  const programEnd = new Date(
-    programStart.getTime() + programOnSchedule.trainingDuration * 60000
-  );
-
-  const formatTime = (date: Date) => {
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
-  };
-
-  const startTimeFormatted = formatTime(programStart);
-  const endTimeFormatted = formatTime(programEnd);
-
-  const timeRange = `${startTimeFormatted} - ${endTimeFormatted}`;
-  return timeRange;
-};
-
 export const addMinutesToTime = (
   startTime: string | Date,
   duration: number
@@ -81,7 +54,7 @@ export const getProgramStatus = (
   programStart.setHours(startHour, startMinute, 0, 0);
 
   const programEnd = new Date(
-    programStart.getTime() + programOnSchedule.trainingDuration * 60000
+    programStart.getTime() + programOnSchedule.program.trainingDuration * 60000
   );
 
   if (isPast(programEnd)) return "completed";

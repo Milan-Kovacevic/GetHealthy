@@ -1,40 +1,26 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import workoutAvatar from "@/assets/workout-avatar.gif";
-import {
-  ArrowRightIcon,
-  ArrowUpIcon,
-  CircleIcon,
-  HomeIcon,
-  SkipForwardIcon,
-} from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { WorkoutExercise } from "@/api/models/trainee-exercising";
+import { ArrowUpIcon, CircleIcon, SkipForwardIcon } from "lucide-react";
 import { GoToSummaryButton } from "./ProgramWorkoutSummary";
+import useProgramWorkout from "../hooks/use-program-workout";
 
-type CurrentExerciseViewProps = {
-  exercise: WorkoutExercise;
-  exerciseIndex: number;
-  setIndex: number;
-  onReturnToSummary: () => void;
+type CurrentExerciseViewProps = {};
 
-  onSkipSet: () => void;
-  onCompletedSet: () => void;
-};
+export default function CurrentExerciseView(props: CurrentExerciseViewProps) {
+  const {
+    workout,
+    currentExerciseIndex,
+    currentSetIndex,
+    pendingWorkout,
+    onSetSkipped,
+    onSetCompleted,
+    onReturnToSummary,
+  } = useProgramWorkout();
 
-export default function CurrentExerciseView({
-  exercise,
-  exerciseIndex,
-  setIndex,
-  onSkipSet,
-  onCompletedSet,
-  onReturnToSummary,
-}: CurrentExerciseViewProps) {
+  const exercise = workout.programExercises[currentExerciseIndex];
+  const exerciseIndex = currentExerciseIndex;
+  const setIndex = currentSetIndex;
+
   return (
     <div className="flex flex-col max-w-lg relative w-full">
       <img
@@ -50,7 +36,7 @@ export default function CurrentExerciseView({
               Exercise no. {exerciseIndex + 1}
             </p>
             <h2 className="pt-0 text-xl font-medium tracking-tight">
-              {exercise.exerciseName}
+              {exercise.name}
             </h2>
           </div>
 
@@ -85,7 +71,8 @@ export default function CurrentExerciseView({
 
       <div className="flex w-full gap-4 mt-6">
         <Button
-          onClick={onSkipSet}
+          disabled={pendingWorkout}
+          onClick={onSetSkipped}
           className="flex-1 [&_svg]:hover:scale-110"
           variant="outline"
         >
@@ -93,7 +80,8 @@ export default function CurrentExerciseView({
           Skip set
         </Button>
         <Button
-          onClick={onCompletedSet}
+          disabled={pendingWorkout}
+          onClick={onSetCompleted}
           className="flex-1 [&_svg]:hover:rotate-90"
           variant="secondary"
         >

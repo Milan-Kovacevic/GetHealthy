@@ -5,6 +5,7 @@ import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-sche
 import { WorkoutSummary } from "@/api/models/trainee-exercising";
 import { getWorkoutSummary } from "@/api/services/trainee-exercising-service";
 import { toast } from "sonner";
+import ProgramWorkoutProvider from "../ProgramWorkoutProvider";
 
 type TrainingWorkoutContentProps = {
   scheduleProgram: TrainingProgramOnSchedule;
@@ -20,13 +21,12 @@ export default function TrainingWorkoutContent(
 
   // TODO: Hardcoded
   const userId = 2;
-  // const programId = scheduleProgram.id;
-  const programId = 1;
+  const programId = scheduleProgram.id;
   useEffect(() => {
     setLoadingWorkout(true);
     getWorkoutSummary(userId, programId)
       .then((value) => {
-        setWorkout(value);
+        setWorkout({ ...value });
       })
       .catch((error) => {
         toast.error("Unable to load program workout, please try again later.");
@@ -40,12 +40,12 @@ export default function TrainingWorkoutContent(
     <>
       {loadingWorkout && <WorkoutContentLoader />}
       {!loadingWorkout && workout && (
-        <TrainingWorkoutForm
-          workoutSummary={workout}
-          scheduleProgram={scheduleProgram.program}
-          trainingDuration={scheduleProgram.trainingDuration}
+        <ProgramWorkoutProvider
+          workout={workout}
           onWorkoutFinished={onWorkoutFinished}
-        />
+        >
+          <TrainingWorkoutForm scheduleProgram={scheduleProgram.program} />
+        </ProgramWorkoutProvider>
       )}
     </>
   );

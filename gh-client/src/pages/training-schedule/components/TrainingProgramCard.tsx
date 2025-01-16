@@ -16,7 +16,7 @@ import {
 import { useSchedule } from "@/hooks/use-schedule";
 import TrainingWorkoutDialog from "@/pages/training-workout/TrainingWorkoutDialog";
 import {
-  getTrainingProgramTimeRange,
+  addMinutesToTime,
   ScheduleTrainingStatus,
 } from "@/utils/date-time-utils";
 import { ExternalLinkIcon, MoreHorizontalIcon, Trash2Icon } from "lucide-react";
@@ -49,7 +49,10 @@ export default function TrainingProgramCard({
                 {programOnSchedule.program.name}
               </h3>
               <p className="text-xs text-muted-foreground">
-                {getTrainingProgramTimeRange(programOnSchedule)}
+                {addMinutesToTime(
+                  programOnSchedule.startTime,
+                  programOnSchedule.program.trainingDuration
+                )}
               </p>
             </CardContent>
             <CardContent className="p-2 pt-0 flex flex-col">
@@ -79,7 +82,10 @@ export default function TrainingProgramCard({
           </p>
           <div className="flex justify-between items-center mt-1">
             <p className="text-xs text-muted-foreground">
-              {getTrainingProgramTimeRange(programOnSchedule)}
+              {addMinutesToTime(
+                programOnSchedule.startTime,
+                programOnSchedule.program.trainingDuration
+              )}
             </p>
             <Button
               onClick={() => onViewDetails(programOnSchedule.program.id)}
