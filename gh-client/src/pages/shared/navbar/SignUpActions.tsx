@@ -50,15 +50,15 @@ export default function SignUpActions(props: SignUpActionsProps) {
   ) : !isMobile ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Button variant="ghost" className="relative h-9 w-9 rounded-full">
           <Avatar
             className={cn(
-              "h-8 w-8 border border-foreground/20",
+              "h-9 w-9 border border-foreground/20 dark:border-foreground/60",
               pendingLogout && "animate-pulse"
             )}
           >
             <AvatarImage src="/avatars/01.png" alt="@" />
-            <AvatarFallback className="text-[13px]">
+            <AvatarFallback className="text-base">
               {authUser.firstName[0]}
               {authUser.lastName[0]}
             </AvatarFallback>

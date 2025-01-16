@@ -50,9 +50,9 @@ const testData: TrainingProgramOnSchedule[] = [
   },
   {
     id: 3,
-    dayOfWeek: 5, // Friday
-    startTime: "07:00",
-    trainingDuration: 45,
+    dayOfWeek: 4, // Friday
+    startTime: "14:00",
+    trainingDuration: 180,
     program: {
       id: 103,
       name: "HIIT Workout",

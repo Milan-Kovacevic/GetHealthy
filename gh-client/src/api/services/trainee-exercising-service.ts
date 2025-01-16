@@ -1,19 +1,5 @@
 import { ApiEndpoints } from "@/utils/constants";
-import {
-  ExerciseFeedbackRequest,
-  ExerciseSetFeedbackRequest,
-  WorkoutSummary,
-} from "../models/trainee-exercising";
-import {
-  ExerciseFeedbackRequestDTO,
-  ExerciseSetFeedbackRequestDTO,
-  TraineeExercisingDTO,
-  TraineeExercisingRequestDTO,
-} from "../contracts/trainee-exercising-contract";
-import { sendAxiosRequest } from "./base-service";
-import { Category } from "../models/category";
-import { ExerciseMetric } from "../models/exercise";
-import { ProgramDifficulty } from "../enums/program-difficulty";
+import { WorkoutSummary } from "../models/trainee-exercising";
 import { delay } from "@/lib/utils";
 
 //TODOO
@@ -21,7 +7,6 @@ const getWorkoutSummary = async (
   traineeId: number,
   programScheduleId: number
 ): Promise<WorkoutSummary> => {
-  console.log(programScheduleId);
   // TODO
 
   await delay(1000);
@@ -30,41 +15,20 @@ const getWorkoutSummary = async (
   );
 };
 
-// const startWorkout = async (programId: number, userId: number) => {
-//   var url = ApiEndpoints.TraineeExercising + `/start`;
-//   return sendAxiosRequest<TraineeExercisingRequestDTO, TraineeExercisingDTO>({
-//     method: "POST",
-//     url: url,
-//     data: { programId, userId },
-//   }).then((response) => response.data as TraineeExercising);
-// };
+const startProgramWorkout = async (
+  traineeId: number,
+  programScheduleId: number
+) => {
+  await delay(1500);
+};
 
-// const giveSetFeedback = async (feedback: ExerciseSetFeedbackRequest) => {
-//   var url = ApiEndpoints.TraineeExercising + `/exercise-set-feedback`;
-//   try {
-//     return sendAxiosRequest<ExerciseSetFeedbackRequestDTO, void>({
-//       method: "POST",
-//       url: url,
-//       data: feedback,
-//     });
-//   } catch (error) {
-//     console.error("Failed to submit set feedback:", error);
-//   }
-// };
+const giveExerciseSetFeedback = async () => {
+  var url = ApiEndpoints.TraineeExercising + `/exercise-set-feedback`;
+  await delay(1500);
+};
 
-// const giveExerciseFeedback = async (feedback: ExerciseFeedbackRequest) => {
-//   var url = ApiEndpoints.TraineeExercising + `/exercise-feedback`;
+export { getWorkoutSummary, startProgramWorkout, giveExerciseSetFeedback };
 
-//   return sendAxiosRequest<ExerciseFeedbackRequestDTO, void>({
-//     method: "POST",
-//     url: url,
-//     data: feedback,
-//   });
-// };
-
-export { getWorkoutSummary };
-
-// Mock podaci za ProgramExerciseDetails
 const workoutSummaryMock: WorkoutSummary[] = [
   {
     id: 1,

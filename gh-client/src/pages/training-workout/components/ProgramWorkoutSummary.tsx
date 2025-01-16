@@ -4,10 +4,24 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { BicepsFlexedIcon, CheckCircle, UserIcon, XCircle } from "lucide-react";
+import {
+  BicepsFlexedIcon,
+  CheckCircle,
+  HomeIcon,
+  Loader2Icon,
+  UserIcon,
+  XCircle,
+} from "lucide-react";
 import { WorkoutSummary } from "@/api/models/trainee-exercising";
-import { capitalize } from "@/lib/utils";
+import { capitalize, cn } from "@/lib/utils";
 import { ScheduleTrainingProgram } from "@/api/models/training-program-on-schedule";
+import { addMinutesToTime } from "@/utils/date-time-utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type ProgramWorkoutSummaryProps = {
   workoutSummary: WorkoutSummary;
@@ -15,6 +29,7 @@ type ProgramWorkoutSummaryProps = {
   trainingDuration: number;
   isWorkoutStarted: boolean;
   currentExerciseIndex: number;
+  pending: boolean;
   onFinish: () => void;
   onStart: () => void;
   onContinue: () => void;
@@ -30,20 +45,23 @@ export default function ProgramWorkoutSummary(
     scheduleProgram,
     isWorkoutStarted,
     trainingDuration,
-    onStart,
+    pending,
     currentExerciseIndex,
+    onStart,
     onFinish,
     onContinue,
     giveFeedback,
     onFeedbackChecked,
   } = props;
 
-  // const isWorkoutFinished = workout.exercises.every((exercise) =>
-  //   exercise.exerciseSets.every((set) => set.status !== "pending")
-  // );
-
-  // TODO
-  const isWorkoutFinished = false;
+  const isWorkoutFinished = workoutSummary.programExercises.every(
+    (exercise) => {
+      return (
+        exercise.skipped == true ||
+        exercise.exerciseSetsFeedback.every((set) => set.completed === true)
+      );
+    }
+  );
 
   return (
     <div className="space-y-3 flex flex-col">
@@ -79,7 +97,7 @@ export default function ProgramWorkoutSummary(
         </div>
         <h3 className="text-xl font-medium">Exercises</h3>
         <ScrollArea className="">
-          <ul className="space-y-3 h-80">
+          <ul className="space-y-2 h-80">
             {workoutSummary.programExercises.map((exercise, index) => (
               <li key={index}>
                 <Card
@@ -96,7 +114,7 @@ export default function ProgramWorkoutSummary(
                   </CardTitle>
 
                   <CardContent className="p-4 pt-0">
-                    <ul className="list-disc list-inside space-y-1">
+                    <ul className="list-disc list-inside space-y-0.5">
                       {exercise.exerciseSetsFeedback.map((set, setIndex) => (
                         <li
                           key={setIndex}
@@ -141,8 +159,15 @@ export default function ProgramWorkoutSummary(
       <p className="font-normal text-sm pb-1">
         Estimated workout time:{" "}
         <span className="font-semibold text-base">{trainingDuration}</span> min
+        (
+        <span className="text-xs font-semibold tracking-tight">
+          {workoutSummary.dateTaken
+            ? addMinutesToTime(workoutSummary.dateTaken, trainingDuration)
+            : addMinutesToTime(new Date(), trainingDuration)}
+        </span>
+        )
       </p>
-      {!isWorkoutFinished && (
+      {!isWorkoutStarted && (
         <div className="flex items-center space-x-2">
           <Checkbox
             id="feedback"
@@ -156,6 +181,7 @@ export default function ProgramWorkoutSummary(
       )}
       <Button
         variant="secondary"
+        disabled={pending}
         onClick={() => {
           if (isWorkoutFinished) onFinish();
           else if (!isWorkoutStarted) onStart();
@@ -163,12 +189,48 @@ export default function ProgramWorkoutSummary(
         }}
         className="w-full"
       >
-        {isWorkoutFinished
-          ? "Finish"
-          : isWorkoutStarted
-          ? "Continue Workout"
-          : "Start Workout"}
+        {pending && (
+          <Loader2Icon className="h-4 w-4 animate-spin text-muted-foreground" />
+        )}
+        <span>
+          {isWorkoutFinished
+            ? "Finish"
+            : isWorkoutStarted
+            ? "Continue Workout"
+            : "Start Workout"}
+        </span>
       </Button>
     </div>
   );
 }
+
+export const GoToSummaryButton = ({
+  onClick,
+  className,
+  tooltip,
+}: {
+  onClick: () => void;
+  className?: string;
+  tooltip?: string;
+}) => {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClick}
+            aria-label="Return to summary"
+            className={cn("self-start", className)}
+          >
+            <HomeIcon className="h-5 w-5" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{tooltip ?? "Go to workout summary"}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};

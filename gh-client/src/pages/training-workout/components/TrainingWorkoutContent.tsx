@@ -8,12 +8,13 @@ import { toast } from "sonner";
 
 type TrainingWorkoutContentProps = {
   scheduleProgram: TrainingProgramOnSchedule;
+  onWorkoutFinished: () => void;
 };
 
 export default function TrainingWorkoutContent(
   props: TrainingWorkoutContentProps
 ) {
-  const { scheduleProgram } = props;
+  const { scheduleProgram, onWorkoutFinished } = props;
   const [loadingWorkout, setLoadingWorkout] = useState(true);
   const [workout, setWorkout] = useState<WorkoutSummary>();
 
@@ -43,6 +44,7 @@ export default function TrainingWorkoutContent(
           workoutSummary={workout}
           scheduleProgram={scheduleProgram.program}
           trainingDuration={scheduleProgram.trainingDuration}
+          onWorkoutFinished={onWorkoutFinished}
         />
       )}
     </>

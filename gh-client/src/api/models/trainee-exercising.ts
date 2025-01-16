@@ -1,10 +1,9 @@
-import { ProgramDifficulty } from "../enums/program-difficulty";
-import { Category } from "./category";
 import { Exercise, ExerciseSet } from "./exercise";
 
 export type WorkoutSummary = {
   id: number; // Program on schedule id
   traineeExercisingId?: number; // Will be present if trainee already started workout...
+  dateTaken?: string; // -||-
   programExercises: WorkoutExercise[];
 };
 

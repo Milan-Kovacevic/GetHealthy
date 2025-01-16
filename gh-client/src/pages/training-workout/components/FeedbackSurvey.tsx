@@ -5,14 +5,14 @@ import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { MessageCircleQuestionIcon } from "lucide-react";
+import { Loader2Icon, MessageCircleQuestionIcon } from "lucide-react";
 import { ExerciseMetric } from "@/api/models/exercise";
 import { ExerciseSetFeedbackRequest } from "@/api/models/trainee-exercising";
-import { giveSetFeedback } from "@/api/services/trainee-exercising-service";
 
 type FeedbackSurveyProps = {
   onSubmit: (feedback: ExerciseSetFeedbackRequest) => void;
   disabled: boolean;
+  pending: boolean;
   targetFirstMatric: string;
   targetSecondMatric?: string;
   firstMetric: ExerciseMetric;
@@ -23,6 +23,7 @@ type FeedbackSurveyProps = {
 export default function FeedbackSurvey({
   onSubmit,
   disabled,
+  pending,
   targetFirstMatric,
   targetSecondMatric,
   firstMetric,
@@ -53,20 +54,15 @@ FeedbackSurveyProps) {
         : actualSecondMetricValue,
     };
 
-    try {
-      await giveSetFeedback(feedback);
-      onSubmit(feedback);
-    } catch (error) {
-      console.error("Failed to submit feedback:", error);
-    }
+    onSubmit(feedback);
   };
 
   return (
     <div className="relative mt-2">
       <Card
         className={cn(
-          "w-full mb-2 border-2 shadow-sm",
-          !disabled && "border-primary"
+          "w-full mb-2 border-2 shadow-md border-border/90",
+          !disabled && ""
         )}
       >
         <div className="px-4 py-3 pb-0 flex flex-row gap-1">
@@ -83,11 +79,18 @@ FeedbackSurveyProps) {
                   disabled={disabled}
                   id="completed"
                   checked={completedAsPlanned}
+                  className={cn(completedAsPlanned && "font-normal")}
                   onCheckedChange={(checked) =>
                     setCompletedAsPlanned(checked as boolean)
                   }
                 />
-                <Label htmlFor="completed">
+                <Label
+                  htmlFor="completed"
+                  className={cn(
+                    "cursor-pointer font-normal",
+                    disabled && "text-muted-foreground"
+                  )}
+                >
                   I have completed {targetFirstMatric} {firstMetric.unit} at{" "}
                   {targetSecondMatric} {secondMetric?.unit}
                 </Label>
@@ -131,13 +134,16 @@ FeedbackSurveyProps) {
             </div>
           </form>
         </CardContent>
-        <CardFooter className="p-4 pt-2">
+        <CardFooter className="p-4 pt-2 justify-end w-full">
           <Button
             variant="outline"
-            disabled={disabled}
+            disabled={disabled || pending}
             type="submit"
             onClick={handleSubmit}
           >
+            {pending && (
+              <Loader2Icon className="text-muted-foreground animate-spin" />
+            )}
             Save Feedback
           </Button>
         </CardFooter>

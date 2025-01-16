@@ -40,7 +40,7 @@ export default function TrainingWorkoutDialog({
         <AlertDialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center flex-1 gap-2 flex-wrap mb-0.5">
-              <h2 className="text-2xl font-semibold tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
                 {programOnSchedule.program.name}
               </h2>
               <TooltipProvider>
@@ -78,7 +78,10 @@ export default function TrainingWorkoutDialog({
           <Separator className="-translate-y-0.5" />
         </AlertDialogHeader>
 
-        <TrainingWorkoutContent scheduleProgram={programOnSchedule} />
+        <TrainingWorkoutContent
+          scheduleProgram={programOnSchedule}
+          onWorkoutFinished={() => setOpen(false)}
+        />
       </AlertDialogContent>
     </AlertDialog>
   );

@@ -11,6 +11,7 @@ export type StartWorkoutRequestDTO = {
 export type WorkoutSummaryDTO = {
   id: number; // Program on schedule id
   traineeExercisingId?: number; // Will be present if trainee already started workout...
+  dateTaken?: string; // -||-
   programExercises: WorkoutExerciseDTO[];
 };
 
