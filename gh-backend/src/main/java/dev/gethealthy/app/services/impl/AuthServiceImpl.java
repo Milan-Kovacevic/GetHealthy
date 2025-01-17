@@ -63,11 +63,10 @@ public class AuthServiceImpl implements AuthService {
             Authentication authenticate = authenticationManager
                     .authenticate(
                             new UsernamePasswordAuthenticationToken(
-                                    request.getUsername(), request.getPassword()
-                            )
-                    );
+                                    request.getUsername(), request.getPassword()));
             JwtUser user = (JwtUser) authenticate.getPrincipal();
-            AuthUserResponse userResponse = modelMapper.map(userRepository.findById(user.getId()), AuthUserResponse.class);
+            AuthUserResponse userResponse = modelMapper.map(userRepository.findById(user.getId()),
+                    AuthUserResponse.class);
             userResponse.setRole(user.getRole());
             TokensResponse tokens = new TokensResponse();
             tokens.setAccessToken(generateJwt(user));
@@ -106,19 +105,17 @@ public class AuthServiceImpl implements AuthService {
         var createdUserAccount = userAccountRepository.save(userAccount);
         var user = modelMapper.map(registrationRequest, User.class);
         user.setUserAccount(createdUserAccount);
-        if (!enabled)
-        {
+        if (!enabled) {
             // StorageType.Document throws exception
-            var qualificationPath = storageAccessService.saveToFile(file.getOriginalFilename(), file.getBytes(), StorageType.PICTURE);
+            var qualificationPath = storageAccessService.saveToFile(file.getOriginalFilename(), file.getBytes(),
+                    StorageType.DOCUMENT);
             var qualification = new Qualification();
             qualification.setCertificationFilePath(qualificationPath);
             var trainer = modelMapper.map(user, Trainer.class);
             trainerRepository.save(trainer);
             qualification.setTrainer(trainer);
             qualificationRepository.save(qualification);
-        }
-        else
-        {
+        } else {
             userRepository.save(user);
         }
     }

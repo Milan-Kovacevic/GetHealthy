@@ -1,4 +1,7 @@
-import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
+import {
+  ManageTrainingProgramOnSchedule,
+  TrainingProgramOnSchedule,
+} from "@/api/models/training-program-on-schedule";
 import { deleteTrainingProgramOnSchedule } from "@/api/services/training-program-on-schedule-service";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,10 +16,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useSchedule } from "@/hooks/use-schedule";
+import { useSchedule } from "@/pages/training-schedule/hooks/use-schedule";
 import TrainingWorkoutDialog from "@/pages/training-workout/TrainingWorkoutDialog";
 import {
-  getTrainingProgramTimeRange,
+  addMinutesToTime,
   ScheduleTrainingStatus,
 } from "@/utils/date-time-utils";
 import { ExternalLinkIcon, MoreHorizontalIcon, Trash2Icon } from "lucide-react";
@@ -49,7 +52,10 @@ export default function TrainingProgramCard({
                 {programOnSchedule.program.name}
               </h3>
               <p className="text-xs text-muted-foreground">
-                {getTrainingProgramTimeRange(programOnSchedule)}
+                {addMinutesToTime(
+                  programOnSchedule.startTime,
+                  programOnSchedule.program.trainingDuration
+                )}
               </p>
             </CardContent>
             <CardContent className="p-2 pt-0 flex flex-col">
@@ -63,16 +69,7 @@ export default function TrainingProgramCard({
                 )}
               </div>
               {programStatus === "live" && (
-                <TrainingWorkoutDialog>
-                  <Button
-                    // onClick={() => onViewDetails(program.id)}
-                    className="w-full text-xs"
-                    size="sm"
-                    variant="secondary"
-                  >
-                    Begin workout
-                  </Button>
-                </TrainingWorkoutDialog>
+                <TrainingWorkoutDialog programOnSchedule={programOnSchedule} />
               )}
             </CardContent>
           </Card>
@@ -83,11 +80,15 @@ export default function TrainingProgramCard({
           </div>
 
           <p className="text-xs text-muted-foreground font-medium">
-            Trainer: {programOnSchedule.program.trainerName}
+            Trainer: {programOnSchedule.program.trainerFirstName}{" "}
+            {programOnSchedule.program.trainerLastName}
           </p>
           <div className="flex justify-between items-center mt-1">
             <p className="text-xs text-muted-foreground">
-              {getTrainingProgramTimeRange(programOnSchedule)}
+              {addMinutesToTime(
+                programOnSchedule.startTime,
+                programOnSchedule.program.trainingDuration
+              )}
             </p>
             <Button
               onClick={() => onViewDetails(programOnSchedule.program.id)}
@@ -126,8 +127,12 @@ const ManageProgramPopup = ({
   programOnSchedule: TrainingProgramOnSchedule;
 }) => {
   const { editProgram } = useSchedule();
-  const handleEdit = (editedProgram: TrainingProgramOnSchedule) => {
-    editProgram(editedProgram);
+
+  const handleEdit = (
+    id: number,
+    editedProgram: ManageTrainingProgramOnSchedule
+  ) => {
+    editProgram(id, editedProgram);
   };
 
   const handleRemove = async () => {

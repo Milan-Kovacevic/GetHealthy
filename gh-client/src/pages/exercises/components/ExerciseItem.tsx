@@ -29,10 +29,10 @@ export default function ExerciseItem({
         <div className="flex space-x-2 mb-5">
           <Badge
             key={exercise.firstExerciseMetric.id}
-            className="font-medium flex gap-2 px-3 h-auto py-1"
+            className="flex gap-2 px-3 h-auto py-1"
             variant="secondary"
           >
-            <span className="text-xs font-medium">
+            <span className="text-xs font-normal">
               {exercise.firstExerciseMetric.name}
             </span>
             {exercise.firstExerciseMetric.unit && (
@@ -48,10 +48,10 @@ export default function ExerciseItem({
           {exercise.secondExerciseMetric && (
             <Badge
               key={exercise.secondExerciseMetric.id}
-              className="font-medium flex gap-2 px-3 h-auto py-1"
+              className="flex gap-2 px-3 h-auto py-1"
               variant="secondary"
             >
-              <span className="text-xs font-medium">
+              <span className="text-xs font-normal">
                 {exercise.secondExerciseMetric.name}
               </span>
               {exercise.secondExerciseMetric.unit && (

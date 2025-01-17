@@ -20,7 +20,7 @@ const createTrainingProgramOnSchedule = async (
   });
 };
 
-const editTrainingProgramOnSchedule = (
+const editTrainingProgramOnSchedule = async (
   data: EditTrainingProgramOnScheduleDTO
 ) => {
   var url = `${ApiEndpoints.TrainingProgramOnSchedule}`;

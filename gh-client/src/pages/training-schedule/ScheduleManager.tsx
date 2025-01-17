@@ -1,4 +1,4 @@
-import { useSchedule } from "@/hooks/use-schedule";
+import { useSchedule } from "@/pages/training-schedule/hooks/use-schedule";
 import { getProgramStatus } from "@/utils/date-time-utils";
 import { addDays, format, startOfWeek } from "date-fns";
 import { CalendarIcon } from "lucide-react";
