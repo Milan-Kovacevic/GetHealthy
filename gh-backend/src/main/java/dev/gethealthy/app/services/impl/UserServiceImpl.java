@@ -175,5 +175,4 @@ public class UserServiceImpl implements UserService {
         traineeOnTrainingProgramRepository.deleteByProgram_IdAndUser_Id(programId, userId);
     }
 
-
 }

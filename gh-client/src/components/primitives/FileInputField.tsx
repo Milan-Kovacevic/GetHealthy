@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { CloudUploadIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type FileInputFieldProps = {
   title: string;
@@ -20,6 +20,7 @@ type FileInputFieldProps = {
   disabled?: boolean;
   className?: string;
   onFileSelect?: (file: File | undefined) => void;
+  fileName: string;
 };
 
 export const FileInputField = (props: FileInputFieldProps) => {
@@ -32,15 +33,15 @@ export const FileInputField = (props: FileInputFieldProps) => {
     formatLabel,
     onFileSelect,
     disabled,
-    initialFile,
+    fileName,
   } = props;
   const [selectedFile, setSelectedFile] = useState<File>();
-  const [currentFileName, setCurrentFileName] = useState(initialFile || "");
+  // const [currentFileName, setCurrentFileName] = useState(initialFile || "");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target?.files?.[0];
     setSelectedFile(file);
-    setCurrentFileName(file ? file.name : initialFile || "");
+    // setCurrentFileName(file ? file.name : initialFile || "");
     if (onFileSelect) {
       onFileSelect(file);
     }
@@ -62,9 +63,14 @@ export const FileInputField = (props: FileInputFieldProps) => {
             <div className="flex flex-col items-center justify-center pt-3.5 pb-4">
               <CloudUploadIcon className="mb-1 h-8 w-8 text-muted-foreground/80" />
               <div className="sm:max-w-md max-w-32 sm:h-6">
-                {currentFileName ? (
+                {/* {currentFileName ? (
                   <p className="mb-1 text-sm font-semibold text-center text-ellipsis overflow-clip line-clamp-1 mx-auto">
                     {currentFileName}
+                  </p>
+                ) : ( */}
+                {fileName ? (
+                  <p className="mb-1 text-sm font-semibold text-center text-ellipsis overflow-clip line-clamp-1 mx-auto">
+                    {fileName}
                   </p>
                 ) : (
                   <p className="mb-1 text-sm text-muted-foreground text-center">

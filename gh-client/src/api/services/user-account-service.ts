@@ -16,7 +16,7 @@ const getUserAccount = (userId: number = 0): Promise<any> => {
   });
 };
 
-const changePassword = (request: PasswordChangeDTO, userId: number) => {
+const changePassword = async (request: PasswordChangeDTO, userId: number) => {
   var url = `${ApiEndpoints.UserAccounts}/${userId}/change-password`;
 
   return sendAxiosRequest<PasswordChangeDTO, void>({
@@ -26,7 +26,7 @@ const changePassword = (request: PasswordChangeDTO, userId: number) => {
   }).then();
 };
 
-const changeEmail = (request: EmailChangeDTO, userId: number) => {
+const changeEmail = async (request: EmailChangeDTO, userId: number) => {
   var url = `${ApiEndpoints.UserAccounts}/${userId}/change-email`;
 
   return sendAxiosRequest<EmailChangeDTO, void>({
