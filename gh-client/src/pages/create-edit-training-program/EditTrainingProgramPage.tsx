@@ -3,10 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import EditTrainingProgramForm from "./components/EditTrainingProgramForm";
 import { toast } from "sonner";
 import { getSingleTrainingProgram } from "@/api/services/program-details-service";
-import { Separator } from "@/components/ui/separator";
 import { GeneralInfoFormSchema } from "@/schemas/training-program-schema";
 import { ExercisePlanItem } from "@/api/models/exercise";
 import PageHeadingLayout from "@/layouts/PageHeadingLayout";
+import EditTrainingProgramLoader from "./components/EditTrainingProgramFormLoader";
 
 export default function EditTrainingProgramPage() {
   const { id } = useParams();
@@ -31,9 +31,11 @@ export default function EditTrainingProgramPage() {
             ...set,
           })),
         }));
-        setProgramGeneralInfo(generalInfo);
-        setProgramExercises(transformedExercises);
-        setProgramPicture(data.imageFilePath);
+        setTimeout(() => {
+          setProgramGeneralInfo(generalInfo);
+          setProgramExercises(transformedExercises);
+          setProgramPicture(data.imageFilePath);
+        }, 5000); // Kašnjenje od 2 sekunde
       } catch (error) {
         console.error("Error fetching training program:", error);
         navigate(-1);
@@ -60,7 +62,8 @@ export default function EditTrainingProgramPage() {
           programId={Number(id)}
         />
       ) : (
-        <p className="">Loading...</p>
+        // <p className="">Loading...</p>
+        <EditTrainingProgramLoader />
       )}
     </PageHeadingLayout>
   );
