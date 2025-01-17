@@ -19,3 +19,14 @@ export type ScheduleTrainingProgram = {
   difficulty: ProgramDifficulty;
   categories: Category[];
 };
+
+export type ManageTrainingProgramOnSchedule = {
+  dayOfWeek: number;
+  startTime: string; // HH:mm
+  program: ManageScheduleProgramDTO;
+};
+
+export type ManageScheduleProgramDTO = {
+  id: number;
+  name: string;
+};

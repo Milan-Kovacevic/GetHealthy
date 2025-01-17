@@ -1,8 +1,10 @@
+import { ProgramDifficulty } from "../enums/program-difficulty";
+import { CategoryDTO } from "./category-contract";
+
 export type TrainingProgramOnScheduleDTO = {
   id: number;
   dayOfWeek: number;
   startTime: string; // HH:mm
-  trainingDuration: number;
   program: ScheduleTrainingProgramDTO;
 };
 
@@ -11,7 +13,11 @@ type ScheduleTrainingProgramDTO = {
   name: string;
   createdAt: string;
   description: string;
-  trainerName: string;
+  trainerFirstName: string;
+  trainerLastName: string;
+  trainingDuration: number;
+  difficulty: ProgramDifficulty;
+  categories: CategoryDTO[];
 };
 
 export type EditTrainingProgramOnScheduleDTO = {
