@@ -131,7 +131,6 @@ export const CreateEditProgramOnScheduleModal = ({
     if (isEdit && programOnSchedule && values.program) {
       programOnSchedule = {
         id: programOnSchedule.id,
-        trainingDuration: programOnSchedule.trainingDuration,
         ...values,
         startTime: values.startTime.toLocaleTimeString("en-GB", {
           hour: "2-digit",
@@ -139,6 +138,7 @@ export const CreateEditProgramOnScheduleModal = ({
         }),
         program: {
           ...values.program,
+          trainingDuration: programOnSchedule.program.trainingDuration,
         },
       };
 
@@ -230,7 +230,7 @@ export const CreateEditProgramOnScheduleModal = ({
                         <TrainerProgramSelector
                           onProgramSelected={changeProgram}
                           text={text}
-                          initialValue={programOnSchedule?.program}
+                          selectedValue={programOnSchedule?.program}
                         />
                       </div>
                     </FormControl>
