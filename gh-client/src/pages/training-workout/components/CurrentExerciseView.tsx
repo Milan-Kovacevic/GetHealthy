@@ -3,6 +3,7 @@ import workoutAvatar from "@/assets/workout-avatar.gif";
 import { ArrowUpIcon, CircleIcon, SkipForwardIcon } from "lucide-react";
 import { GoToSummaryButton } from "./ProgramWorkoutSummary";
 import useProgramWorkout from "../hooks/use-program-workout";
+import LoadingActionButton from "./LoadingActionButton";
 
 type CurrentExerciseViewProps = {};
 
@@ -49,6 +50,17 @@ export default function CurrentExerciseView(props: CurrentExerciseViewProps) {
           <span className="font-semibold text-foreground">
             {exercise.exerciseSetsFeedback.length}
           </span>
+          <span className="ml-2 text-foreground/70 font-medium">
+            ({exercise.exerciseSetsFeedback[setIndex].firstMetricValue}{" "}
+            {exercise.firstExerciseMetric.unit}
+            {exercise.secondExerciseMetric && (
+              <>
+                , {exercise.exerciseSetsFeedback[setIndex].secondMetricValue}{" "}
+                {exercise.secondExerciseMetric.unit}
+              </>
+            )}
+            , {exercise.exerciseSetsFeedback[setIndex].restTime}s rest )
+          </span>
         </p>
       </div>
 
@@ -70,23 +82,25 @@ export default function CurrentExerciseView(props: CurrentExerciseViewProps) {
       </div>
 
       <div className="flex w-full gap-4 mt-6">
-        <Button
+        <LoadingActionButton
+          icon={<SkipForwardIcon />}
+          text="Skip set"
+          type={{ variant: "outline", size: "default" }}
           disabled={pendingWorkout}
-          onClick={onSetSkipped}
+          loading={pendingWorkout}
           className="flex-1 [&_svg]:hover:scale-110"
-          variant="outline"
-        >
-          <SkipForwardIcon />
-          Skip set
-        </Button>
-        <Button
+          onClick={onSetSkipped}
+        />
+
+        <LoadingActionButton
+          icon={<ArrowUpIcon className="duration-300" />}
+          text="Complete set"
+          type={{ variant: "secondary", size: "default" }}
           disabled={pendingWorkout}
-          onClick={onSetCompleted}
+          loading={pendingWorkout}
           className="flex-1 [&_svg]:hover:rotate-90"
-          variant="secondary"
-        >
-          <ArrowUpIcon className="duration-300" />I completed set
-        </Button>
+          onClick={onSetCompleted}
+        />
       </div>
     </div>
   );

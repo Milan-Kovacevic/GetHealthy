@@ -1,60 +1,60 @@
-import { ProgramDifficulty } from "../enums/program-difficulty";
-import { CategoryDTO } from "./category-contract";
-import { ExerciseDTO } from "./exercise-contract";
+import { ExerciseSetDTO } from "./exercise-contract";
 import { ProgramExerciseDetailsDTO } from "./program-exercise-contract";
 
-export type StartWorkoutRequestDTO = {
-  id: number; // Program on schedule id..
+export type GenerateWorkoutSummaryDTO = {
   traineeId: number;
+  programScheduleId: number;
 };
 
 export type WorkoutSummaryDTO = {
   id: number; // Program on schedule id
-  traineeExercisingId?: number; // Will be present if trainee already started workout...
+  traineeExercisingId?: number; // Will be present if trainee had already started workout...
   dateTaken?: string; // -||-
   programExercises: WorkoutExerciseDTO[];
 };
 
-export type WorkoutExerciseDTO = ExerciseDTO & {
+export type WorkoutExerciseDTO = Omit<
+  ProgramExerciseDetailsDTO,
+  "exerciseSets"
+> & {
   exerciseFeedbackId?: number;
   exerciseSetsFeedback?: WorkoutSetDTO[];
   skipped?: boolean;
 };
 
-export type WorkoutSetDTO = {
-  setFeedbackId: number;
+export type WorkoutSetDTO = ExerciseSetDTO & {
+  setFeedbackId?: number;
   firstMetricValueFeedback?: string;
   secondMetricValueFeedback?: string;
   skipped?: boolean;
   completed?: boolean;
 };
 
-//TODOO
-export type TraineeExercisingDTO = {
+export type StartWorkoutRequestDTO = {
+  traineeId: number;
+  programScheduleId: number;
+};
+export type StartWorkoutResponseDTO = {
   traineeExercisingId: number;
-  programName: string;
-  trainerName: string;
-  programCategories: CategoryDTO[];
-  programDifficulty: ProgramDifficulty;
-  exercises: ProgramExerciseDetailsDTO[];
-};
-
-export type TraineeExercisingRequestDTO = {
-  programId: number;
-  userId: number;
-};
-
-export type ExerciseSetFeedbackRequestDTO = {
-  exerciseFeedbackId: number;
-  skipped: boolean;
-  completed: boolean;
-  firstMetricValueFeedback: string;
-  secondMetricValueFeedback?: string;
+  dateTaken: string;
 };
 
 export type ExerciseFeedbackRequestDTO = {
-  skipped: boolean;
-  traineeExercisingId: number;
-  exerciseId: number;
   programExerciseId: number;
+};
+export type ExerciseFeedbackResponseDTO = {
+  exerciseFeedbackId: number;
+};
+
+export type SkipExerciseSetFeedbackRequestDTO = {
+  exerciseSetId: number;
+};
+export type SendExerciseSetFeedbackRequestDTO =
+  SkipExerciseSetFeedbackRequestDTO & {
+    completed: boolean; // Trainee finished complete set
+    firstMetricValueFeedback?: string; // Optional value if trainee doesn't complete 100% of set, or above 100%
+    secondMetricValueFeedback?: string; // Optional value if trainee doesn't complete 100% of set, or above 100%
+  };
+export type ExerciseSetFeedbackResponseDTO = {
+  setFeedbackId: number;
 };

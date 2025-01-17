@@ -11,6 +11,7 @@ import { CircleIcon, PlayIcon, XIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { GoToSummaryButton } from "./ProgramWorkoutSummary";
 import useProgramWorkout from "../hooks/use-program-workout";
+import LoadingActionButton from "./LoadingActionButton";
 
 type ExerciseSummaryProps = {};
 
@@ -49,7 +50,7 @@ export default function ExerciseSummary(props: ExerciseSummaryProps) {
       </div>
 
       <div className="space-y-4 mt-2">
-        <Card className="space-y-0.5">
+        <Card className="space-y-0.5 animate-fade-down">
           <CardContent className="p-3 px-4">
             <SectionTitle title="Set details" />
             <div className="mt-1.5">
@@ -120,37 +121,37 @@ export default function ExerciseSummary(props: ExerciseSummaryProps) {
         </Accordion>
       </div>
 
-      {/* <Separator className="mb-4 mt-8" /> */}
       <div className="flex flex-wrap justify-between gap-3 mt-6">
-        <Button
+        <LoadingActionButton
+          icon={<XIcon />}
+          text="Skip exercise"
+          type={{ variant: "outline", size: "default" }}
           disabled={pendingWorkout}
+          loading={pendingWorkout}
           className="flex-1 [&_svg]:hover:scale-110"
-          variant="outline"
           onClick={onSkipExercise}
-        >
-          <XIcon />
-          Skip exercise
-        </Button>
+        />
+
         {!exercise.exerciseFeedbackId ? (
-          <Button
+          <LoadingActionButton
+            icon={<PlayIcon />}
+            text="Begin exercise"
+            type={{ variant: "secondary", size: "default" }}
             disabled={pendingWorkout}
+            loading={pendingWorkout}
             className="flex-1 [&_svg]:hover:scale-110"
-            variant="secondary"
             onClick={onBeginExercise}
-          >
-            <PlayIcon />
-            Begin exercise
-          </Button>
+          />
         ) : (
-          <Button
+          <LoadingActionButton
+            icon={<PlayIcon />}
+            text="Resume exercise"
+            type={{ variant: "secondary", size: "default" }}
             disabled={pendingWorkout}
+            loading={pendingWorkout}
             className="flex-1 [&_svg]:hover:scale-110"
-            variant="secondary"
             onClick={onResumeExercise}
-          >
-            <PlayIcon />
-            Resume exercise
-          </Button>
+          />
         )}
       </div>
     </div>

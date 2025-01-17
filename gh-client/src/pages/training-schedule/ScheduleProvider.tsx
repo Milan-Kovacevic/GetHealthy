@@ -50,8 +50,8 @@ const testData: TrainingProgramOnSchedule[] = [
   },
   {
     id: 7,
-    dayOfWeek: 4, // Friday
-    startTime: "18:00",
+    dayOfWeek: 5, // Friday
+    startTime: "17:00",
     program: {
       id: 103,
       name: "HIIT Workout",
@@ -69,8 +69,8 @@ const testData: TrainingProgramOnSchedule[] = [
   },
   {
     id: 5,
-    dayOfWeek: 4, // Friday
-    startTime: "18:30",
+    dayOfWeek: 5, // Friday
+    startTime: "17:20",
     program: {
       id: 103,
       name: "New Workout",

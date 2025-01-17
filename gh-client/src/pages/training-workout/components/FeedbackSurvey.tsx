@@ -11,6 +11,7 @@ import {
   SendExerciseSetFeedbackRequest,
   WorkoutSet,
 } from "@/api/models/trainee-exercising";
+import LoadingActionButton from "./LoadingActionButton";
 
 type FeedbackSurveyProps = {
   onSubmit: (feedback: SendExerciseSetFeedbackRequest) => void;
@@ -38,9 +39,7 @@ FeedbackSurveyProps) {
     string | undefined
   >(undefined);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     //TODOO
     const feedback: SendExerciseSetFeedbackRequest = {
       exerciseSetId: 0,
@@ -137,7 +136,16 @@ FeedbackSurveyProps) {
           </form>
         </CardContent>
         <CardFooter className="p-4 pt-2 justify-end w-full">
-          <Button
+          <LoadingActionButton
+            text="Save Feedback"
+            type={{ variant: "outline", size: "default" }}
+            disabled={disabled || pending}
+            loading={pending}
+            className="w-auto flex-none mt-2 self-end"
+            onClick={() => handleSubmit()}
+          />
+
+          {/* <Button
             variant="outline"
             disabled={disabled || pending}
             type="submit"
@@ -147,7 +155,7 @@ FeedbackSurveyProps) {
               <Loader2Icon className="text-muted-foreground animate-spin" />
             )}
             Save Feedback
-          </Button>
+          </Button> */}
         </CardFooter>
       </Card>
     </div>

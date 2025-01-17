@@ -7,6 +7,8 @@ import { GoToSummaryButton } from "./ProgramWorkoutSummary";
 import { cn } from "@/lib/utils";
 import useProgramWorkout from "../hooks/use-program-workout";
 import { Loader2Icon } from "lucide-react";
+import LoadingActionButton from "./LoadingActionButton";
+import { SendExerciseSetFeedbackRequest } from "@/api/models/trainee-exercising";
 
 type WorkoutRestTimerProps = {};
 
@@ -49,6 +51,12 @@ export default function WorkoutRestTimer(props: WorkoutRestTimerProps) {
       if (interval) clearInterval(interval);
     };
   }, [isActive, secondsLeft]);
+
+  useEffect(() => {
+    if (!feedbackSubmitted) return;
+
+    if (secondsLeft == 0) onRestFinished();
+  }, [feedbackSubmitted]);
 
   const formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -104,17 +112,14 @@ export default function WorkoutRestTimer(props: WorkoutRestTimerProps) {
         </div>
       </div>
 
-      <Button
-        disabled={pendingWorkout}
-        onClick={onRestSkipped}
-        variant="outline"
+      <LoadingActionButton
+        text="Skip rest"
+        type={{ variant: "secondary", size: "default" }}
+        disabled={pendingWorkout || (giveFeedback && !feedbackSubmitted)}
+        loading={pendingWorkout}
         className="w-full mt-2 self-end"
-      >
-        {pendingWorkout && (
-          <Loader2Icon className="text-muted-foreground animate-spin" />
-        )}
-        Skip Rest
-      </Button>
+        onClick={onRestSkipped}
+      />
     </div>
   );
 }

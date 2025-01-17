@@ -22,6 +22,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import useProgramWorkout from "../hooks/use-program-workout";
+import LoadingActionButton from "./LoadingActionButton";
 
 type ProgramWorkoutSummaryProps = {
   scheduleProgram: ScheduleTrainingProgram;
@@ -166,27 +167,24 @@ export default function ProgramWorkoutSummary(
           </Label>
         </div>
       )}
-      <Button
-        variant="secondary"
+      <LoadingActionButton
+        text={
+          isWorkoutFinished
+            ? "Finish"
+            : isWorkoutStarted
+            ? "Continue Workout"
+            : "Start Workout"
+        }
+        type={{ variant: "secondary", size: "default" }}
         disabled={pendingWorkout}
+        loading={pendingWorkout}
+        className="w-full"
         onClick={() => {
           if (isWorkoutFinished) onFinishWorkout();
           else if (!isWorkoutStarted) onStartWorkout();
           else onContinueWorkout();
         }}
-        className="w-full"
-      >
-        {pendingWorkout && (
-          <Loader2Icon className="h-4 w-4 animate-spin text-muted-foreground" />
-        )}
-        <span>
-          {isWorkoutFinished
-            ? "Finish"
-            : isWorkoutStarted
-            ? "Continue Workout"
-            : "Start Workout"}
-        </span>
-      </Button>
+      />
     </div>
   );
 }

@@ -8,24 +8,37 @@ import {
   SkipExerciseSetFeedbackRequest,
   StartWorkoutRequest,
   StartWorkoutResponse,
+  WorkoutExercise,
+  WorkoutSet,
   WorkoutSummary,
 } from "../models/trainee-exercising";
 import { delay } from "@/lib/utils";
 import { sendAxiosRequest } from "./base-service";
+import {
+  ExerciseFeedbackRequestDTO,
+  ExerciseFeedbackResponseDTO,
+  ExerciseSetFeedbackResponseDTO,
+  GenerateWorkoutSummaryDTO,
+  SendExerciseSetFeedbackRequestDTO,
+  SkipExerciseSetFeedbackRequestDTO,
+  StartWorkoutRequestDTO,
+  StartWorkoutResponseDTO,
+  WorkoutSummaryDTO,
+} from "../contracts/trainee-exercising-contract";
+import { format } from "date-fns";
 
-//TODOO
 const getWorkoutSummary = async (
   traineeId: number,
   programScheduleId: number
 ): Promise<WorkoutSummary> => {
   var url = ApiEndpoints.TraineeExercising;
   url += "/summary";
-  var body: GenerateWorkoutSummary = {
+  var body: GenerateWorkoutSummaryDTO = {
     traineeId: traineeId,
     programScheduleId: programScheduleId,
   };
 
-  // return sendAxiosRequest<GenerateWorkoutSummary, WorkoutSummary>({
+  // return sendAxiosRequest<GenerateWorkoutSummaryDTO, WorkoutSummaryDTO>({
   //   method: "POST",
   //   url: url,
   //   data: body as GenerateWorkoutSummary,
@@ -42,43 +55,46 @@ const getWorkoutSummary = async (
 const startProgramWorkout = async (
   traineeId: number,
   programScheduleId: number
-) => {
+): Promise<StartWorkoutResponse> => {
   var url = ApiEndpoints.TraineeExercising;
   url += "/start";
-  const body: StartWorkoutRequest = {
+  const body: StartWorkoutRequestDTO = {
     traineeId: traineeId,
     programScheduleId: programScheduleId,
   };
   await delay(1500);
-  // return sendAxiosRequest<StartWorkoutRequest, StartWorkoutResponse>({
+  // return sendAxiosRequest<StartWorkoutRequestDTO, StartWorkoutResponseDTO>({
   //   method: "POST",
   //   url: url,
-  //   data: body as StartWorkoutRequest,
+  //   data: body as StartWorkoutRequestDTO,
   // }).then((response) => {
-  //   return response.data as StartWorkoutResponse;
+  //   return {
+  //     ...response.data,
+  //     workoutId: response.data.traineeExercisingId,
+  //   } as StartWorkoutResponse;
   // });
 
   return Promise.resolve<StartWorkoutResponse>({
     workoutId: 1,
-    dateTaken: new Date().toUTCString(),
+    dateTaken: format(new Date(), "hh:mm:ss"),
   });
 };
 
 const skipWorkoutExercise = async (
   workoutId: number,
   programExerciseId: number
-) => {
+): Promise<ExerciseFeedbackResponse> => {
   var url = ApiEndpoints.TraineeExercising;
   url += `/${workoutId}/exercises/skip`;
-  const body: ExerciseFeedbackRequest = {
+  const body: ExerciseFeedbackRequestDTO = {
     programExerciseId: programExerciseId,
   };
   await delay(1500);
 
-  // return sendAxiosRequest<ExerciseFeedbackRequest, ExerciseFeedbackResponse>({
+  // return sendAxiosRequest<ExerciseFeedbackRequestDTO, ExerciseFeedbackResponseDTO>({
   //   method: "POST",
   //   url: url,
-  //   data: body as ExerciseFeedbackRequest,
+  //   data: body as ExerciseFeedbackRequestDTO,
   // }).then((response) => {
   //   return response.data as ExerciseFeedbackResponse;
   // });
@@ -91,18 +107,21 @@ const skipWorkoutExercise = async (
 const beginWorkoutExercise = async (
   workoutId: number,
   programExerciseId: number
-) => {
+): Promise<ExerciseFeedbackResponse> => {
   var url = ApiEndpoints.TraineeExercising;
   url += `/${workoutId}/exercises/begin`;
-  const body: ExerciseFeedbackRequest = {
+  const body: ExerciseFeedbackRequestDTO = {
     programExerciseId: programExerciseId,
   };
   await delay(1500);
 
-  // return sendAxiosRequest<ExerciseFeedbackRequest, ExerciseFeedbackResponse>({
+  // return sendAxiosRequest<
+  //   ExerciseFeedbackRequestDTO,
+  //   ExerciseFeedbackResponseDTO
+  // >({
   //   method: "POST",
   //   url: url,
-  //   data: body as ExerciseFeedbackRequest,
+  //   data: body as ExerciseFeedbackRequestDTO,
   // }).then((response) => {
   //   return response.data as ExerciseFeedbackResponse;
   // });
@@ -116,21 +135,21 @@ const skipWorkoutExerciseSet = async (
   workoutId: number,
   exerciseFeedbackId: number,
   exerciseSetId: number
-) => {
+): Promise<ExerciseSetFeedbackResponse> => {
   var url = ApiEndpoints.TraineeExercising;
   url += `/${workoutId}/exercises/${exerciseFeedbackId}/sets/skip`;
-  const body: SkipExerciseSetFeedbackRequest = {
+  const body: SkipExerciseSetFeedbackRequestDTO = {
     exerciseSetId: exerciseSetId,
   };
   await delay(1500);
 
   // return sendAxiosRequest<
-  //   SkipExerciseSetFeedbackRequest,
-  //   ExerciseSetFeedbackResponse
+  //   SkipExerciseSetFeedbackRequestDTO,
+  //   ExerciseSetFeedbackResponseDTO
   // >({
   //   method: "POST",
   //   url: url,
-  //   data: body as SkipExerciseSetFeedbackRequest,
+  //   data: body as SkipExerciseSetFeedbackRequestDTO,
   // }).then((response) => {
   //   return response.data as ExerciseSetFeedbackResponse;
   // });
@@ -144,18 +163,18 @@ const giveExerciseSetFeedback = async (
   workoutId: number,
   exerciseFeedbackId: number,
   data: SendExerciseSetFeedbackRequest
-) => {
+): Promise<ExerciseSetFeedbackResponse> => {
   var url = ApiEndpoints.TraineeExercising;
   url += `/${workoutId}/exercises/${exerciseFeedbackId}/sets`;
   await delay(1500);
 
   // return sendAxiosRequest<
-  //   SendExerciseSetFeedbackRequest,
-  //   ExerciseSetFeedbackResponse
+  //   SendExerciseSetFeedbackRequestDTO,
+  //   ExerciseSetFeedbackResponseDTO
   // >({
   //   method: "POST",
   //   url: url,
-  //   data: data as SendExerciseSetFeedbackRequest,
+  //   data: data as SendExerciseSetFeedbackRequestDTO,
   // }).then((response) => {
   //   return response.data as ExerciseSetFeedbackResponse;
   // });
@@ -319,22 +338,6 @@ const workoutSummaryMock: WorkoutSummary[] = [
             secondMetricValue: "8",
           },
         ],
-        // exerciseFeedbackId: 2001,
-        // exerciseSetsFeedback: [
-        //   {
-        //     setFeedbackId: 5,
-        //     firstMetricValueFeedback: "90",
-        //     secondMetricValueFeedback: "10",
-        //     completed: true,
-        //   },
-        //   {
-        //     setFeedbackId: 6,
-        //     firstMetricValueFeedback: "95",
-        //     secondMetricValueFeedback: "8",
-        //     completed: false,
-        //     skipped: true,
-        //   },
-        // ],
       },
       {
         id: 202,
@@ -348,11 +351,6 @@ const workoutSummaryMock: WorkoutSummary[] = [
           { id: 7, restTime: 60, firstMetricValue: "60" },
           { id: 8, restTime: 60, firstMetricValue: "90" },
         ],
-        // exerciseFeedbackId: 2002,
-        // exerciseSetsFeedback: [
-        //   { setFeedbackId: 7, firstMetricValueFeedback: "60", completed: true },
-        //   { setFeedbackId: 8, firstMetricValueFeedback: "90", completed: true },
-        // ],
       },
     ],
   },

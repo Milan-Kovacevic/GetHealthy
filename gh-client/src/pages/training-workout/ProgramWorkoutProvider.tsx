@@ -29,7 +29,9 @@ export default function ProgramWorkoutProvider(
   const [pendingWorkout, setPendingWorkout] = useState(false);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState<number>(0);
   const [currentSetIndex, setCurrentSetIndex] = useState<number>(-1);
-  const [isWorkoutStarted, setWorkoutStarted] = useState<boolean>(false);
+  const [isWorkoutStarted, setWorkoutStarted] = useState<boolean>(
+    workout.workoutId != undefined
+  );
   const [isWorkoutFinished, setWorkoutFinished] = useState<boolean>(false);
   const [giveFeedback, setGiveFeedback] = useState(true);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
@@ -66,7 +68,6 @@ export default function ProgramWorkoutProvider(
           .length
       )
     );
-    setWorkoutStarted(workout.workoutId != undefined);
     setWorkoutFinished(
       workout.programExercises.every((exercise) => {
         return (
@@ -83,6 +84,7 @@ export default function ProgramWorkoutProvider(
 
     if (currentSetIndex < currentExercise.exerciseSetsFeedback.length - 1) {
       setCurrentSetIndex((prev) => prev + 1);
+      setFormState("exercise");
       return;
     }
     if (currentExerciseIndex < workout.programExercises.length - 1) {
@@ -115,13 +117,19 @@ export default function ProgramWorkoutProvider(
   const handleStartWorkout = async () => {
     if (isWorkoutStarted) return; // Cannot start workout if it is already started...
 
+    if (!giveFeedback) {
+      setFormState("exercise-info");
+      setWorkoutStarted(true);
+      return;
+    }
+
     setPendingWorkout(true);
     startProgramWorkout(userId, workoutSummary.id)
       .then((response) => {
         setWorkoutSummary((prev) => {
           return {
             ...prev,
-            traineeExercisingId: response.workoutId,
+            workoutId: response.workoutId,
             dateTaken: response.dateTaken,
           };
         });
@@ -147,24 +155,20 @@ export default function ProgramWorkoutProvider(
     onWorkoutFinished();
   };
 
-  const handleSetRestFinished = () => {
-    const newWorkout = { ...workout };
-    newWorkout.programExercises[currentExerciseIndex].exerciseSetsFeedback[
-      currentSetIndex
-    ].completed = true;
-    setWorkoutSummary(newWorkout);
-    setFeedbackSubmitted(false);
-    setFormState("exercise");
-    moveToNextSet();
-  };
-
-  const handleSetRestSkipped = () => {
-    handleSetRestFinished();
-  };
-
   const handleSetSkipped = () => {
     const currentExercise =
       workoutSummary.programExercises[currentExerciseIndex];
+
+    if (!giveFeedback) {
+      const newWorkout = { ...workoutSummary };
+      newWorkout.programExercises[currentExerciseIndex].exerciseSetsFeedback[
+        currentSetIndex
+      ].skipped = true;
+      setWorkoutSummary(newWorkout);
+      moveToNextSet();
+      return;
+    }
+
     if (!workoutSummary.workoutId || !currentExercise.exerciseFeedbackId)
       return;
 
@@ -175,13 +179,16 @@ export default function ProgramWorkoutProvider(
       currentExercise.exerciseSetsFeedback[currentSetIndex].id
     )
       .then((response) => {
-        const newWorkout = { ...workout };
-        currentExercise.exerciseSetsFeedback[currentSetIndex].skipped = true;
-        currentExercise.exerciseSetsFeedback[currentSetIndex].setFeedbackId =
-          response.setFeedbackId;
+        const newWorkout = { ...workoutSummary };
+        const newWorkoutCurrentExercise =
+          newWorkout.programExercises[currentExerciseIndex];
+        newWorkoutCurrentExercise.exerciseSetsFeedback[
+          currentSetIndex
+        ].skipped = true;
+        newWorkoutCurrentExercise.exerciseSetsFeedback[
+          currentSetIndex
+        ].setFeedbackId = response.setFeedbackId;
         setWorkoutSummary(newWorkout);
-
-        setFormState("exercise");
         moveToNextSet();
       })
       .finally(() => {
@@ -198,7 +205,16 @@ export default function ProgramWorkoutProvider(
   };
 
   const handleBeginExercise = () => {
+    if (!giveFeedback) {
+      var newWorkout = { ...workoutSummary };
+      newWorkout.programExercises[currentExerciseIndex].skipped = false;
+      setWorkoutSummary(newWorkout);
+      setFormState("exercise");
+      return;
+    }
+
     if (!workoutSummary.workoutId) return;
+
     setPendingWorkout(true);
     beginWorkoutExercise(
       workoutSummary.workoutId,
@@ -222,6 +238,19 @@ export default function ProgramWorkoutProvider(
   };
 
   const handleSkipExercise = async () => {
+    if (!giveFeedback) {
+      var newWorkout = { ...workoutSummary };
+      newWorkout.programExercises[currentExerciseIndex].skipped = true;
+      newWorkout.programExercises[
+        currentExerciseIndex
+      ].exerciseSetsFeedback.forEach((set) => {
+        if (!set.completed) set.skipped = true;
+      });
+      setWorkoutSummary(newWorkout);
+      moveToNextExercise();
+      return;
+    }
+
     if (!workoutSummary.workoutId) return;
 
     setPendingWorkout(true);
@@ -234,22 +263,17 @@ export default function ProgramWorkoutProvider(
         newWorkout.programExercises[currentExerciseIndex].exerciseFeedbackId =
           response.exerciseFeedbackId;
         newWorkout.programExercises[currentExerciseIndex].skipped = true;
+        newWorkout.programExercises[
+          currentExerciseIndex
+        ].exerciseSetsFeedback.forEach((set) => {
+          if (!set.completed) set.skipped = true;
+        });
         setWorkoutSummary(newWorkout);
-        setFormState("exercise-info");
+        moveToNextExercise();
       })
       .finally(() => {
         setPendingWorkout(false);
       });
-
-    const newWorkout = { ...workout };
-    newWorkout.programExercises[currentExerciseIndex].skipped = true;
-    newWorkout.programExercises[
-      currentExerciseIndex
-    ].exerciseSetsFeedback.forEach((set) => {
-      if (!set.completed) set.skipped = true;
-    });
-    moveToNextExercise();
-    setWorkoutSummary(newWorkout);
   };
 
   const handleFeedbackSubmit = (data: SendExerciseSetFeedbackRequest) => {
@@ -258,6 +282,7 @@ export default function ProgramWorkoutProvider(
       !workoutSummary.programExercises[currentExerciseIndex].exerciseFeedbackId
     )
       return;
+
     setPendingWorkout(true);
     giveExerciseSetFeedback(
       workoutSummary.workoutId,
@@ -265,9 +290,9 @@ export default function ProgramWorkoutProvider(
       data
     )
       .then((response) => {
-        const newWorkout = { ...workout };
+        const newWorkout = { ...workoutSummary };
         const currentSet =
-          workoutSummary.programExercises[currentExerciseIndex]
+          newWorkout.programExercises[currentExerciseIndex]
             .exerciseSetsFeedback[currentSetIndex];
         currentSet.firstMetricValueFeedback = data.firstMetricValueFeedback;
         currentSet.secondMetricValueFeedback = data.secondMetricValueFeedback;
@@ -283,6 +308,28 @@ export default function ProgramWorkoutProvider(
       .finally(() => {
         setPendingWorkout(false);
       });
+  };
+
+  const handleSetRestFinished = () => {
+    if (!giveFeedback) {
+      const newWorkout = { ...workoutSummary };
+      newWorkout.programExercises[currentExerciseIndex].exerciseSetsFeedback[
+        currentSetIndex
+      ].completed = true;
+      newWorkout.programExercises[currentExerciseIndex].exerciseSetsFeedback[
+        currentSetIndex
+      ].skipped = false;
+      setWorkoutSummary(newWorkout);
+      moveToNextSet();
+      return;
+    }
+
+    setFeedbackSubmitted(false);
+    moveToNextSet();
+  };
+
+  const handleSetRestSkipped = () => {
+    handleSetRestFinished();
   };
 
   const value = {
