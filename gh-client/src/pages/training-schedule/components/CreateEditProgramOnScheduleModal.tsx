@@ -22,7 +22,10 @@ import {
   EditTrainingProgramOnScheduleDTO,
 } from "@/api/contracts/training-program-on-schedule-contract";
 import { TrainerProgram } from "@/api/models/training-program";
-import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
+import {
+  ManageTrainingProgramOnSchedule,
+  TrainingProgramOnSchedule,
+} from "@/api/models/training-program-on-schedule";
 import {
   createTrainingProgramOnSchedule,
   editTrainingProgramOnSchedule,
@@ -82,7 +85,8 @@ export type CreateEditProgramOnScheduleModalProps = {
   isEdit?: boolean;
   programOnSchedule?: TrainingProgramOnSchedule;
   onEditProgramOnSchedule?: (
-    programOnSchedule: TrainingProgramOnSchedule
+    id: number,
+    programOnSchedule: ManageTrainingProgramOnSchedule
   ) => void;
 };
 
@@ -99,7 +103,12 @@ export const CreateEditProgramOnScheduleModal = ({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          program: programOnSchedule ? programOnSchedule.program : null,
+          program: programOnSchedule
+            ? {
+                ...programOnSchedule.program,
+                trainerName: `${programOnSchedule.program.trainerFirstName} ${programOnSchedule.program.trainerLastName}`,
+              }
+            : null,
           dayOfWeek: programOnSchedule?.dayOfWeek ?? undefined,
           startTime: programOnSchedule?.startTime
             ? parseTimeStringToDate(programOnSchedule.startTime)
@@ -129,20 +138,19 @@ export const CreateEditProgramOnScheduleModal = ({
     );
 
     if (isEdit && programOnSchedule && values.program) {
-      programOnSchedule = {
-        id: programOnSchedule.id,
+      const request: ManageTrainingProgramOnSchedule = {
         ...values,
         startTime: values.startTime.toLocaleTimeString("en-GB", {
           hour: "2-digit",
           minute: "2-digit",
         }),
         program: {
-          ...values.program,
-          trainingDuration: programOnSchedule.program.trainingDuration,
+          id: values.program.id,
+          name: values.program.name,
         },
       };
 
-      onEditProgramOnSchedule?.(programOnSchedule);
+      onEditProgramOnSchedule?.(programOnSchedule.id, request);
     }
 
     try {
@@ -184,6 +192,14 @@ export const CreateEditProgramOnScheduleModal = ({
     }
     setOpen(isOpen);
   };
+
+  var trainerProgram: TrainerProgram | undefined;
+  if (programOnSchedule) {
+    trainerProgram = {
+      ...programOnSchedule.program,
+      trainerName: `${programOnSchedule.program.trainerFirstName} ${programOnSchedule.program.trainerLastName}`,
+    };
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleOnOpenChangeModal}>
@@ -230,7 +246,7 @@ export const CreateEditProgramOnScheduleModal = ({
                         <TrainerProgramSelector
                           onProgramSelected={changeProgram}
                           text={text}
-                          selectedValue={programOnSchedule?.program}
+                          selectedValue={trainerProgram}
                         />
                       </div>
                     </FormControl>

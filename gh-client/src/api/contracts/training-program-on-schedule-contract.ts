@@ -1,34 +1,39 @@
+import { ProgramDifficulty } from "../enums/program-difficulty";
+import { CategoryDTO } from "./category-contract";
+
 export type TrainingProgramOnScheduleDTO = {
   id: number;
   dayOfWeek: number;
   startTime: string; // HH:mm
-  program: TrainingProgramDTO;
+  program: ScheduleTrainingProgramDTO;
 };
 
-type TrainingProgramDTO = {
+type ScheduleTrainingProgramDTO = {
   id: number;
   name: string;
   createdAt: string;
   description: string;
+  trainerFirstName: string;
+  trainerLastName: string;
   trainingDuration: number;
-  trainerName: string;
+  difficulty: ProgramDifficulty;
+  categories: CategoryDTO[];
 };
 
 export type EditTrainingProgramOnScheduleDTO = {
   id: number;
   dayOfWeek: number;
   startTime: Date; // HH:mm
-  program: Omit<
-    TrainingProgramDTO,
-    "createdAt" | "description" | "trainerName" | "trainingDuration"
-  >;
+  program: ManageScheduleProgramDTO;
 };
 
 export type CreateTrainingProgramOnScheduleDTO = {
   dayOfWeek: number;
   startTime: Date;
-  program: Omit<
-    TrainingProgramDTO,
-    "createdAt" | "description" | "trainerName" | "trainingDuration"
-  >;
+  program: ManageScheduleProgramDTO;
+};
+
+export type ManageScheduleProgramDTO = {
+  id: number;
+  name: string;
 };

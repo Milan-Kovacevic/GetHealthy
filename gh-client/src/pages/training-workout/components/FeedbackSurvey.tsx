@@ -5,28 +5,30 @@ import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { MessageCircleQuestionIcon } from "lucide-react";
+import { Loader2Icon, MessageCircleQuestionIcon } from "lucide-react";
 import { ExerciseMetric } from "@/api/models/exercise";
-import { ExerciseSetFeedbackRequest } from "@/api/models/trainee-exercising";
-import { giveSetFeedback } from "@/api/services/trainee-exercising-service";
+import {
+  SendExerciseSetFeedbackRequest,
+  WorkoutSet,
+} from "@/api/models/trainee-exercising";
+import LoadingActionButton from "./LoadingActionButton";
 
 type FeedbackSurveyProps = {
-  onSubmit: (feedback: ExerciseSetFeedbackRequest) => void;
+  onSubmit: (feedback: SendExerciseSetFeedbackRequest) => void;
   disabled: boolean;
-  targetFirstMatric: string;
-  targetSecondMatric?: string;
+  pending: boolean;
   firstMetric: ExerciseMetric;
   secondMetric?: ExerciseMetric;
-  //giveSetFeedback: (feedback: ExerciseSetFeedbackRequest) => Promise<void>;
+  completedSet: WorkoutSet;
 };
 
 export default function FeedbackSurvey({
   onSubmit,
   disabled,
-  targetFirstMatric,
-  targetSecondMatric,
+  pending,
   firstMetric,
   secondMetric,
+  completedSet,
 }: //giveSetFeedback,
 FeedbackSurveyProps) {
   const [completedAsPlanned, setCompletedAsPlanned] = useState(true);
@@ -37,36 +39,28 @@ FeedbackSurveyProps) {
     string | undefined
   >(undefined);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     //TODOO
-    const feedback: ExerciseSetFeedbackRequest = {
-      exerciseFeedbackId: 0,
-      skipped: false,
+    const feedback: SendExerciseSetFeedbackRequest = {
+      exerciseSetId: 0,
       completed: completedAsPlanned,
       firstMetricValueFeedback: completedAsPlanned
-        ? targetFirstMatric
+        ? completedSet.firstMetricValue
         : actualFirstMetricValue,
       secondMetricValueFeedback: completedAsPlanned
-        ? targetSecondMatric
+        ? completedSet.secondMetricValue
         : actualSecondMetricValue,
     };
 
-    try {
-      await giveSetFeedback(feedback);
-      onSubmit(feedback);
-    } catch (error) {
-      console.error("Failed to submit feedback:", error);
-    }
+    onSubmit(feedback);
   };
 
   return (
     <div className="relative mt-2">
       <Card
         className={cn(
-          "w-full mb-2 border-2 shadow-sm",
-          !disabled && "border-primary"
+          "w-full mb-2 border-2 shadow-md border-border/90",
+          !disabled && ""
         )}
       >
         <div className="px-4 py-3 pb-0 flex flex-row gap-1">
@@ -83,13 +77,21 @@ FeedbackSurveyProps) {
                   disabled={disabled}
                   id="completed"
                   checked={completedAsPlanned}
+                  className={cn(completedAsPlanned && "font-normal")}
                   onCheckedChange={(checked) =>
                     setCompletedAsPlanned(checked as boolean)
                   }
                 />
-                <Label htmlFor="completed">
-                  I have completed {targetFirstMatric} {firstMetric.unit} at{" "}
-                  {targetSecondMatric} {secondMetric?.unit}
+                <Label
+                  htmlFor="completed"
+                  className={cn(
+                    "cursor-pointer font-normal",
+                    disabled && "text-muted-foreground"
+                  )}
+                >
+                  I have completed {completedSet.firstMetricValue}{" "}
+                  {firstMetric.unit} at {completedSet.secondMetricValue}{" "}
+                  {secondMetric?.unit}
                 </Label>
               </div>
               {!completedAsPlanned && (
@@ -103,43 +105,57 @@ FeedbackSurveyProps) {
                         disabled={disabled}
                         id="actualFirstMetric"
                         type="number"
-                        placeholder={targetFirstMatric.toString()}
+                        placeholder={completedSet.firstMetricValue.toString()}
                         value={actualFirstMetricValue ?? ""}
                         onChange={(e) =>
                           setActualFirstMetricValue(e.target.value)
                         }
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="actualSecondMetric">
-                        Actual {secondMetric?.name} ({secondMetric?.unit})
-                      </Label>
-                      <Input
-                        disabled={disabled}
-                        id="actualSecondMetric"
-                        type="number"
-                        placeholder={targetSecondMatric?.toString()}
-                        value={actualSecondMetricValue ?? ""}
-                        onChange={(e) =>
-                          setActualSecondMetricValue(e.target.value)
-                        }
-                      />
-                    </div>
+                    {completedSet.secondMetricValue && (
+                      <div className="space-y-2">
+                        <Label htmlFor="actualSecondMetric">
+                          Actual {secondMetric?.name} ({secondMetric?.unit})
+                        </Label>
+                        <Input
+                          disabled={disabled}
+                          id="actualSecondMetric"
+                          type="number"
+                          placeholder={completedSet.secondMetricValue?.toString()}
+                          value={actualSecondMetricValue ?? ""}
+                          onChange={(e) =>
+                            setActualSecondMetricValue(e.target.value)
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
             </div>
           </form>
         </CardContent>
-        <CardFooter className="p-4 pt-2">
-          <Button
+        <CardFooter className="p-4 pt-2 justify-end w-full">
+          <LoadingActionButton
+            text="Save Feedback"
+            type={{ variant: "outline", size: "default" }}
+            disabled={disabled || pending}
+            loading={pending}
+            className="w-auto flex-none mt-2 self-end"
+            onClick={() => handleSubmit()}
+          />
+
+          {/* <Button
             variant="outline"
-            disabled={disabled}
+            disabled={disabled || pending}
             type="submit"
             onClick={handleSubmit}
           >
+            {pending && (
+              <Loader2Icon className="text-muted-foreground animate-spin" />
+            )}
             Save Feedback
-          </Button>
+          </Button> */}
         </CardFooter>
       </Card>
     </div>
