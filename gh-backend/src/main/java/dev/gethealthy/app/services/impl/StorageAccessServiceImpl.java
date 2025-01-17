@@ -98,6 +98,6 @@ public class StorageAccessServiceImpl implements StorageAccessService {
         if (type.equals(StorageType.PICTURE))
             return Path.of(picturesPath.toFile().getPath(), encodedFileName + extension);
         else
-            throw new IOException("Invalid storage type specified.");
+            throw new IOException("Invalid storage type specified."); // TODO
     }
 }
