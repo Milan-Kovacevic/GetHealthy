@@ -1,4 +1,7 @@
-import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
+import {
+  ManageTrainingProgramOnSchedule,
+  TrainingProgramOnSchedule,
+} from "@/api/models/training-program-on-schedule";
 import { deleteTrainingProgramOnSchedule } from "@/api/services/training-program-on-schedule-service";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,7 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useSchedule } from "@/hooks/use-schedule";
+import { useSchedule } from "@/pages/training-schedule/hooks/use-schedule";
 import TrainingWorkoutDialog from "@/pages/training-workout/TrainingWorkoutDialog";
 import {
   addMinutesToTime,
@@ -124,8 +127,12 @@ const ManageProgramPopup = ({
   programOnSchedule: TrainingProgramOnSchedule;
 }) => {
   const { editProgram } = useSchedule();
-  const handleEdit = (editedProgram: TrainingProgramOnSchedule) => {
-    editProgram(editedProgram);
+
+  const handleEdit = (
+    id: number,
+    editedProgram: ManageTrainingProgramOnSchedule
+  ) => {
+    editProgram(id, editedProgram);
   };
 
   const handleRemove = async () => {

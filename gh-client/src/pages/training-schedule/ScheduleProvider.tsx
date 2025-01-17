@@ -1,7 +1,10 @@
 // src/context/ScheduleProvider.tsx
 import { ProgramDifficulty } from "@/api/enums/program-difficulty";
-import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
-import { ScheduleContext } from "@/hooks/use-schedule";
+import {
+  ManageTrainingProgramOnSchedule,
+  TrainingProgramOnSchedule,
+} from "@/api/models/training-program-on-schedule";
+import { ScheduleContext } from "@/pages/training-schedule/hooks/use-schedule";
 import { startOfWeek } from "date-fns";
 import React, { useEffect, useState } from "react";
 
@@ -127,10 +130,19 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
     setPrograms((prev) => [...prev, program]);
   };
 
-  const editProgram = (updatedProgram: TrainingProgramOnSchedule) => {
+  const editProgram = (
+    id: number,
+    updatedProgram: ManageTrainingProgramOnSchedule
+  ) => {
     setPrograms((prev) =>
       prev.map((program) =>
-        program.id === updatedProgram.id ? updatedProgram : program
+        program.id === id
+          ? {
+              ...program,
+              dayOfWeek: updatedProgram.dayOfWeek,
+              startTime: updatedProgram.startTime,
+            }
+          : program
       )
     );
   };
