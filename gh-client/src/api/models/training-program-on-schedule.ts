@@ -2,7 +2,6 @@ export type TrainingProgramOnSchedule = {
   id: number;
   dayOfWeek: number;
   startTime: string;
-  trainingDuration: number;
   program: TrainingProgram;
 };
 
@@ -11,5 +10,6 @@ type TrainingProgram = {
   name: string;
   createdAt: string;
   description: string;
+  trainingDuration: number;
   trainerName: string;
 };

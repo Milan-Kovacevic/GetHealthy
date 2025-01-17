@@ -2,7 +2,6 @@ export type TrainingProgramOnScheduleDTO = {
   id: number;
   dayOfWeek: number;
   startTime: string; // HH:mm
-  trainingDuration: number;
   program: TrainingProgramDTO;
 };
 
@@ -11,6 +10,7 @@ type TrainingProgramDTO = {
   name: string;
   createdAt: string;
   description: string;
+  trainingDuration: number;
   trainerName: string;
 };
 
@@ -20,7 +20,7 @@ export type EditTrainingProgramOnScheduleDTO = {
   startTime: Date; // HH:mm
   program: Omit<
     TrainingProgramDTO,
-    "createdAt" | "description" | "trainerName"
+    "createdAt" | "description" | "trainerName" | "trainingDuration"
   >;
 };
 
@@ -29,6 +29,6 @@ export type CreateTrainingProgramOnScheduleDTO = {
   startTime: Date;
   program: Omit<
     TrainingProgramDTO,
-    "createdAt" | "description" | "trainerName"
+    "createdAt" | "description" | "trainerName" | "trainingDuration"
   >;
 };
