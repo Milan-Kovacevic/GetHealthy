@@ -26,13 +26,11 @@ export type PageableProgramParticipants = Page<SingleProgramParticipant>;
 
 export type SingleTrainingProgramInfo = TrainingProgram & {
   totalRates: number;
-  currentlyEnrolled: number;
   joined?: boolean;
 };
 
 export type SingleTrainingProgram = TrainingProgram & {
   totalRates: number;
-  currentlyEnrolled: number;
   requirements: string;
   trainingDuration: number;
   exercises: ProgramExerciseDetails[];

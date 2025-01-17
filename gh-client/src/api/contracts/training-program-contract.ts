@@ -14,6 +14,7 @@ export type TrainingProgramDTO = {
   trinerId: number;
   trainerFirstName: string;
   trainerLastName: string;
+  currentlyEnrolled: number;
 };
 
 export type PageableTrainingProgramsDTO = Page<TrainingProgramDTO>;

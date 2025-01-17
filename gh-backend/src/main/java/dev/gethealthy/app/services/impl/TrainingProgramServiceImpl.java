@@ -47,11 +47,19 @@ public class TrainingProgramServiceImpl
                                                                      Pageable page) {
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
         var dbResponse = trainingProgramRepository.findAll(spec, pageableWithSort);
-        var result = dbResponse.map(e -> modelMapper.map(e, TrainingProgramResponse.class));
-        for (int i = 0; i < result.getContent().size(); i++) {
-            result.getContent().get(i).setRating(dbResponse.getContent().get(i).getTrainingProgramRatings().stream()
+
+        var result = dbResponse.map(e -> {
+            TrainingProgramResponse response = modelMapper.map(e, TrainingProgramResponse.class);
+
+            response.setCurrentlyEnrolled(
+                    trainingProgramRepository.calculateNumberOfTrainingProgramTrainees(e.getId()));
+
+            response.setRating(e.getTrainingProgramRatings().stream()
                     .mapToDouble(ProgramRating::getRate).average().orElse(0.0));
-        }
+
+            return response;
+        });
+
         return result;
     }
 

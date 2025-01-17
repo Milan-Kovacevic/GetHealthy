@@ -91,7 +91,8 @@ export default function ProgramTrainerInfo() {
                   <span className="mx-3 w-0.5 h-4 bg-muted-foreground" />
                   {trainer.gender ? (
                     <p className="text-sm font-normal text-foreground/80">
-                      {capitalize<string>(trainer.gender)}
+                      {/* {capitalize<string>(trainer.gender)} */}
+                      {capitalize(trainer.gender)}
                     </p>
                   ) : (
                     <p className="text-sm font-normal text-foreground/80 italic">
