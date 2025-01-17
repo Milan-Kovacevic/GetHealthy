@@ -16,6 +16,7 @@ import {
   changePassword,
   getUserAccount,
 } from "@/api/services/user-account-service";
+import { toast } from "sonner";
 
 const emailSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -47,6 +48,7 @@ interface UserData {
 }
 
 export default function AccountForm() {
+  const userId = 9; // change with id of logged user
   const [userData, setUserData] = useState<UserData>({
     email: "",
     username: "",
@@ -56,7 +58,7 @@ export default function AccountForm() {
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const data = await getUserAccount(1);
+      const data = await getUserAccount(userId);
 
       setUserData({ email: data.email, username: data.username });
     };
@@ -81,23 +83,29 @@ export default function AccountForm() {
     },
   });
 
-  function onEmailSubmit(values: EmailFormValues) {
+  async function onEmailSubmit(values: EmailFormValues) {
     console.log(values);
     setIsEditingEmail(false);
     setUserData({ ...userData, email: values.email });
     emailForm.reset();
-    changeEmail(values, 1) // userId hardcoded
-      .then()
-      .catch(() => console.log("Could not change email!"));
+    try {
+      await changeEmail(values, userId);
+      toast.success("Successfully changed email!");
+    } catch (error) {
+      toast.error("Couldn't changed email!");
+    }
   }
 
-  function onPasswordSubmit(values: PasswordFormValues) {
+  async function onPasswordSubmit(values: PasswordFormValues) {
     console.log(values);
     setIsChangingPassword(false);
     passwordForm.reset();
-    changePassword(values, 1) // userId hardcoded
-      .then()
-      .catch(() => console.log("Could not change password!"));
+    try {
+      await changePassword(values, userId);
+      toast.success("Successfully changed password!");
+    } catch (error) {
+      toast.error("Couldn't changed password!");
+    }
   }
 
   return (

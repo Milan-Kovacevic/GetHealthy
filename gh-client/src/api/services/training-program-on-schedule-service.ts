@@ -6,6 +6,17 @@ import {
   TrainingProgramOnScheduleDTO,
 } from "../contracts/training-program-on-schedule-contract";
 
+const fetchTrainingProgamsOnSchedule = async () => {
+  var url = `${ApiEndpoints.TrainingProgramOnSchedule}`;
+
+  return sendAxiosRequest<void, TrainingProgramOnScheduleDTO[]>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    return response.data;
+  });
+};
+
 const createTrainingProgramOnSchedule = async (
   data: CreateTrainingProgramOnScheduleDTO
 ) => {
@@ -49,4 +60,5 @@ export {
   deleteTrainingProgramOnSchedule,
   createTrainingProgramOnSchedule,
   editTrainingProgramOnSchedule,
+  fetchTrainingProgamsOnSchedule,
 };
