@@ -108,7 +108,7 @@ export default function TrainingProgramInfo() {
     <div className="my-4 flex flex-col lg:flex-row h-auto py-4 lg:px-0 px-4 relative">
       <div
         className={cn(
-          "bg-primary/10 dark:bg-primary/5 w-full sm:h-[400px] lg:w-2/5 xl:w-1/3 mb-2 lg:mb-0 lg:border-2 rounded-xl overflow-hidden",
+          "relative bg-primary/10 dark:bg-primary/5 w-full sm:h-[400px] lg:w-2/5 xl:w-1/3 mb-2 lg:mb-0 lg:border-2 rounded-xl overflow-hidden",
           !program.imageFilePath && "border-2"
         )}
       >
@@ -120,6 +120,17 @@ export default function TrainingProgramInfo() {
             !program.imageFilePath && "dark:filter-white"
           )}
         />
+        {program.joined && (
+          <div className="absolute inset-0 pointer-events-none z-10">
+            <div
+              className="absolute -left-16 top-6 -rotate-45 bg-primary/85 py-1.5
+          text-center text-sm font-semibold text-white shadow-lg"
+              style={{ width: "200px" }}
+            >
+              <span className="inline-block -rotate-270 text-base">Joined</span>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="w-full lg:w-2/3 pl-0 lg:pl-8 relative flex flex-col">
@@ -195,26 +206,30 @@ export default function TrainingProgramInfo() {
           </div>
           {!isTrainer && (
             <div className="flex items-center flex-wrap gap-2 lg:mt-auto mt-auto mb-0.5">
-              <TrainingProgramApplicationModal
-                onSubmit={handleApplicationModalSubmit}
-                disabled={submitting}
-              />
-              <SimpleAlertDialog
-                title="Are you sure?"
-                description="Are you sure you want to leave this training program?"
-                cancelText="No"
-                submitText="Yes"
-                onConfirm={handleLeaveTrainingProgram}
-              >
-                <Button
+              {!program.joined && (
+                <TrainingProgramApplicationModal
+                  onSubmit={handleApplicationModalSubmit}
                   disabled={submitting}
-                  variant="outline"
-                  className="h-auto items-center min-w-32 w-auto"
+                />
+              )}
+              {program.joined && (
+                <SimpleAlertDialog
+                  title="Are you sure?"
+                  description="Are you sure you want to leave this training program?"
+                  cancelText="No"
+                  submitText="Yes"
+                  onConfirm={handleLeaveTrainingProgram}
                 >
-                  <UserXIcon className="h-5 w-5 text-destructive" />
-                  <span>Leave</span>
-                </Button>
-              </SimpleAlertDialog>
+                  <Button
+                    disabled={submitting}
+                    variant="outline"
+                    className="h-auto items-center min-w-32 w-auto"
+                  >
+                    <UserXIcon className="h-5 w-5 text-destructive" />
+                    <span>Leave</span>
+                  </Button>
+                </SimpleAlertDialog>
+              )}
             </div>
           )}
         </div>
