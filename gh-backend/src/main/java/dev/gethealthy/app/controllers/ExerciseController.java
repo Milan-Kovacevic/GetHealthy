@@ -20,7 +20,6 @@ public class ExerciseController extends CrudController<Integer, ExerciseRequest,
         this.exerciseService = exerciseService;
     }
 
-
     @GetMapping("filter")
     public Page<ExerciseResponse> getAllExerciseFiltered(@RequestParam(defaultValue = "") String query, Pageable page) {
         return exerciseService.getAllExercisesFiltered(page, query);
