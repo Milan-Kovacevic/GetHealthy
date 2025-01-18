@@ -3,6 +3,7 @@ package dev.gethealthy.app.controllers;
 import java.io.IOException;
 
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,24 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("${gethealthy.base-url}/${gethealthy.storage.name}")
 public class StorageAccessController {
     private final StorageAccessService storageAccessService;
+
+    @GetMapping("documents/{fileName}")
+    public ResponseEntity<Resource> getDocumentFile(@PathVariable("fileName") String fileName) {
+        final Resource resource;
+        try {
+            resource = storageAccessService.getFileAsResource(fileName, StorageType.DOCUMENT);
+        } catch (IOException e) {
+            throw new NotFoundException();
+        }
+
+        if (resource == null || !resource.exists() || !resource.isReadable())
+            throw new NotFoundException();
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition")
+                .body(resource);
+    }
 
     @GetMapping("pictures/{fileName}")
     public ResponseEntity<Resource> getPictureFile(@PathVariable("fileName") String fileName) {

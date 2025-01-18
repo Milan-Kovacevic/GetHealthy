@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
+import useAuth from "@/hooks/use-auth";
+
 
 type ProgramDetailsTabsProps = {
   children: ReactNode;
@@ -10,7 +12,7 @@ const programDetailRoutes = [
   { path: "details", name: "Details" },
   { path: "trainer-info", name: "About trainer" },
   { path: "reviews", name: "Reviews" },
-  { path: "trainees", name: "Manage" },
+  { path: "trainees", name: "Manage", requiresTrainer: true },
 ];
 
 export default function ProgramDetailsTabs({
@@ -19,10 +21,15 @@ export default function ProgramDetailsTabs({
   const location = useLocation();
   const { pathname } = location;
 
+  const auth = useAuth();
+  const isTrainer = auth.isTrainer();
+
   return (
     <div className="flex flex-col overflow-y-hidden flex-1">
       <div className="flex md:flex-row flex-col relative">
-        {programDetailRoutes.map((item, index) => (
+        {programDetailRoutes
+        .filter((item) => !item.requiresTrainer || isTrainer)
+        .map((item, index) => (
           <Link
             key={`link-${index}`}
             to={item.path}

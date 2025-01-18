@@ -24,10 +24,13 @@ public class StorageAccessServiceImpl implements StorageAccessService {
     private String storagePath;
     @Value("${gethealthy.storage.name}")
     private String storageName;
+    @Value("${gethealthy.storage.documents.name}")
+    private String documentsName;
     @Value("${gethealthy.storage.pictures.name}")
     private String picturesName;
 
     private Path rootPath;
+    private Path documentsPath;
     private Path picturesPath;
 
     @PostConstruct
@@ -37,6 +40,15 @@ public class StorageAccessServiceImpl implements StorageAccessService {
         if (!rootFolder.exists()) {
             try {
                 Files.createDirectories(rootPath);
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
+        }
+
+        documentsPath = Paths.get(storagePath, storageName, documentsName).normalize().toAbsolutePath();
+        if (!documentsPath.toFile().exists()) {
+            try {
+                Files.createDirectory(documentsPath);
             } catch (IOException ex) {
                 System.out.println(ex);
             }
@@ -80,24 +92,32 @@ public class StorageAccessServiceImpl implements StorageAccessService {
     }
 
     private Path getFilePath(String fileName, StorageType type) throws IOException {
-        Path destinationPath;
         Path sourcePath = Paths.get(fileName);
-        if (type.equals(StorageType.PICTURE)) {
-            destinationPath = picturesPath.resolve(sourcePath).normalize().toAbsolutePath();
-            if (!destinationPath.getParent().equals(picturesPath.toAbsolutePath()))
-                throw new IOException("Cannot access picture files outside storage");
+
+        if (type.equals(StorageType.DOCUMENT)) {
+            return resolveAndValidatePath(sourcePath, documentsPath, "Cannot access document files outside storage");
+        } else if (type.equals(StorageType.PICTURE)) {
+            return resolveAndValidatePath(sourcePath, picturesPath, "Cannot access document files outside storage");
         } else
             throw new IOException("Invalid storage type specified.");
+    }
 
+    private Path resolveAndValidatePath(Path sourcePath, Path basePath, String errorMessage) throws IOException {
+        Path destinationPath = basePath.resolve(sourcePath).normalize().toAbsolutePath();
+        if (!destinationPath.getParent().equals(basePath.toAbsolutePath())) {
+            throw new IOException(errorMessage);
+        }
         return destinationPath;
     }
 
     private Path getNewFilePath(String extension, StorageType type) throws IOException {
         String uniqueFileName = Utility.getUtilCurrentDate().getTime() + "_GH";
         String encodedFileName = Encoders.BASE64.encode(uniqueFileName.getBytes());
-        if (type.equals(StorageType.PICTURE))
+        if (type.equals(StorageType.DOCUMENT))
+            return Path.of(documentsPath.toFile().getPath(), encodedFileName + extension);
+        else if (type.equals(StorageType.PICTURE))
             return Path.of(picturesPath.toFile().getPath(), encodedFileName + extension);
         else
-            throw new IOException("Invalid storage type specified."); // TODO
+            throw new IOException("Invalid storage type specified.");
     }
 }
