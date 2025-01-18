@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface TraineeExercisingRepository extends JpaRepository<TraineeExercising, Integer> {
@@ -20,4 +21,8 @@ public interface TraineeExercisingRepository extends JpaRepository<TraineeExerci
     List<TraineeExercising> findAllByUserIdAndDateTakenBetweenOrderByDateTaken(Integer user_id, @NotNull Instant dateTaken, @NotNull Instant dateTaken2);
 
     Set<TraineeExercising> findAllByUserId(int userId);
+
+    List<TraineeExercising> findAllByProgramIdIn(@NotNull List<Integer> programIds);
+
+    List<TraineeExercising> findByProgramIdAndUserIdOrderByDateTakenDesc(Integer id, int traineeId);
 }

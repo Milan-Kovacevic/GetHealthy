@@ -38,4 +38,8 @@ public class TrainingProgramExercise implements BaseEntity<Integer> {
 
     @OneToMany(mappedBy = "programExercise", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<ExerciseSet> exerciseSets;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name="ProgramExerciseId")
+    private List<ExerciseFeedback> exerciseFeedbacks;
 }
