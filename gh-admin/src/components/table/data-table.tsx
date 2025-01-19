@@ -34,6 +34,7 @@ import {
 import { cn } from "@/lib/utils";
 import { UseTableReturnType } from "@refinedev/react-table";
 import { BaseRecord } from "@refinedev/core";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function DataTable<TData extends BaseRecord>({
   ...tableProps
@@ -42,7 +43,7 @@ export function DataTable<TData extends BaseRecord>({
     getHeaderGroups,
     getRowModel,
     refineCore: {
-      tableQuery: { data: tableData },
+      tableQuery: { data: tableData, isLoading, isFetching },
     },
     getState,
     setPageIndex,
@@ -60,46 +61,62 @@ export function DataTable<TData extends BaseRecord>({
 
   return (
     <div className="flex flex-col gap-6">
-      <Table className="flex-1">
-        <TableHeader>
-          {getHeaderGroups().map((headerGroup: any) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header: any) => {
-                return (
-                  <TableHead
-                    key={header.id}
+      {isLoading || isFetching ? (
+        <div className="space-y-2">
+          {[
+            Array.from(Array(10)).map((item, index) => {
+              return (
+                <Skeleton
+                  key={index}
+                  className={cn("w-full h-12", index == 0 && "h-14 mb-2.5")}
+                />
+              );
+            }),
+          ]}
+        </div>
+      ) : (
+        <Table className="flex-1">
+          <TableHeader>
+            {getHeaderGroups().map((headerGroup: any) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header: any) => {
+                  return (
+                    <TableHead
+                      key={header.id}
+                      style={{
+                        width: header.getSize(), // Use the column's calculated size
+                      }}
+                    >
+                      {!header.isPlaceholder &&
+                        flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell
                     style={{
-                      width: header.getSize(), // Use the column's calculated size
+                      width: cell.column.getSize(), // Ensure cell respects column size
                     }}
+                    key={cell.id}
                   >
-                    {!header.isPlaceholder &&
-                      flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell
-                  style={{
-                    width: cell.column.getSize(), // Ensure cell respects column size
-                  }}
-                  key={cell.id}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+
       <Pagination>
         <PaginationContent className="flex flex-row flex-wrap justify-center items-center">
           <div className="flex flex-row">

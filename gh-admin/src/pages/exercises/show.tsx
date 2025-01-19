@@ -7,14 +7,14 @@ import { ArrowLeft, CircleIcon, PencilIcon } from "lucide-react";
 
 export const ExerciseShow = () => {
   const { edit, goBack } = useNavigation();
-  const { query } = useShow<IExercise>({});
+  const { query, showId } = useShow<IExerciseResponse>({});
 
-  const { data, isLoading, status, error } = query;
+  const { data, isLoading, status } = query;
 
   const record = data?.data;
 
   const handleEdit = () => {
-    if (record) edit("exercises", record?.id);
+    if (showId) edit("exercises", showId);
   };
 
   const handleGoBack = () => {
@@ -43,7 +43,7 @@ export const ExerciseShow = () => {
             <DeleteButton
               text="Delete"
               disabled={status == "error" || status == "loading"}
-              itemId={String(record?.id ?? "")}
+              itemId={String(showId ?? "")}
               resource="exercises"
               onSuccess={handleGoBack}
             />
@@ -57,15 +57,15 @@ export const ExerciseShow = () => {
         </div>
       )}
       {record && (
-        <div className="flex lg:flex-row flex-col gap-6 w-full">
-          <Card className="basis-1/2">
+        <div className="flex lg:flex-row flex-col gap-6 w-full py-2">
+          <Card className="basis-1/2 shadow-md">
             <CardContent className="space-y-8 p-6 px-7">
               <BasicInfo record={record} />
               <DemonstrationInfo record={record} />
               <MetricInfo record={record} />
             </CardContent>
           </Card>
-          <Card className="basis-1/2">
+          <Card className="basis-1/2 shadow-md">
             <CardContent className="p-6 px-7">
               <div className="space-y-2">
                 <SectionTitle title="Demonstration video" />
@@ -95,7 +95,7 @@ const SectionTitle = ({ title }: { title: string }) => {
   );
 };
 
-const BasicInfo = ({ record }: { record: IExercise }) => {
+const BasicInfo = ({ record }: { record: IExerciseResponse }) => {
   return (
     <div className="space-y-2.5">
       <SectionTitle title="Basic information" />
@@ -118,7 +118,7 @@ const BasicInfo = ({ record }: { record: IExercise }) => {
   );
 };
 
-const DemonstrationInfo = ({ record }: { record: IExercise }) => {
+const DemonstrationInfo = ({ record }: { record: IExerciseResponse }) => {
   return (
     <div className="space-y-2.5">
       <SectionTitle title="Demonstration" />
@@ -129,7 +129,7 @@ const DemonstrationInfo = ({ record }: { record: IExercise }) => {
     </div>
   );
 };
-const MetricInfo = ({ record }: { record: IExercise }) => {
+const MetricInfo = ({ record }: { record: IExerciseResponse }) => {
   return (
     <div className="space-y-2.5">
       <SectionTitle title="Exercise metrics" />

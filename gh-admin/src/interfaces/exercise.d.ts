@@ -1,4 +1,4 @@
-interface IExercise {
+interface IExerciseResponse {
   id: number;
   exerciseName: string;
   description: string;
@@ -12,18 +12,6 @@ interface IMetric {
   name: string;
   unit: string;
 }
-
-// interface IExerciseForm {
-//   exerciseName: string;
-//   description: string;
-//   videoLink: string;
-//   firstExerciseMetric: {
-//     id: number;
-//   };
-//   secondExerciseMetric?: {
-//     id: number;
-//   };
-// }
 
 interface IExerciseRequest {
   exerciseName: string;

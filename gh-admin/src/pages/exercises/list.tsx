@@ -1,13 +1,17 @@
 import { DataTable, DeleteButton, TableHeading } from "@/components/table";
 import { Button } from "@/components/ui/button";
-import { useNavigation } from "@refinedev/core";
+import {
+  useHandleNotification,
+  useNavigation,
+  useNotification,
+} from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { type ColumnDef } from "@tanstack/react-table";
 import { EditIcon, EyeIcon, TrashIcon, XIcon } from "lucide-react";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 
 export const ExerciseList = () => {
-  const columns = React.useMemo<ColumnDef<IExercise>[]>(
+  const columns = React.useMemo<ColumnDef<IExerciseResponse>[]>(
     () => [
       {
         id: "exerciseName",
@@ -104,6 +108,13 @@ export const ExerciseList = () => {
               </Button>
               <DeleteButton
                 itemId={getValue() as string}
+                onSuccess={() => {
+                  open?.({
+                    message: "Exercise deleted",
+                    description: "Selected exercise was deleted permanently.",
+                    type: "success",
+                  });
+                }}
                 resource="exercises"
                 className="w-auto h-auto py-2 px-2 ml-1.5"
               />
@@ -114,8 +125,17 @@ export const ExerciseList = () => {
     ],
     []
   );
-
+  const { open } = useNotification();
   const { edit, show, create } = useNavigation();
+
+  useEffect(() => {
+    open?.({
+      message: "Exercise deleted",
+      description: "Selected exercise was deleted permanently.",
+      type: "error",
+      key: "test123",
+    });
+  }, []);
 
   const { ...tableProps } = useTable({
     columns,

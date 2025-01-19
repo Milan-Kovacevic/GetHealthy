@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigation } from "@refinedev/core";
 import { ArrowLeft } from "lucide-react";
-import { ManageExerciseForm } from "./manage-form";
+import { ManageExerciseForm } from "./form";
 
 export const ExerciseEdit = () => {
   const { list } = useNavigation();

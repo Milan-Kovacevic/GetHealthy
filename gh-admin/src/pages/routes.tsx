@@ -9,12 +9,15 @@ import {
   CategoryList,
   CategoryShow,
 } from "./categories";
-import { ExerciseList, ExerciseShow } from "./exercises";
+import {
+  ExerciseList,
+  ExerciseShow,
+  ExerciseCreate,
+  ExerciseEdit,
+} from "./exercises";
 import { AuthLayout, MainLayout } from "@/components/layout";
 import { RequestList, RequestShow } from "./requests";
-import { MetricList, MetricShow } from "./metrics";
-import { ExerciseEdit } from "./exercises/edit";
-import { ExerciseCreate } from "./exercises/create";
+import { MetricList, MetricShow, MetricCreate, MetricEdit } from "./metrics";
 
 export default function PageRoutes() {
   return (
@@ -64,6 +67,8 @@ export default function PageRoutes() {
         </Route>
         <Route path="/exercises/metrics">
           <Route index element={<MetricList />} />
+          <Route path="create" element={<MetricCreate />} />
+          <Route path="edit/:id" element={<MetricEdit />} />
           <Route path="show/:id" element={<MetricShow />} />
         </Route>
       </Route>

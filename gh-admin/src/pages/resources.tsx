@@ -1,10 +1,4 @@
-import {
-  CATEGORY_DATA_PROVIDER_KEY,
-  categoryDataProvider,
-  defaultDataProvider,
-  EXERCISE_DATA_PROVIDER_KEY,
-  exerciseDataProvider,
-} from "@/providers/data";
+import { dataProvider } from "@/providers/data";
 import { DataProviders, ResourceProps } from "@refinedev/core";
 import {
   BookUserIcon,
@@ -57,7 +51,7 @@ export const endpointResources: ResourceProps[] = [
       canDelete: true,
       icon: <TagsIcon />,
       label: "Program categories",
-      dataProviderName: CATEGORY_DATA_PROVIDER_KEY,
+      dataProviderName: "category",
     },
   },
 
@@ -78,25 +72,29 @@ export const endpointResources: ResourceProps[] = [
       canDelete: true,
       icon: <DumbbellIcon />,
       label: "Exercises",
-      dataProviderName: EXERCISE_DATA_PROVIDER_KEY,
+      dataProviderName: "exercise",
       parent: "exercises-root",
     },
   },
   {
     name: "metrics",
     list: "/exercises/metrics",
+    create: "/exercises/metrics/create",
     show: "/exercises/metrics/show/:id",
+    edit: "/exercises/metrics/edit/:id",
     meta: {
       canDelete: false,
       icon: <LayersIcon />,
       label: "Metrics",
       parent: "exercises-root",
+      dataProviderName: "metric",
     },
   },
 ];
 
 export const dataProviders: DataProviders = {
-  default: defaultDataProvider,
-  [EXERCISE_DATA_PROVIDER_KEY]: exerciseDataProvider,
-  [CATEGORY_DATA_PROVIDER_KEY]: categoryDataProvider,
+  default: dataProvider(),
+  exercise: dataProvider("filter"),
+  category: dataProvider("filter"),
+  metric: dataProvider("filter"),
 };

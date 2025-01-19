@@ -23,7 +23,7 @@ public class CategoryController extends CrudController<Integer, CategoryRequest,
     }
 
     @GetMapping("filter")
-    public Page<CategoryResponse> getAllExerciseFiltered(Pageable page) {
+    public Page<CategoryResponse> getPageableCategories(Pageable page) {
         return categoryService.getPageableCategories(page);
     }
 

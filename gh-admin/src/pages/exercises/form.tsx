@@ -25,30 +25,34 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useSelect } from "@refinedev/core";
 
-const ExerciseFormSchema = z.object({
-  exerciseName: z
-    .string({ required_error: "Name is required." })
-    .min(1, "Name is required.")
-    .max(96),
-  description: z
-    .string({ required_error: "Description is required." })
-    .min(1, "Description is required.")
-    .max(256),
-  videoLink: z
-    .string({ required_error: "Demonstration link is required." })
-    .min(1, "Demonstration link is required.")
-    .max(256),
-  metricType1Id: z
-    .string({
-      required_error: "First metric is required.",
-    })
-    .min(1, "First metric is required."),
-  metricType2Id: z
-    .string({
-      required_error: "Second metric is required.",
-    })
-    .min(1, "Second metric is required."),
-});
+const ExerciseFormSchema = z
+  .object({
+    exerciseName: z
+      .string({ required_error: "Name is required." })
+      .min(1, "Name is required.")
+      .max(96),
+    description: z
+      .string({ required_error: "Description is required." })
+      .min(1, "Description is required.")
+      .max(256),
+    videoLink: z
+      .string({ required_error: "Demonstration link is required." })
+      .min(1, "Demonstration link is required.")
+      .max(256),
+    metricType1Id: z
+      .string({
+        required_error: "First metric is required.",
+      })
+      .min(1, "First metric is required."),
+    metricType2Id: z.string().optional(),
+  })
+  .refine(
+    (data) => !data.metricType2Id || data.metricType1Id !== data.metricType2Id,
+    {
+      message: "Metric types must be different.",
+      path: ["metricType2Id"],
+    }
+  );
 
 export function ManageExerciseForm({
   className,
@@ -61,15 +65,15 @@ export function ManageExerciseForm({
     },
   });
 
-  const form = useForm<IExercise>({
+  const form = useForm<IExerciseResponse>({
     mode: "onChange",
     resolver: zodResolver(ExerciseFormSchema),
     defaultValues: {
-      exerciseNamee: "",
+      exerciseName: "",
       description: "",
       videoLink: "",
-      metricType1Id: "",
-      metricType2Id: "",
+      metricType1Id: undefined,
+      metricType2Id: undefined,
     },
   });
   const { onFinish, formLoading, query } = form.refineCore;
@@ -77,10 +81,20 @@ export function ManageExerciseForm({
 
   useEffect(() => {
     if (!exerciseData) return;
-    form.setValue("metricType1Id", exerciseData.firstExerciseMetric.id);
-    if (exerciseData.secondExerciseMetric)
-      form.setValue("metricType2Id", exerciseData.secondExerciseMetric.id);
-  }, [exerciseData]);
+
+    form.setValue(
+      "metricType1Id",
+      exerciseData.firstExerciseMetric.id.toString(),
+      { shouldValidate: true }
+    );
+    if (exerciseData.secondExerciseMetric) {
+      form.setValue(
+        "metricType2Id",
+        exerciseData.secondExerciseMetric.id.toString(),
+        { shouldValidate: true }
+      );
+    }
+  }, [exerciseData, metricOptions]);
 
   return (
     <div
@@ -164,16 +178,20 @@ export function ManageExerciseForm({
                         <FormLabel>First metric *</FormLabel>
                         <Select
                           onValueChange={field.onChange}
+                          value={field.value}
                           defaultValue={field.value}
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="..." />
+                              <SelectValue placeholder="Not set ..." />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             {metricOptions.map((item) => (
-                              <SelectItem key={item.value} value={item.value}>
+                              <SelectItem
+                                key={item.value}
+                                value={item.value.toString()}
+                              >
                                 {item.label}
                               </SelectItem>
                             ))}
@@ -198,16 +216,19 @@ export function ManageExerciseForm({
                       <FormLabel>Second metric</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="..." />
+                            <SelectValue placeholder="Not set ..." />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           {metricOptions.map((item) => (
-                            <SelectItem key={item.value} value={item.value}>
+                            <SelectItem
+                              key={item.value}
+                              value={item.value.toString()}
+                            >
                               {item.label}
                             </SelectItem>
                           ))}

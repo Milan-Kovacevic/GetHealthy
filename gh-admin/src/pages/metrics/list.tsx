@@ -1,73 +1,80 @@
-import React from "react";
-
-import {
-  GetManyResponse,
-  IResourceComponentsProps,
-  useNavigation,
-  useMany,
-} from "@refinedev/core";
-
-import { useTable } from "@refinedev/react-table";
-import { ColumnDef } from "@tanstack/react-table";
-
-import { LucideEye } from "lucide-react";
+import { DataTable, DeleteButton, TableHeading } from "@/components/table";
 import { Button } from "@/components/ui/button";
-import { DataTable, TableHeading } from "@/components/table";
+import {
+  useHandleNotification,
+  useNavigation,
+  useNotification,
+} from "@refinedev/core";
+import { useTable } from "@refinedev/react-table";
+import { type ColumnDef } from "@tanstack/react-table";
+import { EditIcon, EyeIcon, TrashIcon, XIcon } from "lucide-react";
+import React, { ReactNode, useEffect } from "react";
 
-export const MetricList: React.FC<IResourceComponentsProps> = () => {
-  const columns = React.useMemo<ColumnDef<IBlogPost>[]>(
+export const MetricList = () => {
+  const columns = React.useMemo<ColumnDef<IExerciseResponse>[]>(
     () => [
       {
-        id: "id",
-        accessorKey: "id",
-        header: "ID",
-      },
-      {
-        id: "title",
-        accessorKey: "title",
-        header: "Title",
-      },
-      {
-        id: "content",
-        accessorKey: "content",
-        header: "Content",
-      },
-      {
-        id: "category",
-        header: "Category",
-        accessorKey: "category.id",
-        cell: function render({ getValue, table }) {
-          const meta = table.options.meta as {
-            categoryData: GetManyResponse<ICategory>;
-          };
-          const category = meta.categoryData?.data?.find(
-            (item: ICategory) => item.categoryId === getValue()
+        id: "name",
+        accessorKey: "name",
+        header: "Metric name",
+        cell: ({ getValue }) => {
+          return (
+            <p className="text-[15px] font-medium max-w-lg w-full text-foreground/85">
+              {getValue() as string}
+            </p>
           );
-
-          return category?.name ?? "";
         },
       },
       {
-        id: "status",
-        accessorKey: "status",
-        header: "Status",
+        id: "unit",
+        accessorKey: "unit",
+        header: "Unit",
+        cell: ({ getValue }) => {
+          return (
+            <span className="text-foreground/80">[{getValue() as string}]</span>
+          );
+        },
       },
+
       {
         id: "actions",
         accessorKey: "id",
-        header: "Actions",
+        header: () => <div className="text-right mx-2">Actions</div>,
         cell: function render({ getValue }) {
           return (
-            <div className="flex flex-row flex-nowrap gap-0">
+            <div className="flex flex-row flex-nowrap gap-0 justify-end">
               <Button
                 variant="ghost"
                 size="icon"
+                className="w-auto h-auto py-2 px-2 mr-1"
                 onClick={() => {
-                  show("requests", getValue() as string);
+                  show("metrics", getValue() as string);
                 }}
               >
-                <LucideEye size={16} />
+                <EyeIcon size={16} />
               </Button>
+              <Button
+                variant="secondary"
+                size="icon"
+                className="w-auto h-auto py-2 px-2 text-foreground/85"
+                onClick={() => {
+                  edit("metrics", getValue() as string);
+                }}
+              >
+                <EditIcon size={16} />
+              </Button>
+              <DeleteButton
+                itemId={getValue() as string}
+                onSuccess={() => {
+                  open?.({
+                    message: "Metric deleted",
+                    description: "Selected metric was deleted permanently.",
+                    type: "success",
+                  });
+                }}
+                resource="metrics"
+                className="w-auto h-auto py-2 px-2 ml-1.5"
+              />
             </div>
           );
         },
@@ -75,27 +82,15 @@ export const MetricList: React.FC<IResourceComponentsProps> = () => {
     ],
     []
   );
-  const { create, show } = useNavigation();
+  const { open } = useNotification();
+  const { edit, show, create } = useNavigation();
 
   const { ...tableProps } = useTable({
     columns,
     refineCoreProps: {
       meta: {
-        populate: ["category"],
+        populate: ["exercises"],
       },
-    },
-  });
-
-  const catList =
-    tableProps.refineCore.tableQuery.data?.data?.map(
-      (item: IBlogPost) => item?.category?.id
-    ) ?? [];
-
-  const { data: categoryData } = useMany({
-    resource: "categories",
-    ids: catList,
-    queryOptions: {
-      enabled: !!tableProps.refineCore.tableQuery.data?.data,
     },
   });
 
@@ -103,19 +98,18 @@ export const MetricList: React.FC<IResourceComponentsProps> = () => {
     ...prev,
     meta: {
       ...prev.meta,
-      categoryData,
     },
   }));
 
-  const handleCreateMetric = () => {
-    create("metrics");
+  const handleCreateCategory = () => {
+    create("exercises");
   };
 
   return (
     <div className="flex flex-col">
       <TableHeading
         title="Exercise metrics"
-        create={{ label: "Create metric", onCreate: handleCreateMetric }}
+        create={{ label: "Add new exercise", onCreate: handleCreateCategory }}
       />
       <DataTable {...tableProps} />
     </div>

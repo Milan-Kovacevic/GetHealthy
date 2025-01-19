@@ -10,6 +10,7 @@ export const REFRESH_TOKEN_STORAGE_KEY = "gethealthy_refresh_token";
 
 export const TRAINEE_ACCOUNT_TYPE = "trainee";
 export const TRAINER_ACCOUNT_TYPE = "trainer";
+
 export type AccountType =
   | typeof TRAINEE_ACCOUNT_TYPE
   | typeof TRAINER_ACCOUNT_TYPE;
