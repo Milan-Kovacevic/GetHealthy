@@ -50,21 +50,23 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
         var program = trainingScheduleProgram.get().getProgram();
         var traineeExercising = traineeExercisingRepository.findByProgramIdAndUserIdOrderByDateTakenDesc(program.getId(), request.getTraineeId());
 
-        if (!traineeExercising.isEmpty()) {
-            response.setDateTaken(traineeExercising.getFirst().getDateTaken());
-            response.setTraineeExercisingId(traineeExercising.getFirst().getId());
-        }
-        var exerciseFeedback = exerciseFeedbackRepository.findByTraineeExercisingIdAndProgramExerciseId(traineeExercising.getFirst().getId(), program.getId()).get();
-        response.setProgramExercises(program.getTrainingProgramExercises().stream().map(e -> new WorkoutSummaryResponse.WorkoutExercise(
-            exerciseFeedback.getId(),
-            exerciseFeedback.getExerciseSetsFeedback().stream().map(ef-> modelMapper.map(ef, WorkoutSummaryResponse.WorkoutSet.class)).collect(Collectors.toList()),
-            exerciseFeedback.getSkipped(),
-            exerciseFeedback.getExercise().getId(),
-            exerciseFeedback.getExercise().getName(),
-            exerciseFeedback.getExercise().getDescription(),
-            exerciseFeedback.getExercise().getVideoLink(),
-            modelMapper.map(exerciseFeedback.getExercise().getFirstExerciseMetric(), ExerciseMetricResponse.class),
-            modelMapper.map(exerciseFeedback.getExercise().getSecondExerciseMetric(), ExerciseMetricResponse.class)
+        if (traineeExercising.isEmpty())
+            throw new NotFoundException();
+
+        response.setDateTaken(traineeExercising.getFirst().getDateTaken());
+        response.setTraineeExercisingId(traineeExercising.getFirst().getId());
+
+        var exerciseFeedback = traineeExercising.getFirst().getExercisesFeedback();
+        response.setProgramExercises(exerciseFeedback.stream().map(ef -> new WorkoutSummaryResponse.WorkoutExercise(
+                ef.getId(),
+                ef.getExerciseSetsFeedback().stream().map(esf-> modelMapper.map(esf, WorkoutSummaryResponse.WorkoutSet.class)).collect(Collectors.toList()),
+                ef.getSkipped(),
+                ef.getExercise().getId(),
+                ef.getExercise().getName(),
+                ef.getExercise().getDescription(),
+                ef.getExercise().getVideoLink(),
+                modelMapper.map(ef.getExercise().getFirstExerciseMetric(), ExerciseMetricResponse.class),
+                modelMapper.map(ef.getExercise().getSecondExerciseMetric(), ExerciseMetricResponse.class)
         )).collect(Collectors.toList()));
 
         return response;

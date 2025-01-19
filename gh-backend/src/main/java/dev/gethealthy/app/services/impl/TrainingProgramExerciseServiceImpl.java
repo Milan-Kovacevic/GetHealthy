@@ -1,5 +1,6 @@
 package dev.gethealthy.app.services.impl;
 
+import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.Exercise;
 import dev.gethealthy.app.models.entities.ExerciseSet;
@@ -15,6 +16,7 @@ import dev.gethealthy.app.services.TrainingProgramExerciseService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,12 +25,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
-public class TrainingProgramExerciseServiceImpl implements TrainingProgramExerciseService {
+public class TrainingProgramExerciseServiceImpl extends CrudJpaService<TrainingProgramExercise, Integer> implements TrainingProgramExerciseService {
     private final TrainingProgramExerciseRepository trainingProgramExerciseRepository;
     private final ExerciseRepository exerciseRepository;
     private final TrainingProgramRepository trainingProgramRepository;
-    private final ModelMapper modelMapper;
+
+    public TrainingProgramExerciseServiceImpl(TrainingProgramExerciseRepository repository, ModelMapper modelMapper, ExerciseRepository exerciseRepository, TrainingProgramRepository trainingProgramRepository) {
+        super(repository, modelMapper, TrainingProgramExercise.class);
+        this.trainingProgramExerciseRepository = repository;
+        this.exerciseRepository = exerciseRepository;
+        this.trainingProgramRepository= trainingProgramRepository;
+    }
 
     @Override
     public List<ProgramExerciseResponse> getTrainingProgramExercises(Integer programId) {
