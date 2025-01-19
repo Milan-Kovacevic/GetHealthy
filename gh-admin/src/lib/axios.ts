@@ -34,10 +34,10 @@ export const getAxios = (useAuthentication = false) => {
     (error) => {
       const customError: HttpError = {
         ...error,
-        message: error.response?.data?.message,
-        statusCode: error.response?.status,
+        message: "Unexpected error...",
+        statusCode: 404,
       };
-
+      console.log(customError);
       return Promise.reject(customError);
     }
   );

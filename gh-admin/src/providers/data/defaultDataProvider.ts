@@ -25,8 +25,8 @@ export const defaultDataProvider: DefaultDataProvider = {
       `${API_PREFIX}/${resource}?${query.toString()}`
     );
     return {
-      data: response.data.content, // Assuming Spring Boot returns `content` for paginated lists
-      total: response.data.totalElements, // Assuming `totalElements` contains total count
+      data: response.data, // Assuming Spring Boot returns `content` for paginated lists
+      total: response.data.length, // Assuming `totalElements` contains total count
     };
   },
 

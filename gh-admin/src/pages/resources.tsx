@@ -71,9 +71,11 @@ export const endpointResources: ResourceProps[] = [
   {
     name: "exercises",
     list: "/exercises",
+    create: "/exercises/create",
     show: "/exercises/show/:id",
+    edit: "/exercises/edit/:id",
     meta: {
-      canDelete: false,
+      canDelete: true,
       icon: <DumbbellIcon />,
       label: "Exercises",
       dataProviderName: EXERCISE_DATA_PROVIDER_KEY,

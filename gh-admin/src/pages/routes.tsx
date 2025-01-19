@@ -13,6 +13,8 @@ import { ExerciseList, ExerciseShow } from "./exercises";
 import { AuthLayout, MainLayout } from "@/components/layout";
 import { RequestList, RequestShow } from "./requests";
 import { MetricList, MetricShow } from "./metrics";
+import { ExerciseEdit } from "./exercises/edit";
+import { ExerciseCreate } from "./exercises/create";
 
 export default function PageRoutes() {
   return (
@@ -56,6 +58,8 @@ export default function PageRoutes() {
         </Route>
         <Route path="/exercises">
           <Route index element={<ExerciseList />} />
+          <Route path="create" element={<ExerciseCreate />} />
+          <Route path="edit/:id" element={<ExerciseEdit />} />
           <Route path="show/:id" element={<ExerciseShow />} />
         </Route>
         <Route path="/exercises/metrics">

@@ -14,5 +14,5 @@ public class ExerciseRequest {
 
     private Integer metricType1Id;
 
-    private Integer matricType2Id;
+    private Integer metricType2Id;
 }

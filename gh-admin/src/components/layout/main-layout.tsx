@@ -21,7 +21,7 @@ export const MainLayout: React.FC = () => {
             <Breadcrumb />
           </div>
         </header>
-        <ScrollArea className="flex flex-1 flex-col gap-4 py-4 px-5">
+        <ScrollArea className="flex flex-1 flex-col gap-4 py-5 px-6">
           <Outlet />
         </ScrollArea>
       </SidebarInset>

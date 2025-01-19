@@ -9,7 +9,12 @@ export const CategoryEdit = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({});
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      name: "",
+    },
+  });
 
   return (
     <div style={{ padding: "16px" }}>
@@ -37,8 +42,9 @@ export const CategoryEdit = () => {
             <span style={{ marginRight: "8px" }}>Title</span>
             <input
               type="text"
-              {...register("title", {
+              {...register("name", {
                 required: "This field is required",
+                min: 3,
               })}
             />
             <span style={{ color: "red" }}>

@@ -17,7 +17,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import appIcon from "@/assets/applogo.png";
-import { LogOutIcon } from "lucide-react";
+import { ChartBarIcon, LogOutIcon } from "lucide-react";
 
 export const Menu = () => {
   const { mutate: logout } = useLogout();
@@ -86,6 +86,20 @@ export const Menu = () => {
                 );
               })}
             </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Other</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={false} disabled={true}>
+                <span className="select-none">
+                  <ChartBarIcon />
+                  Statistics
+                </span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

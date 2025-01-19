@@ -1,13 +1,9 @@
-import { DataTable, TableHeading } from "@/components/table";
+import { DataTable, DeleteButton, TableHeading } from "@/components/table";
 import { Button } from "@/components/ui/button";
-import {
-  HttpError,
-  useNavigation,
-  useTable as useCoreTable,
-} from "@refinedev/core";
+import { useNavigation } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
-import { type ColumnDef, flexRender } from "@tanstack/react-table";
-import { EditIcon, EyeIcon } from "lucide-react";
+import { type ColumnDef } from "@tanstack/react-table";
+import { EditIcon, EyeIcon, TrashIcon, XIcon } from "lucide-react";
 import React, { ReactNode } from "react";
 
 export const ExerciseList = () => {
@@ -17,17 +13,68 @@ export const ExerciseList = () => {
         id: "exerciseName",
         accessorKey: "exerciseName",
         header: "Name",
+        cell: ({ getValue }) => {
+          return (
+            <p className="text-[15px] font-medium text-foreground/85">
+              {getValue() as string}
+            </p>
+          );
+        },
       },
       {
         id: "description",
         accessorKey: "description",
         header: "Description",
+        cell: ({ getValue }) => {
+          return (
+            <span className="text-foreground/80 line-clamp-2 max-w-sm w-full leading-tight">
+              {getValue() as string}
+            </span>
+          );
+        },
+      },
+
+      {
+        id: "firstExerciseMetric",
+        accessorKey: "firstExerciseMetric",
+        header: () => <p className="text-right">First metric</p>,
+        cell: ({ getValue }) => {
+          const firstMetric = getValue() as IMetric;
+
+          return (
+            <p className="text-foreground/70 text-[13px] font-medium text-right">
+              {firstMetric.name} [
+              <span className="text-muted-foreground font-normal">
+                {firstMetric.unit}
+              </span>
+              ]
+            </p>
+          );
+        },
       },
       {
-        id: "videoLink",
-        accessorKey: "videoLink",
-        header: "Video Link",
+        id: "secondExerciseMetric",
+        accessorKey: "secondExerciseMetric",
+        header: () => <p className="text-right">Second metric</p>,
+        cell: ({ getValue }) => {
+          const secondMetric = getValue() as IMetric;
+
+          return secondMetric ? (
+            <p className="text-foreground/70 text-[13px] font-medium text-right">
+              {secondMetric.name} [
+              <span className="text-muted-foreground font-normal">
+                {secondMetric.unit}
+              </span>
+              ]
+            </p>
+          ) : (
+            <div className="flex justify-end items-center">
+              <XIcon className="h-4 w-4 text-muted-foreground" />
+            </div>
+          );
+        },
       },
+
       {
         id: "actions",
         accessorKey: "id",
@@ -38,21 +85,28 @@ export const ExerciseList = () => {
               <Button
                 variant="ghost"
                 size="icon"
+                className="w-auto h-auto py-2 px-2 mr-1"
                 onClick={() => {
                   show("exercises", getValue() as string);
                 }}
               >
                 <EyeIcon size={16} />
               </Button>
-              {/* <Button
-                variant="ghost"
+              <Button
+                variant="secondary"
                 size="icon"
+                className="w-auto h-auto py-2 px-2 text-foreground/85"
                 onClick={() => {
                   edit("exercises", getValue() as string);
                 }}
               >
                 <EditIcon size={16} />
-              </Button> */}
+              </Button>
+              <DeleteButton
+                itemId={getValue() as string}
+                resource="exercises"
+                className="w-auto h-auto py-2 px-2 ml-1.5"
+              />
             </div>
           );
         },
