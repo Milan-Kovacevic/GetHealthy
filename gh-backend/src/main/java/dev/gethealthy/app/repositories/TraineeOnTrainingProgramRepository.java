@@ -1,5 +1,6 @@
 package dev.gethealthy.app.repositories;
 
+import dev.gethealthy.app.models.entities.TraineeExercising;
 import dev.gethealthy.app.models.entities.TraineeOnTrainingProgram;
 import dev.gethealthy.app.models.entities.TraineeOnTrainingProgramId;
 import dev.gethealthy.app.models.entities.TrainingProgram;
@@ -18,4 +19,6 @@ public interface TraineeOnTrainingProgramRepository extends JpaRepository<Traine
     Optional<TraineeOnTrainingProgram> findByProgram_IdAndUser_Id(Integer programId, Integer userId);
     @Query("SELECT e from TraineeOnTrainingProgram e WHERE e.program.id = :programId AND CONCAT(e.user.firstName , ' ', e.user.lastName) LIKE %:filter%")
     Page<TraineeOnTrainingProgram> getAllTraineesOnTrainingProgramFiltered(Integer programId, String filter, Pageable page);
+
+    List<TraineeOnTrainingProgram> findAllByUserId(Integer userId);
 }
