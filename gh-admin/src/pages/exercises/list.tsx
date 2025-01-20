@@ -88,6 +88,7 @@ export const ExerciseList = () => {
               resource="exercises"
               edit={edit}
               show={show}
+              showDelete={true}
             />
           );
         },

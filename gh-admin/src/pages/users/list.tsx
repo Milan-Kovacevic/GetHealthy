@@ -1,124 +1,113 @@
 import React from "react";
-
-import {
-  GetManyResponse,
-  IResourceComponentsProps,
-  useNavigation,
-  useMany,
-} from "@refinedev/core";
-
-import { useTable, UseTableReturnType } from "@refinedev/react-table";
+import { IResourceComponentsProps, useNavigation } from "@refinedev/core";
+import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
-
-import { LucideEdit, LucideEye, PlusIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { DataTable, TableHeading } from "@/components/table";
+import { DataTable, TableActions, TableHeading } from "@/components/table";
+import { formatDistanceToNow } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import { capitalize } from "@/lib/utils";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
-  const columns = React.useMemo<ColumnDef<IBlogPost>[]>(
+  const { show } = useNavigation();
+
+  const columns = React.useMemo<ColumnDef<IUserResponse>[]>(
     () => [
       {
-        id: "id",
-        accessorKey: "id",
-        header: "ID",
-      },
-      {
-        id: "title",
-        accessorKey: "title",
-        header: "Title",
-      },
-      {
-        id: "content",
-        accessorKey: "content",
-        header: "Content",
-      },
-      {
-        id: "category",
-        header: "Category",
-        accessorKey: "category.id",
-        cell: function render({ getValue, table }) {
-          const meta = table.options.meta as {
-            categoryData: GetManyResponse<ICategory>;
-          };
-          const category = meta.categoryData?.data?.find(
-            (item: ICategory) => item.categoryId === getValue()
+        id: "name",
+        accessorFn: (d) => {
+          return `${d.firstName} ${d.lastName}`;
+        },
+        header: "Name",
+        cell: ({ getValue }) => {
+          return (
+            <p className="text-[15px] text-foreground/80 font-medium">
+              {getValue() as string}
+            </p>
           );
-
-          return category?.name ?? "";
         },
       },
       {
-        id: "status",
-        accessorKey: "status",
-        header: "Status",
+        id: "username",
+        accessorKey: "username",
+        header: "Username",
+        cell: ({ getValue }) => {
+          return (
+            <span className="text-foreground/90">
+              {(getValue() as string).replace(/.{4}$/, "****")}
+            </span>
+          );
+        },
+      },
+      {
+        id: "role",
+        accessorKey: "role",
+        header: "Role",
+        cell: ({ getValue }) => {
+          return (
+            <span className="text-[15px] text-foreground/85">
+              {capitalize(getValue() as string)}
+            </span>
+          );
+        },
+      },
+      {
+        id: "createdAt",
+        accessorKey: "createdAt",
+        header: "Created at",
+        cell: ({ getValue }) => {
+          return (
+            <span className="text-foreground/75 text-[13px]">
+              {formatDistanceToNow(getValue() as string, { addSuffix: true })}
+            </span>
+          );
+        },
+      },
+      {
+        id: "enabled",
+        accessorKey: "enabled",
+        header: () => <div className="text-right mx-2">Status</div>,
+        cell: ({ getValue }) => {
+          const isEnabled = getValue() as boolean;
+          return isEnabled ? (
+            <div className="flex justify-end">
+              <Badge className="font-normal" variant="outline">
+                Enabled
+              </Badge>
+            </div>
+          ) : (
+            <div className="flex justify-end">
+              <Badge className="font-normal" variant="destructive">
+                Not enabled
+              </Badge>
+            </div>
+          );
+        },
       },
       {
         id: "actions",
         accessorKey: "id",
-        header: "Actions",
+        header: () => <div className="text-right mx-2">Actions</div>,
         cell: function render({ getValue }) {
           return (
-            <div className="flex flex-row flex-nowrap gap-0">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  show("blog_posts", getValue() as string);
-                }}
-              >
-                <LucideEye size={16} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  edit("blog_posts", getValue() as string);
-                }}
-              >
-                <LucideEdit size={16} />
-              </Button>
-            </div>
+            <TableActions
+              id={getValue() as string}
+              resource="users"
+              show={show}
+            />
           );
         },
       },
     ],
     []
   );
-  const { edit, show, create } = useNavigation();
 
   const { ...tableProps } = useTable({
     columns,
-    refineCoreProps: {
-      meta: {
-        populate: ["category"],
-      },
-    },
   });
-
-  const catList =
-    tableProps.refineCore.tableQuery.data?.data?.map(
-      (item: IBlogPost) => item?.category?.id
-    ) ?? [];
-
-  const { data: categoryData } = useMany({
-    resource: "categories",
-    ids: catList,
-    queryOptions: {
-      enabled: !!tableProps.refineCore.tableQuery.data?.data,
-    },
-  });
-
-  tableProps?.setOptions((prev) => ({
-    ...prev,
-    meta: {
-      ...prev.meta,
-      categoryData,
-    },
-  }));
 
   return (
     <div className="flex flex-col">
-      <TableHeading title="Manage users" />
+      <TableHeading title="Users" />
       <DataTable {...tableProps} />
     </div>
   );

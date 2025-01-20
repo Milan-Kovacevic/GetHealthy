@@ -31,6 +31,7 @@ export const CategoryList = () => {
               id={getValue() as string}
               resource="categories"
               edit={edit}
+              showDelete={true}
             />
           );
         },

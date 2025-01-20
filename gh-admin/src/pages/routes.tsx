@@ -2,7 +2,7 @@ import { Authenticated, ErrorComponent } from "@refinedev/core";
 import { CatchAllNavigate, NavigateToResource } from "@refinedev/react-router";
 import { Route, Routes } from "react-router";
 import { Login } from "./login";
-import { UserCreate, UserEdit, UserList, UserShow } from "./users";
+import { UserList, UserShow } from "./users";
 import { CategoryCreate, CategoryEdit, CategoryList } from "./categories";
 import {
   ExerciseList,
@@ -12,7 +12,7 @@ import {
 } from "./exercises";
 import { AuthLayout, MainLayout } from "@/components/layout";
 import { RequestList, RequestShow } from "./requests";
-import { MetricList, MetricShow, MetricCreate, MetricEdit } from "./metrics";
+import { MetricList, MetricCreate, MetricEdit } from "./metrics";
 
 export default function PageRoutes() {
   return (
@@ -40,8 +40,6 @@ export default function PageRoutes() {
         <Route index element={<NavigateToResource resource="users" />} />
         <Route path="/users">
           <Route index element={<UserList />} />
-          <Route path="create" element={<UserCreate />} />
-          <Route path="edit/:id" element={<UserEdit />} />
           <Route path="show/:id" element={<UserShow />} />
         </Route>
         <Route path="/users/requests">
@@ -63,7 +61,6 @@ export default function PageRoutes() {
           <Route index element={<MetricList />} />
           <Route path="create" element={<MetricCreate />} />
           <Route path="edit/:id" element={<MetricEdit />} />
-          <Route path="show/:id" element={<MetricShow />} />
         </Route>
       </Route>
     </Routes>

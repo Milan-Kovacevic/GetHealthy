@@ -21,7 +21,7 @@ export const ExerciseShow = () => {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center mb-5 flex-wrap gap-y-4 gap-x-3">
+      <div className="flex justify-between items-center mb-5 flex-wrap gap-y-4 gap-x-3 pb-2">
         <PageTitle title="Exercise details" className="self-start" />
         <PageActions
           onGoBack={handleGoBack}
@@ -44,7 +44,7 @@ export const ExerciseShow = () => {
         </div>
       )}
       {record && (
-        <div className="flex lg:flex-row flex-col gap-6 w-full py-2">
+        <div className="flex lg:flex-row flex-col gap-6 w-full">
           <Card className="basis-1/2 shadow-md">
             <CardContent className="space-y-8 py-5 px-6">
               <BasicInfo record={record} />

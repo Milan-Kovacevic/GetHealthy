@@ -1,4 +1,5 @@
 import { dataProvider } from "@/providers/data";
+import { mockProvider } from "@/providers/data/mockProvider";
 import { DataProviders, ResourceProps } from "@refinedev/core";
 import {
   BookUserIcon,
@@ -19,14 +20,13 @@ export const endpointResources: ResourceProps[] = [
   {
     name: "users",
     list: "/users",
-    create: "/users/create",
-    edit: "/users/edit/:id",
     show: "/users/show/:id",
     meta: {
       canDelete: true,
       icon: <UserIcon />,
       label: "Users",
       parent: "users-root",
+      dataProviderName: "mock",
     },
   },
   {
@@ -38,6 +38,7 @@ export const endpointResources: ResourceProps[] = [
       icon: <BookUserIcon />,
       label: "Registration requests",
       parent: "users-root",
+      dataProviderName: "mock",
     },
   },
 
@@ -50,7 +51,7 @@ export const endpointResources: ResourceProps[] = [
       canDelete: true,
       icon: <TagsIcon />,
       label: "Program categories",
-      dataProviderName: "category",
+      dataProviderName: "filtered",
     },
   },
 
@@ -71,29 +72,27 @@ export const endpointResources: ResourceProps[] = [
       canDelete: true,
       icon: <DumbbellIcon />,
       label: "Exercises",
-      dataProviderName: "exercise",
       parent: "exercises-root",
+      dataProviderName: "filtered",
     },
   },
   {
     name: "metrics",
     list: "/exercises/metrics",
     create: "/exercises/metrics/create",
-    show: "/exercises/metrics/show/:id",
     edit: "/exercises/metrics/edit/:id",
     meta: {
       canDelete: false,
       icon: <LayersIcon />,
       label: "Metrics",
       parent: "exercises-root",
-      dataProviderName: "metric",
+      dataProviderName: "filtered",
     },
   },
 ];
 
 export const dataProviders: DataProviders = {
   default: dataProvider(),
-  exercise: dataProvider("filter"),
-  category: dataProvider("filter"),
-  metric: dataProvider("filter"),
+  filtered: dataProvider("filter"),
+  mock: mockProvider(),
 };

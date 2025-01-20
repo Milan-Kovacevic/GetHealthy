@@ -6,7 +6,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import React from "react";
 
 export const MetricList = () => {
-  const { edit, show, create } = useNavigation();
+  const { edit, create } = useNavigation();
 
   const columns = React.useMemo<ColumnDef<IExerciseResponse>[]>(
     () => [
@@ -43,7 +43,7 @@ export const MetricList = () => {
               id={getValue() as string}
               resource="metrics"
               edit={edit}
-              show={show}
+              showDelete={true}
             />
           );
         },
