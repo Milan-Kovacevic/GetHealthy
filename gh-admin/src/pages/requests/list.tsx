@@ -1,74 +1,65 @@
 import React from "react";
 
-import {
-  GetManyResponse,
-  IResourceComponentsProps,
-  useNavigation,
-  useMany,
-} from "@refinedev/core";
+import { IResourceComponentsProps, useNavigation } from "@refinedev/core";
 
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
-
-import { LucideEye } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { DataTable, TableHeading } from "@/components/table";
+import { DataTable, TableActions, TableHeading } from "@/components/table";
+import { formatDistanceToNow } from "date-fns";
 
 export const RequestList: React.FC<IResourceComponentsProps> = () => {
-  const columns = React.useMemo<ColumnDef<IBlogPost>[]>(
+  const columns = React.useMemo<ColumnDef<IRegistrationRequestResponse>[]>(
     () => [
       {
-        id: "id",
-        accessorKey: "id",
-        header: "ID",
-      },
-      {
-        id: "title",
-        accessorKey: "title",
-        header: "Title",
-      },
-      {
-        id: "content",
-        accessorKey: "content",
-        header: "Content",
-      },
-      {
-        id: "category",
-        header: "Category",
-        accessorKey: "category.id",
-        cell: function render({ getValue, table }) {
-          const meta = table.options.meta as {
-            categoryData: GetManyResponse<ICategory>;
-          };
-          const category = meta.categoryData?.data?.find(
-            (item: ICategory) => item.categoryId === getValue()
+        id: "name",
+        accessorFn: (d) => {
+          return `${d.firstName} ${d.lastName}`;
+        },
+        header: "From",
+        cell: ({ getValue }) => {
+          return (
+            <p className="text-[15px] text-foreground/80 font-medium">
+              {getValue() as string}
+            </p>
           );
+        },
+      },
 
-          return category?.name ?? "";
+      {
+        id: "issueDate",
+        accessorKey: "issueDate",
+        header: "Issued",
+        cell: ({ getValue }) => {
+          return (
+            <span className="text-foreground/80 text-[13px]">
+              {formatDistanceToNow(getValue() as string, { addSuffix: true })}
+            </span>
+          );
         },
       },
       {
-        id: "status",
-        accessorKey: "status",
-        header: "Status",
+        id: "description",
+        accessorKey: "description",
+        header: "Description",
+        cell: ({ getValue }) => {
+          return (
+            <span className="text-foreground/75 line-clamp-2 max-w-sm w-full leading-tight text-[13px]">
+              {getValue() as string}
+            </span>
+          );
+        },
       },
       {
         id: "actions",
         accessorKey: "id",
-        header: "Actions",
+        header: () => <div className="text-right mx-2">Actions</div>,
         cell: function render({ getValue }) {
           return (
-            <div className="flex flex-row flex-nowrap gap-0">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  show("requests", getValue() as string);
-                }}
-              >
-                <LucideEye size={16} />
-              </Button>
-            </div>
+            <TableActions
+              id={getValue() as string}
+              resource="requests"
+              show={show}
+            />
           );
         },
       },
@@ -79,33 +70,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
 
   const { ...tableProps } = useTable({
     columns,
-    refineCoreProps: {
-      meta: {
-        populate: ["category"],
-      },
-    },
   });
-
-  const catList =
-    tableProps.refineCore.tableQuery.data?.data?.map(
-      (item: IBlogPost) => item?.category?.id
-    ) ?? [];
-
-  const { data: categoryData } = useMany({
-    resource: "categories",
-    ids: catList,
-    queryOptions: {
-      enabled: !!tableProps.refineCore.tableQuery.data?.data,
-    },
-  });
-
-  tableProps?.setOptions((prev) => ({
-    ...prev,
-    meta: {
-      ...prev.meta,
-      categoryData,
-    },
-  }));
 
   return (
     <div className="flex flex-col">

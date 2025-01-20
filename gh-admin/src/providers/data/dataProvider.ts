@@ -88,56 +88,80 @@ export const dataProvider = (
     },
 
     getList: async ({ resource, pagination, sorters, filters, meta }) => {
-      const url = `${API_PREFIX}/${resource}${
-        pageablePrefix != "" ? `/${pageablePrefix}` : ""
+      var url = `${API_PREFIX}/${resource}${
+        pageablePrefix != "" ? `/${pageablePrefix}?` : "?"
       }`;
 
       const { headers: headersFromMeta, method } = meta ?? {};
       const requestMethod = (method as MethodTypes) ?? "get";
 
-      // init query object for pagination and sorting
-      const query: {
-        page?: string;
-        size?: string;
-        _sort?: string;
-        _order?: string;
-      } = {};
-
       const generatedPagination = generatePagination(pagination);
       if (generatedPagination) {
-        const { page, size } = generatedPagination;
-        query.page = page;
-        query.size = size;
+        url = `${url}${generatedPagination.toString()}`;
       }
 
       const generatedSort = generateSort(sorters);
+      console.log(generatedSort);
       if (generatedSort) {
-        // const { _sort, _order } = generatedSort;
-        // query._sort = _sort.join(",");
-        // query._order = _order.join(",");
+        url = `${url}&${generatedSort.toString()}`;
       }
-      const queryFilters = generateFilter(filters);
+
+      const generatedFilters = generateFilters(filters);
+      if (generatedFilters) {
+        url = `${url}&${generatedFilters.toString()}`;
+      }
 
       await delay(delayTime);
 
-      const generatedQuery = new URLSearchParams({
-        ...query,
+      const { data } = await httpClient[requestMethod](`${url}`, {
+        headers: headersFromMeta,
       });
-      const generatedQueryFilters = new URLSearchParams({
-        ...queryFilters,
-      });
-
-      const { data } = await httpClient[requestMethod](
-        `${url}?${generatedQuery.toString()}&${generatedQueryFilters.toString()}`,
-        {
-          headers: headersFromMeta,
-        }
-      );
 
       return {
         data: data.content,
         total: data.totalElements,
       };
+    },
+
+    custom: async ({ url, method, filters, sorters, payload, query }) => {
+      let requestUrl = `${url}?`;
+
+      const sortQuery = generateSort(sorters);
+      if (sortQuery) {
+        requestUrl = `${requestUrl}&${sortQuery.toString()}`;
+      }
+
+      const filterQuery = generateFilters(filters);
+      if (filterQuery) {
+        requestUrl = `${requestUrl}&${filterQuery.toString()}`;
+      }
+
+      if (query) {
+        var searchQueryParams = new URLSearchParams(query);
+        requestUrl = `${requestUrl}&${searchQueryParams.toString()}`;
+      }
+
+      await delay(delayTime);
+      let axiosResponse;
+      switch (method) {
+        case "put":
+        case "post":
+        case "patch":
+          axiosResponse = await httpClient[method](url, payload);
+          break;
+        case "delete":
+          axiosResponse = await httpClient.delete(url, {
+            data: payload,
+          });
+          break;
+        default:
+          axiosResponse = await httpClient.get(requestUrl);
+          break;
+      }
+
+      const { data } = axiosResponse;
+
+      return Promise.resolve({ data });
     },
 
     getApiUrl: () => `${API_BASE_URL}/${API_PREFIX}`,
@@ -160,52 +184,53 @@ const mapOperator = (operator: CrudOperators): string => {
 };
 
 // generate query string from Refine CrudFilters to the format that API accepts.
-const generateFilter = (filters?: CrudFilters) => {
+const generateFilters = (filters?: CrudFilters) => {
+  if (!filters || filters.length == 0) return undefined;
+
   const queryFilters: { [key: string]: string } = {};
 
-  if (filters) {
-    filters.map((filter) => {
-      if (filter.operator === "or" || filter.operator === "and") {
-        throw new Error(
-          `[@refinedev/simple-rest]: /docs/data/data-provider#creating-a-data-provider`
-        );
+  filters.map((filter) => {
+    if (filter.operator === "or" || filter.operator === "and") {
+      throw new Error(
+        `[@refinedev/simple-rest]: /docs/data/data-provider#creating-a-data-provider`
+      );
+    }
+
+    if ("field" in filter) {
+      const { field, operator, value } = filter;
+
+      if (field === "q") {
+        queryFilters[field] = value;
+        return;
       }
 
-      if ("field" in filter) {
-        const { field, operator, value } = filter;
+      const mappedOperator = mapOperator(operator);
+      queryFilters[`${field}${mappedOperator}`] = value;
+    }
+  });
 
-        if (field === "q") {
-          queryFilters[field] = value;
-          return;
-        }
-
-        const mappedOperator = mapOperator(operator);
-        queryFilters[`${field}${mappedOperator}`] = value;
-      }
-    });
-  }
-
-  return queryFilters;
+  return new URLSearchParams(queryFilters);
 };
 
 // generate query string from Refine CrudSorting to the format that API accepts.
 const generateSort = (sorters?: CrudSorting) => {
-  if (sorters && sorters.length > 0) {
-    const _sort: string[] = [];
-    const _order: string[] = [];
+  if (!sorters || sorters.length == 0) return undefined;
 
-    sorters.map((item) => {
-      _sort.push(item.field);
-      _order.push(item.order);
-    });
+  const _sort: string[] = [];
+  const _order: string[] = [];
 
-    return {
-      _sort,
-      _order,
-    };
-  }
+  sorters.map((item) => {
+    _sort.push(item.field);
+    _order.push(item.order);
+  });
 
-  return;
+  const sort = _sort.join(",");
+  const order = _order.join(",");
+
+  return new URLSearchParams({
+    _sort: sort,
+    _order: order,
+  });
 };
 
 // generate query string from Refine Pagination to the format that API accepts.
@@ -223,5 +248,5 @@ const generatePagination = (pagination?: Pagination) => {
     query.size = `${pageSize}`;
   }
 
-  return query;
+  return new URLSearchParams(query);
 };

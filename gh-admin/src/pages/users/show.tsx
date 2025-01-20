@@ -1,4 +1,3 @@
-import { CardSectionTitle } from "@/components/card";
 import { PageActions, PageTitle } from "@/components/page";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -34,11 +33,11 @@ export const UserShow = () => {
       </div>
       {isLoading && !record && (
         <div className="flex lg:flex-row flex-col gap-6 w-full max-w-2xl">
-          <Skeleton className="flex-1 h-[340px]" />
+          <Skeleton className="flex-1 h-[300px]" />
         </div>
       )}
       {record && (
-        <div className="flex lg:flex-row flex-col gap-6 w-full py-2">
+        <div className="flex lg:flex-row flex-col gap-6 w-full">
           <Card className="basis-1/2 max-w-2xl shadow-md">
             <CardContent className="space-y-8 py-5 px-6">
               <UserAccountInfo record={record} />
@@ -63,7 +62,7 @@ const UserAccountInfo = ({ record }: { record: IUserDetailsResponse }) => {
         </Avatar>
         <div className="flex-1 space-y-2">
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold">{fullName}</h2>
+            <h2 className="text-xl font-semibold">{fullName}</h2>
             <p className="text-sm text-muted-foreground">@{record.username}</p>
           </div>
           {record.enabled ? (
@@ -77,7 +76,7 @@ const UserAccountInfo = ({ record }: { record: IUserDetailsResponse }) => {
           )}
         </div>
       </div>
-      <div className="space-y-1.5 pt-5 px-2 pb-2">
+      <div className="space-y-1 pt-5 px-2 pb-2">
         <RecordItem label="Email:" value={`${record.email}`} />
         <RecordItem label="Role:" value={capitalize(`${record.role}`)} />
 
@@ -108,10 +107,10 @@ const UserAccountInfo = ({ record }: { record: IUserDetailsResponse }) => {
 const RecordItem = ({ label, value }: { label: string; value: string }) => {
   return (
     <div className="flex flex-row gap-2 items-center">
-      <p className="text-foreground text-base leading-none font-medium">
+      <p className="text-foreground text-sm leading-none font-semibold">
         {label}{" "}
       </p>
-      <p className="text-base text-foreground/95">{value}</p>
+      <p className="text-sm text-foreground/95">{value}</p>
     </div>
   );
 };

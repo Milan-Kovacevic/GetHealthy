@@ -32,7 +32,7 @@ export const endpointResources: ResourceProps[] = [
   {
     name: "requests",
     list: "/users/requests",
-    show: "/users/requests/:id",
+    show: "/users/requests/show/:id",
     meta: {
       canDelete: true,
       icon: <BookUserIcon />,

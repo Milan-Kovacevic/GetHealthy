@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { DeleteButton } from "./delete-button";
-import { EditIcon, EyeIcon } from "lucide-react";
+import { EyeIcon, PencilIcon } from "lucide-react";
 import { BaseKey, IResourceItem } from "@refinedev/core";
 
 interface TableActionsProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -33,14 +33,14 @@ export const TableActions: React.FC<TableActionsProps> = (
       )}
       {edit && (
         <Button
-          variant="secondary"
+          variant="ghost"
           size="icon"
           className="w-auto h-auto py-2 px-2 text-foreground/85"
           onClick={() => {
             edit(resource, id);
           }}
         >
-          <EditIcon size={16} />
+          <PencilIcon size={16} />
         </Button>
       )}
       {showDelete && (

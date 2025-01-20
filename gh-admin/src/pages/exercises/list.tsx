@@ -29,7 +29,7 @@ export const ExerciseList = () => {
         header: "Description",
         cell: ({ getValue }) => {
           return (
-            <span className="text-foreground/80 line-clamp-2 max-w-sm w-full leading-tight">
+            <span className="text-foreground/80 line-clamp-2 max-w-sm w-full leading-tight text-[13px]">
               {getValue() as string}
             </span>
           );

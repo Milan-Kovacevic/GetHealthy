@@ -1,3 +1,4 @@
+import { defaultAxios } from "@/lib";
 import { delay } from "@/lib/utils";
 import {
   CreateResponse,
@@ -94,14 +95,14 @@ export const mockProvider = (
             firstName: "Marko",
             lastName: "Markovic",
             issueDate: "01/10/2025",
-            description: "This is a mock example of a description ...",
+            description: "This is a mock example of a description",
           },
           {
             id: 2,
             firstName: "Marija",
             lastName: "Markovic",
             issueDate: "01/11/2025",
-            description: "This is a mock example of another description ...",
+            description: "This is a mock example of another description",
           },
         ];
 
