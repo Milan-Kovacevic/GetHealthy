@@ -58,7 +58,7 @@ export function ManageExerciseForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const { options: metricOptions } = useSelect<IMetric>({
+  const { options: metricOptions } = useSelect<IMetricResponse>({
     resource: "metrics",
     optionLabel(item) {
       return `${item.name} | ${item.unit}`;

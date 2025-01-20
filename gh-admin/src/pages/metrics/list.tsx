@@ -1,16 +1,13 @@
-import { DataTable, DeleteButton, TableHeading } from "@/components/table";
-import { Button } from "@/components/ui/button";
-import {
-  useHandleNotification,
-  useNavigation,
-  useNotification,
-} from "@refinedev/core";
+import { DataTable, TableHeading } from "@/components/table";
+import { TableActions } from "@/components/table";
+import { useNavigation } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { type ColumnDef } from "@tanstack/react-table";
-import { EditIcon, EyeIcon, TrashIcon, XIcon } from "lucide-react";
-import React, { ReactNode, useEffect } from "react";
+import React from "react";
 
 export const MetricList = () => {
+  const { edit, show, create } = useNavigation();
+
   const columns = React.useMemo<ColumnDef<IExerciseResponse>[]>(
     () => [
       {
@@ -42,74 +39,30 @@ export const MetricList = () => {
         header: () => <div className="text-right mx-2">Actions</div>,
         cell: function render({ getValue }) {
           return (
-            <div className="flex flex-row flex-nowrap gap-0 justify-end">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="w-auto h-auto py-2 px-2 mr-1"
-                onClick={() => {
-                  show("metrics", getValue() as string);
-                }}
-              >
-                <EyeIcon size={16} />
-              </Button>
-              <Button
-                variant="secondary"
-                size="icon"
-                className="w-auto h-auto py-2 px-2 text-foreground/85"
-                onClick={() => {
-                  edit("metrics", getValue() as string);
-                }}
-              >
-                <EditIcon size={16} />
-              </Button>
-              <DeleteButton
-                itemId={getValue() as string}
-                onSuccess={() => {
-                  open?.({
-                    message: "Metric deleted",
-                    description: "Selected metric was deleted permanently.",
-                    type: "success",
-                  });
-                }}
-                resource="metrics"
-                className="w-auto h-auto py-2 px-2 ml-1.5"
-              />
-            </div>
+            <TableActions
+              id={getValue() as string}
+              resource="metrics"
+              edit={edit}
+              show={show}
+            />
           );
         },
       },
     ],
     []
   );
-  const { open } = useNotification();
-  const { edit, show, create } = useNavigation();
-
   const { ...tableProps } = useTable({
     columns,
-    refineCoreProps: {
-      meta: {
-        populate: ["exercises"],
-      },
-    },
   });
-
-  tableProps?.setOptions((prev) => ({
-    ...prev,
-    meta: {
-      ...prev.meta,
-    },
-  }));
-
-  const handleCreateCategory = () => {
-    create("exercises");
-  };
 
   return (
     <div className="flex flex-col">
       <TableHeading
         title="Exercise metrics"
-        create={{ label: "Add new exercise", onCreate: handleCreateCategory }}
+        create={{
+          label: "Add new metric",
+          onCreate: () => create("metrics"),
+        }}
       />
       <DataTable {...tableProps} />
     </div>

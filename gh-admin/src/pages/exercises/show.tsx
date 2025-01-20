@@ -1,3 +1,5 @@
+import { CardSectionTitle } from "@/components/card";
+import { PageActions, PageTitle } from "@/components/page";
 import { DeleteButton } from "@/components/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +12,6 @@ export const ExerciseShow = () => {
   const { query, showId } = useShow<IExerciseResponse>({});
 
   const { data, isLoading, status } = query;
-
   const record = data?.data;
 
   const handleEdit = () => {
@@ -23,32 +24,21 @@ export const ExerciseShow = () => {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center mb-2 flex-wrap gap-y-4 gap-x-3">
-        <h2 className="text-3xl font-bold tracking-tight self-start">
-          Exercise details
-        </h2>
-        <div className="gap-1 flex justify-end pb-2 flex-wrap">
-          <Button variant="ghost" className="self-start" onClick={handleGoBack}>
-            <ArrowLeft className="h-4 w-4" /> Back to Exercises
-          </Button>
-
-          <div className="gap-2 flex justify-end flex-wrap">
-            <Button
-              disabled={status == "error" || status == "loading"}
-              variant="ghost"
-              onClick={handleEdit}
-            >
-              <PencilIcon className="h-4 w-4" /> Edit
-            </Button>
-            <DeleteButton
-              text="Delete"
-              disabled={status == "error" || status == "loading"}
-              itemId={String(showId ?? "")}
-              resource="exercises"
-              onSuccess={handleGoBack}
-            />
-          </div>
-        </div>
+      <div className="flex justify-between items-center mb-5 flex-wrap gap-y-4 gap-x-3">
+        <PageTitle title="Exercise details" className="self-start" />
+        <PageActions
+          onGoBack={handleGoBack}
+          edit={{
+            show: true,
+            disabled: status == "error" || status == "loading",
+            onEdit: handleEdit,
+          }}
+          remove={{
+            show: true,
+            disabled: status == "error" || status == "loading",
+            itemId: String(showId ?? ""),
+          }}
+        />
       </div>
       {isLoading && !record && (
         <div className="flex lg:flex-row flex-col gap-6 w-full">
@@ -59,16 +49,16 @@ export const ExerciseShow = () => {
       {record && (
         <div className="flex lg:flex-row flex-col gap-6 w-full py-2">
           <Card className="basis-1/2 shadow-md">
-            <CardContent className="space-y-8 p-6 px-7">
+            <CardContent className="space-y-8 py-5 px-6">
               <BasicInfo record={record} />
               <DemonstrationInfo record={record} />
               <MetricInfo record={record} />
             </CardContent>
           </Card>
           <Card className="basis-1/2 shadow-md">
-            <CardContent className="p-6 px-7">
+            <CardContent className="p-5 px-6">
               <div className="space-y-2">
-                <SectionTitle title="Demonstration video" />
+                <CardSectionTitle title="Demonstration video" />
                 <div className="aspect-video">
                   <iframe
                     src={record.videoLink}
@@ -86,19 +76,10 @@ export const ExerciseShow = () => {
   );
 };
 
-const SectionTitle = ({ title }: { title: string }) => {
-  return (
-    <p className="text-lg font-semibold text-foreground/90 flex flex-row items-center gap-2 tracking-tight">
-      <CircleIcon className="h-2 w-2" />
-      {title}
-    </p>
-  );
-};
-
 const BasicInfo = ({ record }: { record: IExerciseResponse }) => {
   return (
     <div className="space-y-2.5">
-      <SectionTitle title="Basic information" />
+      <CardSectionTitle title="Basic information" />
       <div className="space-y-2">
         <div className="space-y-1">
           <p className="text-muted-foreground text-sm leading-none">Name: </p>
@@ -121,7 +102,7 @@ const BasicInfo = ({ record }: { record: IExerciseResponse }) => {
 const DemonstrationInfo = ({ record }: { record: IExerciseResponse }) => {
   return (
     <div className="space-y-2.5">
-      <SectionTitle title="Demonstration" />
+      <CardSectionTitle title="Demonstration" />
       <div className="space-y-1.5">
         <p className="text-muted-foreground text-sm leading-none">Link: </p>
         <p className="font-normal text-[15px]">{record.videoLink}</p>
@@ -132,13 +113,13 @@ const DemonstrationInfo = ({ record }: { record: IExerciseResponse }) => {
 const MetricInfo = ({ record }: { record: IExerciseResponse }) => {
   return (
     <div className="space-y-2.5">
-      <SectionTitle title="Exercise metrics" />
+      <CardSectionTitle title="Exercise metrics" />
       <div className="space-y-2">
         <div className="space-y-1">
           <p className="text-muted-foreground text-sm leading-none">
             First metric:{" "}
           </p>
-          <p className="font-medium text-base">
+          <p className="text-base">
             {record.firstExerciseMetric.name}
             {", "}
             <span className="text-muted-foreground font-normal text-sm">
@@ -152,7 +133,7 @@ const MetricInfo = ({ record }: { record: IExerciseResponse }) => {
             Second metric:{" "}
           </p>
           {record.secondExerciseMetric ? (
-            <p className="font-medium text-base">
+            <p className="text-base">
               {record.secondExerciseMetric.name}
               {", "}
               <span className="text-muted-foreground font-normal text-sm">

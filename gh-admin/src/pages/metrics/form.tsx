@@ -11,94 +11,38 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Loader2Icon } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useForm } from "@refinedev/react-hook-form";
-import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useSelect } from "@refinedev/core";
 
-const MetricFormSchema = z
-  .object({
-    exerciseName: z
-      .string({ required_error: "Name is required." })
-      .min(1, "Name is required.")
-      .max(96),
-    description: z
-      .string({ required_error: "Description is required." })
-      .min(1, "Description is required.")
-      .max(256),
-    videoLink: z
-      .string({ required_error: "Demonstration link is required." })
-      .min(1, "Demonstration link is required.")
-      .max(256),
-    metricType1Id: z
-      .string({
-        required_error: "First metric is required.",
-      })
-      .min(1, "First metric is required."),
-    metricType2Id: z.string().optional(),
-  })
-  .refine(
-    (data) => !data.metricType2Id || data.metricType1Id !== data.metricType2Id,
-    {
-      message: "Metric types must be different.",
-      path: ["metricType2Id"],
-    }
-  );
+const MetricFormSchema = z.object({
+  name: z
+    .string({ required_error: "Metric name is required." })
+    .min(1, "Metric name is required.")
+    .max(96),
+  unit: z
+    .string({ required_error: "Metric unit is required." })
+    .min(1, "Metric unit is required.")
+    .max(64),
+});
 
 export function ManageMetricForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const { options: metricOptions } = useSelect<IMetric>({
-    resource: "metrics",
-    optionLabel(item) {
-      return `${item.name} | ${item.unit}`;
-    },
-  });
-
-  const form = useForm<IExerciseResponse>({
+  const form = useForm<IMetricResponse>({
     mode: "onChange",
     resolver: zodResolver(MetricFormSchema),
     defaultValues: {
-      exerciseName: "",
-      description: "",
-      videoLink: "",
-      metricType1Id: undefined,
-      metricType2Id: undefined,
+      name: "",
+      unit: "",
     },
   });
-  const { onFinish, formLoading, query } = form.refineCore;
-  const exerciseData = query?.data?.data;
-
-  useEffect(() => {
-    if (!exerciseData) return;
-
-    form.setValue(
-      "metricType1Id",
-      exerciseData.firstExerciseMetric.id.toString(),
-      { shouldValidate: true }
-    );
-    if (exerciseData.secondExerciseMetric) {
-      form.setValue(
-        "metricType2Id",
-        exerciseData.secondExerciseMetric.id.toString(),
-        { shouldValidate: true }
-      );
-    }
-  }, [exerciseData, metricOptions]);
+  const { onFinish, formLoading } = form.refineCore;
 
   return (
     <div
-      className={cn("flex flex-col gap-6 p-1 max-w-2xl", className)}
+      className={cn("flex flex-col gap-6 p-1 max-w-xl", className)}
       {...props}
     >
       <Form {...form}>
@@ -106,13 +50,13 @@ export function ManageMetricForm({
           <div className="flex flex-col gap-y-3">
             <FormField
               control={form.control}
-              name="exerciseName"
+              name="name"
               render={({ field }) => {
                 return (
                   <FormItem className="space-y-0.5">
-                    <FormLabel>Exercise name *</FormLabel>
+                    <FormLabel>Metric name *</FormLabel>
                     <FormControl>
-                      <Input placeholder="ex. Plank" type="text" {...field} />
+                      <Input placeholder="ex. Weight" type="text" {...field} />
                     </FormControl>
 
                     <FormMessage />
@@ -123,126 +67,20 @@ export function ManageMetricForm({
 
             <FormField
               control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem className="space-y-0.5">
-                  <FormLabel>Description *</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="..."
-                      className="resize-none min-h-36"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Write a brief description about exercise
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
+              name="unit"
+              render={({ field }) => {
+                return (
+                  <FormItem className="space-y-0.5">
+                    <FormLabel>Metric unit *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="ex. kg" type="text" {...field} />
+                    </FormControl>
+                    <FormDescription>Enter a unit of a metric</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
-
-            <div className="grid grid-cols-12 gap-4">
-              <div className="col-span-8">
-                <FormField
-                  control={form.control}
-                  name="videoLink"
-                  render={({ field }) => (
-                    <FormItem className="space-y-0.5">
-                      <FormLabel>Demonstration video *</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="ex. youtube embed"
-                          type="text"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Enter a url of a demonstration video
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-12 gap-4">
-              <div className="col-span-6">
-                <FormField
-                  control={form.control}
-                  name="metricType1Id"
-                  render={({ field }) => {
-                    return (
-                      <FormItem className="space-y-0.5">
-                        <FormLabel>First metric *</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Not set ..." />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {metricOptions.map((item) => (
-                              <SelectItem
-                                key={item.value}
-                                value={item.value.toString()}
-                              >
-                                {item.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>
-                          Select a first exercise metric
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
-                />
-              </div>
-
-              <div className="col-span-6">
-                <FormField
-                  control={form.control}
-                  name="metricType2Id"
-                  render={({ field }) => (
-                    <FormItem className="space-y-0.5">
-                      <FormLabel>Second metric</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Not set ..." />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {metricOptions.map((item) => (
-                            <SelectItem
-                              key={item.value}
-                              value={item.value.toString()}
-                            >
-                              {item.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormDescription>
-                        Select second (optional) exercise metric{" "}
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
           </div>
 
           <Button

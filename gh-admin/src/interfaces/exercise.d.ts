@@ -7,12 +7,6 @@ interface IExerciseResponse {
   secondExerciseMetric?: IMetric;
 }
 
-interface IMetric {
-  id: number;
-  name: string;
-  unit: string;
-}
-
 interface IExerciseRequest {
   exerciseName: string;
   description: string;
