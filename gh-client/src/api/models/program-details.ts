@@ -46,6 +46,7 @@ export type SingleProgramTrainer = {
   profilePictureFilePath?: string;
   contactInfo?: string;
   biography?: string;
+  certificateFilePath?: string;
 };
 
 export type MoveProgramParticipant = {

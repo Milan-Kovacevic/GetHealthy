@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 import SingleTrainingProgramLoader from "./components/SingleTrainingProgramLoader";
 import { toast } from "sonner";
 import TrainingProgramApplicationModal from "./components/TrainingProgramApplicationModal";
-import { capitalize, cn } from "@/lib/utils";
+import { capitalize, cn, pictureUrl } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { sendTrainingProgramApplication } from "@/api/services/program-application-service";
 import useAuth from "@/hooks/use-auth";
@@ -113,7 +113,7 @@ export default function TrainingProgramInfo() {
         )}
       >
         <img
-          src={program.imageFilePath || noImage}
+          src={pictureUrl(program.imageFilePath) || noImage}
           alt="Training Program"
           className={cn(
             "w-full h-full object-cover mix-blend-luminosity dark:mix-blend-luminosity",

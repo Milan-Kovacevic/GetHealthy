@@ -19,3 +19,12 @@ export const pictureUrl = (pictureName?: string) => {
   url += `/storage/pictures/${pictureName}`;
   return url;
 };
+
+export const certificateUrl = (certificateName?: string) => {
+  if (!certificateName) {
+    throw new Error("Certificate name is required to generate the URL.");
+  }
+  var url = environments().baseApiPath + environments().apiResourcePrefix;
+  url += `/storage/certificates/${certificateName}`;
+  return url;
+};

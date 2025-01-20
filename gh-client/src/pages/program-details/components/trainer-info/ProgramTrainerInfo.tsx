@@ -9,6 +9,8 @@ import { useParams } from "react-router-dom";
 import TrainerInfoLoader from "./TrainerInfoLoader";
 import { format } from "date-fns";
 import { capitalize } from "@/lib/utils";
+import downloadTrainerCertificate from "@/api/services/qualification-service";
+import { toast } from "sonner";
 
 export default function ProgramTrainerInfo() {
   const params = useParams();
@@ -42,6 +44,14 @@ export default function ProgramTrainerInfo() {
     );
   }
 
+  const handleDownload = async () => {
+    if (trainer?.certificateFilePath) {
+      await downloadTrainerCertificate(trainer.certificateFilePath);
+    } else {
+      toast.error("No certificate available for download.");
+    }
+  };
+
   return (
     <div className="w-full border-0 bg-background pt-0 pb-8">
       {loading && <TrainerInfoLoader />}
@@ -49,6 +59,7 @@ export default function ProgramTrainerInfo() {
         <>
           <div className="relative p-4 pt-0">
             <Button
+              onClick={handleDownload}
               variant="secondary"
               className="absolute top-10 right-4"
               aria-label="Download qualification"

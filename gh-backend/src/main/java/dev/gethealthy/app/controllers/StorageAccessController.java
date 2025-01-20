@@ -37,4 +37,23 @@ public class StorageAccessController {
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(resource);
     }
+
+    // TODO, u AuthService sertifikat sacuvan kao PICTURE
+//    @GetMapping("certificates/{fileName}")
+//    public ResponseEntity<Resource> getDocumentFile(@PathVariable("fileName") String fileName) {
+//        final Resource resource;
+//        try {
+//            resource = storageAccessService.getFileAsResource(fileName, StorageType.DOCUMENT);
+//        } catch (IOException e) {
+//            throw new NotFoundException();
+//        }
+//
+//        if (resource == null || !resource.exists() || !resource.isReadable())
+//            throw new NotFoundException();
+//        return ResponseEntity
+//                .ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+//                .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition")
+//                .body(resource);
+//    }
 }

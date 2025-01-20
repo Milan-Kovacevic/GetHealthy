@@ -13,7 +13,6 @@ import dev.gethealthy.app.repositories.TrainingProgramExerciseRepository;
 import dev.gethealthy.app.repositories.TrainingProgramRepository;
 import dev.gethealthy.app.services.StorageAccessService;
 import dev.gethealthy.app.services.TrainingProgramService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -146,6 +145,7 @@ public class TrainingProgramServiceImpl
         UserAccount userAccount = trainer.getUserAccount();
         TrainerResponse response = modelMapper.map(trainer, TrainerResponse.class);
         response.setEmail(userAccount.getEmail());
+        response.setCertificateFilePath(trainerRepository.getCertificateFilePath(trainer.getId()));
 
         return response;
     }

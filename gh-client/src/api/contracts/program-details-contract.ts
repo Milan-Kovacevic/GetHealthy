@@ -30,4 +30,5 @@ export type SingleProgramTrainerDTO = {
   profilePictureFilePath?: string;
   contactInfo?: string;
   biography?: string;
+  certificateFilePath?: string; //todoo
 };
