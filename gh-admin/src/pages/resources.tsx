@@ -46,7 +46,6 @@ export const endpointResources: ResourceProps[] = [
     list: "/categories",
     create: "/categories/create",
     edit: "/categories/edit/:id",
-    show: "/categories/show/:id",
     meta: {
       canDelete: true,
       icon: <TagsIcon />,

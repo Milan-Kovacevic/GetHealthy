@@ -8,7 +8,7 @@ interface TableActionsProps extends React.HTMLAttributes<HTMLDivElement> {
   id: string;
   resource: string;
   edit: (resource: string | IResourceItem, id: BaseKey) => void;
-  show: (resource: string | IResourceItem, id: BaseKey) => void;
+  show?: (resource: string | IResourceItem, id: BaseKey) => void;
 }
 
 export const TableActions: React.FC<TableActionsProps> = (
@@ -17,17 +17,20 @@ export const TableActions: React.FC<TableActionsProps> = (
   const { id, resource, edit, show, ...rest } = props;
 
   return (
-    <div className="flex flex-row flex-nowrap gap-0 justify-end">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="w-auto h-auto py-2 px-2 mr-1"
-        onClick={() => {
-          show(resource, id);
-        }}
-      >
-        <EyeIcon size={16} />
-      </Button>
+    <div className="flex flex-row flex-nowrap gap-0 justify-end" {...rest}>
+      {show && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="w-auto h-auto py-2 px-2 mr-1"
+          onClick={() => {
+            show(resource, id);
+          }}
+        >
+          <EyeIcon size={16} />
+        </Button>
+      )}
+
       <Button
         variant="secondary"
         size="icon"

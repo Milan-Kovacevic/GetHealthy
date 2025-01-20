@@ -1,11 +1,8 @@
 import { CardSectionTitle } from "@/components/card";
 import { PageActions, PageTitle } from "@/components/page";
-import { DeleteButton } from "@/components/table";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigation, useShow } from "@refinedev/core";
-import { ArrowLeft, CircleIcon, PencilIcon } from "lucide-react";
 
 export const ExerciseShow = () => {
   const { edit, goBack } = useNavigation();

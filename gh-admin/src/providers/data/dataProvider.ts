@@ -42,7 +42,7 @@ export const dataProvider = (
       const url = `${API_PREFIX}/${resource}/${id}`;
 
       const { headers, method } = meta ?? {};
-      const requestMethod = (method as MethodTypesWithBody) ?? "patch";
+      const requestMethod = (method as MethodTypesWithBody) ?? "put";
 
       await delay(delayTime);
       const { data } = await httpClient[requestMethod](url, variables, {

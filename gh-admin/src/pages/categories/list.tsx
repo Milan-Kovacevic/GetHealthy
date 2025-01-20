@@ -1,19 +1,25 @@
-import { DataTable, TableHeading } from "@/components/table";
-import { Button } from "@/components/ui/button";
-
+import { DataTable, TableActions, TableHeading } from "@/components/table";
 import { useNavigation } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
-import { type ColumnDef, flexRender } from "@tanstack/react-table";
-import { EditIcon, EyeIcon } from "lucide-react";
+import { type ColumnDef } from "@tanstack/react-table";
 import React from "react";
 
 export const CategoryList = () => {
-  const columns = React.useMemo<ColumnDef<ICategory>[]>(
+  const { edit, create } = useNavigation();
+
+  const columns = React.useMemo<ColumnDef<ICategoryResponse>[]>(
     () => [
       {
         id: "name",
         accessorKey: "name",
         header: "Category name",
+        cell: ({ getValue }) => {
+          return (
+            <p className="text-[15px] font-medium text-foreground/85">
+              {getValue() as string}
+            </p>
+          );
+        },
       },
       {
         id: "actions",
@@ -21,26 +27,11 @@ export const CategoryList = () => {
         header: () => <div className="text-right mx-4">Actions</div>,
         cell: function render({ getValue }) {
           return (
-            <div className="flex flex-row flex-nowrap gap-0 justify-end">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  show("categories", getValue() as string);
-                }}
-              >
-                <EyeIcon size={16} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  edit("categories", getValue() as string);
-                }}
-              >
-                <EditIcon size={16} />
-              </Button>
-            </div>
+            <TableActions
+              id={getValue() as string}
+              resource="categories"
+              edit={edit}
+            />
           );
         },
       },
@@ -48,33 +39,18 @@ export const CategoryList = () => {
     []
   );
 
-  const { edit, show, create } = useNavigation();
-
   const { ...tableProps } = useTable({
     columns,
-    refineCoreProps: {
-      meta: {
-        populate: ["category"],
-      },
-    },
   });
-
-  tableProps?.setOptions((prev) => ({
-    ...prev,
-    meta: {
-      ...prev.meta,
-    },
-  }));
-
-  const handleCreateCategory = () => {
-    create("categories");
-  };
 
   return (
     <div className="flex flex-col">
       <TableHeading
         title="Manage categories"
-        create={{ label: "Create category", onCreate: handleCreateCategory }}
+        create={{
+          label: "Create category",
+          onCreate: () => create("categories"),
+        }}
       />
       <DataTable {...tableProps} />
     </div>

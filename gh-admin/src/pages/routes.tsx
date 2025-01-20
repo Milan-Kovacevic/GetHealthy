@@ -3,12 +3,7 @@ import { CatchAllNavigate, NavigateToResource } from "@refinedev/react-router";
 import { Route, Routes } from "react-router";
 import { Login } from "./login";
 import { UserCreate, UserEdit, UserList, UserShow } from "./users";
-import {
-  CategoryCreate,
-  CategoryEdit,
-  CategoryList,
-  CategoryShow,
-} from "./categories";
+import { CategoryCreate, CategoryEdit, CategoryList } from "./categories";
 import {
   ExerciseList,
   ExerciseShow,
@@ -57,7 +52,6 @@ export default function PageRoutes() {
           <Route index element={<CategoryList />} />
           <Route path="create" element={<CategoryCreate />} />
           <Route path="edit/:id" element={<CategoryEdit />} />
-          <Route path="show/:id" element={<CategoryShow />} />
         </Route>
         <Route path="/exercises">
           <Route index element={<ExerciseList />} />

@@ -64,11 +64,11 @@ export function DataTable<TData extends BaseRecord>({
       {isLoading || isFetching ? (
         <div className="space-y-2">
           {[
-            Array.from(Array(10)).map((item, index) => {
+            Array.from(Array(10)).map((_, index) => {
               return (
                 <Skeleton
                   key={index}
-                  className={cn("w-full h-12", index == 0 && "h-14 mb-2.5")}
+                  className={cn("w-full h-12", index == 0 && "h-10 mb-2")}
                 />
               );
             }),
