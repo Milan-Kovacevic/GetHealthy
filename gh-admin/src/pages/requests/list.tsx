@@ -40,7 +40,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       {
         id: "description",
         accessorKey: "description",
-        header: "Description",
+        header: "Note",
         cell: ({ getValue }) => {
           return (
             <span className="text-foreground/75 line-clamp-2 max-w-sm w-full leading-tight text-[13px]">

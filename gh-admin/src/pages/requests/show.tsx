@@ -1,9 +1,17 @@
 import { PageActions, PageTitle } from "@/components/page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCustomMutation, useNavigation, useShow } from "@refinedev/core";
+import {
+  useCustom,
+  useCustomMutation,
+  useDataProvider,
+  useNavigation,
+  useShow,
+} from "@refinedev/core";
 import { CheckIcon, DownloadIcon, Loader2Icon, XIcon } from "lucide-react";
+import { API_PREFIX } from "@/lib";
 
 export const RequestShow = () => {
   const { goBack } = useNavigation();
@@ -53,6 +61,9 @@ const RequestInfo = ({
 }: {
   record: IRegistrationRequestDetailsResponse;
 }) => {
+  const dataProvider = useDataProvider();
+  const defaultDataProvider = dataProvider();
+
   const { isLoading, mutateAsync } =
     useCustomMutation<IRegistrationRequestProcessRequest>();
 
@@ -68,6 +79,32 @@ const RequestInfo = ({
     });
   };
 
+  const handleDownloadQualification = () => {
+    defaultDataProvider
+      .custom?.<any>({
+        url: `${API_PREFIX}/storage/documents/${record.certificationFilePath}`,
+        method: "get",
+      })
+      .then((qualification) => {
+        const fileExtension = record.certificationFilePath.split(".").pop();
+        const fileName =
+          record.firstName +
+          "_" +
+          record.lastName +
+          "_Qualification." +
+          fileExtension;
+
+        const blob = new Blob([qualification.data]);
+
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex items-start justify-between space-x-3">
@@ -78,7 +115,11 @@ const RequestInfo = ({
           <h2 className="text-xl font-semibold">{fullName}</h2>
         </div>
         <div className="">
-          <Button variant="secondary" disabled={isLoading}>
+          <Button
+            onClick={handleDownloadQualification}
+            variant="secondary"
+            disabled={isLoading}
+          >
             <DownloadIcon />
             Download qualification
           </Button>

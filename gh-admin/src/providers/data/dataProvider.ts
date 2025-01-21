@@ -144,6 +144,9 @@ export const dataProvider = (
       await delay(delayTime);
       let axiosResponse;
       switch (method) {
+        case "get":
+          axiosResponse = await httpClient[method](url);
+          break;
         case "put":
         case "post":
         case "patch":

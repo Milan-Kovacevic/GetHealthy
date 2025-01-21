@@ -46,7 +46,7 @@ export const mockProvider = (
           email: "test@mail.com",
           issueDate: "01/10/2025",
           description: "This is a mock example of a description ...",
-          certificationFilePath: "test",
+          certificationFilePath: "agenda.pdf",
         };
 
         return Promise.resolve({
