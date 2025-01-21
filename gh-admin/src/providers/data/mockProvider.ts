@@ -1,4 +1,3 @@
-import { defaultAxios } from "@/lib";
 import { delay } from "@/lib/utils";
 import {
   CreateResponse,

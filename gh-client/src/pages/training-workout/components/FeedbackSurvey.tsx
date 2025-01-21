@@ -1,9 +1,5 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Loader2Icon, MessageCircleQuestionIcon } from "lucide-react";
 import { ExerciseMetric } from "@/api/models/exercise";
@@ -11,7 +7,19 @@ import {
   SendExerciseSetFeedbackRequest,
   WorkoutSet,
 } from "@/api/models/trainee-exercising";
-import LoadingActionButton from "./LoadingActionButton";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import InputFormField from "@/components/primitives/InputFormField";
+import { Button } from "@/components/ui/button";
+import { handleIntegerOnValueChange } from "@/utils/form-input-utils";
 
 type FeedbackSurveyProps = {
   onSubmit: (feedback: SendExerciseSetFeedbackRequest) => void;
@@ -29,27 +37,55 @@ export default function FeedbackSurvey({
   firstMetric,
   secondMetric,
   completedSet,
-}: //giveSetFeedback,
-FeedbackSurveyProps) {
-  const [completedAsPlanned, setCompletedAsPlanned] = useState(true);
-  const [actualFirstMetricValue, setActualFirstMetricValue] =
-    useState<string>("");
-  //number(string)
-  const [actualSecondMetricValue, setActualSecondMetricValue] = useState<
-    string | undefined
-  >(undefined);
+}: FeedbackSurveyProps) {
+  var formSchema = secondMetric
+    ? z
+        .object({
+          completedAsPlanned: z.boolean().default(true),
+          firstMetricValueFeedback: z
+            .number({ invalid_type_error: "First feedback value is required" })
+            .positive()
+            .optional(),
 
-  const handleSubmit = async () => {
-    //TODOO
+          secondMetricValueFeedback: z
+            .number({ invalid_type_error: "Second feedback value is required" })
+            .positive()
+            .optional(),
+        })
+        .refine(
+          (value) =>
+            !value.completedAsPlanned ||
+            !!value.firstMetricValueFeedback ||
+            !!value.firstMetricValueFeedback,
+          {
+            message: "Values are required",
+            path: [
+              "firstMetricValueFeedback",
+              "secondMetricValueFeedback",
+              "completedAsPlanned",
+            ],
+          }
+        )
+    : z.object({
+        completedAsPlanned: z.boolean().default(true),
+        firstMetricValueFeedback: z.string().min(0),
+      });
+
+  const form = useForm<any>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      completedAsPlanned: true,
+      firstMetricValueFeedback: Number(completedSet.firstMetricValue),
+      secondMetricValueFeedback: Number(completedSet.secondMetricValue),
+    },
+  });
+
+  const onSubmitFeedback = (values: any) => {
     const feedback: SendExerciseSetFeedbackRequest = {
       exerciseSetId: 0,
-      completed: completedAsPlanned,
-      firstMetricValueFeedback: completedAsPlanned
-        ? completedSet.firstMetricValue
-        : actualFirstMetricValue,
-      secondMetricValueFeedback: completedAsPlanned
-        ? completedSet.secondMetricValue
-        : actualSecondMetricValue,
+      completed: values.completedAsPlanned,
+      firstMetricValueFeedback: values.firstMetricValueFeedback?.toString(),
+      secondMetricValueFeedback: values.secondMetricValueFeedback?.toString(),
     };
 
     onSubmit(feedback);
@@ -69,73 +105,100 @@ FeedbackSurveyProps) {
             {disabled ? "Resting..." : "Set Feedback"}
           </CardTitle>
         </div>
+
         <CardContent className="p-4">
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  disabled={disabled}
-                  id="completed"
-                  checked={completedAsPlanned}
-                  className={cn(completedAsPlanned && "font-normal")}
-                  onCheckedChange={(checked) =>
-                    setCompletedAsPlanned(checked as boolean)
-                  }
-                />
-                <Label
-                  htmlFor="completed"
-                  className={cn(
-                    "cursor-pointer font-normal",
-                    disabled && "text-muted-foreground"
+          <div className="space-y-4">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmitFeedback)}
+                className="flex flex-col space-y-4"
+              >
+                <FormField
+                  control={form.control}
+                  name="completedAsPlanned"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          disabled={disabled || pending}
+                          onCheckedChange={(e) => {
+                            field.onChange(e);
+                            form.setValue(
+                              "firstMetricValueFeedback",
+                              Number(completedSet.firstMetricValue),
+                              { shouldValidate: true }
+                            );
+                            if (secondMetric)
+                              form.setValue(
+                                "secondMetricValueFeedback",
+                                Number(completedSet.secondMetricValue),
+                                { shouldValidate: true }
+                              );
+                          }}
+                          className={cn(field.value && "font-normal")}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel className="font-normal cursor-pointer">
+                          I have completed {completedSet.firstMetricValue}{" "}
+                          {firstMetric.unit} at {completedSet.secondMetricValue}{" "}
+                          {secondMetric?.unit}
+                        </FormLabel>
+                      </div>
+                    </FormItem>
                   )}
-                >
-                  I have completed {completedSet.firstMetricValue}{" "}
-                  {firstMetric.unit} at {completedSet.secondMetricValue}{" "}
-                  {secondMetric?.unit}
-                </Label>
-              </div>
-              {!completedAsPlanned && (
-                <div className="space-y-2">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="actualFirstMetric">
-                        Actual {firstMetric.name} ({secondMetric?.unit})
-                      </Label>
-                      <Input
+                />
+                {!form.watch("completedAsPlanned") && (
+                  <div className="grid grid-cols-12 gap-4">
+                    <div className="col-span-6">
+                      <InputFormField
+                        control={form.control}
                         disabled={disabled}
-                        id="actualFirstMetric"
                         type="number"
-                        placeholder={completedSet.firstMetricValue.toString()}
-                        value={actualFirstMetricValue ?? ""}
-                        onChange={(e) =>
-                          setActualFirstMetricValue(e.target.value)
-                        }
+                        onChange={(e, field) => {
+                          handleIntegerOnValueChange(e, field);
+                        }}
+                        display={`Actual ${firstMetric.name} [${firstMetric.unit}]`}
+                        name="firstMetricValueFeedback"
+                        placeholder={completedSet.firstMetricValue}
                       />
                     </div>
-                    {completedSet.secondMetricValue && (
-                      <div className="space-y-2">
-                        <Label htmlFor="actualSecondMetric">
-                          Actual {secondMetric?.name} ({secondMetric?.unit})
-                        </Label>
-                        <Input
+
+                    <div className="col-span-6">
+                      {secondMetric && (
+                        <InputFormField
+                          control={form.control}
                           disabled={disabled}
-                          id="actualSecondMetric"
                           type="number"
-                          placeholder={completedSet.secondMetricValue?.toString()}
-                          value={actualSecondMetricValue ?? ""}
-                          onChange={(e) =>
-                            setActualSecondMetricValue(e.target.value)
-                          }
+                          onChange={(e, field) => {
+                            handleIntegerOnValueChange(e, field);
+                          }}
+                          display={`Actual ${secondMetric.name} [${secondMetric.unit}]`}
+                          name="secondMetricValueFeedback"
+                          placeholder={completedSet.secondMetricValue}
                         />
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
+                )}
+                <div className="self-end pt-0">
+                  <Button
+                    variant="outline"
+                    disabled={disabled || pending}
+                    type="submit"
+                  >
+                    {pending && (
+                      <Loader2Icon className="text-muted-foreground animate-spin self-end" />
+                    )}
+                    Save Feedback
+                  </Button>
                 </div>
-              )}
-            </div>
-          </form>
+              </form>
+            </Form>
+          </div>
         </CardContent>
-        <CardFooter className="p-4 pt-2 justify-end w-full">
+        {/* <CardFooter className="p-4 pt-2 justify-end w-full">
           <LoadingActionButton
             text="Save Feedback"
             type={{ variant: "outline", size: "default" }}
@@ -144,19 +207,7 @@ FeedbackSurveyProps) {
             className="w-auto flex-none mt-2 self-end"
             onClick={() => handleSubmit()}
           />
-
-          {/* <Button
-            variant="outline"
-            disabled={disabled || pending}
-            type="submit"
-            onClick={handleSubmit}
-          >
-            {pending && (
-              <Loader2Icon className="text-muted-foreground animate-spin" />
-            )}
-            Save Feedback
-          </Button> */}
-        </CardFooter>
+        </CardFooter> */}
       </Card>
     </div>
   );

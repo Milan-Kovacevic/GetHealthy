@@ -53,15 +53,15 @@ export default function ProgramWorkoutSummary(
           <div className="flex flex-row w-full gap-3 items-center mb-1.5">
             <div className="flex items-center text-sm gap-1">
               <UserIcon className="text-muted-foreground fill-secondary h-4 w-4 mt-0.5" />
-              <p className="text-foreground/80 text-base font-medium tracking-tight">
+              <p className="text-base font-medium tracking-tight">
                 {scheduleProgram.trainerFirstName}{" "}
                 {scheduleProgram.trainerLastName}
               </p>
             </div>
             <span className="text-muted-foreground">•</span>
             <div className="flex items-center gap-1.5">
-              <BicepsFlexedIcon className="text-foreground/75 fill-secondary h-4 w-4 mt-0.5" />
-              <p className="font-normal">
+              <BicepsFlexedIcon className="text-muted-foreground fill-secondary h-4 w-4 mt-0.5" />
+              <p className="font-medium tracking-tight text-base">
                 {capitalize(scheduleProgram.difficulty)}
               </p>
             </div>

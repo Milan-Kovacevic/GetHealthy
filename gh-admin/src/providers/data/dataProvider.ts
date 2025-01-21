@@ -101,7 +101,6 @@ export const dataProvider = (
       }
 
       const generatedSort = generateSort(sorters);
-      console.log(generatedSort);
       if (generatedSort) {
         url = `${url}&${generatedSort.toString()}`;
       }

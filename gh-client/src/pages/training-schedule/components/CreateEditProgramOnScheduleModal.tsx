@@ -17,19 +17,11 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 
-import {
-  CreateTrainingProgramOnScheduleDTO,
-  EditTrainingProgramOnScheduleDTO,
-} from "@/api/contracts/training-program-on-schedule-contract";
 import { TrainerProgram } from "@/api/models/training-program";
 import {
   ManageTrainingProgramOnSchedule,
   TrainingProgramOnSchedule,
 } from "@/api/models/training-program-on-schedule";
-import {
-  createTrainingProgramOnSchedule,
-  editTrainingProgramOnSchedule,
-} from "@/api/services/training-program-on-schedule-service";
 import { TimePicker } from "@/components/primitives/TimePicker";
 import {
   Form,
@@ -44,7 +36,6 @@ import { parseTimeStringToDate } from "@/utils/date-time-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PencilIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 const daysOfWeek = [
@@ -84,16 +75,15 @@ const formSchema = z.object({
 export type CreateEditProgramOnScheduleModalProps = {
   isEdit?: boolean;
   programOnSchedule?: TrainingProgramOnSchedule;
-  onEditProgramOnSchedule?: (
-    id: number,
+  onSubmitModal: (
     programOnSchedule: ManageTrainingProgramOnSchedule
-  ) => void;
+  ) => Promise<void>;
 };
 
 export const CreateEditProgramOnScheduleModal = ({
   isEdit = false,
   programOnSchedule,
-  onEditProgramOnSchedule,
+  onSubmitModal,
 }: CreateEditProgramOnScheduleModalProps) => {
   const defaultText = "Select training program ...";
   const [open, setOpen] = useState(false);
@@ -115,7 +105,7 @@ export const CreateEditProgramOnScheduleModal = ({
             : new Date(),
         }
       : {
-          program: null,
+          program: {},
           dayOfWeek: undefined,
           startTime: new Date(),
         },
@@ -126,53 +116,14 @@ export const CreateEditProgramOnScheduleModal = ({
   }, []);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setOpen(false);
-    form.reset({});
-    setText(defaultText);
+    console.log(values);
 
-    console.log(
-      values.startTime.toLocaleTimeString("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    );
-
-    if (isEdit && programOnSchedule && values.program) {
-      const request: ManageTrainingProgramOnSchedule = {
-        ...values,
-        startTime: values.startTime.toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        program: {
-          id: values.program.id,
-          name: values.program.name,
-        },
-      };
-
-      onEditProgramOnSchedule?.(programOnSchedule.id, request);
-    }
-
-    try {
-      isEdit
-        ? await editTrainingProgramOnSchedule({
-            ...values,
-            program: values.program,
-            id: programOnSchedule?.id,
-          } as EditTrainingProgramOnScheduleDTO)
-        : await createTrainingProgramOnSchedule(
-            values as CreateTrainingProgramOnScheduleDTO
-          );
-      toast.success(
-        `Successfully ${
-          isEdit ? "edited" : "created"
-        } training program on schedule!`
-      );
-    } catch {
-      toast.error(
-        `Could not ${isEdit ? "edit" : "create"} training program on schedule!`
-      );
-    }
+    if (values)
+      onSubmitModal(values as ManageTrainingProgramOnSchedule).then(() => {
+        setOpen(false);
+        form.reset({});
+        setText(defaultText);
+      });
   };
 
   const changeProgram = (program?: TrainerProgram) => {
@@ -208,9 +159,9 @@ export const CreateEditProgramOnScheduleModal = ({
           <Button
             size="sm"
             variant={"secondary"}
-            className="self-center border-primary border w-full"
+            className="self-center w-full"
           >
-            <PlusIcon className="" />
+            <PlusIcon className="text-primary" />
             Add program
           </Button>
         ) : (
@@ -238,7 +189,7 @@ export const CreateEditProgramOnScheduleModal = ({
               <FormField
                 control={form.control}
                 name="program"
-                render={({ field }) => (
+                render={({}) => (
                   <FormItem>
                     <FormLabel>Program</FormLabel>
                     <FormControl>

@@ -1,7 +1,11 @@
 import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
 import { isPast, isWithinInterval } from "date-fns";
 
-export type ScheduleTrainingStatus = "completed" | "upcoming" | "live";
+export type ScheduleTrainingStatus =
+  | "completed"
+  | "not_completed"
+  | "upcoming"
+  | "live";
 
 export const addMinutesToTime = (
   startTime: string | Date,

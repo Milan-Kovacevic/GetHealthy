@@ -31,23 +31,27 @@ export default function ProgramScheduleDay(props: ProgramScheduleDayProps) {
         "flex flex-col rounded-none border border-b-2",
         dayOfWeek === 1 && "border-l-2 rounded-bl-lg",
         dayOfWeek === lastDayOfWeek && "border-r-2 rounded-br-lg",
-        isTodaysDay && "border-t-0 bg-secondary/15 dark:bg-secondary/15",
+        // isTodaysDay && "bg-accent/5 dark:bg-accent/10",
         programs.length == 0 && "opacity-80"
-        // activeDayOfYear < todaysDayOfYear && "bg-muted/30 dark:bg-muted/40"
       )}
     >
       <CardContent className="flex-grow p-0 flex flex-col">
         <div
           className={cn(
-            "text-lg font-semibold text-center bg-accent/25 dark:bg-accent/70 border border-l-0 border-r-0 border-b-2 p-1",
-            isTodaysDay && "border-primary border-2 dark:border-primary/45"
+            "text-lg font-medium text-center bg-accent/25 dark:bg-accent/70 border border-l-0 border-r-0 border-b-2 p-1",
+            isTodaysDay && "bg-primary/5 dark:bg-primary/5"
           )}
         >
-          <p className="text-muted-foreground font-medium text-sm leading-none pt-1">
+          <p
+            className={cn(
+              "text-muted-foreground font-normal text-sm leading-tight pt-1",
+              isTodaysDay && "text-foreground/75"
+            )}
+          >
             {isTodaysDay && "Today, "}
             {format(forDay, "dd. MMM")}
           </p>
-          <p className="text-foreground">{format(forDay, "EEEE")}</p>
+          <p className={cn("text-foreground")}>{format(forDay, "EEEE")}</p>
         </div>
         <ScrollArea className="p-3.5 flex-1 flex">
           {programs.length == 0 ? (
@@ -62,6 +66,7 @@ export default function ProgramScheduleDay(props: ProgramScheduleDayProps) {
                 return (
                   <TrainingProgramCard
                     key={program.id}
+                    isTodaysDay={isTodaysDay}
                     programOnSchedule={program}
                     onViewDetails={() => {
                       onViewDetails(program.id);

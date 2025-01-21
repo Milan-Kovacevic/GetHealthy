@@ -22,11 +22,10 @@ export type ScheduleTrainingProgram = {
 
 export type ManageTrainingProgramOnSchedule = {
   dayOfWeek: number;
-  startTime: string; // HH:mm
-  program: ManageScheduleProgramDTO;
+  startTime: Date; // HH:mm
+  program: ManageScheduleProgram;
 };
 
-export type ManageScheduleProgramDTO = {
+export type ManageScheduleProgram = {
   id: number;
-  name: string;
 };

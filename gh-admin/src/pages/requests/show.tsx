@@ -12,6 +12,7 @@ import {
 } from "@refinedev/core";
 import { CheckIcon, DownloadIcon, Loader2Icon, XIcon } from "lucide-react";
 import { API_PREFIX } from "@/lib";
+import { useState } from "react";
 
 export const RequestShow = () => {
   const { goBack } = useNavigation();
@@ -45,7 +46,7 @@ export const RequestShow = () => {
       )}
       {record && (
         <div className="flex lg:flex-row flex-col gap-6 w-full">
-          <Card className="basis-1/2 max-w-2xl shadow-md">
+          <Card className="w-full max-w-2xl shadow-md">
             <CardContent className="space-y-8 py-5 px-6">
               <RequestInfo record={record} />
             </CardContent>
@@ -63,6 +64,7 @@ const RequestInfo = ({
 }) => {
   const dataProvider = useDataProvider();
   const defaultDataProvider = dataProvider();
+  const [loadingQualification, setLoadingQualification] = useState(false);
 
   const { isLoading, mutateAsync } =
     useCustomMutation<IRegistrationRequestProcessRequest>();
@@ -80,6 +82,7 @@ const RequestInfo = ({
   };
 
   const handleDownloadQualification = () => {
+    setLoadingQualification(true);
     defaultDataProvider
       .custom?.<any>({
         url: `${API_PREFIX}/storage/documents/${record.certificationFilePath}`,
@@ -94,7 +97,9 @@ const RequestInfo = ({
           "_Qualification." +
           fileExtension;
 
-        const blob = new Blob([qualification.data]);
+        const blob = new Blob([...qualification.data], {
+          type: "application/octet-stream",
+        });
 
         let url = URL.createObjectURL(blob);
         let a = document.createElement("a");
@@ -102,6 +107,9 @@ const RequestInfo = ({
         a.download = fileName;
         a.click();
         URL.revokeObjectURL(url);
+      })
+      .finally(() => {
+        setLoadingQualification(false);
       });
   };
 
@@ -115,14 +123,20 @@ const RequestInfo = ({
           <h2 className="text-xl font-semibold">{fullName}</h2>
         </div>
         <div className="">
-          <Button
-            onClick={handleDownloadQualification}
-            variant="secondary"
-            disabled={isLoading}
-          >
-            <DownloadIcon />
-            Download qualification
-          </Button>
+          {record.certificationFilePath && (
+            <Button
+              onClick={handleDownloadQualification}
+              variant="secondary"
+              disabled={isLoading || loadingQualification}
+            >
+              {loadingQualification ? (
+                <Loader2Icon className="animate-spin" />
+              ) : (
+                <DownloadIcon />
+              )}
+              Download qualification
+            </Button>
+          )}
         </div>
       </div>
       <div className="space-y-1 pt-3 pb-2">

@@ -7,12 +7,12 @@ import { createContext, useContext } from "react";
 type ScheduleContextState = {
   programs: TrainingProgramOnSchedule[];
   currentDate: Date;
-  addProgram: (program: TrainingProgramOnSchedule) => void;
-  editProgram: (
+  onAddProgram: (program: ManageTrainingProgramOnSchedule) => Promise<void>;
+  onEditProgram: (
     id: number,
     updatedProgram: ManageTrainingProgramOnSchedule
-  ) => void;
-  removeProgram: (programId: number) => void;
+  ) => Promise<void>;
+  onRemoveProgram: (programId: number) => void;
   getProgramsForDay: (day: Date) => TrainingProgramOnSchedule[];
   setCurrentDate: (date: Date) => void;
 };

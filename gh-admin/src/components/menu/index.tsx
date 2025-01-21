@@ -93,7 +93,12 @@ export const Menu = () => {
           <SidebarGroupLabel>Other</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={false} disabled={true}>
+              <SidebarMenuButton
+                asChild
+                isActive={false}
+                disabled={true}
+                className="bg-muted cursor-not-allowed"
+              >
                 <span className="select-none">
                   <ChartBarIcon />
                   Statistics

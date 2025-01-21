@@ -2,10 +2,16 @@ import {
   ManageTrainingProgramOnSchedule,
   TrainingProgramOnSchedule,
 } from "@/api/models/training-program-on-schedule";
-import { fetchTrainingProgamsOnSchedule } from "@/api/services/training-program-on-schedule-service";
+import {
+  createTrainingProgramOnSchedule,
+  deleteTrainingProgramOnSchedule,
+  editTrainingProgramOnSchedule,
+  fetchTrainingProgamsOnSchedule,
+} from "@/api/services/training-program-on-schedule-service";
 import { ScheduleContext } from "@/pages/training-schedule/hooks/use-schedule";
-import { startOfWeek } from "date-fns";
+import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type ScheduleProviderProps = {
   children: React.ReactNode;
@@ -15,19 +21,21 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
   const [programs, setPrograms] = useState<TrainingProgramOnSchedule[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
 
+  const sortPrograms = (programs: TrainingProgramOnSchedule[]) => {
+    return programs.sort((a, b) => {
+      const [aHours, aMinutes] = a.startTime.split(":").map(Number);
+      const [bHours, bMinutes] = b.startTime.split(":").map(Number);
+      const aTime = aHours * 60 + aMinutes;
+      const bTime = bHours * 60 + bMinutes;
+      return aTime - bTime;
+    });
+  };
+
   useEffect(() => {
     const fetchAndSortPrograms = async () => {
       try {
         const fetchedPrograms = await fetchTrainingProgamsOnSchedule();
-        const sortedPrograms = fetchedPrograms.sort((a, b) => {
-          const [aHours, aMinutes] = a.startTime.split(":").map(Number);
-          const [bHours, bMinutes] = b.startTime.split(":").map(Number);
-          const aTime = aHours * 60 + aMinutes;
-          const bTime = bHours * 60 + bMinutes;
-          return aTime - bTime;
-        });
-
-        setPrograms(sortedPrograms);
+        setPrograms(sortPrograms(fetchedPrograms));
       } catch (error) {
         console.error("Error fetching training programs!", error);
       }
@@ -36,33 +44,51 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
     fetchAndSortPrograms();
   }, []);
 
-  const addProgram = (program: TrainingProgramOnSchedule) => {
-    setPrograms((prev) => [...prev, program]);
+  const onAddProgram = async (program: ManageTrainingProgramOnSchedule) => {
+    return createTrainingProgramOnSchedule(program)
+      .then((response) => {
+        setPrograms((prev) => sortPrograms([...prev, response]));
+        toast.success(`Successfully added training program on schedule!`);
+      })
+      .catch(() => {
+        toast.success(`Could not add training program on schedule!`);
+      });
   };
 
-  const editProgram = (
+  const onEditProgram = async (
     id: number,
     updatedProgram: ManageTrainingProgramOnSchedule
   ) => {
-    setPrograms((prev) =>
-      prev.map((program) =>
-        program.id === id
-          ? {
-              ...program,
-              dayOfWeek: updatedProgram.dayOfWeek,
-              startTime: updatedProgram.startTime,
-            }
-          : program
-      )
-    );
+    return editTrainingProgramOnSchedule(id, updatedProgram)
+      .then((response) => {
+        setPrograms((prev) =>
+          sortPrograms(
+            prev.map((program) =>
+              program.id === id ? { ...response } : program
+            )
+          )
+        );
+        toast.success(`Successfully updated training program on schedule!`);
+      })
+      .catch(() => {
+        toast.success(`Could not update training program on schedule!`);
+      });
   };
 
-  const removeProgram = (programId: number) => {
-    setPrograms((prev) => prev.filter((program) => program.id !== programId));
+  const onRemoveProgram = async (programId: number) => {
+    return deleteTrainingProgramOnSchedule(programId)
+      .then(() => {
+        setPrograms((prev) =>
+          prev.filter((program) => program.id !== programId)
+        );
+        toast.success("Training program successfully deleted!");
+      })
+      .catch(() => {
+        toast.error("Could not delete training program from schedule!");
+      });
   };
 
   const getProgramsForDay = (day: Date) => {
-    const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
     const weekDay = day.getDay() === 0 ? 7 : day.getDay(); // Handle Sunday as 7
     return programs.filter((program) => program.dayOfWeek === weekDay);
   };
@@ -70,9 +96,9 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
   const value = {
     programs,
     currentDate,
-    addProgram,
-    editProgram,
-    removeProgram,
+    onAddProgram,
+    onEditProgram,
+    onRemoveProgram,
     getProgramsForDay,
     setCurrentDate,
   };

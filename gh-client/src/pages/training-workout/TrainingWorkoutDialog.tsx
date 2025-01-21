@@ -64,7 +64,9 @@ export default function TrainingWorkoutDialog({
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>View training program details</p>
+                      <p className="font-normal">
+                        View training program details
+                      </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

@@ -22,15 +22,21 @@ import {
   addMinutesToTime,
   ScheduleTrainingStatus,
 } from "@/utils/date-time-utils";
-import { ExternalLinkIcon, MoreHorizontalIcon, Trash2Icon } from "lucide-react";
-import { toast } from "sonner";
+import {
+  CheckIcon,
+  ExternalLinkIcon,
+  MoreHorizontalIcon,
+  Trash2Icon,
+} from "lucide-react";
 import CreateEditProgramOnScheduleModal from "./CreateEditProgramOnScheduleModal";
+import { cn } from "@/lib/utils";
 
 interface TrainingProgramCardProps {
   programOnSchedule: TrainingProgramOnSchedule;
   programStatus: ScheduleTrainingStatus;
   onViewDetails: (programId: number) => void;
   editable: boolean;
+  isTodaysDay: boolean;
 }
 
 export default function TrainingProgramCard({
@@ -38,6 +44,7 @@ export default function TrainingProgramCard({
   onViewDetails,
   programStatus,
   editable,
+  isTodaysDay,
 }: TrainingProgramCardProps) {
   return (
     <TooltipProvider>
@@ -45,27 +52,60 @@ export default function TrainingProgramCard({
         <TooltipTrigger asChild>
           <Card
             data-state="closed"
-            className="cursor-pointer shadow-md hover:border-foreground transition-colors p-1 border-foreground/35"
+            className={cn(
+              "transition-colors p-1 bg-card/80 shadow-md select-none",
+              isTodaysDay && "bg-card",
+              programStatus == "not_completed" &&
+                "border-2 border-red-400 dark:border-red-700",
+              programStatus == "completed" && "border-2 border-green-600/60",
+              (programStatus == "upcoming" || programStatus == "live") &&
+                "border-2 border-border/60",
+              programStatus == "live" &&
+                "border-red-400/50 dark:border-red-700/50",
+              "hover:bg-accent/10 dark:hover:bg-accent/90 duration-300"
+            )}
           >
-            <CardContent className="p-2 flex flex-col">
-              <h3 className="font-semibold text-sm mb-1">
-                {programOnSchedule.program.name}
-              </h3>
-              <p className="text-xs text-muted-foreground">
+            <CardContent className="p-2 pt-1 pb-0.5 flex flex-col">
+              <div className="flex justify-between items-center gap-0.5 mb-1.5">
+                <h3
+                  className={cn(
+                    "font-medium text-sm tracking-tight leading-tight",
+                    isTodaysDay && "font-semibold"
+                  )}
+                >
+                  {programOnSchedule.program.name}
+                </h3>
+                <Button
+                  onClick={() => onViewDetails(programOnSchedule.program.id)}
+                  size="sm"
+                  variant="ghost"
+                  className="h-auto py-1 font-normal px-1.5 [&_svg]:h-3.5 [&_svg]:w-3.5"
+                >
+                  <ExternalLinkIcon className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+
+              <p className="text-xs text-muted-foreground mb-1">
+                Trainer: {programOnSchedule.program.trainerFirstName}{" "}
+                {programOnSchedule.program.trainerLastName}
+              </p>
+              <p
+                className={cn(
+                  "text-xs font-medium leading-none text-foreground/80",
+                  isTodaysDay && "font-semibold"
+                )}
+              >
                 {addMinutesToTime(
                   programOnSchedule.startTime,
                   programOnSchedule.program.trainingDuration
                 )}
               </p>
             </CardContent>
-            <CardContent className="p-2 pt-0 flex flex-col">
+            <CardContent className="p-2 pb-1 pt-0 flex flex-col">
               <div className="mt-1 flex justify-between items-center">
                 <StatusBadge status={programStatus} />
                 {editable && (
-                  <ManageProgramPopup
-                    programOnSchedule={programOnSchedule}
-                    // onEditProgramOnSchedule={onEditProgramOnSchedule}
-                  />
+                  <ManageProgramPopup programOnSchedule={programOnSchedule} />
                 )}
               </div>
               {programStatus === "live" && (
@@ -74,32 +114,6 @@ export default function TrainingProgramCard({
             </CardContent>
           </Card>
         </TooltipTrigger>
-        <TooltipContent className="w-64 max-h-40 p-3">
-          <div className="text-sm line-clamp-3 mb-2">
-            {programOnSchedule.program.description}
-          </div>
-
-          <p className="text-xs text-muted-foreground font-medium">
-            Trainer: {programOnSchedule.program.trainerFirstName}{" "}
-            {programOnSchedule.program.trainerLastName}
-          </p>
-          <div className="flex justify-between items-center mt-1">
-            <p className="text-xs text-muted-foreground">
-              {addMinutesToTime(
-                programOnSchedule.startTime,
-                programOnSchedule.program.trainingDuration
-              )}
-            </p>
-            <Button
-              onClick={() => onViewDetails(programOnSchedule.program.id)}
-              size="sm"
-              variant="ghost"
-              className="h-auto  px-2"
-            >
-              <ExternalLinkIcon className="w-4 h-4" />
-            </Button>
-          </div>
-        </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
@@ -107,15 +121,19 @@ export default function TrainingProgramCard({
 
 const StatusBadge = ({ status }: { status: ScheduleTrainingStatus }) => {
   const statusStyles = {
-    completed: "bg-green-100 text-green-800",
-    upcoming: "bg-yellow-100 text-yellow-800",
-    live: "bg-red-100 text-red-800 animate-pulse",
+    completed:
+      "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100",
+    not_completed: "bg-red-100 text-red-800",
+    upcoming:
+      "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100",
+    live: "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100 animate-pulse",
   };
 
   return (
     <span
-      className={`px-2 py-0.5 rounded-full text-xs font-semibold ${statusStyles[status]}`}
+      className={`px-2 py-0.5 rounded-full text-xs font-semibold flex items-center ${statusStyles[status]}`}
     >
+      {status == "completed" && <CheckIcon className="h-3.5 w-3.5 mr-1" />}
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );
@@ -126,24 +144,14 @@ const ManageProgramPopup = ({
 }: {
   programOnSchedule: TrainingProgramOnSchedule;
 }) => {
-  const { editProgram } = useSchedule();
+  const { onEditProgram, onRemoveProgram } = useSchedule();
 
-  const handleEdit = (
-    id: number,
-    editedProgram: ManageTrainingProgramOnSchedule
+  const handleEditProgramOnSchedule = (
+    data: ManageTrainingProgramOnSchedule
   ) => {
-    editProgram(id, editedProgram);
+    return onEditProgram(programOnSchedule.id, data);
   };
 
-  const handleRemove = async () => {
-    try {
-      await deleteTrainingProgramOnSchedule(programOnSchedule.id);
-      toast.success("Training program successfully deleted!");
-    } catch (error) {
-      toast.error("Could not delete training program!");
-      console.log(error);
-    }
-  };
   return (
     <Popover>
       <PopoverTrigger
@@ -161,13 +169,13 @@ const ManageProgramPopup = ({
         <CreateEditProgramOnScheduleModal
           isEdit={true}
           programOnSchedule={programOnSchedule}
-          onEditProgramOnSchedule={handleEdit}
+          onSubmitModal={handleEditProgramOnSchedule}
         />
         <Button
           variant="ghost"
           size="sm"
           className="w-full justify-start rounded-none px-4 py-2 text-xs font-normal text-destructive hover:text-destructive"
-          onClick={handleRemove}
+          onClick={() => onRemoveProgram(programOnSchedule.id)}
         >
           <Trash2Icon className="mr-0 h-3.5 w-3.5" />
           Remove

@@ -3,7 +3,7 @@ import { CategoryDTO } from "./category-contract";
 
 export type TrainingProgramOnScheduleDTO = {
   id: number;
-  dayOfWeek: number;
+  dayOfWeek: string;
   startTime: string; // HH:mm
   program: ScheduleTrainingProgramDTO;
 };
@@ -23,13 +23,13 @@ type ScheduleTrainingProgramDTO = {
 export type EditTrainingProgramOnScheduleDTO = {
   id: number;
   dayOfWeek: number;
-  startTime: Date; // HH:mm
+  startTime: string; // HH:mm
   program: ManageScheduleProgramDTO;
 };
 
 export type CreateTrainingProgramOnScheduleDTO = {
   dayOfWeek: number;
-  startTime: Date;
+  startTime: string;
   program: ManageScheduleProgramDTO;
 };
 
