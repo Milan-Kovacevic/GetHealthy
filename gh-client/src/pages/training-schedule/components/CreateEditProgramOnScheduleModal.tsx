@@ -8,15 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useEffect, useState } from "react";
-
 import { TrainerProgram } from "@/api/models/training-program";
 import {
   ManageTrainingProgramOnSchedule,
@@ -37,39 +29,48 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PencilIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import SelectFormField from "@/components/primitives/SelectFormField";
 
 const daysOfWeek = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-] as const;
+  { label: "Monday", value: "1" },
+  { label: "Tuesday", value: "2" },
+  { label: "Wednesday", value: "3" },
+  { label: "Thursday", value: "4" },
+  { label: "Friday", value: "5" },
+  { label: "Saturday", value: "6" },
+  { label: "Sunday", value: "7" },
+];
 
 const formSchema = z.object({
   program: z
-    .object({
-      id: z.number(),
-      name: z.string(),
-      createdAt: z.string(),
-      description: z.string(),
-      trainerName: z.string(),
-    })
+    .object(
+      {
+        id: z.number(),
+        name: z.string(),
+        createdAt: z.string(),
+        description: z.string(),
+        trainerName: z.string(),
+      },
+      {
+        required_error: "Please select program",
+        invalid_type_error: "Please select program",
+      }
+    )
     .nullable()
     .refine((val) => val !== null && val.id > 0, {
       message: "Please select a program.",
     }),
 
   dayOfWeek: z
-    .number()
+    .string({ required_error: "Please select a valid day of the week." })
     .min(1)
     .max(7, { message: "Please select a valid day of the week." }),
 
-  startTime: z.date().refine((val) => !isNaN(new Date(val).getTime()), {
-    message: "Please enter a valid start time.",
-  }),
+  startTime: z
+    .date({ required_error: "Start time is required." })
+    .refine((val) => !isNaN(new Date(val).getTime()), {
+      message: "Please enter a valid start time.",
+    }),
 });
 
 export type CreateEditProgramOnScheduleModalProps = {
@@ -99,13 +100,13 @@ export const CreateEditProgramOnScheduleModal = ({
                 trainerName: `${programOnSchedule.program.trainerFirstName} ${programOnSchedule.program.trainerLastName}`,
               }
             : null,
-          dayOfWeek: programOnSchedule?.dayOfWeek ?? undefined,
+          dayOfWeek: programOnSchedule?.dayOfWeek.toString() ?? undefined,
           startTime: programOnSchedule?.startTime
             ? parseTimeStringToDate(programOnSchedule.startTime)
             : new Date(),
         }
       : {
-          program: {},
+          program: null,
           dayOfWeek: undefined,
           startTime: new Date(),
         },
@@ -116,14 +117,19 @@ export const CreateEditProgramOnScheduleModal = ({
   }, []);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    if (!values.program) return;
 
-    if (values)
-      onSubmitModal(values as ManageTrainingProgramOnSchedule).then(() => {
-        setOpen(false);
-        form.reset({});
-        setText(defaultText);
-      });
+    const request: ManageTrainingProgramOnSchedule = {
+      ...values,
+      program: values.program,
+      dayOfWeek: Number(values.dayOfWeek),
+    };
+
+    onSubmitModal(request).then(() => {
+      setOpen(false);
+      form.reset({});
+      setText(defaultText);
+    });
   };
 
   const changeProgram = (program?: TrainerProgram) => {
@@ -175,7 +181,7 @@ export const CreateEditProgramOnScheduleModal = ({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Select Training Program</DialogTitle>
@@ -185,13 +191,13 @@ export const CreateEditProgramOnScheduleModal = ({
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
-            <div className="grid gap-4 py-4">
+            <div className="space-y-2 py-2 w-[320px]">
               <FormField
                 control={form.control}
                 name="program"
                 render={({}) => (
-                  <FormItem>
-                    <FormLabel>Program</FormLabel>
+                  <FormItem className="space-y-0.5">
+                    <FormLabel>Program *</FormLabel>
                     <FormControl>
                       <div className="flex flex-col gap-4">
                         <TrainerProgramSelector
@@ -201,60 +207,36 @@ export const CreateEditProgramOnScheduleModal = ({
                         />
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs ml-0.5" />
                   </FormItem>
                 )}
               />
-              <FormField
+              <SelectFormField
                 control={form.control}
                 name="dayOfWeek"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Select Day</FormLabel>
-                    <FormControl>
-                      <div className="flex flex-col gap-4">
-                        <Select
-                          onValueChange={(value) =>
-                            field.onChange(Number(value))
-                          }
-                          value={field.value?.toString()}
-                        >
-                          <SelectTrigger className="col-span-3">
-                            <SelectValue placeholder="Select a day" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {daysOfWeek.map((day, index) => (
-                              <SelectItem
-                                key={day}
-                                value={(index + 1).toString()}
-                              >
-                                {day}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Select day *"
+                placeholder="Select a day"
+                options={daysOfWeek}
               />
-              <div className="flex flex-row sm:gap-x-8 gap-x-4 flex-wrap">
+
+              <div className="pt-1">
                 <FormField
                   control={form.control}
                   name="startTime"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Start Time</FormLabel>
+                    <FormItem className="space-y-0.5">
                       <FormControl>
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-row items-center gap-1">
                           <TimePicker
                             date={new Date(field.value)}
                             setDate={(date) => field.onChange(date)}
                           />
+                          <span className="text-sm mt-5 -translate-y-px">
+                            Start time *
+                          </span>
                         </div>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs ml-0.5" />
                     </FormItem>
                   )}
                 />

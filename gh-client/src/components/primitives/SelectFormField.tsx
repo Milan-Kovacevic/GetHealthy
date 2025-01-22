@@ -36,7 +36,7 @@ function SelectFormField(props: SelectFormFieldProps) {
       render={({ field }) => (
         <FormItem
           className={cn(
-            "flex flex-col flex-1 min-w-[200px] w-full ",
+            "w-full space-y-0.5 min-w-[200px]",
             props.className,
             props.disabled && "cursor-not-allowed"
           )}

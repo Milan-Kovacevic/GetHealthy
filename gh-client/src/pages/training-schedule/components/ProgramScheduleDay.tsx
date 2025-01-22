@@ -69,7 +69,7 @@ export default function ProgramScheduleDay(props: ProgramScheduleDayProps) {
                     isTodaysDay={isTodaysDay}
                     programOnSchedule={program}
                     onViewDetails={() => {
-                      onViewDetails(program.id);
+                      onViewDetails(program.program.id);
                     }}
                     programStatus={getProgramStatus(program)}
                     editable={true}

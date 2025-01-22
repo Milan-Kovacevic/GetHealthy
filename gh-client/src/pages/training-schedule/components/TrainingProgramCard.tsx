@@ -2,7 +2,6 @@ import {
   ManageTrainingProgramOnSchedule,
   TrainingProgramOnSchedule,
 } from "@/api/models/training-program-on-schedule";
-import { deleteTrainingProgramOnSchedule } from "@/api/services/training-program-on-schedule-service";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -12,7 +11,6 @@ import {
 } from "@/components/ui/popover";
 import {
   Tooltip,
-  TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
@@ -30,6 +28,7 @@ import {
 } from "lucide-react";
 import CreateEditProgramOnScheduleModal from "./CreateEditProgramOnScheduleModal";
 import { cn } from "@/lib/utils";
+import { SimpleAlertDialog } from "@/pages/shared/SimpleAlertDialog";
 
 interface TrainingProgramCardProps {
   programOnSchedule: TrainingProgramOnSchedule;
@@ -171,15 +170,22 @@ const ManageProgramPopup = ({
           programOnSchedule={programOnSchedule}
           onSubmitModal={handleEditProgramOnSchedule}
         />
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start rounded-none px-4 py-2 text-xs font-normal text-destructive hover:text-destructive"
-          onClick={() => onRemoveProgram(programOnSchedule.id)}
+        <SimpleAlertDialog
+          onConfirm={() => onRemoveProgram(programOnSchedule.id)}
+          title="Are you sure?"
+          description="This action cannot be undone, are you sure you want to continue?"
+          submitText="Yes"
+          cancelText="No"
         >
-          <Trash2Icon className="mr-0 h-3.5 w-3.5" />
-          Remove
-        </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start rounded-none px-4 py-2 text-xs font-normal text-destructive hover:text-destructive"
+          >
+            <Trash2Icon className="mr-0 h-3.5 w-3.5" />
+            Remove
+          </Button>
+        </SimpleAlertDialog>
       </PopoverContent>
     </Popover>
   );
