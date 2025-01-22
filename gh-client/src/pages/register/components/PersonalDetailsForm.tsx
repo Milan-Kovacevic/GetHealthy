@@ -113,6 +113,7 @@ const TraineeForm = ({
             Go back
           </Button>
           <Button className="w-full" type="submit" disabled={loading}>
+            {loading && <Loader2Icon className="animate-spin" />}
             Get started
           </Button>
         </div>
