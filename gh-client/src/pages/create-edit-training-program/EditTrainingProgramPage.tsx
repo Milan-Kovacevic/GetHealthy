@@ -3,10 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import EditTrainingProgramForm from "./components/EditTrainingProgramForm";
 import { toast } from "sonner";
 import { getSingleTrainingProgram } from "@/api/services/program-details-service";
-import { Separator } from "@/components/ui/separator";
 import { GeneralInfoFormSchema } from "@/schemas/training-program-schema";
 import { ExercisePlanItem } from "@/api/models/exercise";
 import PageHeadingLayout from "@/layouts/PageHeadingLayout";
+import GeneralInformationFormSkeleton from "./components/GeneralInformationFormSkeleton";
+import ExercisePlanBuilderSkeleton from "./components/ExercisePlanBuilderSkeleton";
 
 export default function EditTrainingProgramPage() {
   const { id } = useParams();
@@ -46,6 +47,7 @@ export default function EditTrainingProgramPage() {
     fetchTrainingProgram();
   }, [id]);
 
+  const loading = !programGeneralInfo || !programExercises;
   return (
     <PageHeadingLayout
       title="Edit Training Program"
@@ -60,7 +62,10 @@ export default function EditTrainingProgramPage() {
           programId={Number(id)}
         />
       ) : (
-        <p className="">Loading...</p>
+        <div>
+          <GeneralInformationFormSkeleton />
+          <ExercisePlanBuilderSkeleton />
+        </div>
       )}
     </PageHeadingLayout>
   );

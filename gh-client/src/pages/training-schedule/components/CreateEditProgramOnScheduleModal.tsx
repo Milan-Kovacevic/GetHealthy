@@ -191,7 +191,7 @@ export const CreateEditProgramOnScheduleModal = ({
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
-            <div className="space-y-2 py-2 w-[320px]">
+            <div className="space-y-2 py-2 w-[320px] pt-6">
               <FormField
                 control={form.control}
                 name="program"

@@ -36,41 +36,46 @@ export type AccountInfoFormSchema = {
 function useAccountInfoForm(defaultValues?: AccountInfoFormSchema) {
   // Used as a hook for future i18n updates ...
 
-  const formSchema = z.object({
-    username: z
-      .string()
-      .min(1, {
-        message: "Username is required.",
-      })
-      .max(32, {
-        message: "Maximum username length is 32",
-      }),
-    email: z
-      .string()
-      .min(1, {
-        message: "Email is required.",
-      })
-      .max(128, {
-        message: "Maximum email length is 128",
-      }),
-    password: z
-      .string()
-      .min(1, {
-        message: "Password is required.",
-      })
-      .max(64, {
-        message: "Maximum password length is 64",
-      }),
-    repeatPassword: z
-      .string()
-      .min(1, {
-        message: "Passwords must match.",
-      })
-      .max(64, {
-        message: "Maximum password length is 64",
-      }),
-  });
-
+  const formSchema = z
+    .object({
+      username: z
+        .string({ required_error: "Username is required." })
+        .min(4, {
+          message: "Minimal username length is 4.",
+        })
+        .max(32, {
+          message: "Maximum username length is 32.",
+        }),
+      email: z
+        .string()
+        .min(1, {
+          message: "Email is required.",
+        })
+        .max(128, {
+          message: "Maximum email length is 128",
+        })
+        .email("This is not a valid email."),
+      password: z
+        .string()
+        .min(1, {
+          message: "Password is required.",
+        })
+        .max(64, {
+          message: "Maximum password length is 64",
+        }),
+      repeatPassword: z
+        .string()
+        .min(1, {
+          message: "Passwords must match.",
+        })
+        .max(64, {
+          message: "Maximum password length is 64",
+        }),
+    })
+    .refine((data) => data.password === data.repeatPassword, {
+      message: "Passwords don't match",
+      path: ["repeatPassword"],
+    });
   const form = useForm<AccountInfoFormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues ?? {
@@ -96,8 +101,14 @@ function usePersonalDetailsForm(defaultValues?: TrainerDetailsFormSchema) {
   // Used as a hook for future i18n updates ...
 
   const trainerFormSchema = z.object({
-    firstName: z.string().min(1, "First name is required.").max(64),
-    lastName: z.string().min(1, "Last name is required.").max(64),
+    firstName: z
+      .string()
+      .min(1, "First name is required.")
+      .max(64, "Maximum length is 64 characters"),
+    lastName: z
+      .string()
+      .min(1, "Last name is required.")
+      .max(64, "Maximum length is 64 characters"),
     qualification: z
       .instanceof(File, { message: "Qualification is required." })
       .refine((file) => file.size < 1000000, {
@@ -114,8 +125,14 @@ function usePersonalDetailsForm(defaultValues?: TrainerDetailsFormSchema) {
       ),
   });
   const traineeFormSchema = z.object({
-    firstName: z.string().min(1, "First name is required.").max(64),
-    lastName: z.string().min(1, "Last name is required.").max(64),
+    firstName: z
+      .string()
+      .min(1, "First name is required.")
+      .max(64, "Maximum length is 64 characters"),
+    lastName: z
+      .string()
+      .min(1, "Last name is required.")
+      .max(64, "Maximum length is 64 characters"),
   });
 
   const traineeForm = useForm<TraineeDetailsFormSchema>({
