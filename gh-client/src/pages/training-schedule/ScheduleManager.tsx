@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
 import CreateEditProgramOnScheduleModal from "./components/CreateEditProgramOnScheduleModal";
 import ProgramScheduleDay from "./components/ProgramScheduleDay";
+import AuthGuard from "../shared/AuthGuard";
+import { TRAINER_ONLY_ROLE } from "@/utils/constants";
 
 const ScheduleManager = () => {
   const { programs, onAddProgram } = useSchedule();
@@ -57,9 +59,11 @@ const ScheduleManager = () => {
                 </p>
               </div>
             </div>
+            <AuthGuard allowedRoles={[TRAINER_ONLY_ROLE]}>
             <div className="md:flex-none flex-1 mb-2 md:self-end ">
               <CreateEditProgramOnScheduleModal onSubmitModal={onAddProgram} />
             </div>
+            </AuthGuard>
           </div>
 
           <div className="flex-1 flex bg-background">
