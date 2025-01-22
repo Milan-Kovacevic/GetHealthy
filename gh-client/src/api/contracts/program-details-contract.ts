@@ -9,10 +9,12 @@ export type SingleTrainingProgramDTO = TrainingProgramDTO & {
   exercises: ProgramExerciseDetailsDTO[];
 };
 
+export type TraineeProgramStatusDTO = "JOINED" | "NOT_JOINED" | "PENDING";
+
 export type SingleTrainingProgramInfoDTO = TrainingProgramDTO & {
   totalRates: number;
   currentlyEnrolled: number;
-  joined?: boolean;
+  status?: TraineeProgramStatusDTO;
 };
 
 export type SingleProgramDetailsDTO = {

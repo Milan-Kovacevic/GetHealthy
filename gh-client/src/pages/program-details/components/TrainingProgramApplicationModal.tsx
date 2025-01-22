@@ -15,10 +15,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserPlus } from "lucide-react";
 import TextareaFormField from "@/components/primitives/TextareaFormField";
+import { cn } from "@/lib/utils";
 
 type TrainingProgramApplicationModalProps = {
   disabled: boolean;
   onSubmit?: (application: string) => void;
+  pending?: boolean;
 };
 
 const formSchema = z.object({
@@ -57,12 +59,12 @@ export default function TrainingProgramApplicationModal(
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          disabled={props.disabled}
+          disabled={props.disabled || props.pending}
           variant="secondary"
-          className="h-auto items-center min-w-32"
+          className={cn("h-auto items-center min-w-32")}
         >
           <UserPlus className="h-5 w-5 text-primary" />
-          <span>Join</span>
+          <span>{props.pending ? "Pending application" : "Join"}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

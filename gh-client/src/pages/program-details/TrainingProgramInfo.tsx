@@ -120,14 +120,16 @@ export default function TrainingProgramInfo() {
             !program.imageFilePath && "dark:filter-white"
           )}
         />
-        {program.joined && (
+        {program.status == "JOINED" && (
           <div className="absolute inset-0 pointer-events-none z-10">
             <div
               className="absolute -left-16 top-6 -rotate-45 bg-primary/85 py-1.5
           text-center text-sm font-semibold text-white shadow-lg"
               style={{ width: "200px" }}
             >
-              <span className="inline-block -rotate-270 text-base">Joined</span>
+              <span className="inline-block -rotate-270 uppercase sm:text-[13px] text-xs tracking-wider">
+                Joined
+              </span>
             </div>
           </div>
         )}
@@ -206,13 +208,15 @@ export default function TrainingProgramInfo() {
           </div>
           {!isTrainer && (
             <div className="flex items-center flex-wrap gap-2 lg:mt-auto mt-auto mb-0.5">
-              {!program.joined && (
+              {(program.status == "NOT_JOINED" ||
+                program.status == "PENDING") && (
                 <TrainingProgramApplicationModal
                   onSubmit={handleApplicationModalSubmit}
                   disabled={submitting}
+                  pending={program.status == "PENDING"}
                 />
               )}
-              {program.joined && (
+              {program.status == "JOINED" && (
                 <SimpleAlertDialog
                   title="Are you sure?"
                   description="Are you sure you want to leave this training program?"
