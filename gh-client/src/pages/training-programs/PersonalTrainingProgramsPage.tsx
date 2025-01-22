@@ -2,7 +2,7 @@ import useAuth from "@/hooks/use-auth";
 import { TrainingProgramLayout } from "./TrainingProgramLayout";
 import usePersonalTrainingPrograms from "./hooks/use-personal-programs";
 import { TrainingProgramsLoader } from "./components/TrainingProgramsLoaders";
-import NoTrainingProgramsAnimation from "./components/NoTrainingProgramsAnimation";
+import NoTrainingProgramsAnimation from "../shared/NoListItemsAnimation";
 import { TrainingProgramCard } from "./components/TrainingProgramCard";
 import { ManagedProgramCard } from "./components/ManagedProgramCard";
 
@@ -23,18 +23,21 @@ export const PersonalTrainingProgramsPage = () => {
       {isTrainer
         ? state.programs.map((item) => (
             <ManagedProgramCard
+              key={item.id}
               program={item}
               onRemoveTrainingProgram={state.onRemoveTrainingProgram}
             />
           ))
-        : state.programs.map((item) => <TrainingProgramCard program={item} />)}
+        : state.programs.map((item) => (
+            <TrainingProgramCard key={item.id} program={item} />
+          ))}
     </div>
   );
 
   return (
     <TrainingProgramLayout
       showFeatures={false}
-      showCreate={false}
+      showCreate={isTrainer}
       state={state}
     >
       {TrainingProgramsSection}

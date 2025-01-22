@@ -6,4 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface TraineeRepository extends JpaRepository<Trainee, Integer> {
 
+    Trainee getTraineeById(int userId);
 }

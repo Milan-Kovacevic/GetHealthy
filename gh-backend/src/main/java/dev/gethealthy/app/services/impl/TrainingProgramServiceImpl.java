@@ -1,14 +1,19 @@
 package dev.gethealthy.app.services.impl;
 
-import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.*;
 import dev.gethealthy.app.models.enums.StorageType;
-import dev.gethealthy.app.models.requests.*;
+import dev.gethealthy.app.models.requests.CreateProgramExercisesRequest;
+import dev.gethealthy.app.models.requests.CreateTrainingProgramRequest;
+import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.*;
-import dev.gethealthy.app.repositories.*;
+import dev.gethealthy.app.repositories.CategoryRepository;
+import dev.gethealthy.app.repositories.TrainerRepository;
+import dev.gethealthy.app.repositories.TrainingProgramExerciseRepository;
+import dev.gethealthy.app.repositories.TrainingProgramRepository;
 import dev.gethealthy.app.services.StorageAccessService;
 import dev.gethealthy.app.services.TrainingProgramService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -173,39 +178,37 @@ public class TrainingProgramServiceImpl
 
     @Override
     public void createTrainingProgram(CreateTrainingProgramRequest trainingProgramRequest,
-                                      TrainingProgramExercisesRequest trainingProgramExercisesRequest, MultipartFile file) {
+                                      CreateProgramExercisesRequest trainingProgramExercisesRequest, MultipartFile file) {
         Trainer trainer = trainerRepository.findById(trainingProgramRequest.getTrainerId()).orElseThrow(NotFoundException::new);
 
         var trainingProgram = modelMapper.map(trainingProgramRequest, TrainingProgram.class);
         trainingProgram.setTrainer(trainer);
         trainingProgram.setCreatedAt(Instant.now());
-
+        trainingProgram.setId(null);
         List<TrainingProgramExercise> trainingProgramExercises = new ArrayList<>();
 
-        for (TrainingProgramExerciseRequest exercisesRequest : trainingProgramExercisesRequest
+        for (var exercisesRequest : trainingProgramExercisesRequest
                 .getTrainingProgramExercises()) {
-            TrainingProgramExercise trainingProgramExercise = modelMapper.map(exercisesRequest,
+            var trainingProgramExercise = modelMapper.map(exercisesRequest,
                     TrainingProgramExercise.class);
+            trainingProgramExercise.setId(null);
             trainingProgramExercise.setProgram(trainingProgram);
 
             List<ExerciseSet> exerciseSets = new ArrayList<>();
-            for (ExerciseSetRequest setRequest : exercisesRequest.getExerciseSets()) {
+            for (var setRequest : exercisesRequest.getExerciseSets()) {
                 ExerciseSet exerciseSet = modelMapper.map(setRequest, ExerciseSet.class);
                 exerciseSet.setProgramExercise(trainingProgramExercise);
                 exerciseSets.add(exerciseSet);
             }
 
             trainingProgramExercise.setExerciseSets(exerciseSets);
-
             trainingProgramExercises.add(trainingProgramExercise);
         }
 
         trainingProgram.setTrainingProgramExercises(trainingProgramExercises);
-
         saveFile(file, trainingProgram);
 
         trainingProgramRepository.saveAndFlush(trainingProgram);
-
     }
 
     @Override

@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class ExerciseSetResponse {
-    private Integer id;
-    private Integer restTime;
-    private String firstMetricValue;
-    private String secondMetricValue;
+    protected Integer id;
+    protected Integer restTime;
+    protected String firstMetricValue;
+    protected String secondMetricValue;
 }

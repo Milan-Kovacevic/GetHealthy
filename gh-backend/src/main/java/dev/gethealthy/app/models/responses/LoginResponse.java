@@ -5,10 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-@Getter
-@Setter
-public class LoginResponse extends UserAccountResponse {
-    private String token;
+public class LoginResponse {
+    private TokensResponse tokens;
+    private AuthUserResponse user;
 }

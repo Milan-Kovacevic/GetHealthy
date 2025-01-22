@@ -2,17 +2,45 @@ import { Exercise } from "@/api/models/exercise";
 import { getPageableExcercises } from "@/api/services/exercise-service";
 import { usePagination } from "@/hooks/use-pagination";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
+export type ExercisesState = {
+  exercises: Exercise[];
+  loading: boolean;
+  totalPages: number;
+  isLastPage: boolean;
+  isFirstPage: boolean;
+  currentPage: number;
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
+  onPageChange: (page: number) => void;
+  onSearch: () => void;
+  onMoreExercises: () => void;
+};
 
 export default function useExercises() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const onSearchExercises = (searchQuery: string) => {
-    setSearchQuery(searchQuery);
-  };
+  const query = searchParams.get("q");
+  const page = searchParams.get("p");
+
+  const [searchQuery, setSearchQuery] = useState(query ?? "");
 
   useEffect(() => {
     loadMoreExercises();
-  }, [searchQuery]);
+  }, [searchQuery, page]);
+
+  const onSearchExercises = (searchQuery: string) => {
+    searchParams.set("q", searchQuery);
+    setSearchParams(searchParams);
+    setSearchQuery(searchQuery);
+  };
+
+  const onExercisesPageChange = (page: number) => {
+    searchParams.set("p", page.toString());
+    setSearchParams(searchParams);
+    setCurrentExercisePage(page);
+  };
 
   const {
     data: exercises,
@@ -21,20 +49,25 @@ export default function useExercises() {
     totalPages: totalExercisePages,
     last: lastExercisePage,
     first: firstExercisePage,
-    page: exercisePage,
-    setPage: setExercisePage,
+    page: currentExercisePage,
+    setPage: setCurrentExercisePage,
   } = usePagination<Exercise>({
-    fetchData: (state) => getPageableExcercises(searchQuery, state.page),
+    fetchData: (state) => {
+      return getPageableExcercises(searchQuery, state.page);
+    },
+    initialPage: parseInt(page ?? "0"),
   });
 
   return {
-    exercises,
-    loadingExercises,
-    totalExercisePages,
-    lastExercisePage,
-    firstExercisePage,
-    exercisePage,
-    setExercisePage,
-    onSearchExercises,
-  };
+    exercises: exercises,
+    loading: loadingExercises,
+    totalPages: totalExercisePages,
+    isLastPage: lastExercisePage,
+    isFirstPage: firstExercisePage,
+    currentPage: currentExercisePage,
+    searchQuery: searchQuery,
+    setSearchQuery: setSearchQuery,
+    onPageChange: onExercisesPageChange,
+    onSearch: onSearchExercises,
+  } as ExercisesState;
 }

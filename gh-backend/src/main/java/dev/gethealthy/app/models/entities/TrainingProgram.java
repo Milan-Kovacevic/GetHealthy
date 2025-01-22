@@ -58,11 +58,11 @@ public class TrainingProgram implements BaseEntity<Integer> {
         @JoinColumn(name = "UserId", nullable = false)
         private Trainer trainer;
 
-        @OneToMany(fetch = FetchType.EAGER) // TODO: LAZY??
+        @OneToMany(fetch = FetchType.LAZY) // TODO: LAZY??
         @JoinColumn(name = "ProgramId")
         private List<ProgramRating> trainingProgramRatings;
 
-        @OneToMany(fetch = FetchType.EAGER)
+        @OneToMany(fetch = FetchType.LAZY)
         @OnDelete(action = OnDeleteAction.CASCADE)
         @JoinColumn(name = "CategoryId", nullable = false)
         @JoinTable(name = "training_program_category", joinColumns = @JoinColumn(name = "ProgramId"), inverseJoinColumns = @JoinColumn(name = "CategoryId"))
@@ -70,7 +70,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
 
         // @OnDelete(action = OnDeleteAction.CASCADE)
         // @JoinColumn(name = "ExerciseId", nullable = false)
-        @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }) // TODO: ???
+        @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE }) // TODO: ???
         @JoinTable(name = "training_program_exercise", joinColumns = @JoinColumn(name = "ProgramId"), inverseJoinColumns = @JoinColumn(name = "ExerciseId"))
         private List<Exercise> exercises;
 
@@ -78,8 +78,16 @@ public class TrainingProgram implements BaseEntity<Integer> {
         @JoinColumn(name = "ProgramId")
         private List<TrainingProgramExercise> trainingProgramExercises;
 
+        @OneToMany(fetch = FetchType.LAZY)
+        @JoinColumn(name = "ProgramId")
+        private List<TraineeOnTrainingProgram> traineeOnTrainingProgram;
+
+        @OneToMany(fetch = FetchType.LAZY)
+        @JoinColumn(name = "ProgramId")
+        private List<Comment> comments;
+
         @Column(name = "Deleted")
-        private Boolean deleted = false;
+        private Boolean deleted;
 
         @Size(max = 255)
         @Column(name = "ImageFilePath")

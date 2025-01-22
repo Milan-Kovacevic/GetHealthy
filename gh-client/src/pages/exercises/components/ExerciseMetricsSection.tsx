@@ -40,20 +40,23 @@ export default function ExerciseMetricsSection(
       {loadingMetrics && showMetrics && (
         <div className="flex flex-wrap items-center gap-2 justify-center">
           {[...Array(3)].map((_, index) => (
-            <Skeleton key={`item-${index}`} className="w-28 h-8 rounded-full" />
+            <Skeleton
+              key={`item-${index}`}
+              className="w-28 sm:h-8 h-6 rounded-full"
+            />
           ))}
         </div>
       )}
 
       {!loadingMetrics && showMetrics && exerciseMetrics.length > 0 && (
-        <div className="flex flex-wrap gap-2 justify-center items-center">
+        <div className="flex flex-wrap sm:gap-2 gap-1.5 justify-center items-center">
           {exerciseMetrics.map((item) => (
             <Badge
               key={item.id}
-              className="font-medium flex gap-2 px-4 h-auto py-1 border-muted-foreground/20"
+              className="font-medium flex gap-2 sm:px-4 px-2.5 h-auto sm:py-1 py-0.5 border-muted-foreground/20"
               variant="secondary"
             >
-              <span className="text-sm">{item.name}</span>
+              <span className="sm:text-sm text-xs">{item.name}</span>
               {item.unit && (
                 <>
                   <span className="bg-muted-foreground/90 h-4 w-px"></span>

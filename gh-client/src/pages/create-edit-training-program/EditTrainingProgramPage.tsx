@@ -3,9 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import EditTrainingProgramForm from "./components/EditTrainingProgramForm";
 import { toast } from "sonner";
 import { getSingleTrainingProgram } from "@/api/services/program-details-service";
-import { Separator } from "@/components/ui/separator";
 import { GeneralInfoFormSchema } from "@/schemas/training-program-schema";
 import { ExercisePlanItem } from "@/api/models/exercise";
+import PageHeadingLayout from "@/layouts/PageHeadingLayout";
 import GeneralInformationFormSkeleton from "./components/GeneralInformationFormSkeleton";
 import ExercisePlanBuilderSkeleton from "./components/ExercisePlanBuilderSkeleton";
 
@@ -49,30 +49,24 @@ export default function EditTrainingProgramPage() {
 
   const loading = !programGeneralInfo || !programExercises;
   return (
-    <section className="overflow-hidden relative sm:px-5 px-4 md:pt-6 pt-4 pb-10">
-      <div className="container mx-auto h-full space-y-5 z-10 relative">
-        <div className="space-y-0.5">
-          <p className="text-2xl font-bold">Edit Training Program</p>
-          <p className="text-muted-foreground text-sm sm:text-base">
-            Edit general information about the program or update your workout
-            plan
-          </p>
+    <PageHeadingLayout
+      title="Edit Training Program"
+      description="Edit general information about the program or update your workout
+            plan"
+    >
+      {programGeneralInfo && programExercises ? (
+        <EditTrainingProgramForm
+          generalInfo={programGeneralInfo}
+          exercises={programExercises}
+          programPicture={programPicture}
+          programId={Number(id)}
+        />
+      ) : (
+        <div>
+          <GeneralInformationFormSkeleton />
+          <ExercisePlanBuilderSkeleton />
         </div>
-        <Separator className="my-4" />
-        {!loading ? (
-          <EditTrainingProgramForm
-            generalInfo={programGeneralInfo}
-            exercises={programExercises}
-            programPicture={programPicture}
-            programId={Number(id)}
-          />
-        ) : (
-          <div>
-            <GeneralInformationFormSkeleton />
-            <ExercisePlanBuilderSkeleton />
-          </div>
-        )}
-      </div>
-    </section>
+      )}
+    </PageHeadingLayout>
   );
 }

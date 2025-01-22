@@ -5,32 +5,95 @@ import {
   EditTrainingProgramOnScheduleDTO,
   TrainingProgramOnScheduleDTO,
 } from "../contracts/training-program-on-schedule-contract";
+import {
+  ManageTrainingProgramOnSchedule,
+  TrainingProgramOnSchedule,
+} from "../models/training-program-on-schedule";
+import { format } from "date-fns";
 
-const createTrainingProgramOnSchedule = async (
-  data: CreateTrainingProgramOnScheduleDTO
-) => {
+const translateWeekDayToNumber = (weekDay: string) => {
+  switch (weekDay) {
+    case "MONDAY":
+      return 0;
+    case "TUESDAY":
+      return 1;
+    case "WEDNESDAY":
+      return 2;
+    case "THURSDAY":
+      return 3;
+    case "FRIDAY":
+      return 4;
+    case "SATURDAY":
+      return 5;
+    case "SUNDAY":
+      return 6;
+    default:
+      return -1;
+  }
+};
+
+const fetchTrainingProgamsOnSchedule = async (): Promise<
+  TrainingProgramOnSchedule[]
+> => {
   var url = `${ApiEndpoints.TrainingProgramOnSchedule}`;
 
-  return sendAxiosRequest<CreateTrainingProgramOnScheduleDTO, void>({
-    method: "POST",
+  return sendAxiosRequest<void, TrainingProgramOnScheduleDTO[]>({
+    method: "GET",
     url: url,
-    data: data,
   }).then((response) => {
-    return response.data;
+    return response.data.map((item) => {
+      return {
+        ...item,
+        dayOfWeek: translateWeekDayToNumber(item.dayOfWeek),
+      };
+    });
   });
 };
 
-const editTrainingProgramOnSchedule = (
-  data: EditTrainingProgramOnScheduleDTO
-) => {
+const createTrainingProgramOnSchedule = async (
+  data: ManageTrainingProgramOnSchedule
+): Promise<TrainingProgramOnSchedule> => {
   var url = `${ApiEndpoints.TrainingProgramOnSchedule}`;
 
-  return sendAxiosRequest<EditTrainingProgramOnScheduleDTO, void>({
+  return sendAxiosRequest<
+    CreateTrainingProgramOnScheduleDTO,
+    TrainingProgramOnScheduleDTO
+  >({
+    method: "POST",
+    url: url,
+    data: {
+      ...data,
+      startTime: format(data.startTime, "HH:mm:ss"),
+    } as CreateTrainingProgramOnScheduleDTO,
+  }).then((response) => {
+    return {
+      ...response.data,
+      dayOfWeek: translateWeekDayToNumber(response.data.dayOfWeek),
+    };
+  });
+};
+
+const editTrainingProgramOnSchedule = async (
+  id: number,
+  data: ManageTrainingProgramOnSchedule
+): Promise<TrainingProgramOnSchedule> => {
+  var url = `${ApiEndpoints.TrainingProgramOnSchedule}/${id}`;
+  console.log(data);
+  return sendAxiosRequest<
+    EditTrainingProgramOnScheduleDTO,
+    TrainingProgramOnScheduleDTO
+  >({
     method: "PUT",
     url: url,
-    data: data,
+    data: {
+      ...data,
+      startTime: format(data.startTime, "HH:mm:ss"),
+    } as EditTrainingProgramOnScheduleDTO,
   }).then((response) => {
-    return response.data;
+    return {
+      ...response.data,
+      dayOfWeek: translateWeekDayToNumber(response.data.dayOfWeek),
+    };
   });
 };
 
@@ -49,4 +112,5 @@ export {
   deleteTrainingProgramOnSchedule,
   createTrainingProgramOnSchedule,
   editTrainingProgramOnSchedule,
+  fetchTrainingProgamsOnSchedule,
 };

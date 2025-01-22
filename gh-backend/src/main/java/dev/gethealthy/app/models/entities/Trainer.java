@@ -16,19 +16,6 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "trainer")
 public class Trainer extends User implements BaseEntity<Integer> {
-
-    /*
-    @Column(name = "UserId", nullable = false)
-    private Integer trainerId;
-    */
-    /*
-    @MapsId
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "UserId", nullable = false)
-    private User user;
-     */
-
     @Size(max = 512)
     @Column(name = "Biography", length = 512)
     private String biography;
@@ -37,9 +24,9 @@ public class Trainer extends User implements BaseEntity<Integer> {
     @Column(name = "ContactInfo", length = 32)
     private String contactInfo;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "UserId", nullable = false)
-    private Qualification qualification;
+//    @MapsId
+//    @OneToOne(fetch = FetchType.LAZY, optional = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JoinColumn(name = "UserId", nullable = false)
+//    private Qualification qualification;
 }

@@ -1,10 +1,10 @@
--- Test data for get_healthy.USER_ACCOUNT
+-- Test data for get_healthy.USER_ACCOUNT -- password 123
 INSERT INTO get_healthy.user_account (UserId, Username, Password, Email, Enabled, Role, CreatedAt, LastAccessed)
 VALUES 
-  (1, 'admin1', 'passwordHash1', 'admin1@example.com', 1, 0, '2024-12-01 10:00:00', '2024-12-20 15:30:00'),
-  (2, 'trainer1', 'passwordHash2', 'trainer1@example.com', 1, 1, '2024-12-01 11:00:00', NULL),
-  (3, 'trainee1', 'passwordHash3', 'trainee1@example.com', 1, 2, '2024-12-02 09:30:00', '2024-12-21 08:00:00'),
-  (4, 'trainee2', 'passwordHash4', 'trainee2@example.com', 1, 2, '2025-01-08 10:31:26', NULL);
+  (1, 'admin1', '$2a$12$2FgxuDftoQZo4qBIXtkgI.1iSGadToaPm8.CWXRsnIs4m/EFZ7gya', 'admin1@example.com', 1, 0, '2024-12-01 10:00:00', '2024-12-20 15:30:00'),
+  (2, 'trainer1', '$2a$12$2FgxuDftoQZo4qBIXtkgI.1iSGadToaPm8.CWXRsnIs4m/EFZ7gya', 'trainer1@example.com', 1, 2, '2024-12-01 11:00:00', NULL),
+  (3, 'trainee1', '$2a$12$2FgxuDftoQZo4qBIXtkgI.1iSGadToaPm8.CWXRsnIs4m/EFZ7gya', 'trainee1@example.com', 1, 1, '2024-12-02 09:30:00', NULL),
+  (4, 'trainee2', '$2a$12$2FgxuDftoQZo4qBIXtkgI.1iSGadToaPm8.CWXRsnIs4m/EFZ7gya', 'trainee2@example.com', 1, 1, '2025-01-08 10:31:26', NULL);
   
 
 -- Test data for get_healthy.ADMINISTRATOR
@@ -199,9 +199,9 @@ VALUES
   (1, 'Great program for beginners!', '2024-12-20 12:00:00', 3, 1);
 
 -- Test data for get_healthy.PROGRAM_RATING
-INSERT INTO get_healthy.program_rating (Rate, ProgramId, UserId)
+INSERT INTO get_healthy.program_rating (Rate, ProgramId, UserId, DateRated)
 VALUES 
-  (5, 1, 3);
+  (5, 1, 3, '2025-01-05 14:45:00');
 
 -- Test data for get_healthy.TRAINEE_ON_TRAINING_PROGRAM
 INSERT INTO get_healthy.trainee_on_training_program (UserId, ProgramId, JoinDate)
@@ -211,7 +211,8 @@ VALUES
 -- Test data for get_healthy.TRAINING_PROGRAM_ON_SCHEDULE
 INSERT INTO get_healthy.training_program_on_schedule (Id, StartTime, DayOfWeek, ProgramId)
 VALUES 
-  (1, '08:00:00', 1, 1);
+  (1, '08:00:00', 1, 1),
+  (2, '20:00:00', 5, 2);
 
 -- Test data for get_healthy.EXERCISE_SET
 INSERT INTO get_healthy.exercise_set (ExerciseSetId, ProgramExericseId, RestTime, FirstMetricValue, SecondMetricValue)

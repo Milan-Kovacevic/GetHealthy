@@ -37,8 +37,7 @@ public class Exercise implements BaseEntity<Integer> {
     @JoinColumn(name = "FirstExerciseMetricId", nullable = false)
     private ExerciseMetric firstExerciseMetric;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "SecondExerciseMetricId")
     private ExerciseMetric secondExerciseMetric;
-
 }

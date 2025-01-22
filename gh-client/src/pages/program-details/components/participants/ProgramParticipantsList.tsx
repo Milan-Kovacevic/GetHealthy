@@ -18,8 +18,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { SearchBar } from "@/components/primitives/SearchBar";
-import { TrainerProgram } from "@/api/models/training-program";
-// import { getAllTrainingProgramsForTrainer } from "@/api/services/training-program-service";
+import { toast } from "sonner";
 
 type ProgramParticipantsListProps = {
   programId: number;
@@ -52,13 +51,6 @@ export default function ProgramParticipantsList(
       );
     },
   });
-  const [trainerPrograms, setTrainerPrograms] = useState<TrainerProgram[]>([]);
-  const selectablePrograms = trainerPrograms.filter((p) => p.id != programId);
-  useEffect(() => {
-    // getAllTrainingProgramsForTrainer(userId).then((programs) => {
-    //   setTrainerPrograms(programs);
-    // });
-  }, []);
 
   const handleSearchParticipants = () => {
     onLoadMoreData();
@@ -70,7 +62,12 @@ export default function ProgramParticipantsList(
       .then(() => {
         onLoadMoreData();
       })
-      .finally(() => setIsLoadingParticipants(false));
+      .catch(() => {
+        setIsLoadingParticipants(false);
+        toast.error("Unexpected error", {
+          description: "Unable to remove participant from selected program",
+        });
+      });
   };
 
   const handleMoveProgramParticipant = (newProgramId: number) => {
@@ -86,7 +83,12 @@ export default function ProgramParticipantsList(
         setSelectedParticipant(null);
         onLoadMoreData();
       })
-      .finally(() => setIsLoadingParticipants(false));
+      .catch(() => {
+        setIsLoadingParticipants(false);
+        toast.error("Unexpected error", {
+          description: "Unable to move participant to selected program",
+        });
+      });
   };
 
   const onMoveProgramParticipantClicked = (id: number) => {
@@ -180,7 +182,6 @@ export default function ProgramParticipantsList(
             onCancel={onCancelMoveParticipant}
             onSubmit={handleMoveProgramParticipant}
             participant={selectedParticipant}
-            trainerPrograms={selectablePrograms}
           />
         )}
       </div>

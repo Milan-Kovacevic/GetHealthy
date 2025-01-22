@@ -16,18 +16,23 @@ type PhoneInputFormFieldProps = {
   description?: string;
   placeholder?: string;
   className?: string;
+  disabled?: boolean;
 };
 
 const PhoneInputFormField = (props: PhoneInputFormFieldProps) => {
   return (
     <FormField
       control={props.control}
-      name="phone"
+      name={props.name}
       render={({ field }) => (
         <FormItem className={cn("flex flex-col items-start", props.className)}>
           <FormLabel className="text-left">{props.label}</FormLabel>
           <FormControl className="w-full">
-            <PhoneInput placeholder={props.placeholder} {...field} />
+            <PhoneInput
+              placeholder={props.placeholder}
+              {...field}
+              disabled={props.disabled}
+            />
           </FormControl>
           {props.description && (
             <FormDescription className="text-xs ml-0.5">

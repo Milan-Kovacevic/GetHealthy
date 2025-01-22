@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("${gethealthy.base-url}/schedules")
 public class TrainingScheduleController extends CrudController<Integer, TrainingScheduleRequest, TrainingScheduleResponse> {
-    // TODO ...
     public TrainingScheduleController(TrainingScheduleService crudService) {
         super(crudService, TrainingScheduleResponse.class);
     }

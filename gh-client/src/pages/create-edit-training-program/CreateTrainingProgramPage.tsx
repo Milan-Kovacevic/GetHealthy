@@ -1,23 +1,17 @@
 import { Separator } from "@/components/ui/separator";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
 import CreateTrainingProgramForm from "./components/CreateTrainingProgramForm";
+import PageHeadingLayout from "@/layouts/PageHeadingLayout";
 
 const CreateTrainingProgramPage = () => {
   return (
-    <section className="overflow-hidden relative sm:px-5 px-4 md:pt-6 pt-4 pb-10">
-      <BackgroundBlurs />
-      <div className="container mx-auto h-full space-y-5 z-10 relative">
-        <div className="space-y-0.5">
-          <p className="text-2xl font-bold">Create training program</p>
-          <p className="text-muted-foreground text-sm sm:text-base">
-            Fill in some general information about the program, and create your
-            workout plan
-          </p>
-        </div>
-        <Separator className="my-4" />
-        <CreateTrainingProgramForm />
-      </div>
-    </section>
+    <PageHeadingLayout
+      title="Create training program"
+      description="Fill in some general information about the program, and create your
+            workout plan"
+    >
+      <CreateTrainingProgramForm />
+    </PageHeadingLayout>
   );
 };
 

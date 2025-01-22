@@ -9,7 +9,9 @@ import dev.gethealthy.app.models.enums.Role;
 import dev.gethealthy.app.models.enums.StorageType;
 import dev.gethealthy.app.models.requests.LoginRequest;
 import dev.gethealthy.app.models.requests.RegistrationRequest;
+import dev.gethealthy.app.models.responses.AuthUserResponse;
 import dev.gethealthy.app.models.responses.LoginResponse;
+import dev.gethealthy.app.models.responses.TokensResponse;
 import dev.gethealthy.app.repositories.QualificationRepository;
 import dev.gethealthy.app.repositories.TrainerRepository;
 import dev.gethealthy.app.repositories.UserAccountRepository;
@@ -30,6 +32,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -55,17 +58,21 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest request) {
-        LoginResponse response;
+        LoginResponse response = new LoginResponse();
         try {
             Authentication authenticate = authenticationManager
                     .authenticate(
                             new UsernamePasswordAuthenticationToken(
-                                    request.getUsername(), request.getPassword()
-                            )
-                    );
+                                    request.getUsername(), request.getPassword()));
             JwtUser user = (JwtUser) authenticate.getPrincipal();
-            response = modelMapper.map(userAccountRepository.findById(user.getId()), LoginResponse.class);
-            response.setToken(generateJwt(user));
+            AuthUserResponse userResponse = modelMapper.map(userRepository.findById(user.getId()),
+                    AuthUserResponse.class);
+            userResponse.setRole(user.getRole());
+            TokensResponse tokens = new TokensResponse();
+            tokens.setAccessToken(generateJwt(user));
+            tokens.setRefreshToken(generateJwt(user));
+            response.setTokens(tokens);
+            response.setUser(userResponse);
         } catch (Exception ex) {
             throw new UnauthorizedException();
         }
@@ -89,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(RegistrationRequest registrationRequest) throws IOException {
+    public void register(RegistrationRequest registrationRequest, MultipartFile file) throws IOException {
         var enabled = registrationRequest.getRole() != Role.TRAINER;
         var userAccount = modelMapper.map(registrationRequest, UserAccount.class);
         userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
@@ -98,21 +105,18 @@ public class AuthServiceImpl implements AuthService {
         var createdUserAccount = userAccountRepository.save(userAccount);
         var user = modelMapper.map(registrationRequest, User.class);
         user.setUserAccount(createdUserAccount);
-        if (!enabled)
-        {
+        if (!enabled) {
             // StorageType.Document throws exception
-            var qualificationPath = storageAccessService.saveToFile(registrationRequest.getFile().getOriginalFilename(), registrationRequest.getFile().getBytes(), StorageType.PICTURE);
+            var qualificationPath = storageAccessService.saveToFile(file.getOriginalFilename(), file.getBytes(),
+                    StorageType.DOCUMENT);
             var qualification = new Qualification();
             qualification.setCertificationFilePath(qualificationPath);
             var trainer = modelMapper.map(user, Trainer.class);
             trainerRepository.save(trainer);
             qualification.setTrainer(trainer);
             qualificationRepository.save(qualification);
-        }
-        else
-        {
+        } else {
             userRepository.save(user);
         }
-        return true;
     }
 }

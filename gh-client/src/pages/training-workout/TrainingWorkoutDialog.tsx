@@ -2,11 +2,15 @@ import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogHeader,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useState } from "react";
+import TrainingWorkoutContent from "./components/TrainingWorkoutContent";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
 import {
   Tooltip,
   TooltipContent,
@@ -14,74 +18,78 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { SquareArrowOutUpRight, XIcon } from "lucide-react";
-import { ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import TrainingWorkoutForm from "./components/TrainingWorkoutForm";
-import { getWorkoutSummary } from "@/api/services/trainee-exercising-service";
-import { TraineeExercising } from "@/api/models/trainee-exercising";
+import { SquareArrowOutUpRight, XIcon } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 type TrainingWorkoutDialogProps = {
-  children: ReactNode;
+  programOnSchedule: TrainingProgramOnSchedule;
 };
 
 export default function TrainingWorkoutDialog({
-  children,
+  programOnSchedule,
 }: TrainingWorkoutDialogProps) {
   const [open, setOpen] = useState(false);
-  const [workout, setWorkout] = useState<TraineeExercising>();
-
-  useEffect(() => {
-    getWorkoutSummary()
-      .then((value) => {
-        setWorkout(value);
-      })
-      .catch((error) => {
-        console.error("Error fetching workout information:", error);
-      })
-      .finally(() => {});
-  }, []);
-
-  if (!workout) {
-    return <div>Loading workout...</div>;
-  }
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger>{children}</AlertDialogTrigger>
-      <AlertDialogContent className="max-w-fit">
-        <AlertDialogHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center flex-1 gap-2 flex-wrap mb-0.5">
-              <h2 className="text-xl font-bold">{workout.programName}</h2>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Link to="../programs/1/details" target="_blank">
-                      <Button variant="ghost" size="sm" className="h-auto py-2">
-                        <SquareArrowOutUpRight />
-                      </Button>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>View training program details</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+      <AlertDialogTrigger asChild>
+        <Button className="w-full text-xs" size="sm" variant="secondary">
+          Begin workout
+        </Button>
+      </AlertDialogTrigger>
 
-            <AlertDialogCancel
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                "self-start h-auto py-1.5 px-2 border-none"
-              )}
-            >
-              <XIcon />
-            </AlertDialogCancel>
-          </div>
+      <AlertDialogContent className="max-w-lg">
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center flex-1 gap-2 flex-wrap mb-0.5">
+                <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
+                  {programOnSchedule.program.name}
+                </h2>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto py-1.5 px-2 mt-1"
+                      >
+                        <Link
+                          to={`/programs/${programOnSchedule.program.id}/details`}
+                          target="_blank"
+                        >
+                          <SquareArrowOutUpRight />
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="font-normal">
+                        View training program details
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+
+              <AlertDialogCancel
+                className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  "self-start h-auto py-1.5 px-2 border-none"
+                )}
+              >
+                <XIcon />
+              </AlertDialogCancel>
+            </div>
+          </AlertDialogTitle>
           <Separator className="-translate-y-0.5" />
         </AlertDialogHeader>
-        <TrainingWorkoutForm traineeExercising={workout} />
+        <AlertDialogDescription className="p-0 m-0 hidden" />
+
+        <TrainingWorkoutContent
+          scheduleProgram={programOnSchedule}
+          onWorkoutFinished={() => setOpen(false)}
+        />
       </AlertDialogContent>
     </AlertDialog>
   );

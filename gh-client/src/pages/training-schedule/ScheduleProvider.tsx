@@ -1,89 +1,94 @@
-// src/context/ScheduleProvider.tsx
-import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
-import { ScheduleContext } from "@/hooks/use-schedule";
-import { startOfWeek } from "date-fns";
+import {
+  ManageTrainingProgramOnSchedule,
+  TrainingProgramOnSchedule,
+} from "@/api/models/training-program-on-schedule";
+import {
+  createTrainingProgramOnSchedule,
+  deleteTrainingProgramOnSchedule,
+  editTrainingProgramOnSchedule,
+  fetchTrainingProgamsOnSchedule,
+} from "@/api/services/training-program-on-schedule-service";
+import { ScheduleContext } from "@/pages/training-schedule/hooks/use-schedule";
+import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type ScheduleProviderProps = {
   children: React.ReactNode;
 };
 
-const mockPrograms: TrainingProgramOnSchedule[] = [
-  {
-    id: 1,
-    dayOfWeek: 1,
-    startTime: "10:00",
-    trainingDuration: 100,
-    program: {
-      id: 1,
-      name: "Morning Yoga",
-      createdAt: "2025-01-01T00:00:00.000Z",
-      description: "Start your day with energizing yoga",
-      trainerName: "Marko Markovic",
-    },
-  },
-  {
-    id: 2,
-    dayOfWeek: 4,
-    startTime: "18:00",
-    trainingDuration: 100,
-    program: {
-      id: 2,
-      name: "HIIT Workout",
-      createdAt: "2025-01-01T00:00:00.000Z",
-      description: "High-intensity interval training",
-      trainerName: "Marko Markovic",
-    },
-  },
-  {
-    id: 3,
-    dayOfWeek: 4,
-    startTime: "00:00",
-    trainingDuration: 100,
-    program: {
-      id: 3,
-      name: "Strength Training",
-      createdAt: "2025-01-01T00:00:00.000Z",
-      description: "Build muscle and strength with our structured workout.",
-      trainerName: "Anna Smith",
-    },
-  },
-];
-
 export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
   const [programs, setPrograms] = useState<TrainingProgramOnSchedule[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  useEffect(() => {
-    // fetch prgorams from backend
-    const sortedPrograms = [...mockPrograms].sort((a, b) => {
+  const sortPrograms = (programs: TrainingProgramOnSchedule[]) => {
+    return programs.sort((a, b) => {
       const [aHours, aMinutes] = a.startTime.split(":").map(Number);
       const [bHours, bMinutes] = b.startTime.split(":").map(Number);
       const aTime = aHours * 60 + aMinutes;
       const bTime = bHours * 60 + bMinutes;
       return aTime - bTime;
     });
-    setPrograms(sortedPrograms);
+  };
+
+  useEffect(() => {
+    const fetchAndSortPrograms = async () => {
+      try {
+        const fetchedPrograms = await fetchTrainingProgamsOnSchedule();
+        setPrograms(sortPrograms(fetchedPrograms));
+      } catch (error) {
+        console.error("Error fetching training programs!", error);
+      }
+    };
+
+    fetchAndSortPrograms();
   }, []);
 
-  const addProgram = (program: TrainingProgramOnSchedule) => {
-    setPrograms((prev) => [...prev, program]);
+  const onAddProgram = async (program: ManageTrainingProgramOnSchedule) => {
+    return createTrainingProgramOnSchedule(program)
+      .then((response) => {
+        setPrograms((prev) => sortPrograms([...prev, response]));
+        toast.success(`Successfully added training program on schedule!`);
+      })
+      .catch(() => {
+        toast.success(`Could not add training program on schedule!`);
+      });
   };
 
-  const editProgram = (updatedProgram: TrainingProgramOnSchedule) => {
-    setPrograms((prev) =>
-      prev.map((program) =>
-        program.id === updatedProgram.id ? updatedProgram : program
-      )
-    );
+  const onEditProgram = async (
+    id: number,
+    updatedProgram: ManageTrainingProgramOnSchedule
+  ) => {
+    return editTrainingProgramOnSchedule(id, updatedProgram)
+      .then((response) => {
+        setPrograms((prev) =>
+          sortPrograms(
+            prev.map((program) =>
+              program.id === id ? { ...response } : program
+            )
+          )
+        );
+        toast.success(`Successfully updated training program on schedule!`);
+      })
+      .catch(() => {
+        toast.success(`Could not update training program on schedule!`);
+      });
   };
 
-  const removeProgram = (programId: number) => {
-    setPrograms((prev) => prev.filter((program) => program.id !== programId));
+  const onRemoveProgram = async (programId: number) => {
+    return deleteTrainingProgramOnSchedule(programId)
+      .then(() => {
+        setPrograms((prev) =>
+          prev.filter((program) => program.id !== programId)
+        );
+        toast.success("Training program successfully deleted!");
+      })
+      .catch(() => {
+        toast.error("Could not delete training program from schedule!");
+      });
   };
 
   const getProgramsForDay = (day: Date) => {
-    const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
     const weekDay = day.getDay() === 0 ? 7 : day.getDay(); // Handle Sunday as 7
     return programs.filter((program) => program.dayOfWeek === weekDay);
   };
@@ -91,9 +96,9 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
   const value = {
     programs,
     currentDate,
-    addProgram,
-    editProgram,
-    removeProgram,
+    onAddProgram,
+    onEditProgram,
+    onRemoveProgram,
     getProgramsForDay,
     setCurrentDate,
   };

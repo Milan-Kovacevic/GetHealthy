@@ -34,19 +34,22 @@ export default function ExerciseList(props: ExerciseListProps) {
   } = props;
 
   return (
-    <div>
+    <div className="flex-1 flex flex-col">
       {loading && <ExerciseListSkeletonLoader />}
       {!loading && (
         <>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {exercises.map((exercise) => (
-              <ExerciseItem
-                key={exercise.id}
-                exercise={exercise}
-                showVideo={showVideoEmbedded}
-              />
-            ))}
+          <div className="flex-1">
+            <div className="grid sm:gap-6 gap-3 md:grid-cols-2 lg:grid-cols-3">
+              {exercises.map((exercise) => (
+                <ExerciseItem
+                  key={exercise.id}
+                  exercise={exercise}
+                  showVideo={showVideoEmbedded}
+                />
+              ))}
+            </div>
           </div>
+
           <Pagination className="mt-8">
             <PaginationContent>
               <PaginationItem>

@@ -15,6 +15,7 @@ import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { traineeScheme, trainerScheme } from "@/schemas/user-schemas";
 import { UserRole } from "@/api/enums/user-role";
+import { toast } from "sonner";
 
 const profileFormSchema = z.union([traineeScheme, trainerScheme]);
 
@@ -38,22 +39,29 @@ type ProfileFormProps = {
 };
 
 export function ProfileForm(props: ProfileFormProps) {
+  const userId = 9; // change with id of currently logged user
   const [isEditing, setIsEditing] = useState(false);
   const [initialValues, setInitialValues] = useState<ProfileFormValues | null>(
     null
   );
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
 
+  const [fileName, setFileName] = useState<string>("");
+
+  const resetFileName = () => {
+    setFileName("");
+  };
+
   useEffect(() => {
     const fetchProfileData = async () => {
       let data: ProfileFormValues | null = null;
-      const pdata = await getProfile(1);
+      const pdata = await getProfile(userId);
 
       data = pdata;
 
       if (data) {
         setInitialValues(data);
-        form.reset(data);
+        form.reset({ ...data, dateOfBirth: new Date(data.dateOfBirth) });
       }
     };
 
@@ -82,14 +90,17 @@ export function ProfileForm(props: ProfileFormProps) {
   const handleFileSelection = (file: File | undefined) => {
     if (file) {
       setSelectedFile(file);
+      setFileName(file.name);
       form.setValue("profilePictureFilePath", file.name);
     } else {
       setSelectedFile(undefined);
+      setFileName("");
       form.setValue("profilePictureFilePath", "");
     }
   };
 
   async function onSubmit(data: ProfileFormValues) {
+    console.log(data);
     try {
       let requestData: any;
       if (props.isTrainer) {
@@ -114,13 +125,14 @@ export function ProfileForm(props: ProfileFormProps) {
         new Blob([JSON.stringify(requestData)], { type: "application/json" })
       );
 
-      await updateUserProfile(1, formData).catch(() =>
-        console.log("Some error happened!")
-      );
+      await updateUserProfile(userId, formData);
 
       setIsEditing(false);
+      resetFileName();
+      toast.success("Successfully updated user profile!");
     } catch (error) {
       console.error("Error updating profile or profile picture:", error);
+      toast.error("Couldn't updated user profile!");
     }
   }
 
@@ -216,6 +228,7 @@ export function ProfileForm(props: ProfileFormProps) {
               placeholder="Enter a phone number"
               description="Enter a phone number"
               className="w-[240px]"
+              disabled={!isEditing}
             />
 
             <TextareaFormField
@@ -237,6 +250,7 @@ export function ProfileForm(props: ProfileFormProps) {
           formats=""
           onFileSelect={handleFileSelection}
           disabled={!isEditing}
+          fileName={fileName}
         />
 
         {isEditing && (

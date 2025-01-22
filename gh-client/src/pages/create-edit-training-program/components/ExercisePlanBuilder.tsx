@@ -37,7 +37,6 @@ const ExercisePlanBuilder = ({ isEdit, form }: ExercisePlanBuilderProps) => {
 
   var formExercises: ExercisePlanItem[] = form.watch(exercisesPath);
   var exerciseErrors = resolveExerciseFormErrorObject(form, isEdit);
-  console.log(exerciseErrors);
 
   return (
     <div className="mt-8 w-full">
