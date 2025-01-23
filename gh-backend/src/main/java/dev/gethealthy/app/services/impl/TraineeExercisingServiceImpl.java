@@ -53,10 +53,10 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
         if (traineeExercising.isEmpty())
             throw new NotFoundException();
 
-        response.setDateTaken(traineeExercising.getFirst().getDateTaken());
-        response.setTraineeExercisingId(traineeExercising.getFirst().getId());
+        response.setDateTaken(traineeExercising.get(0).getDateTaken());
+        response.setTraineeExercisingId(traineeExercising.get(0).getId());
 
-        var exerciseFeedback = traineeExercising.getFirst().getExercisesFeedback();
+        var exerciseFeedback = traineeExercising.get(0).getExercisesFeedback();
         response.setProgramExercises(exerciseFeedback.stream().map(ef -> new WorkoutSummaryResponse.WorkoutExercise(
                 ef.getId(),
                 ef.getExerciseSetsFeedback().stream().map(esf-> modelMapper.map(esf, WorkoutSummaryResponse.WorkoutSet.class)).collect(Collectors.toList()),
