@@ -12,13 +12,11 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { delay } from "@/lib/utils";
 
-const pageSize = 5;
-
 const generateNotificationContent = (
   notification: NotificationDTO
 ): { title: string; description: string } => {
   switch (notification.notificationType) {
-    case "PROGRAM_APPLICATION_ACCEPTED": // PROGRAM_APPLICATION_ACCEPTED
+    case "PROGRAM_APPLICATION_ACCEPTED":
       return {
         title: `Program request APPROVED`,
         description: `Your request for training program '${notification.metadata}' has been approved by ${notification.senderFirstName} ${notification.senderLastName}`,
@@ -46,9 +44,22 @@ const generateNotificationContent = (
   }
 };
 
+const parseNotificationMessage = (notificationJson: string) => {
+  const notificationDto = JSON.parse(notificationJson);
+  var content = generateNotificationContent(notificationDto);
+  return {
+    id: notificationDto.id,
+    title: content.title,
+    description: content.description,
+    isRead: notificationDto.markRead,
+    time: formatDistanceToNow(notificationDto.date, { addSuffix: true }),
+  };
+};
+
 const getPageableUserNotifications = async (
   userId: number,
-  page: number = 0
+  page: number = 0,
+  pageSize: number = 5
 ) => {
   var url = ApiEndpoints.UserNotifications.replace("{userId}", `${userId}`);
   url += `?page=${page}&size=${pageSize}`;
@@ -123,4 +134,5 @@ export {
   markUserNotificationAsRead,
   deleteUserNotification,
   getNotificationsSummary,
+  parseNotificationMessage,
 };

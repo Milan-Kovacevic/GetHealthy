@@ -18,7 +18,7 @@ public interface NotificationService  {
 
     void deleteAllUserNotifications(Integer userId);
 
-    void createNotification(User user, User sender, String metadata, NotificationType notificationType, String description);
+    NotificationResponse createNotification(User user, User sender, String metadata, NotificationType notificationType);
 
     void markUserNotificationAsRead(Integer userId, Integer notificationId);
 

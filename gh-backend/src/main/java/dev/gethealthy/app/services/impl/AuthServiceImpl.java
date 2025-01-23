@@ -1,10 +1,7 @@
 package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.exceptions.UnauthorizedException;
-import dev.gethealthy.app.models.entities.Qualification;
-import dev.gethealthy.app.models.entities.Trainer;
-import dev.gethealthy.app.models.entities.User;
-import dev.gethealthy.app.models.entities.UserAccount;
+import dev.gethealthy.app.models.entities.*;
 import dev.gethealthy.app.models.enums.Role;
 import dev.gethealthy.app.models.enums.StorageType;
 import dev.gethealthy.app.models.requests.LoginRequest;
@@ -12,10 +9,7 @@ import dev.gethealthy.app.models.requests.RegistrationRequest;
 import dev.gethealthy.app.models.responses.AuthUserResponse;
 import dev.gethealthy.app.models.responses.LoginResponse;
 import dev.gethealthy.app.models.responses.TokensResponse;
-import dev.gethealthy.app.repositories.QualificationRepository;
-import dev.gethealthy.app.repositories.TrainerRepository;
-import dev.gethealthy.app.repositories.UserAccountRepository;
-import dev.gethealthy.app.repositories.UserRepository;
+import dev.gethealthy.app.repositories.*;
 import dev.gethealthy.app.security.models.JwtUser;
 import dev.gethealthy.app.services.AuthService;
 import dev.gethealthy.app.services.StorageAccessService;
@@ -49,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final StorageAccessService storageAccessService;
     private final TrainerRepository trainerRepository;
+    private final TraineeRepository traineeRepository;
     private final QualificationRepository qualificationRepository;
 
     @Value("${authorization.token.expiration-time}")
@@ -97,16 +92,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void register(RegistrationRequest registrationRequest, MultipartFile file) throws IOException {
-        var enabled = registrationRequest.getRole() != Role.TRAINER;
+        var isTrainer = registrationRequest.getRole() == Role.TRAINER;
+        var enabled = !isTrainer;
         var userAccount = modelMapper.map(registrationRequest, UserAccount.class);
         userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
         userAccount.setEnabled(enabled);
         userAccount.setCreatedAt(Instant.now());
         var createdUserAccount = userAccountRepository.save(userAccount);
-        var user = modelMapper.map(registrationRequest, User.class);
-        user.setUserAccount(createdUserAccount);
-        if (!enabled) {
-            // StorageType.Document throws exception
+
+        if (isTrainer) {
+            var user = modelMapper.map(registrationRequest, User.class);
+            user.setUserAccount(createdUserAccount);
             var qualificationPath = storageAccessService.saveToFile(file.getOriginalFilename(), file.getBytes(),
                     StorageType.DOCUMENT);
             var qualification = new Qualification();
@@ -116,7 +112,10 @@ public class AuthServiceImpl implements AuthService {
             qualification.setTrainer(trainer);
             qualificationRepository.save(qualification);
         } else {
-            userRepository.save(user);
+            var trainee = modelMapper.map(registrationRequest, Trainee.class);
+            trainee.setUserAccount(createdUserAccount);
+            traineeRepository.save(trainee);
+
         }
     }
 }

@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 
 type TrainingProgramApplicationModalProps = {
   disabled: boolean;
-  onSubmit?: (application: string) => void;
+  onSubmit?: (application: string) => Promise<void>;
   pending?: boolean;
 };
 
@@ -43,10 +43,10 @@ export default function TrainingProgramApplicationModal(
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    setOpen(false);
-    form.reset();
-    props.onSubmit?.(values.application);
+    props.onSubmit?.(values.application)?.then(() => {
+      setOpen(false);
+      form.reset();
+    });
   }
 
   useEffect(() => {
@@ -87,7 +87,9 @@ export default function TrainingProgramApplicationModal(
               />
             </div>
             <DialogFooter>
-              <Button type="submit">Submit Application</Button>
+              <Button disabled={props.disabled} type="submit">
+                Submit Application
+              </Button>
             </DialogFooter>
           </form>
         </Form>

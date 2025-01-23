@@ -30,7 +30,7 @@ export default function LoginPage() {
       })
       .catch((error) => {
         console.error("Form submission error", error);
-        toast.error("Failed to submit the form. Please try again.");
+        toast.error("Invalid login credentials. Please try again.");
       })
       .finally(() => {
         setIsSubmitting(false);

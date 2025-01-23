@@ -15,6 +15,7 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { BellIcon } from "lucide-react";
+import useAuth from "@/hooks/use-auth";
 
 type NotificationsPopoverProps = {
   isTrainer: boolean;
@@ -25,6 +26,10 @@ export default function NotificationsPopover({
   isTrainer,
   className,
 }: NotificationsPopoverProps) {
+  const auth = useAuth();
+  const userId = auth.getUserId();
+  if (!userId) return;
+
   const [activeTab, setActiveTab] = useState("inbox");
 
   const {
@@ -50,13 +55,14 @@ export default function NotificationsPopover({
     onMarkNotificationAsRead,
     onMarkAllAsRead,
     pending: pendingNotifications,
-  } = useNotifications();
+  } = useNotifications(userId);
 
   const TrainerView = (
     <>
       <div className="flex items-center justify-between mb-2 mx-4 h-8">
         <NotificationTitle
           showMarkAll={activeTab == "inbox"}
+          disabled={unreadCount == 0}
           onMarkAll={onMarkAllAsRead}
         />
       </div>
@@ -100,7 +106,11 @@ export default function NotificationsPopover({
   const TraineeView = (
     <>
       <div className="flex items-center justify-between mb-2 mx-4 h-8">
-        <NotificationTitle showMarkAll={true} onMarkAll={onMarkAllAsRead} />
+        <NotificationTitle
+          disabled={unreadCount == 0}
+          showMarkAll={true}
+          onMarkAll={onMarkAllAsRead}
+        />
       </div>
 
       <NotificationList
@@ -158,15 +168,18 @@ export default function NotificationsPopover({
 const NotificationTitle = ({
   onMarkAll,
   showMarkAll,
+  disabled,
 }: {
   onMarkAll?: () => void;
   showMarkAll: boolean;
+  disabled: boolean;
 }) => {
   return (
     <div className="flex items-center justify-between h-8 w-full">
       <h2 className="text-lg font-semibold ml-0.5">Notifications</h2>
       {showMarkAll && (
         <Button
+          disabled={disabled}
           variant="ghost"
           size="sm"
           className="text-foreground hover:text-primary"

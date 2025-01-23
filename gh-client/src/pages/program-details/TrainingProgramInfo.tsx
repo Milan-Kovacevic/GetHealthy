@@ -66,22 +66,23 @@ export default function TrainingProgramInfo() {
     );
   }
 
-  const handleApplicationModalSubmit = (note: string) => {
+  const handleApplicationModalSubmit = async (note: string) => {
     const request: SendProgramApplication = {
       programId: program.id,
       note: note,
     };
     setSubmitting(true);
-    sendTrainingProgramApplication(userId, request)
+    return sendTrainingProgramApplication(userId, request)
       .then(() => {
         toast.info("Application submitted!", {
           description: `Your request to join program '${program.name}' has been submitted. Check your inbox for status update.`,
         });
       })
-      .catch(() => {
+      .catch((e) => {
         toast.error("Unexpected error", {
           description: "Unable to send request. Please, try again later.",
         });
+        throw e;
       })
       .finally(() => {
         setSubmitting(false);
