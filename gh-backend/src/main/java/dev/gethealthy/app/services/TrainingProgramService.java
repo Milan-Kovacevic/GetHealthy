@@ -38,4 +38,5 @@ public interface TrainingProgramService {
 
     void updateTrainingProgramGeneralInfo(Integer programId, TrainingProgramRequest trainingProgramRequest,
                                           MultipartFile file);
+
 }

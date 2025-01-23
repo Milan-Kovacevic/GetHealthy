@@ -3,7 +3,6 @@ import { TrainingProgramDTO } from "./training-program-contract";
 
 export type SingleTrainingProgramDTO = TrainingProgramDTO & {
   totalRates: number;
-  currentlyEnrolled: number;
   requirements: string;
   trainingDuration: number;
   exercises: ProgramExerciseDetailsDTO[];
@@ -13,7 +12,7 @@ export type TraineeProgramStatusDTO = "JOINED" | "NOT_JOINED" | "PENDING";
 
 export type SingleTrainingProgramInfoDTO = TrainingProgramDTO & {
   totalRates: number;
-  currentlyEnrolled: number;
+  joined?: boolean;
   status?: TraineeProgramStatusDTO;
 };
 
@@ -34,4 +33,5 @@ export type SingleProgramTrainerDTO = {
   profilePictureFilePath?: string;
   contactInfo?: string;
   biography?: string;
+  certificateFilePath?: string; //todoo
 };

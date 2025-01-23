@@ -22,4 +22,5 @@ public class TrainingProgramResponse {
     private Integer trainerId;
     private String trainerFirstName;
     private String trainerLastName;
+    private Integer currentlyEnrolled;
 }

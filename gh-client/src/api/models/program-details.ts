@@ -28,13 +28,12 @@ export type TraineeProgramStatus = "JOINED" | "NOT_JOINED" | "PENDING";
 
 export type SingleTrainingProgramInfo = TrainingProgram & {
   totalRates: number;
-  currentlyEnrolled: number;
+  joined?: boolean;
   status: TraineeProgramStatus;
 };
 
 export type SingleTrainingProgram = TrainingProgram & {
   totalRates: number;
-  currentlyEnrolled: number;
   requirements: string;
   trainingDuration: number;
   exercises: ProgramExerciseDetails[];
@@ -50,6 +49,7 @@ export type SingleProgramTrainer = {
   profilePictureFilePath?: string;
   contactInfo?: string;
   biography?: string;
+  certificateFilePath?: string;
 };
 
 export type MoveProgramParticipant = {
