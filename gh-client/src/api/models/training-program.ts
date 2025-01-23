@@ -14,6 +14,7 @@ export type TrainingProgram = {
   trinerId: number;
   trainerFirstName: string;
   trainerLastName: string;
+  currentlyEnrolled: number;
 };
 
 export type PageableTrainingPrograms = Page<TrainingProgram>;

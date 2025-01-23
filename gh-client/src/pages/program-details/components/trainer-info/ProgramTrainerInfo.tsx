@@ -8,7 +8,9 @@ import trainerImg from "@/assets/trainer.png";
 import { useParams } from "react-router-dom";
 import TrainerInfoLoader from "./TrainerInfoLoader";
 import { format } from "date-fns";
-import { capitalize } from "@/lib/utils";
+import { capitalize, pictureUrl } from "@/lib/utils";
+import downloadTrainerCertificate from "@/api/services/qualification-service";
+import { toast } from "sonner";
 
 export default function ProgramTrainerInfo() {
   const params = useParams();
@@ -42,6 +44,14 @@ export default function ProgramTrainerInfo() {
     );
   }
 
+  const handleDownload = async () => {
+    if (trainer?.certificateFilePath) {
+      await downloadTrainerCertificate(trainer.certificateFilePath);
+    } else {
+      toast.error("No certificate available for download.");
+    }
+  };
+
   return (
     <div className="w-full border-0 bg-background pt-0 pb-8">
       {loading && <TrainerInfoLoader />}
@@ -49,6 +59,7 @@ export default function ProgramTrainerInfo() {
         <>
           <div className="relative p-4 pt-0">
             <Button
+              onClick={handleDownload}
               variant="secondary"
               className="absolute top-10 right-4"
               aria-label="Download qualification"
@@ -63,7 +74,7 @@ export default function ProgramTrainerInfo() {
             <div className="flex flex-col md:flex-row md:gap-6 gap-3">
               <Avatar className="w-24 h-24 md:w-32 md:h-32">
                 <AvatarImage
-                  src={trainerImg || trainer.profilePictureFilePath} //zamijeniti
+                  src={pictureUrl(trainer.profilePictureFilePath) || trainerImg} //zamijeniti
                   alt="avatar"
                 />
                 <AvatarFallback>AM</AvatarFallback>
@@ -91,7 +102,8 @@ export default function ProgramTrainerInfo() {
                   <span className="mx-3 w-0.5 h-4 bg-muted-foreground" />
                   {trainer.gender ? (
                     <p className="text-sm font-normal text-foreground/80">
-                      {capitalize<string>(trainer.gender)}
+                      {/* {capitalize<string>(trainer.gender)} */}
+                      {capitalize(trainer.gender)}
                     </p>
                   ) : (
                     <p className="text-sm font-normal text-foreground/80 italic">

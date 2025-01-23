@@ -123,7 +123,8 @@ export function ManagedProgramCard(props: ManagedProgramCardProps) {
             {program.trainerFirstName} {program.trainerLastName}
           </p>
           <span className="text-muted-foreground ml-2 text-xs">
-            • <span className="font-semibold">20</span> participants
+            • <span className="font-semibold">{program.currentlyEnrolled}</span>{" "}
+            participants
           </span>
         </div>
         <div className="mb-2 flex flex-wrap gap-x-1.5 gap-y-1.5">
