@@ -100,15 +100,13 @@ public class TrainingProgramApplicationServiceImpl implements TrainingProgramApp
                     application.getTrainee(),
                     application.getProgram().getTrainer(),
                     application.getProgram().getName(),
-                    NotificationType.PROGRAM_APPLICATION_ACCEPTED,
-                    application.getNote());
+                    NotificationType.PROGRAM_APPLICATION_ACCEPTED);
         } else {
             notificationService.createNotification(
                     application.getTrainee(),
                     application.getProgram().getTrainer(),
                     application.getProgram().getName(),
-                    NotificationType.PROGRAM_APPLICATION_ACCEPTED,
-                    application.getNote());
+                    NotificationType.PROGRAM_APPLICATION_REJECTED);
         }
         trainingProgramApplicationRepository.deleteByProgram_IdAndTrainee_Id(programId, traineeId);
     }

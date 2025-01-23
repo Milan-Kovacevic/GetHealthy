@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function EditTrainingProgramFormLoader() {
+export default function EditTrainingProgramLoader() {
   return (
     <div className="animate-in fade-in-50">
       <div className="mt-5 w-full">

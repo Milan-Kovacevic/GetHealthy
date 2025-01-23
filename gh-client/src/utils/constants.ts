@@ -24,6 +24,7 @@ export const ACCOUNT_TYPES = [
   TRAINER_ACCOUNT_TYPE,
 ] as const;
 
+export const WS_BASE_PATH = environments().baseApiPath + "/ws";
 const API_PREFIX = environments().apiResourcePrefix;
 export const ApiEndpoints = {
   Authentication: `${API_PREFIX}/auth`,

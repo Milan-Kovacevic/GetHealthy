@@ -66,8 +66,7 @@ public class CommentServiceImpl extends CrudJpaService<Comment, Integer> impleme
                 trainingProgram.getTrainer(),
                 trainee,
                 trainingProgram.getName(),
-                NotificationType.NEW_COMMENT_ON_PROGRAM,
-                trainingProgram.getDescription()
+                NotificationType.NEW_COMMENT_ON_PROGRAM
         );
         return comment;
     }

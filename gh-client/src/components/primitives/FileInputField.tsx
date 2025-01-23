@@ -55,9 +55,11 @@ export const FileInputField = (props: FileInputFieldProps) => {
           <label
             htmlFor={name}
             className={cn(
-              "flex flex-col items-center justify-center w-full h-full border-2 border-border border-dashed rounded-lg cursor-pointer bg-muted/25 dark:hover:bg-muted/45",
-              "hover:border-foreground/30 dark:bg-muted/25 hover:bg-muted/55 dark:border-border dark:hover:border-foreground/30 transition-all",
-              disabled && "cursor-not-allowed opacity-50"
+              "flex flex-col items-center justify-center w-full h-full border-2 border-border border-dashed rounded-lg cursor-pointer bg-muted/25",
+              "dark:bg-muted/25 dark:border-border transition-all duration-200",
+              disabled && "cursor-not-allowed opacity-50",
+              !disabled &&
+                "hover:border-foreground/30 dark:hover:bg-muted/45 dark:hover:border-foreground/30 hover:bg-muted/55"
             )}
           >
             <div className="flex flex-col items-center justify-center pt-3.5 pb-4">

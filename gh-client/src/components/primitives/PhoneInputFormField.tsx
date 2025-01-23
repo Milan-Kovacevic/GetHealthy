@@ -25,7 +25,7 @@ const PhoneInputFormField = (props: PhoneInputFormFieldProps) => {
       control={props.control}
       name={props.name}
       render={({ field }) => (
-        <FormItem className={cn("flex flex-col items-start", props.className)}>
+        <FormItem className={cn("space-y-0.5", props.className)}>
           <FormLabel className="text-left">{props.label}</FormLabel>
           <FormControl className="w-full">
             <PhoneInput

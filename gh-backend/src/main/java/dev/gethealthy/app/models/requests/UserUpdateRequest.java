@@ -1,5 +1,6 @@
 package dev.gethealthy.app.models.requests;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -19,7 +20,7 @@ import lombok.Data;
 public class UserUpdateRequest {
     private String firstName;
     private String lastName;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private Gender gender;
     @NotNull
     private Role role;

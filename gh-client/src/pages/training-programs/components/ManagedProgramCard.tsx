@@ -104,7 +104,7 @@ export function ManagedProgramCard(props: ManagedProgramCardProps) {
                 variant="ghost"
                 className="h-auto py-2 px-2.5 text-destructive/80 hover:text-destructive"
               >
-                <TrashIcon />
+                <TrashIcon strokeWidth={2.25} />
               </Button>
             </SimpleAlertDialog>
             <Button

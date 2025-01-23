@@ -14,14 +14,18 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final ModelMapper modelMapper;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public Page<NotificationResponse> getNotificationsForUser(Integer userId, Pageable page) {
@@ -53,7 +57,8 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void createNotification(User user, User sender, String metadata, NotificationType notificationType, String description) {
+    @MessageMapping("/broadcast")
+    public NotificationResponse createNotification(User user, User sender, String metadata, NotificationType notificationType) {
         Notification notification = new Notification();
 
         notification.setId(null);
@@ -65,6 +70,11 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setMarkRead(false);
 
         notificationRepository.saveAndFlush(notification);
+
+        var payload =  modelMapper.map(notification, NotificationResponse.class);
+        messagingTemplate.convertAndSend("/topic/notifications/"  + user.getId(), payload);
+
+        return payload;
     }
 
     @Override

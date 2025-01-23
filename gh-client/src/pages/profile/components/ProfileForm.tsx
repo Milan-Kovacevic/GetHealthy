@@ -31,8 +31,6 @@ const defaultValues: Partial<ProfileFormValues> = {
   biography: "",
   firstName: "",
   lastName: "",
-  weight: 0,
-  height: 0,
 };
 
 export function ProfileForm() {
@@ -58,12 +56,17 @@ export function ProfileForm() {
     const fetchProfileData = async () => {
       let data: ProfileFormValues | null = null;
       const pdata = await getProfile(userId);
-
       data = pdata;
 
       if (data) {
-        setInitialValues(data);
-        form.reset({ ...data, dateOfBirth: new Date(data.dateOfBirth) });
+        const result = Object.entries(data).reduce((acc: any, [key, item]) => {
+          acc[key] = item ?? undefined;
+
+          return acc;
+        }, {});
+
+        setInitialValues(result);
+        form.reset({ ...result });
       }
     };
 
@@ -103,15 +106,23 @@ export function ProfileForm() {
 
   async function onSubmit(data: ProfileFormValues) {
     try {
+      console.log(data);
       let requestData: any;
       if (isTrainer) {
         const pom = trainerScheme.parse(data);
-        requestData = { ...pom, role: UserRole.TRAINER };
+        requestData = {
+          ...pom,
+          // dateOfBirth: format(pom.dateOfBirth, "yyyy-MM-dd"),
+          role: UserRole.TRAINER,
+        };
         setInitialValues(requestData);
       } else {
         const pom = traineeScheme.parse(data);
-        requestData = { ...pom, role: UserRole.TRAINEE };
-
+        requestData = {
+          ...pom,
+          // dateOfBirth: format(pom.dateOfBirth, "yyyy-MM-dd"),
+          role: UserRole.TRAINEE,
+        };
         setInitialValues(requestData);
       }
 
@@ -130,10 +141,10 @@ export function ProfileForm() {
 
       setIsEditing(false);
       resetFileName();
-      toast.success("Successfully updated user profile!");
+      toast.success("Successfully updated your profile!");
     } catch (error) {
       console.error("Error updating profile or profile picture:", error);
-      toast.error("Couldn't updated user profile!");
+      toast.error("Couldn't update your profile. Please, try again later");
     }
   }
 
@@ -164,7 +175,7 @@ export function ProfileForm() {
         </div>
 
         <div className="flex sm:flex-row flex-col gap-4 mt-4">
-          <div className="flex-1 translate-y-1 basis-1/2">
+          <div className="flex-1 basis-1/2">
             <DatePickerFormField
               control={form.control}
               placeholder="Pick a date"
@@ -188,7 +199,7 @@ export function ProfileForm() {
           />
         </div>
 
-        {isTrainer === false ? (
+        {isTrainer == false ? (
           <>
             <div className="flex flex-wrap gap-4">
               <NumberInputFormField
@@ -231,8 +242,8 @@ export function ProfileForm() {
               name="contactInfo"
               label="Phone Number"
               placeholder="Enter a phone number"
-              description="Enter a phone number"
-              className="w-[240px]"
+              description="Enter your phone number"
+              className="w-[320px]"
               disabled={!isEditing}
             />
 
@@ -266,7 +277,7 @@ export function ProfileForm() {
         <Button
           variant={isEditing ? "outline" : "secondary"}
           type="button"
-          className="min-w-24"
+          className="min-w-32"
           onClick={toggleEditMode}
         >
           {isEditing ? "Cancel" : "Edit"}
