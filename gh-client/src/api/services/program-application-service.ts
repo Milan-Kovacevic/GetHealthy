@@ -5,10 +5,12 @@ import {
   PageableProgramApplicationsDTO,
   ProcessTrainingProgramApplicationDTO,
   ProgramApplicationDetailsDTO,
+  ProgramApplicationDTO,
 } from "../contracts/program-application-contract";
 import {
   PageableProgramRequests,
   ProcessProgramApplication,
+  ProgramRequest,
   ProgramRequestDetails,
   SendProgramApplication,
 } from "../models/program-request";
@@ -43,6 +45,15 @@ const getPageableTrainingProgramApplications = async (
       }),
     } as PageableProgramRequests;
   });
+};
+
+const parseProgramRequestMessage = (requestJson: string) => {
+  const requestDto = JSON.parse(requestJson) as ProgramApplicationDTO;
+
+  return {
+    ...requestDto,
+    programName: requestDto.trainingProgramName,
+  } as ProgramRequest;
 };
 
 const getProgramApplicationDetails = async (
@@ -111,4 +122,5 @@ export {
   getProgramApplicationDetails,
   sendTrainingProgramApplication,
   processTrainingProgramApplication,
+  parseProgramRequestMessage,
 };

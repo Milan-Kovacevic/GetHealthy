@@ -33,6 +33,9 @@ export function useNotifications(userId: number) {
 
   const onNotificationReceive = (message: IMessage) => {
     const notification = parseNotificationMessage(message.body);
+    const index = notifications.findIndex((x) => x.id == notification.id);
+    if (index != -1) return; // Notification is already there
+
     setNotifications((prev) => [notification, ...prev]);
     setUnreadCount((prev) => prev + 1);
   };

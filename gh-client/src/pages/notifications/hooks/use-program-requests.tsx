@@ -6,10 +6,12 @@ import {
 import {
   getPageableTrainingProgramApplications,
   getProgramApplicationDetails,
+  parseProgramRequestMessage,
   processTrainingProgramApplication,
 } from "@/api/services/program-application-service";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { useState } from "react";
+import { IMessage, useSubscription } from "react-stomp-hooks";
 import { toast } from "sonner";
 
 export function useProgramRequests() {
@@ -38,6 +40,18 @@ export function useProgramRequests() {
       );
     },
   });
+
+  const onRequestReceive = (message: IMessage) => {
+    const request = parseProgramRequestMessage(message.body);
+    const index = requests.findIndex(
+      (x) =>
+        x.programId == request.programId && x.traineeId == request.traineeId
+    );
+    if (index != -1) return; // Program request is already there
+
+    setRequests((prev) => [request, ...prev]);
+  };
+  useSubscription(`/topic/requests/${userId}`, onRequestReceive);
 
   const onCloseRequestDetails = () => {
     setSelectedRequest(undefined);

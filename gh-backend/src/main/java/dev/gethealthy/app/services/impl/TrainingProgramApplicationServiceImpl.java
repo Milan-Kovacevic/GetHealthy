@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,7 @@ public class TrainingProgramApplicationServiceImpl implements TrainingProgramApp
     private final TrainingProgramRepository trainingProgramRepository;
     private final TraineeRepository traineeRepository;
     private final NotificationService notificationService;
+    private final SimpMessagingTemplate messagingTemplate;
     private final ModelMapper modelMapper;
 
     @Override
@@ -79,7 +81,11 @@ public class TrainingProgramApplicationServiceImpl implements TrainingProgramApp
         entity.setTrainee(trainee);
         trainingProgramApplicationRepository.saveAndFlush(entity);
 
-        return modelMapper.map(entity, ProgramApplicationResponse.class);
+
+        var payload = modelMapper.map(entity, ProgramApplicationResponse.class);
+        messagingTemplate.convertAndSend("/topic/requests/"  + trainingProgram.getTrainer().getId(), payload);
+
+        return payload;
     }
 
     @Override

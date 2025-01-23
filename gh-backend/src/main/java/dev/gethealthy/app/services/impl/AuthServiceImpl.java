@@ -114,7 +114,6 @@ public class AuthServiceImpl implements AuthService {
             var trainee = modelMapper.map(registrationRequest, Trainee.class);
             trainee.setUserAccount(createdUserAccount);
             traineeRepository.save(trainee);
-
         }
     }
 }

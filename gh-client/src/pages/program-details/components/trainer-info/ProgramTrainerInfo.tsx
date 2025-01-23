@@ -2,9 +2,9 @@ import { SingleProgramTrainer } from "@/api/models/program-details";
 import { getSingleProgramTrainer } from "@/api/services/program-details-service";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { Download, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import trainerImg from "@/assets/trainer.png";
+import noImage from "@/assets/no-image.jpg";
 import { useParams } from "react-router-dom";
 import TrainerInfoLoader from "./TrainerInfoLoader";
 import { format } from "date-fns";
@@ -74,10 +74,13 @@ export default function ProgramTrainerInfo() {
             <div className="flex flex-col md:flex-row md:gap-6 gap-3">
               <Avatar className="w-24 h-24 md:w-32 md:h-32">
                 <AvatarImage
-                  src={pictureUrl(trainer.profilePictureFilePath) || trainerImg} //zamijeniti
+                  src={pictureUrl(trainer.profilePictureFilePath)}
                   alt="avatar"
                 />
-                <AvatarFallback>AM</AvatarFallback>
+                <AvatarFallback>
+                  <UserIcon className="h-16 w-16 text-muted-foreground" />
+                  {/* AM */}
+                </AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <div>
