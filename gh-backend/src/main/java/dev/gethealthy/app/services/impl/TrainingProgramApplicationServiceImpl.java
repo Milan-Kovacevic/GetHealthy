@@ -1,12 +1,10 @@
 package dev.gethealthy.app.services.impl;
 
-import dev.gethealthy.app.base.CrudJpaService;
-import dev.gethealthy.app.exceptions.BadRequestException;
 import dev.gethealthy.app.exceptions.ConflictException;
 import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.*;
 import dev.gethealthy.app.models.enums.NotificationType;
-import dev.gethealthy.app.models.requests.TrainingProgramApplicationProcessRequest;
+import dev.gethealthy.app.models.requests.ProcessRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramApplicationRequest;
 import dev.gethealthy.app.models.responses.SingleProgramApplicationResponse;
 import dev.gethealthy.app.models.responses.ProgramApplicationResponse;
@@ -24,9 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -90,7 +85,7 @@ public class TrainingProgramApplicationServiceImpl implements TrainingProgramApp
 
     @Override
     public void processTrainingProgramApplication(Integer traineeId, Integer programId,
-            TrainingProgramApplicationProcessRequest request) {
+            ProcessRequest request) {
         TrainingProgramApplication application = trainingProgramApplicationRepository
                 .findByProgram_IdAndTrainee_Id(programId, traineeId)
                 .orElseThrow(NotFoundException::new);

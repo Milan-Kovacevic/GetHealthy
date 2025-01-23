@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class TrainingProgramApplicationProcessRequest {
+public class ProcessRequest {
     @NotNull
     private Boolean approve;
 }
