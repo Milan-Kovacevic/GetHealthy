@@ -28,7 +28,7 @@ const NumberInputFormField = (props: NumberInputFormFieldProps) => {
       name={props.name}
       control={props.control}
       render={({ field: { onChange, value } }) => (
-        <FormItem className={cn("", props.className)}>
+        <FormItem className={cn("space-y-0.5", props.className)}>
           <FormLabel>{props.label}</FormLabel>
           <FormControl>
             <NumberField

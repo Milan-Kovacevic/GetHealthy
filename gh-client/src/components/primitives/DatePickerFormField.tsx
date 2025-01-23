@@ -31,6 +31,17 @@ type DatePickerFormFieldProps = {
 };
 
 const DatePickerFormField = (props: DatePickerFormFieldProps) => {
+  function formatDateString(dateString: string | Date): string {
+    const date = new Date(dateString);
+
+    const year = date.toLocaleString("default", { year: "numeric" });
+    const month = date.toLocaleString("default", { month: "2-digit" });
+    const day = date.toLocaleString("default", { day: "2-digit" });
+
+    // Generate yyyy-mm-dd date string
+    return year + "-" + month + "-" + day;
+  }
+
   return (
     <FormField
       control={props.control}
@@ -38,7 +49,7 @@ const DatePickerFormField = (props: DatePickerFormFieldProps) => {
       render={({ field }) => (
         <FormItem
           className={cn(
-            "flex flex-col flex-1 min-w-[200px]",
+            "space-y-0.5 flex-1 min-w-[200px]",
             props.disabled && "cursor-not-allowed",
             props.className
           )}
@@ -67,8 +78,10 @@ const DatePickerFormField = (props: DatePickerFormFieldProps) => {
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
-                selected={field.value}
-                onSelect={field.onChange}
+                selected={field.value ? new Date(field.value) : undefined}
+                onSelect={(date) =>
+                  field.onChange(date ? formatDateString(date) : null)
+                }
                 disabled={(date) =>
                   date > new Date() || date < new Date("1900-01-01")
                 }

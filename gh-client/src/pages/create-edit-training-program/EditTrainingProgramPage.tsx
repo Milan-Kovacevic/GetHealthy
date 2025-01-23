@@ -6,7 +6,7 @@ import { getSingleTrainingProgram } from "@/api/services/program-details-service
 import { GeneralInfoFormSchema } from "@/schemas/training-program-schema";
 import { ExercisePlanItem } from "@/api/models/exercise";
 import PageHeadingLayout from "@/layouts/PageHeadingLayout";
-import EditTrainingProgramLoader from "./components/EditTrainingProgramFormLoader";
+import EditTrainingProgramLoader from "./components/EditTrainingProgramLoader";
 
 export default function EditTrainingProgramPage() {
   const { id } = useParams();
@@ -31,11 +31,10 @@ export default function EditTrainingProgramPage() {
             ...set,
           })),
         }));
-        setTimeout(() => {
-          setProgramGeneralInfo(generalInfo);
-          setProgramExercises(transformedExercises);
-          setProgramPicture(data.imageFilePath);
-        }, 5000); // Kašnjenje od 2 sekunde
+
+        setProgramGeneralInfo(generalInfo);
+        setProgramExercises(transformedExercises);
+        setProgramPicture(data.imageFilePath);
       } catch (error) {
         console.error("Error fetching training program:", error);
         navigate(-1);
@@ -55,7 +54,7 @@ export default function EditTrainingProgramPage() {
       description="Edit general information about the program or update your workout
             plan"
     >
-      {programGeneralInfo && programExercises ? (
+      {!loading ? (
         <EditTrainingProgramForm
           generalInfo={programGeneralInfo}
           exercises={programExercises}
@@ -63,7 +62,6 @@ export default function EditTrainingProgramPage() {
           programId={Number(id)}
         />
       ) : (
-        // <p className="">Loading...</p>
         <EditTrainingProgramLoader />
       )}
     </PageHeadingLayout>

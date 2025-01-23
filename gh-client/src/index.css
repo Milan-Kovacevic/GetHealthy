@@ -122,3 +122,13 @@
 .scrollbar-hidden::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
