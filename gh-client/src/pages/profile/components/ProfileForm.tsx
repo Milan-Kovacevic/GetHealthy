@@ -18,16 +18,17 @@ import { UserRole } from "@/api/enums/user-role";
 import { toast } from "sonner";
 import useAuth from "@/hooks/use-auth";
 
-const profileFormSchema = z.union([traineeScheme, trainerScheme]);
+type TraineeProfileFormValues = z.infer<typeof traineeScheme>;
+type TrainerProfileFormValues = z.infer<typeof trainerScheme>;
 
 const genders = [
   { label: "Male", value: "MALE" },
   { label: "Female", value: "FEMALE" },
 ];
 
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
-
-const defaultValues: Partial<ProfileFormValues> = {
+const defaultValues: Partial<
+  TraineeProfileFormValues | TrainerProfileFormValues
+> = {
   biography: "",
   firstName: "",
   lastName: "",
@@ -41,9 +42,9 @@ export function ProfileForm() {
   if (userId == null) return;
 
   const [isEditing, setIsEditing] = useState(false);
-  const [initialValues, setInitialValues] = useState<ProfileFormValues | null>(
-    null
-  );
+  const [initialValues, setInitialValues] = useState<
+    TraineeProfileFormValues | TrainerProfileFormValues | null
+  >(null);
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
 
   const [fileName, setFileName] = useState<string>("");
@@ -67,11 +68,18 @@ export function ProfileForm() {
 
         setInitialValues(result);
         form.reset({ ...result });
+        console.log("Result:", result);
       }
     };
 
     fetchProfileData();
   }, [isTrainer]);
+
+  const profileFormSchema = isTrainer ? trainerScheme : traineeScheme;
+
+  type ProfileFormValues = typeof profileFormSchema extends typeof trainerScheme
+    ? TrainerProfileFormValues
+    : TraineeProfileFormValues;
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
