@@ -71,7 +71,12 @@ export default function TrainerProgramSelector(
         <Button
           variant="outline"
           role="combobox"
-          className={cn("justify-between font-normal truncate", className)}
+          className={cn(
+            "justify-between font-normal truncate z-10",
+            !selectedProgram &&
+              "text-muted-foreground hover:text-muted-foreground",
+            className
+          )}
         >
           {text}
 
@@ -101,7 +106,7 @@ export default function TrainerProgramSelector(
             )}
 
             <CommandGroup>
-              <ScrollArea>
+              <ScrollArea className="z-10">
                 <div className="max-h-[200px] w-full">
                   <div className="flex w-full flex-col items-center">
                     {programs.map((program) => (

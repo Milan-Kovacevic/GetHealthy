@@ -32,12 +32,12 @@ const ScheduleManager = () => {
   return (
     <section className="h-full relative overflow-hidden flex flex-col">
       <CircleBackgroundBlob
-        variant="lighter"
+        variant="lightest"
         className="-top-20 left-1/2 w-1/3 h-96 right-auto"
       />
       <CircleBackgroundBlob variant="lightest" />
       <CircleBackgroundBlob
-        variant="lightest"
+        variant="lighter"
         className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
       />
       <div className="container mx-auto sm:px-0 px-4 pt-8 pb-8 flex flex-col flex-1">
@@ -60,9 +60,11 @@ const ScheduleManager = () => {
               </div>
             </div>
             <AuthGuard allowedRoles={[TRAINER_ONLY_ROLE]}>
-            <div className="md:flex-none flex-1 mb-2 md:self-end ">
-              <CreateEditProgramOnScheduleModal onSubmitModal={onAddProgram} />
-            </div>
+              <div className="md:flex-none flex-1 mb-2 md:self-end ">
+                <CreateEditProgramOnScheduleModal
+                  onSubmitModal={onAddProgram}
+                />
+              </div>
             </AuthGuard>
           </div>
 

@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { traineeScheme, trainerScheme } from "@/schemas/user-schemas";
 import { UserRole } from "@/api/enums/user-role";
 import { toast } from "sonner";
+import useAuth from "@/hooks/use-auth";
 
 const profileFormSchema = z.union([traineeScheme, trainerScheme]);
 
@@ -34,12 +35,13 @@ const defaultValues: Partial<ProfileFormValues> = {
   height: 0,
 };
 
-type ProfileFormProps = {
-  isTrainer?: boolean;
-};
+export function ProfileForm() {
+  const auth = useAuth();
+  const isTrainer = auth.isTrainer();
+  const userId = auth.getUserId();
 
-export function ProfileForm(props: ProfileFormProps) {
-  const userId = 9; // change with id of currently logged user
+  if (userId == null) return;
+
   const [isEditing, setIsEditing] = useState(false);
   const [initialValues, setInitialValues] = useState<ProfileFormValues | null>(
     null
@@ -66,7 +68,7 @@ export function ProfileForm(props: ProfileFormProps) {
     };
 
     fetchProfileData();
-  }, [props.isTrainer]);
+  }, [isTrainer]);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -100,10 +102,9 @@ export function ProfileForm(props: ProfileFormProps) {
   };
 
   async function onSubmit(data: ProfileFormValues) {
-    console.log(data);
     try {
       let requestData: any;
-      if (props.isTrainer) {
+      if (isTrainer) {
         const pom = trainerScheme.parse(data);
         requestData = { ...pom, role: UserRole.TRAINER };
         setInitialValues(requestData);
@@ -125,7 +126,7 @@ export function ProfileForm(props: ProfileFormProps) {
         new Blob([JSON.stringify(requestData)], { type: "application/json" })
       );
 
-      await updateUserProfile(userId, formData);
+      await updateUserProfile(userId!, formData);
 
       setIsEditing(false);
       resetFileName();
@@ -162,15 +163,18 @@ export function ProfileForm(props: ProfileFormProps) {
           />
         </div>
 
-        <div className="flex flex-wrap gap-4 mt-4">
-          <DatePickerFormField
-            control={form.control}
-            placeholder="Pick a date"
-            name="dateOfBirth"
-            description="Your date of birth is used to calculate your age."
-            label="Date of birth"
-            disabled={!isEditing}
-          />
+        <div className="flex sm:flex-row flex-col gap-4 mt-4">
+          <div className="flex-1 translate-y-1 basis-1/2">
+            <DatePickerFormField
+              control={form.control}
+              placeholder="Pick a date"
+              name="dateOfBirth"
+              description="Your date of birth is used to calculate your age."
+              label="Date of birth"
+              disabled={!isEditing}
+              className="w-auto"
+            />
+          </div>
 
           <SelectFormField
             control={form.control}
@@ -179,11 +183,12 @@ export function ProfileForm(props: ProfileFormProps) {
             label="Gender"
             placeholder="Select a gender"
             description="You can choose your gender."
+            className="flex-1 basis-1/2"
             disabled={!isEditing}
           />
         </div>
 
-        {props.isTrainer === false ? (
+        {isTrainer === false ? (
           <>
             <div className="flex flex-wrap gap-4">
               <NumberInputFormField
@@ -245,7 +250,7 @@ export function ProfileForm(props: ProfileFormProps) {
 
         <FileInputField
           title="Profile image"
-          name={props.isTrainer ? "trainerProfileImage" : "traineeProfileImage"}
+          name={isTrainer ? "trainerProfileImage" : "traineeProfileImage"}
           description="You can set your profile image."
           formats=""
           onFileSelect={handleFileSelection}

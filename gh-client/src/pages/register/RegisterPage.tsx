@@ -56,14 +56,14 @@ const RegisterPage = () => {
   };
 
   return (
-    <section className="h-full relative overflow-hidden">
+    <section className="h-full relative overflow-hidden flex items-center justify-center">
       <TopBackgroundBlob />
       <CircleBackgroundBlob variant="lighter" />
       <CircleBackgroundBlob
         variant="light"
         className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
       />
-      <div className="relative container mx-auto z-10 my-28">
+      <div className="relative container mx-auto z-10 -translate-y-20 my-20">
         <div className="flex flex-col gap-4">
           <Card className="mx-auto w-full p-1 max-w-[480px] animate-fade-down shadow-md dark:shadow-white/5">
             <AuthCardHeader

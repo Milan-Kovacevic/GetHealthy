@@ -11,6 +11,7 @@ const getUserAccount = (userId: number = 0): Promise<any> => {
   return sendAxiosRequest<void, any>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data;
   });
@@ -22,6 +23,7 @@ const changePassword = async (request: PasswordChangeDTO, userId: number) => {
   return sendAxiosRequest<PasswordChangeDTO, void>({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: request,
   }).then();
 };
@@ -32,6 +34,7 @@ const changeEmail = async (request: EmailChangeDTO, userId: number) => {
   return sendAxiosRequest<EmailChangeDTO, void>({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: request,
   }).then();
 };

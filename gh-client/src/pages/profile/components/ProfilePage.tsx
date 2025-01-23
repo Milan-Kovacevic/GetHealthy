@@ -8,10 +8,10 @@ const ProfilePage = () => {
         <div>
           <h3 className="text-lg font-medium">Profile</h3>
           <p className="text-sm text-muted-foreground">
-            This is how others will see you on the site.
+            This is how others will see you on the application.
           </p>
           <Separator className="my-6" />
-          <ProfileForm isTrainer={false} />
+          <ProfileForm />
         </div>
       </div>
     </div>
