@@ -25,6 +25,6 @@ export const certificateUrl = (certificateName?: string) => {
     throw new Error("Certificate name is required to generate the URL.");
   }
   var url = environments().baseApiPath + environments().apiResourcePrefix;
-  url += `/storage/certificates/${certificateName}`;
+  url += `/storage/documents/${certificateName}`;
   return url;
 };

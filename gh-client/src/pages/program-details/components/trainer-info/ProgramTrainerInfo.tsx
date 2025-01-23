@@ -8,7 +8,7 @@ import trainerImg from "@/assets/trainer.png";
 import { useParams } from "react-router-dom";
 import TrainerInfoLoader from "./TrainerInfoLoader";
 import { format } from "date-fns";
-import { capitalize } from "@/lib/utils";
+import { capitalize, pictureUrl } from "@/lib/utils";
 import downloadTrainerCertificate from "@/api/services/qualification-service";
 import { toast } from "sonner";
 
@@ -74,7 +74,7 @@ export default function ProgramTrainerInfo() {
             <div className="flex flex-col md:flex-row md:gap-6 gap-3">
               <Avatar className="w-24 h-24 md:w-32 md:h-32">
                 <AvatarImage
-                  src={trainerImg || trainer.profilePictureFilePath} //zamijeniti
+                  src={pictureUrl(trainer.profilePictureFilePath) || trainerImg} //zamijeniti
                   alt="avatar"
                 />
                 <AvatarFallback>AM</AvatarFallback>
