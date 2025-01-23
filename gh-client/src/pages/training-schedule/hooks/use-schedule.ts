@@ -1,12 +1,18 @@
-import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
+import {
+  ManageTrainingProgramOnSchedule,
+  TrainingProgramOnSchedule,
+} from "@/api/models/training-program-on-schedule";
 import { createContext, useContext } from "react";
 
 type ScheduleContextState = {
   programs: TrainingProgramOnSchedule[];
   currentDate: Date;
-  addProgram: (program: TrainingProgramOnSchedule) => void;
-  editProgram: (updatedProgram: TrainingProgramOnSchedule) => void;
-  removeProgram: (programId: number) => void;
+  onAddProgram: (program: ManageTrainingProgramOnSchedule) => Promise<void>;
+  onEditProgram: (
+    id: number,
+    updatedProgram: ManageTrainingProgramOnSchedule
+  ) => Promise<void>;
+  onRemoveProgram: (programId: number) => void;
   getProgramsForDay: (day: Date) => TrainingProgramOnSchedule[];
   setCurrentDate: (date: Date) => void;
 };

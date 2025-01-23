@@ -48,6 +48,7 @@ export default function EditTrainingProgramPage() {
     fetchTrainingProgram();
   }, [id]);
 
+  const loading = !programGeneralInfo || !programExercises;
   return (
     <PageHeadingLayout
       title="Edit Training Program"

@@ -11,27 +11,30 @@ const getUserAccount = (userId: number = 0): Promise<any> => {
   return sendAxiosRequest<void, any>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data;
   });
 };
 
-const changePassword = (request: PasswordChangeDTO, userId: number) => {
+const changePassword = async (request: PasswordChangeDTO, userId: number) => {
   var url = `${ApiEndpoints.UserAccounts}/${userId}/change-password`;
 
   return sendAxiosRequest<PasswordChangeDTO, void>({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: request,
   }).then();
 };
 
-const changeEmail = (request: EmailChangeDTO, userId: number) => {
+const changeEmail = async (request: EmailChangeDTO, userId: number) => {
   var url = `${ApiEndpoints.UserAccounts}/${userId}/change-email`;
 
   return sendAxiosRequest<EmailChangeDTO, void>({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: request,
   }).then();
 };

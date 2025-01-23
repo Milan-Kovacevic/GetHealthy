@@ -18,7 +18,7 @@ import {
   TRAINEE_ACCOUNT_TYPE,
   TRAINER_ACCOUNT_TYPE,
 } from "@/utils/constants";
-import { AlbumIcon, DumbbellIcon } from "lucide-react";
+import { AlbumIcon, DumbbellIcon, PersonStandingIcon } from "lucide-react";
 
 type AccountTypeSelectorProps = {
   className?: string;
@@ -65,11 +65,11 @@ function AccountSelectorForm(props: AccountTypeSelectorProps) {
                         htmlFor={TRAINEE_ACCOUNT_TYPE}
                         className="flex h-full flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                       >
-                        <DumbbellIcon className="mb-3 h-10 w-10" />
-                        <p className="text-lg -mt-2">Trainee</p>
-                        <p className="font-normal text-center mt-2 max-w-40 text-muted-foreground">
-                          Browse training programs, exercise and track your
-                          progress
+                        <PersonStandingIcon className="mb-3 h-14 w-14 -translate-y-1.5" />
+                        <p className="text-lg -mt-5">Trainee</p>
+                        <p className="font-normal text-center text-xs leading-[1.15] mt-1.5 max-w-40 text-muted-foreground">
+                          Browse training programs, workout and track your
+                          overall progress
                         </p>
                       </Label>
                     </div>
@@ -84,11 +84,11 @@ function AccountSelectorForm(props: AccountTypeSelectorProps) {
                         htmlFor={TRAINER_ACCOUNT_TYPE}
                         className="flex h-full flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary "
                       >
-                        <AlbumIcon className="mb-3 h-6 w-6" />
-                        <p className="text-lg -mt-2">Trainer</p>
-                        <p className="font-normal text-center mt-2 max-w-40 text-muted-foreground">
-                          Manage training programs, exercises and track your
-                          engagement
+                        <DumbbellIcon className="mb-3 h-10 w-10" />
+                        <p className="text-lg -mt-2.5">Trainer</p>
+                        <p className="font-normal text-center text-xs leading-[1.15] mt-1.5 max-w-40 text-muted-foreground">
+                          Manage training programs, trainees and track your
+                          popularity and engagement
                         </p>
                       </Label>
                     </div>

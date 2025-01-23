@@ -1,12 +1,12 @@
 package dev.gethealthy.app.services.impl;
 
-import dev.gethealthy.app.models.entities.ExerciseSetFeedback;
 import dev.gethealthy.app.models.entities.ProgramRating;
 import dev.gethealthy.app.models.entities.TraineeExercising;
+import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.enums.TrainingProgramDifficulty;
 import dev.gethealthy.app.models.requests.EngagementAnalyticsRequest;
 import dev.gethealthy.app.models.requests.PopularityAnalyticsRequest;
-import dev.gethealthy.app.models.responses.ProgramRatingResponse;
+import dev.gethealthy.app.models.responses.TraineeDashboardAnalyticsResponse;
 import dev.gethealthy.app.models.responses.TrainerDashboardAnalyticsResponse;
 import dev.gethealthy.app.models.responses.TrainerEngagementAnalyticsResponse;
 import dev.gethealthy.app.models.responses.TrainerPopularityAnalyticsResponse;
@@ -17,11 +17,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,20 +37,29 @@ public class TrainerAnalyticsServiceImpl implements TrainerAnalyticsService {
         TrainerDashboardAnalyticsResponse response = new TrainerDashboardAnalyticsResponse();
 
         var programs = trainingProgramRepository.findAllByTrainer_Id(userId);
+        var traineeExercising = traineeExercisingRepository.findAllByProgramIdIn(programs.stream().map(p -> p.getId()).toList());
 
-        List<TrainerDashboardAnalyticsResponse.TopProgramDashboardData>
-                topInteracted =
-                programs
-                .stream()
-                .map(tp -> new TrainerDashboardAnalyticsResponse.TopProgramDashboardData(tp.getName(), tp.getComments().size() + tp.getTrainingProgramRatings().size()))
-                .sorted(Comparator.comparingDouble(TrainerDashboardAnalyticsResponse.TopProgramDashboardData::getValue).reversed())
+        Map<Integer, Long> programExercisedCount = traineeExercising.stream()
+                .collect(Collectors.groupingBy(e -> e.getProgram().getId(), Collectors.counting()));
+
+        List<TrainingProgram> top3Interacted = programs.stream()
+                .filter(program -> programExercisedCount.containsKey(program.getId()))
+                .sorted((p1, p2) -> Long.compare(
+                        programExercisedCount.get(p2.getId()),
+                        programExercisedCount.get(p1.getId())
+                ))
+                .limit(3)
                 .toList();
+
+        List<TrainerDashboardAnalyticsResponse.TopProgramDashboardData> topInteracted = new ArrayList<>();
+        top3Interacted.forEach(p-> topInteracted.add(new TrainerDashboardAnalyticsResponse.TopProgramDashboardData(p.getName(), programExercisedCount.get(p.getId()))));
 
         List<TrainerDashboardAnalyticsResponse.TopProgramDashboardData>
                 topJoined =
                 programs.stream()
                 .map(tp -> new TrainerDashboardAnalyticsResponse.TopProgramDashboardData(tp.getName(), tp.getTraineeOnTrainingProgram().size()))
                 .sorted(Comparator.comparingDouble(TrainerDashboardAnalyticsResponse.TopProgramDashboardData::getValue).reversed())
+                .limit(3)
                 .toList();
 
         List<TrainerDashboardAnalyticsResponse.TopProgramDashboardData>
@@ -59,6 +68,7 @@ public class TrainerAnalyticsServiceImpl implements TrainerAnalyticsService {
                 .stream()
                 .map(tp -> new TrainerDashboardAnalyticsResponse.TopProgramDashboardData(tp.getName(), tp.getTrainingProgramRatings().stream().mapToDouble(ProgramRating::getRate).average().orElse(0)))
                 .sorted(Comparator.comparingDouble(TrainerDashboardAnalyticsResponse.TopProgramDashboardData::getValue).reversed())
+                .limit(3)
                 .toList();
 
         long beginnerCount = programs.stream().filter(p->p.getDifficulty() == TrainingProgramDifficulty.BEGINNER).count();

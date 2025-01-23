@@ -15,6 +15,8 @@ import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { traineeScheme, trainerScheme } from "@/schemas/user-schemas";
 import { UserRole } from "@/api/enums/user-role";
+import { toast } from "sonner";
+import useAuth from "@/hooks/use-auth";
 
 const profileFormSchema = z.union([traineeScheme, trainerScheme]);
 
@@ -33,32 +35,40 @@ const defaultValues: Partial<ProfileFormValues> = {
   height: 0,
 };
 
-type ProfileFormProps = {
-  isTrainer?: boolean;
-};
+export function ProfileForm() {
+  const auth = useAuth();
+  const isTrainer = auth.isTrainer();
+  const userId = auth.getUserId();
 
-export function ProfileForm(props: ProfileFormProps) {
+  if (userId == null) return;
+
   const [isEditing, setIsEditing] = useState(false);
   const [initialValues, setInitialValues] = useState<ProfileFormValues | null>(
     null
   );
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
 
+  const [fileName, setFileName] = useState<string>("");
+
+  const resetFileName = () => {
+    setFileName("");
+  };
+
   useEffect(() => {
     const fetchProfileData = async () => {
       let data: ProfileFormValues | null = null;
-      const pdata = await getProfile(1);
+      const pdata = await getProfile(userId);
 
       data = pdata;
 
       if (data) {
         setInitialValues(data);
-        form.reset(data);
+        form.reset({ ...data, dateOfBirth: new Date(data.dateOfBirth) });
       }
     };
 
     fetchProfileData();
-  }, [props.isTrainer]);
+  }, [isTrainer]);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -82,9 +92,11 @@ export function ProfileForm(props: ProfileFormProps) {
   const handleFileSelection = (file: File | undefined) => {
     if (file) {
       setSelectedFile(file);
+      setFileName(file.name);
       form.setValue("profilePictureFilePath", file.name);
     } else {
       setSelectedFile(undefined);
+      setFileName("");
       form.setValue("profilePictureFilePath", "");
     }
   };
@@ -92,7 +104,7 @@ export function ProfileForm(props: ProfileFormProps) {
   async function onSubmit(data: ProfileFormValues) {
     try {
       let requestData: any;
-      if (props.isTrainer) {
+      if (isTrainer) {
         const pom = trainerScheme.parse(data);
         requestData = { ...pom, role: UserRole.TRAINER };
         setInitialValues(requestData);
@@ -114,13 +126,14 @@ export function ProfileForm(props: ProfileFormProps) {
         new Blob([JSON.stringify(requestData)], { type: "application/json" })
       );
 
-      await updateUserProfile(1, formData).catch(() =>
-        console.log("Some error happened!")
-      );
+      await updateUserProfile(userId!, formData);
 
       setIsEditing(false);
+      resetFileName();
+      toast.success("Successfully updated user profile!");
     } catch (error) {
       console.error("Error updating profile or profile picture:", error);
+      toast.error("Couldn't updated user profile!");
     }
   }
 
@@ -150,15 +163,18 @@ export function ProfileForm(props: ProfileFormProps) {
           />
         </div>
 
-        <div className="flex flex-wrap gap-4 mt-4">
-          <DatePickerFormField
-            control={form.control}
-            placeholder="Pick a date"
-            name="dateOfBirth"
-            description="Your date of birth is used to calculate your age."
-            label="Date of birth"
-            disabled={!isEditing}
-          />
+        <div className="flex sm:flex-row flex-col gap-4 mt-4">
+          <div className="flex-1 translate-y-1 basis-1/2">
+            <DatePickerFormField
+              control={form.control}
+              placeholder="Pick a date"
+              name="dateOfBirth"
+              description="Your date of birth is used to calculate your age."
+              label="Date of birth"
+              disabled={!isEditing}
+              className="w-auto"
+            />
+          </div>
 
           <SelectFormField
             control={form.control}
@@ -167,11 +183,12 @@ export function ProfileForm(props: ProfileFormProps) {
             label="Gender"
             placeholder="Select a gender"
             description="You can choose your gender."
+            className="flex-1 basis-1/2"
             disabled={!isEditing}
           />
         </div>
 
-        {props.isTrainer === false ? (
+        {isTrainer === false ? (
           <>
             <div className="flex flex-wrap gap-4">
               <NumberInputFormField
@@ -216,6 +233,7 @@ export function ProfileForm(props: ProfileFormProps) {
               placeholder="Enter a phone number"
               description="Enter a phone number"
               className="w-[240px]"
+              disabled={!isEditing}
             />
 
             <TextareaFormField
@@ -232,11 +250,12 @@ export function ProfileForm(props: ProfileFormProps) {
 
         <FileInputField
           title="Profile image"
-          name={props.isTrainer ? "trainerProfileImage" : "traineeProfileImage"}
+          name={isTrainer ? "trainerProfileImage" : "traineeProfileImage"}
           description="You can set your profile image."
           formats=""
           onFileSelect={handleFileSelection}
           disabled={!isEditing}
+          fileName={fileName}
         />
 
         {isEditing && (

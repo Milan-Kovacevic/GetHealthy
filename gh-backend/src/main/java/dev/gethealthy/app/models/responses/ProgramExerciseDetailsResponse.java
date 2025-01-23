@@ -6,12 +6,12 @@ import java.util.List;
 
 @Data
 public class ProgramExerciseDetailsResponse  {
-    private Integer id;
-    private String name;
-    private String description;
-    private String videoLink;
-    private ExerciseMetricResponse firstExerciseMetric;
-    private ExerciseMetricResponse secondExerciseMetric;
+    protected Integer id;
+    protected String name;
+    protected String description;
+    protected String videoLink;
+    protected ExerciseMetricResponse firstExerciseMetric;
+    protected ExerciseMetricResponse secondExerciseMetric;
     private List<ExerciseSetResponse> exerciseSets;
-    private Integer programExerciseId;
+    protected Integer programExerciseId;
 }

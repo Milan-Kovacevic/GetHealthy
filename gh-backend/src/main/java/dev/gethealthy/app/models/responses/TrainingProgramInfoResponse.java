@@ -1,5 +1,6 @@
 package dev.gethealthy.app.models.responses;
 
+import dev.gethealthy.app.models.enums.TraineeProgramStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -7,5 +8,5 @@ import lombok.EqualsAndHashCode;
 @Data
 public class TrainingProgramInfoResponse extends TrainingProgramResponse{
     private Integer totalRates;
-    private Boolean joined;
+    private TraineeProgramStatus status;
 }

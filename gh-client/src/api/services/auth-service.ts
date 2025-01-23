@@ -3,7 +3,6 @@ import { AuthUserContext, UserLogin } from "../models/authentication";
 import { sendAxiosRequest } from "./base-service";
 import { LoginResponseDTO, UserLoginDTO } from "../contracts/auth-contract";
 import { delay } from "@/lib/utils";
-import { UserRole } from "../enums/user-role";
 
 const loginUser = async (data: UserLogin): Promise<AuthUserContext> => {
   const url = `${ApiEndpoints.Authentication}/login`;
@@ -13,25 +12,11 @@ const loginUser = async (data: UserLogin): Promise<AuthUserContext> => {
     url: url,
     data: data as UserLoginDTO,
   }).then((response) => response.data as AuthUserContext);
-  // const userMock = {
-  //   id: 2,
-  //   firstName: "Marko",
-  //   lastName: "Markovic",
-  //   role: UserRole.TRAINER,
-  // };
-  // const tokensMock = {
-  //   accessToken: "123-sha256",
-  //   refreshToken: "123456-sha512",
-  // };
-
-  // return { user: userMock, tokens: tokensMock };
 };
 
-// TODO: Check if this is neccessary
-// (ex. set valid flag in token claim on backend to invalidate jwt?)
 const logoutUser = async () => {
   const url = `${ApiEndpoints.Authentication}/logout`;
-  await delay(1000);
+  await delay(500);
 
   return sendAxiosRequest<void, void>({
     method: "POST",
@@ -52,7 +37,6 @@ const registerUser = async (formData: FormData): Promise<boolean> => {
       return true;
     })
     .catch((error) => {
-      // Handle error code...
       return false;
     });
 };

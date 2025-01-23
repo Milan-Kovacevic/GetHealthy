@@ -1,21 +1,27 @@
 import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
 import { isPast, isWithinInterval } from "date-fns";
 
-export type ScheduleTrainingStatus = "completed" | "upcoming" | "live";
+export type ScheduleTrainingStatus =
+  | "completed"
+  | "not_completed"
+  | "upcoming"
+  | "live";
 
-export const getTrainingProgramTimeRange = (
-  programOnSchedule: TrainingProgramOnSchedule
+export const addMinutesToTime = (
+  startTime: string | Date,
+  duration: number
 ): string => {
-  const [startHour, startMinute] = programOnSchedule.startTime
-    .split(":")
-    .map(Number);
+  var programStart: Date = new Date();
+  if (startTime instanceof Date) {
+    programStart = startTime;
+  }
 
-  const programStart = new Date();
-  programStart.setHours(startHour, startMinute, 0, 0);
+  if (typeof startTime == "string") {
+    const [startHour, startMinute] = startTime.split(":").map(Number);
+    programStart.setHours(startHour, startMinute, 0, 0);
+  }
 
-  const programEnd = new Date(
-    programStart.getTime() + programOnSchedule.trainingDuration * 60000
-  );
+  const programEnd = new Date(programStart.getTime() + duration * 60000);
 
   const formatTime = (date: Date) => {
     const hours = date.getHours().toString().padStart(2, "0");
@@ -52,7 +58,7 @@ export const getProgramStatus = (
   programStart.setHours(startHour, startMinute, 0, 0);
 
   const programEnd = new Date(
-    programStart.getTime() + programOnSchedule.trainingDuration * 60000
+    programStart.getTime() + programOnSchedule.program.trainingDuration * 60000
   );
 
   if (isPast(programEnd)) return "completed";

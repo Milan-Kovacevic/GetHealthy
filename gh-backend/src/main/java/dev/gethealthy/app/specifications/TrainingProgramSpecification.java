@@ -34,6 +34,7 @@ public class TrainingProgramSpecification {
                 .and(TrainingProgramSpecification.isNotDeleted());
     }
 
+    // TODO
     public static Specification<TrainingProgram> constructSpecificationForTrainee(int userId, String searchWord, List<String> categories,
                                                                                   double ratingUpper,
                                                                                   double ratingLower, long participantsUpper, long participantsLower, int difficulty) {

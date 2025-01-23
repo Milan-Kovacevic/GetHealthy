@@ -62,15 +62,12 @@ export default function MobileNavbar(props: MobileNavbarProps) {
                 } else {
                   return (
                     <Accordion
+                      key={"mobile-nav-bar_" + index}
                       type="single"
                       collapsible
                       className="w-full flex flex-col gap-4"
                     >
-                      <AccordionItem
-                        key={"mobile-nav-bar_" + index}
-                        value="products"
-                        className="border-b-0"
-                      >
+                      <AccordionItem value="products" className="border-b-0">
                         <AccordionTrigger className="py-0 font-semibold hover:no-underline">
                           {item.title}
                         </AccordionTrigger>

@@ -39,7 +39,8 @@ const DatePickerFormField = (props: DatePickerFormFieldProps) => {
         <FormItem
           className={cn(
             "flex flex-col flex-1 min-w-[200px]",
-            props.disabled && "cursor-not-allowed"
+            props.disabled && "cursor-not-allowed",
+            props.className
           )}
         >
           <FormLabel>{props.label}</FormLabel>

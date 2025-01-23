@@ -41,7 +41,8 @@ public class ExerciseFeedback implements BaseEntity<Integer> {
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private TrainingProgramExercise programExercise;
 
-    @OneToMany(mappedBy = "exerciseFeedback")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name="ExerciseFeedbackId")
     private List<ExerciseSetFeedback> exerciseSetsFeedback;
 
 }

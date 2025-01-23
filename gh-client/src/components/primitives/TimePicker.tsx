@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Clock } from "lucide-react";
 import { Label } from "@/components/ui/label";
@@ -16,7 +14,7 @@ export function TimePicker({ date, setDate }: TimePickerProps) {
   const secondRef = React.useRef<HTMLInputElement>(null);
 
   return (
-    <div className="flex items-end gap-2">
+    <div className="flex items-end gap-1.5">
       <div className="grid gap-1 text-center">
         <Label htmlFor="hours" className="text-xs">
           Hours

@@ -1,4 +1,5 @@
 import environments from "@/environments/config";
+import { UserRole } from "@/api/enums/user-role";
 
 export const LIGHT_THEME = "light";
 export const DARK_THEME = "dark";
@@ -10,6 +11,11 @@ export const REFRESH_TOKEN_STORAGE_KEY = "gethealthy_refresh_token";
 
 export const TRAINEE_ACCOUNT_TYPE = "trainee";
 export const TRAINER_ACCOUNT_TYPE = "trainer";
+
+export const TRAINER_ONLY_ROLE = UserRole.TRAINER;
+export const TRAINEE_ONLY_ROLE = UserRole.TRAINEE;
+export const BOTH_USER_ROLES = [UserRole.TRAINEE, UserRole.TRAINER];
+
 export type AccountType =
   | typeof TRAINEE_ACCOUNT_TYPE
   | typeof TRAINER_ACCOUNT_TYPE;
@@ -39,7 +45,7 @@ export const ApiEndpoints = {
   TrainingProgramOnSchedule: `${API_PREFIX}/schedules`,
   Metrics: `${API_PREFIX}/metrics`,
   Exercises: `${API_PREFIX}/exercises`,
-  TraineeExercising: `${API_PREFIX}/trainee-exercising`,
+  TraineeExercising: `${API_PREFIX}/workouts`,
   TrainerAnalytics: `${API_PREFIX}/users/{userId}/trainer-analytics`,
   TraineeAnalytics: `${API_PREFIX}/users/{userId}/trainee-analytics`,
 };

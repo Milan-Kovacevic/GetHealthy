@@ -24,9 +24,12 @@ export type SingleProgramParticipant = {
 
 export type PageableProgramParticipants = Page<SingleProgramParticipant>;
 
+export type TraineeProgramStatus = "JOINED" | "NOT_JOINED" | "PENDING";
+
 export type SingleTrainingProgramInfo = TrainingProgram & {
   totalRates: number;
   joined?: boolean;
+  status: TraineeProgramStatus;
 };
 
 export type SingleTrainingProgram = TrainingProgram & {

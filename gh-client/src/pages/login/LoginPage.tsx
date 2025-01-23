@@ -38,9 +38,9 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="h-full relative overflow-hidden">
+    <section className="h-full relative overflow-hidden flex items-center justify-center">
       <BackgroundBlurs />
-      <div className="relative container mx-auto z-10 my-28">
+      <div className="relative container mx-auto my-20 -translate-y-20 z-10">
         <div className="flex flex-col gap-4">
           <Card className="mx-auto w-full max-w-md p-1 animate-fade-down shadow-md dark:shadow-white/5">
             <AuthCardHeader

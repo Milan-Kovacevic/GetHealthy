@@ -51,7 +51,12 @@ const getSingleTrainingProgramInfo = async (programId: number) => {
   return sendAxiosRequest<void, SingleTrainingProgramInfoDTO>({
     method: "GET",
     url: url,
-  }).then((response) => response.data as SingleTrainingProgramInfo);
+  }).then((response) => {
+    return {
+      ...response.data,
+      status: response.data.status ?? "NOT_JOINED",
+    } as SingleTrainingProgramInfo;
+  });
 };
 
 const getSingleProgramTrainer = async (programId: number) => {

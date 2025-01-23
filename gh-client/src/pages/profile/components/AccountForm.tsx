@@ -16,12 +16,13 @@ import {
   changePassword,
   getUserAccount,
 } from "@/api/services/user-account-service";
+import { toast } from "sonner";
+import useAuth from "@/hooks/use-auth";
 
 const emailSchema = z.object({
   email: z.string().email("Invalid email address"),
-  confirmedPassword: z
-    .string()
-    .min(8, "Password must be at least 8 characters"),
+  confirmedPassword: z.string(),
+  // .min(8, "Password must be at least 8 characters"),
 });
 
 const passwordSchema = z
@@ -30,11 +31,10 @@ const passwordSchema = z
       .string()
       .min(8, "Password must be at least 8 characters"),
     newPassword: z.string().min(8, "Password must be at least 8 characters"),
-    confirmedNewPassword: z
-      .string()
-      .min(8, "Password must be at least 8 characters"),
+    confirmedNewPassword: z.string(),
+    // .min(8, "Password must be at least 8 characters"),
   })
-  .refine((data) => data.newPassword === data.confirmedNewPassword, {
+  .refine((data) => data.newPassword !== data.confirmedNewPassword, {
     message: "Passwords don't match",
     path: ["confirmedNewPassword"],
   });
@@ -47,6 +47,10 @@ interface UserData {
 }
 
 export default function AccountForm() {
+  const auth = useAuth();
+  const userId = auth.getUserId();
+  if (!userId) return;
+
   const [userData, setUserData] = useState<UserData>({
     email: "",
     username: "",
@@ -56,7 +60,7 @@ export default function AccountForm() {
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const data = await getUserAccount(1);
+      const data = await getUserAccount(userId!);
 
       setUserData({ email: data.email, username: data.username });
     };
@@ -81,23 +85,29 @@ export default function AccountForm() {
     },
   });
 
-  function onEmailSubmit(values: EmailFormValues) {
-    console.log(values);
-    setIsEditingEmail(false);
+  async function onEmailSubmit(values: EmailFormValues) {
     setUserData({ ...userData, email: values.email });
-    emailForm.reset();
-    changeEmail(values, 1) // userId hardcoded
-      .then()
-      .catch(() => console.log("Could not change email!"));
+
+    try {
+      await changeEmail(values, userId!);
+      toast.success("Successfully changed your email!");
+      setIsEditingEmail(false);
+      emailForm.reset();
+    } catch (error) {
+      toast.error("Unable to change your email. Please, try again later.");
+    }
   }
 
-  function onPasswordSubmit(values: PasswordFormValues) {
+  async function onPasswordSubmit(values: PasswordFormValues) {
     console.log(values);
     setIsChangingPassword(false);
     passwordForm.reset();
-    changePassword(values, 1) // userId hardcoded
-      .then()
-      .catch(() => console.log("Could not change password!"));
+    try {
+      await changePassword(values, userId!);
+      toast.success("Successfully changed password!");
+    } catch (error) {
+      toast.error("Couldn't changed password!");
+    }
   }
 
   return (

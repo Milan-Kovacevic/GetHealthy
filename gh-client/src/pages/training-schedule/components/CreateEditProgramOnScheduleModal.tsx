@@ -8,25 +8,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useEffect, useState } from "react";
-
-import {
-  CreateTrainingProgramOnScheduleDTO,
-  EditTrainingProgramOnScheduleDTO,
-} from "@/api/contracts/training-program-on-schedule-contract";
 import { TrainerProgram } from "@/api/models/training-program";
-import { TrainingProgramOnSchedule } from "@/api/models/training-program-on-schedule";
 import {
-  createTrainingProgramOnSchedule,
-  editTrainingProgramOnSchedule,
-} from "@/api/services/training-program-on-schedule-service";
+  ManageTrainingProgramOnSchedule,
+  TrainingProgramOnSchedule,
+} from "@/api/models/training-program-on-schedule";
 import { TimePicker } from "@/components/primitives/TimePicker";
 import {
   Form,
@@ -41,55 +28,63 @@ import { parseTimeStringToDate } from "@/utils/date-time-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PencilIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
+import SelectFormField from "@/components/primitives/SelectFormField";
 
 const daysOfWeek = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-] as const;
+  { label: "Monday", value: "1" },
+  { label: "Tuesday", value: "2" },
+  { label: "Wednesday", value: "3" },
+  { label: "Thursday", value: "4" },
+  { label: "Friday", value: "5" },
+  { label: "Saturday", value: "6" },
+  { label: "Sunday", value: "7" },
+];
 
 const formSchema = z.object({
   program: z
-    .object({
-      id: z.number(),
-      name: z.string(),
-      createdAt: z.string(),
-      description: z.string(),
-      trainerName: z.string(),
-    })
+    .object(
+      {
+        id: z.number(),
+        name: z.string(),
+        createdAt: z.string(),
+        description: z.string(),
+        trainerName: z.string(),
+      },
+      {
+        required_error: "Please select program",
+        invalid_type_error: "Please select program",
+      }
+    )
     .nullable()
     .refine((val) => val !== null && val.id > 0, {
       message: "Please select a program.",
     }),
 
   dayOfWeek: z
-    .number()
+    .string({ required_error: "Please select a valid day of the week." })
     .min(1)
     .max(7, { message: "Please select a valid day of the week." }),
 
-  startTime: z.date().refine((val) => !isNaN(new Date(val).getTime()), {
-    message: "Please enter a valid start time.",
-  }),
+  startTime: z
+    .date({ required_error: "Start time is required." })
+    .refine((val) => !isNaN(new Date(val).getTime()), {
+      message: "Please enter a valid start time.",
+    }),
 });
 
 export type CreateEditProgramOnScheduleModalProps = {
   isEdit?: boolean;
   programOnSchedule?: TrainingProgramOnSchedule;
-  onEditProgramOnSchedule?: (
-    programOnSchedule: TrainingProgramOnSchedule
-  ) => void;
+  onSubmitModal: (
+    programOnSchedule: ManageTrainingProgramOnSchedule
+  ) => Promise<void>;
 };
 
 export const CreateEditProgramOnScheduleModal = ({
   isEdit = false,
   programOnSchedule,
-  onEditProgramOnSchedule,
+  onSubmitModal,
 }: CreateEditProgramOnScheduleModalProps) => {
   const defaultText = "Select training program ...";
   const [open, setOpen] = useState(false);
@@ -99,8 +94,13 @@ export const CreateEditProgramOnScheduleModal = ({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          program: programOnSchedule ? programOnSchedule.program : null,
-          dayOfWeek: programOnSchedule?.dayOfWeek ?? undefined,
+          program: programOnSchedule
+            ? {
+                ...programOnSchedule.program,
+                trainerName: `${programOnSchedule.program.trainerFirstName} ${programOnSchedule.program.trainerLastName}`,
+              }
+            : null,
+          dayOfWeek: programOnSchedule?.dayOfWeek.toString() ?? undefined,
           startTime: programOnSchedule?.startTime
             ? parseTimeStringToDate(programOnSchedule.startTime)
             : new Date(),
@@ -117,54 +117,19 @@ export const CreateEditProgramOnScheduleModal = ({
   }, []);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setOpen(false);
-    form.reset({});
-    setText(defaultText);
+    if (!values.program) return;
 
-    console.log(
-      values.startTime.toLocaleTimeString("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    );
+    const request: ManageTrainingProgramOnSchedule = {
+      ...values,
+      program: values.program,
+      dayOfWeek: Number(values.dayOfWeek),
+    };
 
-    if (isEdit && programOnSchedule && values.program) {
-      programOnSchedule = {
-        id: programOnSchedule.id,
-        trainingDuration: programOnSchedule.trainingDuration,
-        ...values,
-        startTime: values.startTime.toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        program: {
-          ...values.program,
-        },
-      };
-
-      onEditProgramOnSchedule?.(programOnSchedule);
-    }
-
-    try {
-      isEdit
-        ? await editTrainingProgramOnSchedule({
-            ...values,
-            program: values.program,
-            id: programOnSchedule?.id,
-          } as EditTrainingProgramOnScheduleDTO)
-        : await createTrainingProgramOnSchedule(
-            values as CreateTrainingProgramOnScheduleDTO
-          );
-      toast.success(
-        `Successfully ${
-          isEdit ? "edited" : "created"
-        } training program on schedule!`
-      );
-    } catch {
-      toast.error(
-        `Could not ${isEdit ? "edit" : "create"} training program on schedule!`
-      );
-    }
+    onSubmitModal(request).then(() => {
+      setOpen(false);
+      form.reset({});
+      setText(defaultText);
+    });
   };
 
   const changeProgram = (program?: TrainerProgram) => {
@@ -185,6 +150,14 @@ export const CreateEditProgramOnScheduleModal = ({
     setOpen(isOpen);
   };
 
+  var trainerProgram: TrainerProgram | undefined;
+  if (programOnSchedule) {
+    trainerProgram = {
+      ...programOnSchedule.program,
+      trainerName: `${programOnSchedule.program.trainerFirstName} ${programOnSchedule.program.trainerLastName}`,
+    };
+  }
+
   return (
     <Dialog open={open} onOpenChange={handleOnOpenChangeModal}>
       <DialogTrigger asChild>
@@ -192,9 +165,9 @@ export const CreateEditProgramOnScheduleModal = ({
           <Button
             size="sm"
             variant={"secondary"}
-            className="self-center border-primary border w-full"
+            className="self-center w-full"
           >
-            <PlusIcon className="" />
+            <PlusIcon className="text-primary" />
             Add program
           </Button>
         ) : (
@@ -208,7 +181,7 @@ export const CreateEditProgramOnScheduleModal = ({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Select Training Program</DialogTitle>
@@ -218,76 +191,52 @@ export const CreateEditProgramOnScheduleModal = ({
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
-            <div className="grid gap-4 py-4">
+            <div className="space-y-2 py-2 w-[320px] pt-6">
               <FormField
                 control={form.control}
                 name="program"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Program</FormLabel>
+                render={({}) => (
+                  <FormItem className="space-y-0.5">
+                    <FormLabel>Program *</FormLabel>
                     <FormControl>
                       <div className="flex flex-col gap-4">
                         <TrainerProgramSelector
                           onProgramSelected={changeProgram}
                           text={text}
-                          initialValue={programOnSchedule?.program}
+                          selectedValue={trainerProgram}
                         />
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs ml-0.5" />
                   </FormItem>
                 )}
               />
-              <FormField
+              <SelectFormField
                 control={form.control}
                 name="dayOfWeek"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Select Day</FormLabel>
-                    <FormControl>
-                      <div className="flex flex-col gap-4">
-                        <Select
-                          onValueChange={(value) =>
-                            field.onChange(Number(value))
-                          }
-                          value={field.value?.toString()}
-                        >
-                          <SelectTrigger className="col-span-3">
-                            <SelectValue placeholder="Select a day" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {daysOfWeek.map((day, index) => (
-                              <SelectItem
-                                key={day}
-                                value={(index + 1).toString()}
-                              >
-                                {day}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Select day *"
+                placeholder="Select a day"
+                options={daysOfWeek}
               />
-              <div className="flex flex-row sm:gap-x-8 gap-x-4 flex-wrap">
+
+              <div className="pt-1">
                 <FormField
                   control={form.control}
                   name="startTime"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Start Time</FormLabel>
+                    <FormItem className="space-y-0.5">
                       <FormControl>
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-row items-center gap-1">
                           <TimePicker
                             date={new Date(field.value)}
                             setDate={(date) => field.onChange(date)}
                           />
+                          <span className="text-sm mt-5 -translate-y-px">
+                            Start time *
+                          </span>
                         </div>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs ml-0.5" />
                     </FormItem>
                   )}
                 />

@@ -154,6 +154,7 @@ export default function AppearanceForm() {
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
+                      disabled={true}
                       variant="outline"
                       role="combobox"
                       className={cn(
@@ -172,12 +173,16 @@ export default function AppearanceForm() {
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0">
                   <Command>
-                    <CommandInput placeholder="Search language..." />
+                    <CommandInput
+                      placeholder="Search language..."
+                      disabled={true}
+                    />
                     <CommandList>
                       <CommandEmpty>No language found.</CommandEmpty>
                       <CommandGroup>
                         {languages.map((language) => (
                           <CommandItem
+                            disabled={true}
                             value={language.label}
                             key={language.value}
                             onSelect={() => {

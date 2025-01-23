@@ -7,7 +7,7 @@ import dev.gethealthy.app.models.responses.ProgramExerciseResponse;
 
 import java.util.List;
 
-public interface TrainingProgramExerciseService {
+public interface TrainingProgramExerciseService extends CrudService<Integer>{
     List<ProgramExerciseResponse> getTrainingProgramExercises(Integer programId);
 
     void updateTrainingProgramExercises(Integer programId, TrainingProgramExercisesRequest trainingProgramExercisesRequest);
