@@ -92,6 +92,7 @@ public class TrainingProgramApplicationServiceImpl implements TrainingProgramApp
 
         if (request.getApprove()) {
             TraineeOnTrainingProgram entity = new TraineeOnTrainingProgram();
+            entity.setId(new TraineeOnTrainingProgramId(traineeId, programId));
             entity.setJoinDate(Utility.getInstantCurrentDate());
             entity.setProgram(application.getProgram());
             entity.setUser(application.getTrainee());
