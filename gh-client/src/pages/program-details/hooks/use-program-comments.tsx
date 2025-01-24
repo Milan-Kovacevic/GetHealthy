@@ -6,9 +6,8 @@ import {
   getPageableProgramComments,
   sendTrainingProgramComment,
 } from "@/api/services/program-review-service";
-import useAuth from "@/hooks/use-auth";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 type UseProgramCommentsProps = {

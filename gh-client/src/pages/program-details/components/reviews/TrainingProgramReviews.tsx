@@ -6,19 +6,17 @@ import ProgramCommentForm from "./ProgramCommentForm";
 import { sendTrainingProgramRating } from "@/api/services/program-review-service";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useParams } from "react-router-dom";
 import useAuth from "@/hooks/use-auth";
+import { useProgramDetails } from "../../hooks/use-program-details";
 
 export default function TrainingProgramReviews() {
-  const params = useParams();
+  const { programInfo } = useProgramDetails();
+
   const auth = useAuth();
-
-  const id = params["id"];
   const userId = auth.getUserId();
-  if (userId == null || !id) return;
+  if (userId == null || !programInfo) return;
 
-  const programId = parseInt(id);
-
+  const programId = programInfo.id;
   const {
     comments,
     isLoadingComments,
@@ -62,6 +60,7 @@ export default function TrainingProgramReviews() {
       </div>
       <div className="flex flex-col gap-4 mt-2 flex-1">
         <TrainingProgramComments
+          programInfo={programInfo}
           comments={comments}
           isLoading={isLoadingComments}
           hasMore={hasMoreComments}

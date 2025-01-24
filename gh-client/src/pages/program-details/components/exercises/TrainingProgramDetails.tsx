@@ -13,7 +13,7 @@ export default function TrainingProgramDetails() {
 
   useEffect(() => {
     const programId = params["id"];
-    if (!programId) return; // Handle this situation
+    if (!programId) return;
 
     setLoading(true);
     setTimeout(() => {

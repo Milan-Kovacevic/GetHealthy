@@ -38,18 +38,18 @@ const getWorkoutSummary = async (
     programScheduleId: programScheduleId,
   };
 
-  // return sendAxiosRequest<GenerateWorkoutSummaryDTO, WorkoutSummaryDTO>({
-  //   method: "POST",
-  //   url: url,
-  //   data: body as GenerateWorkoutSummary,
-  // }).then((response) => {
-  //   return response.data as WorkoutSummary;
-  // });
-
-  await delay(1000);
-  return Promise.resolve<WorkoutSummary>({
-    ...workoutSummaryMock[programScheduleId % 3],
+  await delay(500);
+  return sendAxiosRequest<GenerateWorkoutSummaryDTO, WorkoutSummaryDTO>({
+    method: "POST",
+    url: url,
+    data: body as GenerateWorkoutSummary,
+  }).then((response) => {
+    return response.data as WorkoutSummary;
   });
+
+  // return Promise.resolve<WorkoutSummary>({
+  //   ...workoutSummaryMock[programScheduleId % 3],
+  // });
 };
 
 const startProgramWorkout = async (
@@ -62,22 +62,22 @@ const startProgramWorkout = async (
     traineeId: traineeId,
     programScheduleId: programScheduleId,
   };
-  await delay(1500);
-  // return sendAxiosRequest<StartWorkoutRequestDTO, StartWorkoutResponseDTO>({
-  //   method: "POST",
-  //   url: url,
-  //   data: body as StartWorkoutRequestDTO,
-  // }).then((response) => {
-  //   return {
-  //     ...response.data,
-  //     workoutId: response.data.traineeExercisingId,
-  //   } as StartWorkoutResponse;
-  // });
-
-  return Promise.resolve<StartWorkoutResponse>({
-    workoutId: 1,
-    dateTaken: format(new Date(), "hh:mm:ss"),
+  await delay(500);
+  return sendAxiosRequest<StartWorkoutRequestDTO, StartWorkoutResponseDTO>({
+    method: "POST",
+    url: url,
+    data: body as StartWorkoutRequestDTO,
+  }).then((response) => {
+    return {
+      ...response.data,
+      workoutId: response.data.traineeExercisingId,
+    } as StartWorkoutResponse;
   });
+
+  // return Promise.resolve<StartWorkoutResponse>({
+  //   workoutId: 1,
+  //   dateTaken: format(new Date(), "hh:mm:ss"),
+  // });
 };
 
 const skipWorkoutExercise = async (
@@ -89,19 +89,21 @@ const skipWorkoutExercise = async (
   const body: ExerciseFeedbackRequestDTO = {
     programExerciseId: programExerciseId,
   };
-  await delay(1500);
-
-  // return sendAxiosRequest<ExerciseFeedbackRequestDTO, ExerciseFeedbackResponseDTO>({
-  //   method: "POST",
-  //   url: url,
-  //   data: body as ExerciseFeedbackRequestDTO,
-  // }).then((response) => {
-  //   return response.data as ExerciseFeedbackResponse;
-  // });
-
-  return Promise.resolve<ExerciseFeedbackResponse>({
-    exerciseFeedbackId: 1001,
+  await delay(500);
+  return sendAxiosRequest<
+    ExerciseFeedbackRequestDTO,
+    ExerciseFeedbackResponseDTO
+  >({
+    method: "POST",
+    url: url,
+    data: body as ExerciseFeedbackRequestDTO,
+  }).then((response) => {
+    return response.data as ExerciseFeedbackResponse;
   });
+
+  // return Promise.resolve<ExerciseFeedbackResponse>({
+  //   exerciseFeedbackId: 1001,
+  // });
 };
 
 const beginWorkoutExercise = async (
@@ -113,22 +115,21 @@ const beginWorkoutExercise = async (
   const body: ExerciseFeedbackRequestDTO = {
     programExerciseId: programExerciseId,
   };
-  await delay(1500);
-
-  // return sendAxiosRequest<
-  //   ExerciseFeedbackRequestDTO,
-  //   ExerciseFeedbackResponseDTO
-  // >({
-  //   method: "POST",
-  //   url: url,
-  //   data: body as ExerciseFeedbackRequestDTO,
-  // }).then((response) => {
-  //   return response.data as ExerciseFeedbackResponse;
-  // });
-
-  return Promise.resolve<ExerciseFeedbackResponse>({
-    exerciseFeedbackId: 1001,
+  await delay(500);
+  return sendAxiosRequest<
+    ExerciseFeedbackRequestDTO,
+    ExerciseFeedbackResponseDTO
+  >({
+    method: "POST",
+    url: url,
+    data: body as ExerciseFeedbackRequestDTO,
+  }).then((response) => {
+    return response.data as ExerciseFeedbackResponse;
   });
+
+  // return Promise.resolve<ExerciseFeedbackResponse>({
+  //   exerciseFeedbackId: 1001,
+  // });
 };
 
 const skipWorkoutExerciseSet = async (
@@ -141,22 +142,21 @@ const skipWorkoutExerciseSet = async (
   const body: SkipExerciseSetFeedbackRequestDTO = {
     exerciseSetId: exerciseSetId,
   };
-  await delay(1500);
-
-  // return sendAxiosRequest<
-  //   SkipExerciseSetFeedbackRequestDTO,
-  //   ExerciseSetFeedbackResponseDTO
-  // >({
-  //   method: "POST",
-  //   url: url,
-  //   data: body as SkipExerciseSetFeedbackRequestDTO,
-  // }).then((response) => {
-  //   return response.data as ExerciseSetFeedbackResponse;
-  // });
-
-  return Promise.resolve<ExerciseSetFeedbackResponse>({
-    setFeedbackId: 101,
+  await delay(500);
+  return sendAxiosRequest<
+    SkipExerciseSetFeedbackRequestDTO,
+    ExerciseSetFeedbackResponseDTO
+  >({
+    method: "POST",
+    url: url,
+    data: body as SkipExerciseSetFeedbackRequestDTO,
+  }).then((response) => {
+    return response.data as ExerciseSetFeedbackResponse;
   });
+
+  // return Promise.resolve<ExerciseSetFeedbackResponse>({
+  //   setFeedbackId: 101,
+  // });
 };
 
 const giveExerciseSetFeedback = async (
@@ -166,22 +166,21 @@ const giveExerciseSetFeedback = async (
 ): Promise<ExerciseSetFeedbackResponse> => {
   var url = ApiEndpoints.TraineeExercising;
   url += `/${workoutId}/exercises/${exerciseFeedbackId}/sets`;
-  await delay(1500);
-
-  // return sendAxiosRequest<
-  //   SendExerciseSetFeedbackRequestDTO,
-  //   ExerciseSetFeedbackResponseDTO
-  // >({
-  //   method: "POST",
-  //   url: url,
-  //   data: data as SendExerciseSetFeedbackRequestDTO,
-  // }).then((response) => {
-  //   return response.data as ExerciseSetFeedbackResponse;
-  // });
-
-  return Promise.resolve<ExerciseSetFeedbackResponse>({
-    setFeedbackId: 101,
+  await delay(500);
+  return sendAxiosRequest<
+    SendExerciseSetFeedbackRequestDTO,
+    ExerciseSetFeedbackResponseDTO
+  >({
+    method: "POST",
+    url: url,
+    data: data as SendExerciseSetFeedbackRequestDTO,
+  }).then((response) => {
+    return response.data as ExerciseSetFeedbackResponse;
   });
+
+  // return Promise.resolve<ExerciseSetFeedbackResponse>({
+  //   setFeedbackId: 101,
+  // });
 };
 
 export {
