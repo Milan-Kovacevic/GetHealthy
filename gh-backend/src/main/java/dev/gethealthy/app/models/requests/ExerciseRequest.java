@@ -10,9 +10,7 @@ public class ExerciseRequest {
 
     private String videoLink;
 
-    private Integer userId;
+    private Integer firstExerciseMetricId;
 
-    private Integer metricType1Id;
-
-    private Integer metricType2Id;
+    private Integer secondExerciseMetricId;
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
+import java.io.Serial;
 import java.util.Objects;
 
 @Getter
@@ -17,6 +18,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainingProgramCategoryId implements java.io.Serializable {
+    @Serial
     private static final long serialVersionUID = -39041558448567269L;
     @NotNull
     @Column(name = "CategoryId", nullable = false)
