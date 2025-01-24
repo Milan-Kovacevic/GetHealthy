@@ -7,13 +7,12 @@ import SingleTrainingProgramLoader from "./SingleTrainingProgramLoader";
 import TrainingProgramApplicationModal from "./TrainingProgramApplicationModal";
 import { capitalize, cn, pictureUrl } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import useAuth from "@/hooks/use-auth";
 import { SimpleAlertDialog } from "../../shared/SimpleAlertDialog";
 import { useProgramDetails } from "../hooks/use-program-details";
+import AuthGuard from "@/pages/shared/AuthGuard";
+import { TRAINEE_ONLY_ROLE } from "@/utils/constants";
 
 export default function TrainingProgramInfo() {
-  const auth = useAuth();
-  const isTrainer = auth.isTrainer();
 
   const {
     loadingProgram,
@@ -139,7 +138,7 @@ export default function TrainingProgramInfo() {
               )}
             </div>
           </div>
-          {!isTrainer && (
+          <AuthGuard allowedRoles={[TRAINEE_ONLY_ROLE]}>
             <div className="flex items-center flex-wrap gap-2 lg:mt-auto mt-auto mb-0.5">
               {(programInfo.status == "NOT_JOINED" ||
                 programInfo.status == "PENDING") && (
@@ -168,7 +167,7 @@ export default function TrainingProgramInfo() {
                 </SimpleAlertDialog>
               )}
             </div>
-          )}
+          </AuthGuard>
         </div>
       </div>
     </div>

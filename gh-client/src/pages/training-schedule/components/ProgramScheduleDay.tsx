@@ -72,7 +72,6 @@ export default function ProgramScheduleDay(props: ProgramScheduleDayProps) {
                       onViewDetails(program.program.id);
                     }}
                     programStatus={getProgramStatus(program)}
-                    editable={true}
                   />
                 );
               })}

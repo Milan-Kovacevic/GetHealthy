@@ -11,7 +11,7 @@ export type TrainingProgram = {
   imageFilePath?: string;
   rating?: number;
   categories: Category[];
-  trinerId: number;
+  trainerId: number;
   trainerFirstName: string;
   trainerLastName: string;
   currentlyEnrolled: number;

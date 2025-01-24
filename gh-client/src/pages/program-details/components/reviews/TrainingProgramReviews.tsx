@@ -8,6 +8,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import useAuth from "@/hooks/use-auth";
 import { useProgramDetails } from "../../hooks/use-program-details";
+import AuthGuard from "@/pages/shared/AuthGuard";
+import { BOTH_USER_ROLES, TRAINEE_ONLY_ROLE } from "@/utils/constants";
+import { AuthUser } from "@/api/models/authentication";
 
 export default function TrainingProgramReviews() {
   const { programInfo } = useProgramDetails();
@@ -48,15 +51,23 @@ export default function TrainingProgramReviews() {
             Program comments
           </p>
         </div>
-        <div className="sm:self-start self-end">
-          <p className="text-muted-foreground font-medium text-xs mb-1 text-end">
-            Leave a review
-          </p>
-          <StarRating
-            rating={rating}
-            onRatingChange={handleSubmitProgramRating}
-          />
-        </div>
+        <AuthGuard
+          allowedRoles={[TRAINEE_ONLY_ROLE]}
+          preCheck={(_) => {
+            return programInfo.status == "JOINED";
+          }}
+        >
+          <div className="sm:self-start self-end">
+            <p className="text-muted-foreground font-medium text-xs mb-1 text-end">
+              Leave a review
+            </p>
+
+            <StarRating
+              rating={rating}
+              onRatingChange={handleSubmitProgramRating}
+            />
+          </div>
+        </AuthGuard>
       </div>
       <div className="flex flex-col gap-4 mt-2 flex-1">
         <TrainingProgramComments
@@ -67,10 +78,19 @@ export default function TrainingProgramReviews() {
           onCommentsPageChange={onCommentPageChange}
         />
 
-        <ProgramCommentForm
-          onSendComment={onSendProgramComment}
-          disabled={isLoadingComments}
-        />
+        <AuthGuard
+          allowedRoles={BOTH_USER_ROLES}
+          preCheck={(user) => {
+            return (
+              programInfo.status == "JOINED" || user.id == programInfo.trainerId
+            );
+          }}
+        >
+          <ProgramCommentForm
+            onSendComment={onSendProgramComment}
+            disabled={isLoadingComments}
+          />
+        </AuthGuard>
       </div>
     </div>
   );

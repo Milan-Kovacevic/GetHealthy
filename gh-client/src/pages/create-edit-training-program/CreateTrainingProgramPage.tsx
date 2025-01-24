@@ -16,23 +16,3 @@ const CreateTrainingProgramPage = () => {
 };
 
 export default CreateTrainingProgramPage;
-
-const BackgroundBlurs = () => {
-  return (
-    <>
-      <CircleBackgroundBlob
-        variant="lighter"
-        className="left-auto -right-56 w-80 h-96 top-44"
-      />
-      <CircleBackgroundBlob
-        variant="lightest"
-        className="-left-72 w-1/4 h-96 top-44"
-      />
-      <CircleBackgroundBlob variant="lightest" />
-      <CircleBackgroundBlob
-        variant="lightest"
-        className="-bottom-24 -right-16 w-1/3 h-96 left-auto"
-      />
-    </>
-  );
-};
