@@ -1,6 +1,7 @@
 package dev.gethealthy.app.controllers;
 
 import dev.gethealthy.app.exceptions.UnauthorizedException;
+import dev.gethealthy.app.exceptions.ForbiddenException;
 import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.enums.Role;
 import dev.gethealthy.app.models.requests.UserUpdateRequest;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 import static dev.gethealthy.app.specifications.TrainingProgramSpecification.*;
+import static dev.gethealthy.app.util.Utility.getJwtUser;
 
 @RestController
 @RequiredArgsConstructor
@@ -78,11 +80,15 @@ public class UserController {
                                                                             @RequestParam(required = false, defaultValue = "0") int difficulty,
                                                                             @PathVariable(name = "userId") Integer userId, Authentication auth) {
         Specification<TrainingProgram> spec;
+        var user = getJwtUser().orElseThrow(ForbiddenException::new);
 
         JwtUser user = (JwtUser) auth.getPrincipal();
         Role role = user.getRole();
 
         if (role == Role.TRAINER)
+
+        Specification<TrainingProgram> spec;
+        if(user.getRole() == Role.TRAINER)
             spec = constructSpecificationForTrainer(userId, searchWord, categories, ratingUpper,
                 ratingLower, participantsUpper, participantsLower, difficulty);
         else if (role == Role.TRAINEE)

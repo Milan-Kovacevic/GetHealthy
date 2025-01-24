@@ -12,8 +12,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+@Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "trainee")

@@ -6,19 +6,20 @@ import ProgramCommentForm from "./ProgramCommentForm";
 import { sendTrainingProgramRating } from "@/api/services/program-review-service";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useParams } from "react-router-dom";
 import useAuth from "@/hooks/use-auth";
+import { useProgramDetails } from "../../hooks/use-program-details";
+import AuthGuard from "@/pages/shared/AuthGuard";
+import { BOTH_USER_ROLES, TRAINEE_ONLY_ROLE } from "@/utils/constants";
+import { AuthUser } from "@/api/models/authentication";
 
 export default function TrainingProgramReviews() {
-  const params = useParams();
+  const { programInfo } = useProgramDetails();
+
   const auth = useAuth();
-
-  const id = params["id"];
   const userId = auth.getUserId();
-  if (userId == null || !id) return;
+  if (userId == null || !programInfo) return;
 
-  const programId = parseInt(id);
-
+  const programId = programInfo.id;
   const {
     comments,
     isLoadingComments,
@@ -50,28 +51,46 @@ export default function TrainingProgramReviews() {
             Program comments
           </p>
         </div>
-        <div className="sm:self-start self-end">
-          <p className="text-muted-foreground font-medium text-xs mb-1 text-end">
-            Leave a review
-          </p>
-          <StarRating
-            rating={rating}
-            onRatingChange={handleSubmitProgramRating}
-          />
-        </div>
+        <AuthGuard
+          allowedRoles={[TRAINEE_ONLY_ROLE]}
+          preCheck={(_) => {
+            return programInfo.status == "JOINED";
+          }}
+        >
+          <div className="sm:self-start self-end">
+            <p className="text-muted-foreground font-medium text-xs mb-1 text-end">
+              Leave a review
+            </p>
+
+            <StarRating
+              rating={rating}
+              onRatingChange={handleSubmitProgramRating}
+            />
+          </div>
+        </AuthGuard>
       </div>
       <div className="flex flex-col gap-4 mt-2 flex-1">
         <TrainingProgramComments
+          programInfo={programInfo}
           comments={comments}
           isLoading={isLoadingComments}
           hasMore={hasMoreComments}
           onCommentsPageChange={onCommentPageChange}
         />
 
-        <ProgramCommentForm
-          onSendComment={onSendProgramComment}
-          disabled={isLoadingComments}
-        />
+        <AuthGuard
+          allowedRoles={BOTH_USER_ROLES}
+          preCheck={(user) => {
+            return (
+              programInfo.status == "JOINED" || user.id == programInfo.trainerId
+            );
+          }}
+        >
+          <ProgramCommentForm
+            onSendComment={onSendProgramComment}
+            disabled={isLoadingComments}
+          />
+        </AuthGuard>
       </div>
     </div>
   );

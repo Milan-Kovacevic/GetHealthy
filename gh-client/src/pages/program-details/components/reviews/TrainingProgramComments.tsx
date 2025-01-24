@@ -1,3 +1,4 @@
+import { SingleTrainingProgramInfo } from "@/api/models/program-details";
 import { ProgramComment } from "@/api/models/program-review";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
@@ -6,6 +7,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Loader2Icon } from "lucide-react";
 
 type TrainingProgramCommentsProps = {
+  programInfo: SingleTrainingProgramInfo;
   comments: ProgramComment[];
   isLoading: boolean;
   hasMore: boolean;

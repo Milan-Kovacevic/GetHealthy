@@ -44,7 +44,7 @@ export default function ProgramScheduleDay(props: ProgramScheduleDayProps) {
         >
           <p
             className={cn(
-              "text-muted-foreground font-normal text-sm leading-tight pt-1",
+              "text-muted-foreground font-normal text-sm leading-none pt-1",
               isTodaysDay && "text-foreground/75"
             )}
           >
@@ -72,7 +72,6 @@ export default function ProgramScheduleDay(props: ProgramScheduleDayProps) {
                       onViewDetails(program.program.id);
                     }}
                     programStatus={getProgramStatus(program)}
-                    editable={true}
                   />
                 );
               })}

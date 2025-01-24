@@ -29,12 +29,13 @@ import {
 import CreateEditProgramOnScheduleModal from "./CreateEditProgramOnScheduleModal";
 import { cn } from "@/lib/utils";
 import { SimpleAlertDialog } from "@/pages/shared/SimpleAlertDialog";
+import AuthGuard from "@/pages/shared/AuthGuard";
+import { TRAINEE_ONLY_ROLE, TRAINER_ONLY_ROLE } from "@/utils/constants";
 
 interface TrainingProgramCardProps {
   programOnSchedule: TrainingProgramOnSchedule;
   programStatus: ScheduleTrainingStatus;
   onViewDetails: (programId: number) => void;
-  editable: boolean;
   isTodaysDay: boolean;
 }
 
@@ -42,7 +43,6 @@ export default function TrainingProgramCard({
   programOnSchedule,
   onViewDetails,
   programStatus,
-  editable,
   isTodaysDay,
 }: TrainingProgramCardProps) {
   return (
@@ -102,10 +102,12 @@ export default function TrainingProgramCard({
             </CardContent>
             <CardContent className="p-2 pb-1 pt-0 flex flex-col">
               <div className="mt-1 flex justify-between items-center">
-                <StatusBadge status={programStatus} />
-                {editable && (
+                <AuthGuard allowedRoles={[TRAINEE_ONLY_ROLE]}>
+                  <StatusBadge status={programStatus} />
+                </AuthGuard>
+                <AuthGuard allowedRoles={[TRAINER_ONLY_ROLE]}>
                   <ManageProgramPopup programOnSchedule={programOnSchedule} />
-                )}
+                </AuthGuard>
               </div>
               {programStatus === "live" && (
                 <TrainingWorkoutDialog programOnSchedule={programOnSchedule} />
@@ -159,7 +161,7 @@ const ManageProgramPopup = ({
           e.type;
         }}
       >
-        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+        <Button variant="ghost" size="icon" className="h-8 w-8 p-0 ml-auto">
           <MoreHorizontalIcon className="h-4 w-4" />
           <span className="sr-only">Open menu</span>
         </Button>

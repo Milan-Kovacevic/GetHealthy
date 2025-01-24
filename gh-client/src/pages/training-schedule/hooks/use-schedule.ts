@@ -24,5 +24,5 @@ export const useSchedule = () => {
   if (!context) {
     throw new Error("useSchedule must be used within a ScheduleProvider");
   }
-  return context;
+  return context!;
 };

@@ -51,15 +51,4 @@ public class TrainingProgramApplicationController {
         trainingProgramApplicationService.processTrainingProgramApplication(userId, programId, request);
     }
 
-//    @PostMapping("/training-program-applications/mark-read") // TODO: ???
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void markTrainingProgramApplicationAsRead(
-//            @PathVariable Integer userId, // U request body
-//            @PathVariable Integer programId) {
-//        TrainingProgramApplicationId id = new TrainingProgramApplicationId();
-//        id.setUserId(userId);
-//        id.setProgramId(programId);
-//        trainingProgramApplicationService.markTrainingProgramApplicationAsRead(id);
-//    }
-
 }

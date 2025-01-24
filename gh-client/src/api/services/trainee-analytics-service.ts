@@ -40,21 +40,21 @@ const generateTraineeProgressAnalytics = async (
     to: to.toISOString(),
     exerciseId: exerciseId,
   };
-  //   return sendAxiosRequest<
-  //     ProgressAnalyticsRequestDTO,
-  //     TraineeProgressAnalyticsDTO
-  //   >({
-  //     method: "POST",
-  //     url: url,
-  //     data: body,
-  //   }).then((response) => {
-  //     return response.data as TraineeProgressAnalytics;
-  //   });
-  await delay(1500);
+  await delay(500);
+  return sendAxiosRequest<
+    ProgressAnalyticsRequestDTO,
+    TraineeProgressAnalyticsDTO
+  >({
+    method: "POST",
+    url: url,
+    data: body,
+  }).then((response) => {
+    return response.data as TraineeProgressAnalytics;
+  });
 
-  return {
-    data: mockProgressData,
-  };
+  // return {
+  //   data: mockProgressData,
+  // };
 };
 
 const totalJoined = [{ interacted: 8, nonInteracted: 1 }];
@@ -83,20 +83,20 @@ const getTraineeDashboardAnalytics = async (
   var url = ApiEndpoints.TraineeAnalytics.replace("{userId}", `${userId}`);
   url += "/general";
 
-  //   return sendAxiosRequest<void, TraineeDashboardAnalyticsDTO>({
-  //     method: "GET",
-  //     url: url,
-  //   }).then((response) => {
-  //     return response.data as TraineeDashboardAnalytics;
-  //   });
-  await delay(1500);
+  await delay(500);
+  return sendAxiosRequest<void, TraineeDashboardAnalyticsDTO>({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    return response.data as TraineeDashboardAnalytics;
+  });
 
-  return {
-    topFavoriteExercises: topInteractedExercisesMock,
-    topInteractedPrograms: topInteractedMock,
-    topSkippedExercises: topSkippedExercisesMock,
-    totalJoined: totalJoined,
-  };
+  // return {
+  //   topFavoriteExercises: topInteractedExercisesMock,
+  //   topInteractedPrograms: topInteractedMock,
+  //   topSkippedExercises: topSkippedExercisesMock,
+  //   totalJoined: totalJoined,
+  // };
 };
 
 export { getTraineeDashboardAnalytics, generateTraineeProgressAnalytics };
