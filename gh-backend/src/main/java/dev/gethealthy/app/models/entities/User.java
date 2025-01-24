@@ -9,6 +9,7 @@ import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Data
@@ -39,7 +40,7 @@ public class User implements BaseEntity<Integer> {
 
     @NotNull
     @Column(name = "DateOfBirth")
-    private LocalDate dateOfBirth;
+    private Instant dateOfBirth;
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)

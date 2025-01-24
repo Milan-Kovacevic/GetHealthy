@@ -33,12 +33,12 @@ public class UserController {
     private final TrainingProgramService trainingProgramService;
 
     @GetMapping
-    public Page<SingleUserResponse> getUsers(Pageable page) {
+    public Page<UserDetailsResponse> getUsers(Pageable page) {
         return userService.getAllUsers(page);
     }
 
     @GetMapping("/{userId}")
-    public SingleUserResponse getUser(@PathVariable(name = "userId") Integer userId, Authentication auth) {
+    public UserDetailsResponse getUser(@PathVariable(name = "userId") Integer userId, Authentication auth) {
         return userService.getUser(userId);
     }
 

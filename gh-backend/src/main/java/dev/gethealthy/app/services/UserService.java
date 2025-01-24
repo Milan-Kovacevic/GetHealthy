@@ -1,5 +1,6 @@
 package dev.gethealthy.app.services;
 
+import dev.gethealthy.app.models.responses.UserDetailsResponse;
 import dev.gethealthy.app.models.responses.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,8 +13,8 @@ import dev.gethealthy.app.models.responses.UserInfoResponse;
 import java.util.List;
 
 public interface UserService {
-    Page<SingleUserResponse> getAllUsers(Pageable page);
-    SingleUserResponse getUser(Integer userId);
+    Page<UserDetailsResponse> getAllUsers(Pageable page);
+    UserDetailsResponse getUser(Integer userId);
     UserInfoResponse getUserInfo(Integer userId);
     void updateUser(Integer userId, UserUpdateRequest request, MultipartFile file);
     String updateProfilePicture(Integer userId, MultipartFile file);
