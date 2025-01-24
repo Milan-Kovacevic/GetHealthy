@@ -1,6 +1,8 @@
 package dev.gethealthy.app.controllers;
 
+import dev.gethealthy.app.exceptions.ForbiddenException;
 import dev.gethealthy.app.models.entities.TrainingProgram;
+import dev.gethealthy.app.models.enums.Role;
 import dev.gethealthy.app.models.requests.UserUpdateRequest;
 import dev.gethealthy.app.models.responses.SingleUserResponse;
 import dev.gethealthy.app.models.responses.ProgramListingResponse;
@@ -22,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 import static dev.gethealthy.app.specifications.TrainingProgramSpecification.*;
+import static dev.gethealthy.app.util.Utility.getJwtUser;
 
 @RestController
 @RequiredArgsConstructor
@@ -70,9 +73,9 @@ public class UserController {
                                                                             @RequestParam(required = false, defaultValue = "0") long participantsLower,
                                                                             @RequestParam(required = false, defaultValue = "0") int difficulty,
                                                                             @PathVariable(name = "userId") Integer userId) {
+        var user = getJwtUser().orElseThrow(ForbiddenException::new);
         Specification<TrainingProgram> spec;
-        // TODO: Based on role from Principal determine it its trainer or trainee...
-        if(true)
+        if(user.getRole() == Role.TRAINER)
             spec = constructSpecificationForTrainer(userId, searchWord, categories, ratingUpper,
                 ratingLower, participantsUpper, participantsLower, difficulty);
         else spec = constructSpecificationForTrainee(userId, searchWord, categories, ratingUpper,

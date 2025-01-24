@@ -97,9 +97,13 @@ public class TrainingProgramApplicationServiceImpl implements TrainingProgramApp
 
         if (request.getApprove()) {
             TraineeOnTrainingProgram entity = new TraineeOnTrainingProgram();
+            var trainee = traineeRepository.findById(traineeId).orElseThrow(NotFoundException::new);
+            var program = trainingProgramRepository.findById(programId).orElseThrow(NotFoundException::new);
+
+            entity.setId(new TraineeOnTrainingProgramId(traineeId, program.getId()));
             entity.setJoinDate(Utility.getInstantCurrentDate());
-            entity.setProgram(application.getProgram());
-            entity.setUser(application.getTrainee());
+            entity.setProgram(program);
+            entity.setUser(trainee);
             traineeOnTrainingProgramRepository.saveAndFlush(entity);
 
             notificationService.createNotification(

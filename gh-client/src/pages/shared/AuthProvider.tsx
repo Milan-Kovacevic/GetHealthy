@@ -34,11 +34,11 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
       );
       localStorage.setItem(
         ACCESS_TOKEN_STORAGE_KEY,
-        JSON.stringify(response.tokens.accessToken)
+        response.tokens.accessToken
       );
       localStorage.setItem(
         REFRESH_TOKEN_STORAGE_KEY,
-        JSON.stringify(response.tokens.refreshToken)
+        response.tokens.refreshToken
       );
       return response.user;
     });

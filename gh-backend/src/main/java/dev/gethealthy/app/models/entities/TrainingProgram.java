@@ -16,8 +16,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "training_program")
 public class TrainingProgram implements BaseEntity<Integer> {
@@ -58,7 +57,7 @@ public class TrainingProgram implements BaseEntity<Integer> {
         @JoinColumn(name = "UserId", nullable = false)
         private Trainer trainer;
 
-        @OneToMany(fetch = FetchType.LAZY) // TODO: LAZY??
+        @OneToMany(fetch = FetchType.LAZY)
         @JoinColumn(name = "ProgramId")
         private List<ProgramRating> trainingProgramRatings;
 

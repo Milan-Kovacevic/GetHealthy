@@ -34,7 +34,6 @@ public class TrainingProgramSpecification {
                 .and(TrainingProgramSpecification.isNotDeleted());
     }
 
-    // TODO
     public static Specification<TrainingProgram> constructSpecificationForTrainee(int userId, String searchWord, List<String> categories,
                                                                                   double ratingUpper,
                                                                                   double ratingLower, long participantsUpper, long participantsLower, int difficulty) {
@@ -44,7 +43,7 @@ public class TrainingProgramSpecification {
                 .and(TrainingProgramSpecification.hasParticipantCountBetween(participantsLower, participantsUpper))
                 .and(TrainingProgramSpecification.belongsToCategories(categories))
                 .and(TrainingProgramSpecification.hasDifficulty(difficulty))
-                .and(TrainingProgramSpecification.belongsToUser(userId))
+                .and(TrainingProgramSpecification.isParticipant(userId))
                 .and(TrainingProgramSpecification.isNotDeleted());
     }
 
@@ -108,6 +107,13 @@ public class TrainingProgramSpecification {
         return (Root<TrainingProgram> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             Join<TrainingProgram, Category> trainerJoin = root.join("trainer");
             return trainerJoin.get("id").in(userId);
+        };
+    }
+
+    private static Specification<TrainingProgram> isParticipant(int userId) {
+        return (Root<TrainingProgram> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            Join<TrainingProgram, TraineeOnTrainingProgram> traineeJoin = root.join("traineeOnTrainingProgram");
+            return cb.equal(traineeJoin.get("user").get("id"), userId);
         };
     }
 
