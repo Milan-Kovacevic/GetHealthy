@@ -24,3 +24,4 @@ public interface TrainingProgramApplicationRepository extends JpaRepository<Trai
             "and (e.program.name like %:filter% or e.trainee.firstName like %:filter% or e.trainee.lastName like %:filter%) order by e.markRead asc")
     Page<TrainingProgramApplication> findAllTrainerApplicationsFiltered(Integer userId, String filter, Pageable page);
 }
+

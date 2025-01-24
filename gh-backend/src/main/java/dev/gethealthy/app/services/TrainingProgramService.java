@@ -23,7 +23,7 @@ public interface TrainingProgramService {
 
     SingleTrainingProgramResponse getSingleTrainingProgram(Integer programId);
 
-    TrainingProgramInfoResponse getTrainingProgramInfo(Integer programId);
+    TrainingProgramInfoResponse getTrainingProgramInfo(Integer programId, Integer userId);
 
     TrainerResponse getTrainerByProgramId(Integer programId);
 

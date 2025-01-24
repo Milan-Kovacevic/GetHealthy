@@ -1,11 +1,13 @@
 package dev.gethealthy.app.controllers;
 
 import dev.gethealthy.app.models.entities.TrainingProgram;
+import dev.gethealthy.app.models.enums.Role;
 import dev.gethealthy.app.models.requests.CreateProgramExercisesRequest;
 import dev.gethealthy.app.models.requests.CreateTrainingProgramRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramExercisesRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.*;
+import dev.gethealthy.app.security.models.JwtUser;
 import dev.gethealthy.app.services.TrainingProgramService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -87,9 +89,11 @@ public class TrainingProgramController {
     }
 
     @GetMapping("{programId}/info")
-    public TrainingProgramInfoResponse getTrainingProgramInfo(@PathVariable Integer programId) {
+    public TrainingProgramInfoResponse getTrainingProgramInfo(@PathVariable Integer programId, Authentication auth) {
         // TODO: Include joined flag for trainee, based of if he already joined to that program or not
-        return trainingProgramService.getTrainingProgramInfo(programId);
+        JwtUser user = (JwtUser) auth.getPrincipal();
+        Integer userId = user.getId();
+        return trainingProgramService.getTrainingProgramInfo(programId, userId);
     }
 
     @GetMapping("{programId}/trainer-info")
