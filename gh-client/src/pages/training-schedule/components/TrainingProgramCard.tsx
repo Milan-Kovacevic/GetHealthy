@@ -132,7 +132,7 @@ const StatusBadge = ({ status }: { status: ScheduleTrainingStatus }) => {
 
   return (
     <span
-      className={`px-2 py-0.5 rounded-full text-xs font-semibold flex items-center ${statusStyles[status]}`}
+      className={`px-2 py-0.5 mt-2 rounded-full text-xs font-semibold flex items-center ${statusStyles[status]}`}
     >
       {status == "completed" && <CheckIcon className="h-3.5 w-3.5 mr-1" />}
       {status.charAt(0).toUpperCase() + status.slice(1)}

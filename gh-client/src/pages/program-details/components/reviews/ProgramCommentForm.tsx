@@ -1,7 +1,7 @@
 import { SendProgramComment } from "@/api/models/program-review";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { SendIcon } from "lucide-react";
+import { Loader2Icon, SendIcon } from "lucide-react";
 import React, { useState } from "react";
 
 type ProgramCommentFormProps = {
@@ -37,7 +37,11 @@ export default function ProgramCommentForm(props: ProgramCommentFormProps) {
           className="min-h-[100px] resize-none"
         />
         <Button variant="secondary" type="submit" disabled={disabled}>
-          <SendIcon className="text-primary" />
+          {disabled ? (
+            <Loader2Icon className="animate-spin" />
+          ) : (
+            <SendIcon className="text-primary" />
+          )}
           Send comment
         </Button>
       </div>

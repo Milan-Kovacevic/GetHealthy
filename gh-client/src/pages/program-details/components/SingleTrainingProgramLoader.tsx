@@ -13,7 +13,7 @@ export default function SingleTrainingProgramLoader() {
             <div>
               <Skeleton className="h-9 w-64 mb-2" />
               <div className="flex items-center gap-2 text-muted-foreground">
-                <Skeleton className="h-6 w-24" />
+                <Skeleton className="h-6 w-40" />
               </div>
             </div>
           </div>
@@ -24,7 +24,7 @@ export default function SingleTrainingProgramLoader() {
           </div>
         </div>
 
-        <Skeleton className="h-24 w-full mt-4" />
+        <Skeleton className="h-24 w-full lg:max-w-[80%] mt-4" />
 
         <div className="mt-3 text-base gap-2 flex flex-row items-center">
           <Skeleton className="h-6 w-32" />

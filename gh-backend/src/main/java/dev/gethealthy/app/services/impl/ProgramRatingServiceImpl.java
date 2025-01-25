@@ -2,6 +2,7 @@ package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.ProgramRating;
+import dev.gethealthy.app.models.entities.ProgramRatingId;
 import dev.gethealthy.app.models.entities.Trainee;
 import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.requests.ProgramRatingRequest;
@@ -11,6 +12,7 @@ import dev.gethealthy.app.repositories.TraineeOnTrainingProgramRepository;
 import dev.gethealthy.app.repositories.TraineeRepository;
 import dev.gethealthy.app.repositories.TrainingProgramRepository;
 import dev.gethealthy.app.services.ProgramRatingService;
+import dev.gethealthy.app.util.Utility;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -52,9 +54,10 @@ public class ProgramRatingServiceImpl implements ProgramRatingService {
         );
 
         ProgramRating entity = modelMapper.map(request, ProgramRating.class);
+        entity.setDateRated(Utility.getInstantCurrentDate());
         entity.setUser(trainee);
         entity.setProgram(trainingProgram);
-        entity.setId(null);
+        entity.setId(new ProgramRatingId(programId, trainee.getId()));
         programRatingRepository.saveAndFlush(entity);
 
         ProgramRatingResponse rating = modelMapper.map(entity, ProgramRatingResponse.class);

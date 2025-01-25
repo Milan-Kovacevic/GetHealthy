@@ -4,7 +4,6 @@ import { PlusIcon } from "lucide-react";
 import FeaturedTrainingPrograms from "./components/FeaturedTrainingPrograms";
 import { TrainingProgramFilters } from "./components/TrainingProgramFilters";
 import { useNavigate } from "react-router-dom";
-import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
 import { Category } from "@/api/models/category";
 import { SearchBar } from "@/components/primitives/SearchBar";
 import { TrainingProgramsState } from "./hooks/use-training-programs";

@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 function TrainingProgramsLoader() {
   return (
-    <div className="grid gap-6 mt-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 flex-1">
+    <div className="grid mt-5 gap-x-6 gap-y-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 flex-1">
       {Array.from(Array(8).keys()).map((item) => (
         <ProgramCardSkeleton key={item} />
       ))}

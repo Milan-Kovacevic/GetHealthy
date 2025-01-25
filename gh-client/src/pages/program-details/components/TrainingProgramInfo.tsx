@@ -13,7 +13,6 @@ import AuthGuard from "@/pages/shared/AuthGuard";
 import { TRAINEE_ONLY_ROLE } from "@/utils/constants";
 
 export default function TrainingProgramInfo() {
-
   const {
     loadingProgram,
     programInfo,
@@ -69,7 +68,7 @@ export default function TrainingProgramInfo() {
         <div className="flex flex-col mt-1.5 flex-1">
           <div className="relative flex items-center justify-between gap-5">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-semibold mb-0.5 leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-semibold mb-1">
                 {programInfo.name}
               </h1>
               <div className="flex items-center gap-2 text-muted-foreground">

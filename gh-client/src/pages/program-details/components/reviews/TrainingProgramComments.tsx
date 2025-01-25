@@ -19,19 +19,16 @@ const TrainingProgramComments = (props: TrainingProgramCommentsProps) => {
 
   return (
     <ScrollArea className="w-full overflow-y-auto mx-1 mb-2 flex-1">
-      <div className="max-h-[500px]">
+      <div className="max-h-[360px]">
         <div className="flex w-full flex-col items-center">
           {!isLoading && comments.length == 0 && (
             <div className="self-start mb-2">
               <p className="text-muted-foreground text-sm italic">
                 There are no comments on this training program ...
-                {/* <span className="font-semibold">
-                  Be the first one to comment!
-                </span> */}
               </p>
             </div>
           )}
-          <div className="space-y-5 flex-1 w-full mb-2 mt-1 pl-5 pr-4 mr-3">
+          <div className="space-y-3 flex-1 w-full pt-3 mb-2 pl-5 pr-4 mr-3">
             {comments.map((comment) => (
               <div
                 key={comment.commentId}
