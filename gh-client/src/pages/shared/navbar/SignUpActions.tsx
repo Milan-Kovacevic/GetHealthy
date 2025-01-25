@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { capitalize, cn } from "@/lib/utils";
+import { capitalize, cn, pictureUrl } from "@/lib/utils";
 import { Loader2Icon, LogOutIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -57,7 +57,10 @@ export default function SignUpActions(props: SignUpActionsProps) {
               pendingLogout && "animate-pulse"
             )}
           >
-            <AvatarImage src="/avatars/01.png" alt="@" />
+            <AvatarImage
+              src={pictureUrl(authUser.profilePictureFilePath)}
+              alt="@"
+            />
             <AvatarFallback className="text-base">
               {authUser.firstName[0]}
               {authUser.lastName[0]}

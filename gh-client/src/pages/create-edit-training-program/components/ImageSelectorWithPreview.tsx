@@ -34,8 +34,6 @@ export default function ImageSelectorWithPreview(
     disabled,
     initialPicture,
   } = props;
-
-  const [selectedFile, setSelectedFile] = useState<File>();
   const [selectedPicture, setSelectedPicture] = useState<string | undefined>(
     initialPicture
   );
@@ -43,7 +41,7 @@ export default function ImageSelectorWithPreview(
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target?.files?.[0];
     if (!file) return;
-    setSelectedFile(file);
+
     setSelectedPicture(URL.createObjectURL(file));
     if (onFileSelect) {
       onFileSelect(file);

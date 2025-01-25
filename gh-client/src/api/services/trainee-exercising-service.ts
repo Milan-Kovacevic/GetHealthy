@@ -25,7 +25,6 @@ import {
   StartWorkoutResponseDTO,
   WorkoutSummaryDTO,
 } from "../contracts/trainee-exercising-contract";
-import { format } from "date-fns";
 
 const getWorkoutSummary = async (
   traineeId: number,

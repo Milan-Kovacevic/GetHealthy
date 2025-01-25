@@ -15,9 +15,9 @@ VALUES
 -- Test data for get_healthy.USER
 INSERT INTO get_healthy.user (UserId, FirstName, LastName, DateOfBirth, Gender, ProfilePictureFilePath)
 VALUES 
-  (2, 'John', 'Doe', '1985-05-15', 1, '/images/john_doe.png'),
-  (3, 'Jane', 'Smith', '1990-10-20', 0, '/images/jane_smith.png'),
-  (4, 'Jack', 'Sparrow', '1996-11-07', 0, '/images/jack_sparrow.png');
+  (2, 'John', 'Doe', '1985-05-15', 1, NULL),
+  (3, 'Jane', 'Smith', '1990-10-20', 0, NULL),
+  (4, 'Jack', 'Sparrow', '1996-11-07', 0, NULL);
 
 -- Test data for get_healthy.REGISTRATION_REQUEST
 INSERT INTO get_healthy.registration_request (UserId, IssueDate, CertificationFilePath, Description, FirstName, LastName)
@@ -75,31 +75,31 @@ VALUES
  (1, 'Beginner Full Body', 0, 30, 
      'This program provides a comprehensive introduction to fitness by targeting all major muscle groups. Perfect for individuals new to exercise, the plan incorporates simple movements and focuses on developing consistency while avoiding overtraining.', 
      'No prior experience is needed. Comfortable workout clothing and a positive attitude are recommended to maximize results.', 
-     '2024-12-20 10:00:00', 2, "https://cdn.muscleandstrength.com/sites/default/files/styles/400x250/public/taxonomy/image/workouts/workoutsformen.jpg?itok=jALf6fyP"),
+     '2024-12-20 10:00:00', 2, NULL),
 (2, 'Intermediate Strength', 1, 45, 
     'This program is tailored for those looking to improve their overall strength and muscle endurance. It combines compound movements with isolation exercises to target specific muscle groups, helping participants achieve balanced development.', 
     'A set of adjustable dumbbells or access to a gym is required. Participants should also have a basic understanding of strength training principles and maintain proper form to prevent injuries.', 
-    '2024-12-21 11:00:00', 2, "https://cdn.muscleandstrength.com/sites/default/files/styles/400x250/public/taxonomy/image/workouts/workoutsforwomen.jpg?itok=G4rsV_4R"),
+    '2024-12-21 11:00:00', 2, NULL),
 (3, 'Advanced Cardio Burn', 2, 60, 
     'Designed for fitness enthusiasts seeking to challenge their cardiovascular system, this program includes high-intensity intervals, endurance drills, and plyometric exercises. It aims to significantly boost stamina while burning calories efficiently.', 
     'High-quality running shoes are essential for safety during high-impact exercises. Participants should have prior experience with cardio workouts and no underlying heart conditions.', 
-    '2024-12-22 12:00:00', 2, "https://cdn.muscleandstrength.com/sites/default/files/styles/400x250/public/taxonomy/image/workouts/musclebuilding.jpg?itok=7ajNGjpw"),
+    '2024-12-22 12:00:00', 2, NULL),
 (4, 'Yoga for Flexibility', 0, 40, 
     'This yoga program focuses on improving flexibility, balance, and mental clarity. By incorporating gentle stretches and guided breathing exercises, it promotes relaxation and stress relief while enhancing physical well-being.', 
     'A yoga mat is required for comfort during floor poses. Participants should have a quiet space free of distractions to fully immerse themselves in the practice.', 
-    '2024-12-23 09:30:00', 2, null),
+    '2024-12-23 09:30:00', 2, NULL),
 (5, 'HIIT Challenge', 2, 30, 
     'A high-intensity interval training program designed for maximum calorie burn in minimal time. This fast-paced plan alternates between bursts of intense effort and short recovery periods to keep your metabolism elevated throughout the day.', 
     'No special equipment is required. Participants should have a towel and water bottle on hand due to the intensity of the workouts. Prior experience with HIIT is strongly recommended.', 
-    '2024-12-24 08:45:00', 2, "https://cdn.muscleandstrength.com/sites/default/files/styles/400x250/public/taxonomy/image/workouts/celebrity_0.jpg?itok=K4Us_DV7"),
+    '2024-12-24 08:45:00', 2, NULL),
 (6, 'Functional Fitness', 1, 50, 
     'This program emphasizes exercises that mimic everyday movements to improve functional strength and mobility. It includes a mix of strength, flexibility, and balance exercises tailored to enhance overall physical performance.', 
     'Resistance bands, a sturdy chair, and an optional medicine ball are required. Participants should have a basic understanding of proper form to avoid strain during dynamic movements.', 
-    '2024-12-25 07:15:00', 2, null),
+    '2024-12-25 07:15:00', 2, NULL),
 (7, 'Core Strength Builder', 1, 30, 
     'This program is dedicated to building a stronger and more stable core, which is essential for better posture, balance, and athletic performance. It includes a combination of static holds and dynamic core exercises.', 
     'An exercise mat is needed for comfort during floor exercises. Participants should focus on engaging their core throughout each movement for maximum effectiveness.', 
-    '2024-12-26 06:00:00', 2, "https://cdn.muscleandstrength.com/sites/default/files/styles/400x250/public/taxonomy/image/workouts/chestworkouts.jpg?itok=4fRxwlBd"),
+    '2024-12-26 06:00:00', 2, NULL),
 (8, 'Weightlifting Basics', 0, 60, 
     'Ideal for beginners, this program introduces foundational weightlifting techniques and movements. It covers proper form, breathing techniques, and progressive overload strategies to ensure safe and effective workouts.', 
     'A barbell, weight plates, and a flat bench are required. Access to a squat rack is recommended for safety during compound lifts. Participants should be ready to learn and practice new skills consistently.', 
@@ -107,11 +107,11 @@ VALUES
 (9, 'Marathon Training', 2, 120, 
     'This detailed marathon training plan is designed for experienced runners aiming to complete or improve their performance in a marathon. It includes long-distance runs, tempo runs, and recovery days strategically planned to prevent overtraining.', 
     'Participants will need high-quality running shoes, moisture-wicking clothing, and a GPS watch or fitness tracker to monitor progress. A dedicated running route with varying terrain is also recommended.', 
-    '2024-12-28 14:00:00', 2, "https://cdn.muscleandstrength.com/sites/default/files/styles/400x250/public/taxonomy/image/workouts/backworkouts.jpg?itok=n1xpz4jW"),
+    '2024-12-28 14:00:00', 2, NULL),
 (10, 'Powerlifting Pro', 2, 90, 
     'This specialized program focuses on the three main powerlifting lifts: squat, bench press, and deadlift. It incorporates progressive overload techniques and accessory exercises to maximize strength gains.', 
     'A barbell, weight plates, a power rack, and a flat bench are essential. Participants should have prior experience with heavy lifting and understand basic safety techniques, such as spotting and bracing.', 
-    '2024-12-29 13:00:00', 2, null);
+    '2024-12-29 13:00:00', 2, NULL);
     
 
 -- Test data for get_healthy.TRAINING_PROGRAM_EXERCISE
@@ -172,26 +172,7 @@ VALUES
 -- Test data for get_healthy.TRAINING_PROGRAM_APPLICATION
 INSERT INTO get_healthy.training_program_application (UserId, ProgramId, MarkRead, SubmissionDate, Note)
 VALUES 
-  (3, 1, 0, '2024-12-15 16:00:00', 'Excited to start this program.'),
-  (3, 2, 1, '2024-12-20 10:30:00', NULL),
-  (3, 3, 0, '2024-12-25 09:00:00', 'Looking forward to improving my strength.'),
-  (3, 4, 0, '2025-01-05 14:45:00', 'Ready to try something new!'),
-  (3, 5, 1, '2025-01-08 08:00:00', NULL),
-  (3, 6, 0, '2025-01-10 11:20:00', 'I hope this program helps me stay consistent.'),
-  (3, 7, 0, '2025-01-12 17:00:00', NULL),
-  (3, 8, 1, '2025-01-15 12:00:00', 'I’ve heard great things about this one.'),
-  (3, 9, 0, '2025-01-18 13:30:00', NULL),
-  (3, 10, 1, '2025-01-20 15:00:00', 'Can’t wait to see the results.'),
-  (4, 1, 0, '2025-01-22 16:00:00', NULL),
-  (4, 2, 0, '2025-01-25 18:00:00', 'Trying to build a good habit.'),
-  (4, 3, 1, '2025-01-27 19:00:00', NULL),
-  (4, 4, 0, '2025-01-30 08:45:00', 'Consistency is key!'),
-  (4, 5, 1, '2025-02-02 09:00:00', NULL),
-  (4, 6, 0, '2025-02-04 11:15:00', 'Hoping to challenge myself with this program.'),
-  (4, 7, 1, '2025-02-07 13:00:00', NULL),
-  (4, 8, 0, '2025-02-10 14:30:00', 'I’ll give it my best shot.'),
-  (4, 9, 0, '2025-02-15 16:00:00', NULL),
-  (4, 10, 1, '2025-02-18 17:45:00', 'Let’s see how far I can go!');
+  (3, 1, 0, '2024-12-15 16:00:00', 'Excited to start this program.');
 
 -- Test data for get_healthy.COMMENT
 INSERT INTO get_healthy.comment (CommentId, Content, DatePosted, UserId, ProgramId)
@@ -238,23 +219,5 @@ VALUES
 -- Test data for get_healthy.NOTIFICATION
 INSERT INTO get_healthy.notification (NotificationId, Date, MarkRead, Metadata, NotificationType, SenderId, UserId)
 VALUES
-    (1, NOW() - INTERVAL 1 DAY, FALSE, 'Full Body Workout', FLOOR(RAND() * 5), 3, 2),
-    (2, NOW() - INTERVAL 2 DAY, TRUE, 'Leg Day Program', FLOOR(RAND() * 5), 3, 2),
-    (3, NOW() - INTERVAL 3 DAY, FALSE, 'Cardio Blast', FLOOR(RAND() * 5), 3, 2),
-    (4, NOW() - INTERVAL 4 DAY, TRUE, 'Strength Training', FLOOR(RAND() * 5), 3, 2),
-    (5, NOW() - INTERVAL 5 DAY, FALSE, 'HIIT Training', FLOOR(RAND() * 5), 3, 2),
-    (6, NOW() - INTERVAL 6 DAY, TRUE, 'Upper Body Focus', FLOOR(RAND() * 5), 3, 2),
-    (7, NOW() - INTERVAL 7 DAY, FALSE, 'Core Workout', FLOOR(RAND() * 5), 3, 2),
-    (8, NOW() - INTERVAL 8 DAY, TRUE, 'Endurance Program', FLOOR(RAND() * 5), 3, 2),
-    (9, NOW() - INTERVAL 9 DAY, FALSE, 'Mobility & Flexibility', FLOOR(RAND() * 5), 3, 2),
-    (10, NOW() - INTERVAL 10 DAY, TRUE, 'Recovery Workout', FLOOR(RAND() * 5), 3, 2),
-    (11, NOW() - INTERVAL 11 DAY, FALSE, 'Strength & Conditioning', FLOOR(RAND() * 5), 3, 2),
-    (12, NOW() - INTERVAL 12 DAY, TRUE, 'Powerlifting Program', FLOOR(RAND() * 5), 3, 2),
-    (13, NOW() - INTERVAL 13 DAY, FALSE, 'Weight Loss Program', FLOOR(RAND() * 5), 3, 2),
-    (14, NOW() - INTERVAL 14 DAY, TRUE, 'Muscle Building Plan', FLOOR(RAND() * 5), 3, 2),
-    (15, NOW() - INTERVAL 15 DAY, FALSE, 'Plyometric Training', FLOOR(RAND() * 5), 3, 2),
-    (16, NOW() - INTERVAL 16 DAY, TRUE, 'Functional Fitness', FLOOR(RAND() * 5), 3, 2),
-    (17, NOW() - INTERVAL 17 DAY, FALSE, 'Yoga for Athletes', FLOOR(RAND() * 5), 3, 2),
-    (18, NOW() - INTERVAL 18 DAY, TRUE, 'Running Program', FLOOR(RAND() * 5), 3, 2),
-    (19, NOW() - INTERVAL 19 DAY, FALSE, 'Cycling Plan', FLOOR(RAND() * 5), 3, 2),
-    (20, NOW() - INTERVAL 20 DAY, TRUE, 'Swimming Training', FLOOR(RAND() * 5), 3, 2);
+    (1, NOW() - INTERVAL 1 DAY, FALSE, 'Beginner Full Body', 2, 3, 2),
+	(2, NOW() - INTERVAL 2 DAY, FALSE, 'Beginner Full Body', 3, 2, 3);

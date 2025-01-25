@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${gethealthy.base-url}/trainee-exercising")
+@RequestMapping("${gethealthy.base-url}/workouts")
 public class TraineeExercisingController {
     private final ExerciseFeedbackService exerciseFeedbackService;
     private final TraineeExercisingService traineeExercisingService;

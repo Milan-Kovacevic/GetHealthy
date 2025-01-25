@@ -161,7 +161,7 @@ const AboutUsPage = () => {
           </div>
         </div>
 
-        <div className="text-center mt-14 animate-fade-down delay-500">
+        <div className="text-center mt-14 animate-fade-down">
           <h2 className="lg:mb-6 mb-4 text-pretty text-xl font-bold lg:text-2xl">
             Meet our team
           </h2>

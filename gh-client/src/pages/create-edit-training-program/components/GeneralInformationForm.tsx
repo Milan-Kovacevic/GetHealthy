@@ -1,7 +1,6 @@
 import { difficultyOptions } from "@/api/enums/program-difficulty";
 import { Category } from "@/api/models/category";
 import { getAllCategories } from "@/api/services/category-service";
-import { FileInputField } from "@/components/primitives/FileInputField";
 import InputFormField from "@/components/primitives/InputFormField";
 import { MultiSelect } from "@/components/primitives/MultiSelectFormFIeld";
 import TextareaFormField from "@/components/primitives/TextareaFormField";

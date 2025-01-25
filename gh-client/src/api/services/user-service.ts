@@ -1,5 +1,6 @@
 import { ApiEndpoints } from "@/utils/constants";
 import { sendAxiosRequest } from "./base-service";
+import { pictureUrl } from "@/lib/utils";
 
 const getProfile = async (userId: number): Promise<any> => {
   var url = `${ApiEndpoints.Users}/${userId}/userInfo`;
@@ -9,7 +10,10 @@ const getProfile = async (userId: number): Promise<any> => {
     requireAuth: true,
     url: url,
   }).then((response) => {
-    return response.data;
+    return {
+      ...response.data,
+      profilePictureFilePath: pictureUrl(response.data.profilePictureFilePath),
+    };
   });
 };
 

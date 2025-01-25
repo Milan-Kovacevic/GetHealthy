@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { getProfile, updateUserProfile } from "@/api/services/user-service";
 import DatePickerFormField from "@/components/primitives/DatePickerFormField";
-import { FileInputField } from "@/components/primitives/FileInputField";
+import { PictureInputField } from "@/components/primitives/PictureInputField";
 import InputFormField from "@/components/primitives/InputFormField";
 import NumberInputFormField from "@/components/primitives/NumberInputFormField";
 import PhoneInputFormField from "@/components/primitives/PhoneInputFormField";
@@ -45,13 +45,9 @@ export function ProfileForm() {
   const [initialValues, setInitialValues] = useState<
     TraineeProfileFormValues | TrainerProfileFormValues | null
   >(null);
+  const [initialPicture, setInitialPicture] = useState<string | undefined>();
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
-
   const [fileName, setFileName] = useState<string>("");
-
-  const resetFileName = () => {
-    setFileName("");
-  };
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -67,8 +63,8 @@ export function ProfileForm() {
         }, {});
 
         setInitialValues(result);
+        setInitialPicture(result?.profilePictureFilePath);
         form.reset({ ...result });
-        console.log("Result:", result);
       }
     };
 
@@ -96,8 +92,10 @@ export function ProfileForm() {
   const toggleEditMode = () => {
     if (isEditing) {
       form.reset(initialValues!);
+      setFileName("");
+      setSelectedFile(undefined);
     }
-    setIsEditing(!isEditing);
+    setIsEditing((prev) => !prev);
   };
 
   const handleFileSelection = (file: File | undefined) => {
@@ -114,24 +112,19 @@ export function ProfileForm() {
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      console.log(data);
       let requestData: any;
       if (isTrainer) {
         const pom = trainerScheme.parse(data);
         requestData = {
           ...pom,
-          // dateOfBirth: format(pom.dateOfBirth, "yyyy-MM-dd"),
           role: UserRole.TRAINER,
         };
-        setInitialValues(requestData);
       } else {
         const pom = traineeScheme.parse(data);
         requestData = {
           ...pom,
-          // dateOfBirth: format(pom.dateOfBirth, "yyyy-MM-dd"),
           role: UserRole.TRAINEE,
         };
-        setInitialValues(requestData);
       }
 
       const formData = new FormData();
@@ -139,16 +132,15 @@ export function ProfileForm() {
       if (selectedFile) {
         formData.append("file", selectedFile);
       }
-
       formData.append(
         "request",
         new Blob([JSON.stringify(requestData)], { type: "application/json" })
       );
-
       await updateUserProfile(userId!, formData);
 
       setIsEditing(false);
-      resetFileName();
+      setSelectedFile(undefined);
+      setInitialValues(requestData);
       toast.success("Successfully updated your profile!");
     } catch (error) {
       console.error("Error updating profile or profile picture:", error);
@@ -267,11 +259,11 @@ export function ProfileForm() {
           </>
         )}
 
-        <FileInputField
+        <PictureInputField
           title="Profile image"
           name={isTrainer ? "trainerProfileImage" : "traineeProfileImage"}
           description="You can set your profile image."
-          formats=""
+          initialPicture={initialPicture}
           onFileSelect={handleFileSelection}
           disabled={!isEditing}
           fileName={fileName}

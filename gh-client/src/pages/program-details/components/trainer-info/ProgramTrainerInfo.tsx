@@ -78,8 +78,10 @@ export default function ProgramTrainerInfo() {
                   alt="avatar"
                 />
                 <AvatarFallback>
-                  <UserIcon className="h-16 w-16 text-muted-foreground" />
-                  {/* AM */}
+                  <UserIcon
+                    className="h-16 w-16 text-muted-foreground"
+                    strokeWidth={1.25}
+                  />
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">

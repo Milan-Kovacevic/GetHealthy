@@ -14,6 +14,7 @@ export type AuthUserDTO = {
   id: number;
   firstName: string;
   lastName: string;
+  profilePictureFilePath?: string;
   role: UserRole;
 };
 

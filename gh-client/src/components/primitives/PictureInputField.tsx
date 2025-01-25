@@ -7,41 +7,51 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { CloudUploadIcon } from "lucide-react";
+import { CloudUploadIcon, UserIcon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
 
-type FileInputFieldProps = {
+type PictureInputFieldProps = {
   title: string;
   name: string;
   description?: string;
-  initialFile?: string;
-  formats?: string;
-  formatLabel?: string;
+  initialPicture?: string;
   disabled?: boolean;
   className?: string;
   onFileSelect?: (file: File | undefined) => void;
   fileName: string;
 };
 
-export const FileInputField = (props: FileInputFieldProps) => {
+export const PictureInputField = (props: PictureInputFieldProps) => {
   const {
     name,
     description,
     className,
     title,
-    formats,
-    formatLabel,
+    initialPicture,
     onFileSelect,
     disabled,
     fileName,
   } = props;
-  const [selectedFile, setSelectedFile] = useState<File>();
-  // const [currentFileName, setCurrentFileName] = useState(initialFile || "");
+  const [selectedPicture, setSelectedPicture] = useState<string | undefined>(
+    initialPicture
+  );
+
+  useEffect(() => {
+    setSelectedPicture(initialPicture);
+  }, [initialPicture]);
+
+  useEffect(() => {
+    if (fileName?.trim() == "") {
+      setSelectedPicture(initialPicture);
+    }
+  }, [fileName]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target?.files?.[0];
-    setSelectedFile(file);
-    // setCurrentFileName(file ? file.name : initialFile || "");
+    if (!file) return;
+
+    setSelectedPicture(URL.createObjectURL(file));
     if (onFileSelect) {
       onFileSelect(file);
     }
@@ -51,7 +61,7 @@ export const FileInputField = (props: FileInputFieldProps) => {
     <FormItem className={cn("space-y-1 w-full flex flex-col", className)}>
       <FormLabel className="mb-1">{title}</FormLabel>
       <FormControl>
-        <div className="flex items-center justify-center w-full h-full flex-1 gap-4">
+        <div className="flex sm:flex-row flex-col-reverse items-center justify-center w-full h-full flex-1 gap-x-4 gap-y-3 sm:pt-0 pt-4">
           <label
             htmlFor={name}
             className={cn(
@@ -65,11 +75,6 @@ export const FileInputField = (props: FileInputFieldProps) => {
             <div className="flex flex-col items-center justify-center pt-3.5 pb-4">
               <CloudUploadIcon className="mb-1 h-8 w-8 text-muted-foreground/80" />
               <div className="sm:max-w-md max-w-32 sm:h-6">
-                {/* {currentFileName ? (
-                  <p className="mb-1 text-sm font-semibold text-center text-ellipsis overflow-clip line-clamp-1 mx-auto">
-                    {currentFileName}
-                  </p>
-                ) : ( */}
                 {fileName ? (
                   <p className="mb-1 text-sm font-semibold text-center text-ellipsis overflow-clip line-clamp-1 mx-auto">
                     {fileName}
@@ -81,18 +86,33 @@ export const FileInputField = (props: FileInputFieldProps) => {
                   </p>
                 )}
               </div>
-              {formatLabel && (
-                <p className="text-xs text-muted-foreground text-center">
-                  {formatLabel}
-                </p>
-              )}
+
+              <p className="text-xs text-muted-foreground text-center">
+                {".png | .jpg | .jpeg"}
+              </p>
             </div>
           </label>
+          <div>
+            <Avatar
+              className={cn(
+                "h-28 w-28 border-2 border-foreground/20 dark:border-foreground/60",
+                disabled && "opacity-85"
+              )}
+            >
+              <AvatarImage src={selectedPicture} alt="@" />
+              <AvatarFallback className="text-base">
+                <UserIcon
+                  strokeWidth={1.25}
+                  className="h-16 w-16 text-muted-foreground"
+                />
+              </AvatarFallback>
+            </Avatar>
+          </div>
           <Input
             id={name}
             type="file"
             className="hidden"
-            accept={formats}
+            accept={".png,.jpg,.jpeg"}
             onChange={handleFileChange}
             disabled={disabled}
           />

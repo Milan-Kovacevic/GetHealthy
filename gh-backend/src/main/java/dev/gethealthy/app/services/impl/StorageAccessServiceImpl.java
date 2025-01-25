@@ -29,19 +29,18 @@ public class StorageAccessServiceImpl implements StorageAccessService {
     @Value("${gethealthy.storage.pictures.name}")
     private String picturesName;
 
-    private Path rootPath;
     private Path documentsPath;
     private Path picturesPath;
 
     @PostConstruct
     private void postConstruct() {
-        rootPath = Paths.get(storagePath, storageName).normalize().toAbsolutePath();
+        Path rootPath = Paths.get(storagePath, storageName).normalize().toAbsolutePath();
         File rootFolder = rootPath.toFile();
         if (!rootFolder.exists()) {
             try {
                 Files.createDirectories(rootPath);
             } catch (IOException ex) {
-                System.out.println(ex);
+                System.out.println(ex.getMessage());
             }
         }
 
@@ -50,7 +49,7 @@ public class StorageAccessServiceImpl implements StorageAccessService {
             try {
                 Files.createDirectory(documentsPath);
             } catch (IOException ex) {
-                System.out.println(ex);
+                System.out.println(ex.getMessage());
             }
         }
 
@@ -59,7 +58,7 @@ public class StorageAccessServiceImpl implements StorageAccessService {
             try {
                 Files.createDirectory(picturesPath);
             } catch (IOException ex) {
-                System.out.println(ex);
+                System.out.println(ex.getMessage());
             }
         }
     }
@@ -73,7 +72,7 @@ public class StorageAccessServiceImpl implements StorageAccessService {
             Files.write(filePath, content);
             return filePath.toFile().getName();
         } catch (IOException ex) {
-            System.out.println(ex);
+            System.out.println(ex.getMessage());
             return null;
         }
     }
@@ -95,17 +94,17 @@ public class StorageAccessServiceImpl implements StorageAccessService {
         Path sourcePath = Paths.get(fileName);
 
         if (type.equals(StorageType.DOCUMENT)) {
-            return resolveAndValidatePath(sourcePath, documentsPath, "Cannot access document files outside storage");
+            return resolveAndValidatePath(sourcePath, documentsPath);
         } else if (type.equals(StorageType.PICTURE)) {
-            return resolveAndValidatePath(sourcePath, picturesPath, "Cannot access document files outside storage");
+            return resolveAndValidatePath(sourcePath, picturesPath);
         } else
             throw new IOException("Invalid storage type specified.");
     }
 
-    private Path resolveAndValidatePath(Path sourcePath, Path basePath, String errorMessage) throws IOException {
+    private Path resolveAndValidatePath(Path sourcePath, Path basePath) throws IOException {
         Path destinationPath = basePath.resolve(sourcePath).normalize().toAbsolutePath();
         if (!destinationPath.getParent().equals(basePath.toAbsolutePath())) {
-            throw new IOException(errorMessage);
+            throw new IOException("Cannot access document files outside storage");
         }
         return destinationPath;
     }
