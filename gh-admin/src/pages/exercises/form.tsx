@@ -39,18 +39,18 @@ const ExerciseFormSchema = z
       .string({ required_error: "Demonstration link is required." })
       .min(1, "Demonstration link is required.")
       .max(256),
-    metricType1Id: z
-      .string({
+    firstExerciseMetricId: z
+      .number({
         required_error: "First metric is required.",
       })
       .min(1, "First metric is required."),
-    metricType2Id: z.string().optional(),
+    secondExerciseMetricId: z.number().optional(),
   })
   .refine(
-    (data) => !data.metricType2Id || data.metricType1Id !== data.metricType2Id,
+    (data) => !data.secondExerciseMetricId || data.firstExerciseMetricId !== data.secondExerciseMetricId,
     {
       message: "Metric types must be different.",
-      path: ["metricType2Id"],
+      path: ["secondExerciseMetricId"],
     }
   );
 
@@ -72,8 +72,8 @@ export function ManageExerciseForm({
       exerciseName: "",
       description: "",
       videoLink: "",
-      metricType1Id: undefined,
-      metricType2Id: undefined,
+      firstExerciseMetricId: undefined,
+      secondExerciseMetricId: undefined,
     },
   });
   const { onFinish, formLoading, query } = form.refineCore;
@@ -83,14 +83,14 @@ export function ManageExerciseForm({
     if (!exerciseData) return;
 
     form.setValue(
-      "metricType1Id",
-      exerciseData.firstExerciseMetric.id.toString(),
+      "firstExerciseMetricId",
+      exerciseData.firstExerciseMetric.id,
       { shouldValidate: true }
     );
     if (exerciseData.secondExerciseMetric) {
       form.setValue(
-        "metricType2Id",
-        exerciseData.secondExerciseMetric.id.toString(),
+        "secondExerciseMetricId",
+        exerciseData.secondExerciseMetric.id,
         { shouldValidate: true }
       );
     }
@@ -171,15 +171,17 @@ export function ManageExerciseForm({
               <div className="col-span-6">
                 <FormField
                   control={form.control}
-                  name="metricType1Id"
+                  name="firstExerciseMetricId"
                   render={({ field }) => {
                     return (
                       <FormItem className="space-y-0.5">
                         <FormLabel>First metric *</FormLabel>
                         <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          defaultValue={field.value}
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          } // Convert string to number
+                          value={field.value?.toString()} // Convert number to string for the Select component
+                          defaultValue={field.value?.toString()} // Ensure proper defaultValue
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -210,13 +212,13 @@ export function ManageExerciseForm({
               <div className="col-span-6">
                 <FormField
                   control={form.control}
-                  name="metricType2Id"
+                  name="secondExerciseMetricId"
                   render={({ field }) => (
                     <FormItem className="space-y-0.5">
                       <FormLabel>Second metric</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
+                        onValueChange={(value) => field.onChange(Number(value))} // Convert string to number
+                        value={field.value?.toString()} // Convert number to string for the Select component
                       >
                         <FormControl>
                           <SelectTrigger>

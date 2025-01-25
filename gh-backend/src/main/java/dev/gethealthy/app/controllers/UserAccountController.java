@@ -1,7 +1,11 @@
 package dev.gethealthy.app.controllers;
 
+import dev.gethealthy.app.models.responses.UserResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +38,7 @@ public class UserAccountController {
             @RequestBody @Valid PasswordChangeRequest request, Authentication auth) {
         // if (auth == null)
         // throw new UnauthorizedException();
+
         userAccountService.changePassword(userId, request);
     }
 

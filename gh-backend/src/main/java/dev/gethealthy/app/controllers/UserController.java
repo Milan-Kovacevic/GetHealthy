@@ -1,13 +1,12 @@
 package dev.gethealthy.app.controllers;
 
+import dev.gethealthy.app.exceptions.UnauthorizedException;
 import dev.gethealthy.app.exceptions.ForbiddenException;
 import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.enums.Role;
 import dev.gethealthy.app.models.requests.UserUpdateRequest;
-import dev.gethealthy.app.models.responses.SingleUserResponse;
-import dev.gethealthy.app.models.responses.ProgramListingResponse;
-import dev.gethealthy.app.models.responses.TrainingProgramResponse;
-import dev.gethealthy.app.models.responses.UserInfoResponse;
+import dev.gethealthy.app.models.responses.*;
+import dev.gethealthy.app.security.models.JwtUser;
 import dev.gethealthy.app.services.TrainingProgramService;
 import dev.gethealthy.app.services.UserService;
 import jakarta.validation.Valid;
@@ -18,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,8 +34,13 @@ public class UserController {
     private final UserService userService;
     private final TrainingProgramService trainingProgramService;
 
+    @GetMapping
+    public Page<UserDetailsResponse> getUsers(Pageable page) {
+        return userService.getAllUsers(page);
+    }
+
     @GetMapping("/{userId}")
-    public SingleUserResponse getUser(@PathVariable(name = "userId") Integer userId, Authentication auth) {
+    public UserDetailsResponse getUser(@PathVariable(name = "userId") Integer userId, Authentication auth) {
         return userService.getUser(userId);
     }
 
@@ -72,15 +78,20 @@ public class UserController {
                                                                             @RequestParam(required = false, defaultValue = "1000") long participantsUpper,
                                                                             @RequestParam(required = false, defaultValue = "0") long participantsLower,
                                                                             @RequestParam(required = false, defaultValue = "0") int difficulty,
-                                                                            @PathVariable(name = "userId") Integer userId) {
-        var user = getJwtUser().orElseThrow(ForbiddenException::new);
+                                                                            @PathVariable(name = "userId") Integer userId, Authentication auth) {
         Specification<TrainingProgram> spec;
+
+        JwtUser user = (JwtUser) auth.getPrincipal();
+        Role role = user.getRole();
+
         if(user.getRole() == Role.TRAINER)
             spec = constructSpecificationForTrainer(userId, searchWord, categories, ratingUpper,
                 ratingLower, participantsUpper, participantsLower, difficulty);
-        else spec = constructSpecificationForTrainee(userId, searchWord, categories, ratingUpper,
+        else if (role == Role.TRAINEE)
+            spec = constructSpecificationForTrainee(userId, searchWord, categories, ratingUpper,
                 ratingLower, participantsUpper, participantsLower, difficulty);
-
+        else
+            throw new UnauthorizedException();
         Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
         return trainingProgramService.getFilteredTrainingPrograms(spec, sort, page);
     }

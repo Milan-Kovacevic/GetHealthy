@@ -1,5 +1,6 @@
 package dev.gethealthy.app.models.responses;
 
+import java.time.Instant;
 import java.util.Date;
 
 import dev.gethealthy.app.models.enums.Role;
@@ -12,6 +13,6 @@ public class UserAccountResponse {
     private String email;
     private Boolean enabled;
     private Role role;
-    private Date createdAt;
-    private Date lastAccessed;
+    private Instant createdAt;
+    private Instant lastAccessed;
 }

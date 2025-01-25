@@ -17,12 +17,17 @@ import dev.gethealthy.app.repositories.TraineeOnTrainingProgramRepository;
 import dev.gethealthy.app.repositories.UserRepository;
 import dev.gethealthy.app.services.StorageAccessService;
 import dev.gethealthy.app.services.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -99,8 +104,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SingleUserResponse getUser(Integer userId) {
-        return getUserData(userId, SingleUserResponse.class);
+    public Page<UserDetailsResponse> getAllUsers(Pageable page) {
+        return userRepository.findAll(page).map(this::convertToUserDetailsResponse);
+    }
+
+    @Override
+    public UserDetailsResponse getUser(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+        return convertToUserDetailsResponse(user);
+    }
+
+    private UserDetailsResponse convertToUserDetailsResponse(User user) {
+        UserDetailsResponse response = modelMapper.map(user, UserDetailsResponse.class);
+
+        // Map UserAccount properties
+        if (user.getUserAccount() != null) {
+            response.setEmail(user.getUserAccount().getEmail());
+            response.setUsername(user.getUserAccount().getUsername());
+            response.setCreatedAt(user.getUserAccount().getCreatedAt());
+            response.setLastAccessed(user.getUserAccount().getLastAccessed());
+            response.setEnabled(user.getUserAccount().getEnabled());
+            response.setRole(user.getUserAccount().getRole());
+        }
+
+        return response;
     }
 
     @Override

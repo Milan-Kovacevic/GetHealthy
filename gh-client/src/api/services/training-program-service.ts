@@ -35,6 +35,7 @@ const getPageableTrainingPrograms = async (
   return sendAxiosRequest<void, PageableTrainingProgramsDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     // Perform neccessary mappings etc...
     return {
@@ -176,6 +177,7 @@ const getPageableProgramsForTrainer = (
   return sendAxiosRequest<void, PageableTrainerProgramsDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data as PageableTrainerPrograms;
   });

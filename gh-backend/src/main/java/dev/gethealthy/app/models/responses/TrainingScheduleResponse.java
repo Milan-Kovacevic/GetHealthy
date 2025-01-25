@@ -1,5 +1,6 @@
 package dev.gethealthy.app.models.responses;
 
+import dev.gethealthy.app.models.enums.ScheduleItemState;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,4 +20,6 @@ public class TrainingScheduleResponse {
     private DayOfWeek dayOfWeek;
 
     private TrainingProgramScheduleResponse program;
+
+    private ScheduleItemState scheduleItemState;
 }

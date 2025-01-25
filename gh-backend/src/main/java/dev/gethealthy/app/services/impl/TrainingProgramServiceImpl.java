@@ -3,14 +3,12 @@ package dev.gethealthy.app.services.impl;
 import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.*;
 import dev.gethealthy.app.models.enums.StorageType;
+import dev.gethealthy.app.models.enums.TraineeProgramStatus;
 import dev.gethealthy.app.models.requests.CreateProgramExercisesRequest;
 import dev.gethealthy.app.models.requests.CreateTrainingProgramRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.*;
-import dev.gethealthy.app.repositories.CategoryRepository;
-import dev.gethealthy.app.repositories.TrainerRepository;
-import dev.gethealthy.app.repositories.TrainingProgramExerciseRepository;
-import dev.gethealthy.app.repositories.TrainingProgramRepository;
+import dev.gethealthy.app.repositories.*;
 import dev.gethealthy.app.services.StorageAccessService;
 import dev.gethealthy.app.services.TrainingProgramService;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +38,8 @@ public class TrainingProgramServiceImpl
     private final TrainerRepository trainerRepository;
     private final StorageAccessService storageAccessService;
     private final CategoryRepository categoryRepository;
+    private final TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository;
+    private final TrainingProgramApplicationRepository trainingProgramApplicationRepository;
 
     @Override
     public Page<TrainingProgramResponse> getFilteredTrainingPrograms(Specification<TrainingProgram> spec, Sort sort,
@@ -111,16 +111,22 @@ public class TrainingProgramServiceImpl
     }
 
     @Override
-    public TrainingProgramInfoResponse getTrainingProgramInfo(Integer programId) {
+    public TrainingProgramInfoResponse getTrainingProgramInfo(Integer programId, Integer userId) {
         TrainingProgram program = trainingProgramRepository.findById(programId)
                 .orElseThrow(NotFoundException::new);
 
         var programResponse = modelMapper.map(program, TrainingProgramInfoResponse.class);
 
+        if (traineeOnTrainingProgramRepository.existsByProgram_IdAndUser_Id(programId, userId))
+            programResponse.setStatus(TraineeProgramStatus.JOINED);
+        else if(trainingProgramApplicationRepository.existsByProgram_IdAndTrainee_Id(programId, userId))
+            programResponse.setStatus(TraineeProgramStatus.PENDING);
+        else
+            programResponse.setStatus(TraineeProgramStatus.NOT_JOINED);
+
         programResponse.setCurrentlyEnrolled(getTrainingProgramCurrentlyEnrolled(programId));
         programResponse.setTotalRates(getTrainingProgramTotalRates(programId));
         programResponse.setRating(getTrainingProgramAverageRate(programId));
-
         return programResponse;
     }
 
