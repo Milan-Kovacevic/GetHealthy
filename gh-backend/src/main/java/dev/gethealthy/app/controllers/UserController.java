@@ -80,14 +80,10 @@ public class UserController {
                                                                             @RequestParam(required = false, defaultValue = "0") int difficulty,
                                                                             @PathVariable(name = "userId") Integer userId, Authentication auth) {
         Specification<TrainingProgram> spec;
-        var user = getJwtUser().orElseThrow(ForbiddenException::new);
 
         JwtUser user = (JwtUser) auth.getPrincipal();
         Role role = user.getRole();
 
-        if (role == Role.TRAINER)
-
-        Specification<TrainingProgram> spec;
         if(user.getRole() == Role.TRAINER)
             spec = constructSpecificationForTrainer(userId, searchWord, categories, ratingUpper,
                 ratingLower, participantsUpper, participantsLower, difficulty);

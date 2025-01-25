@@ -25,4 +25,6 @@ public interface TraineeExercisingRepository extends JpaRepository<TraineeExerci
     List<TraineeExercising> findAllByProgramIdIn(@NotNull List<Integer> programIds);
 
     List<TraineeExercising> findByProgramIdAndUserIdOrderByDateTakenDesc(Integer id, int traineeId);
+
+    List<TraineeExercising> findByProgramIdAndUserIdAndDateTakenAfterOrderByDateTakenAsc(Integer programId, Integer userId, Instant dateTaken);
 }

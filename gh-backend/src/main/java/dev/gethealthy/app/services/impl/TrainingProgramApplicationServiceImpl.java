@@ -94,8 +94,8 @@ public class TrainingProgramApplicationServiceImpl implements TrainingProgramApp
             TraineeOnTrainingProgram entity = new TraineeOnTrainingProgram();
             entity.setId(new TraineeOnTrainingProgramId(traineeId, programId));
             entity.setJoinDate(Utility.getInstantCurrentDate());
-            entity.setProgram(program);
-            entity.setUser(trainee);
+            entity.setProgram(application.getProgram());
+            entity.setUser(application.getTrainee());
             traineeOnTrainingProgramRepository.saveAndFlush(entity);
 
             notificationService.createNotification(
