@@ -18,4 +18,6 @@ public interface TrainingProgramExerciseRepository extends JpaRepository<Trainin
     @Modifying
     @Query("DELETE FROM TrainingProgramExercise t WHERE t.program.id = :programId")
     void deleteByProgram_Id(@Param("programId") Integer programId);
+
+    List<TrainingProgramExercise> findByExerciseIdAndProgramId(Integer ExerciseId, Integer ProgramId);
 }

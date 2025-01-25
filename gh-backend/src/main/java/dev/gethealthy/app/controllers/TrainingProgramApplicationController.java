@@ -1,7 +1,6 @@
 package dev.gethealthy.app.controllers;
 
-import dev.gethealthy.app.models.entities.TrainingProgramApplicationId;
-import dev.gethealthy.app.models.requests.TrainingProgramApplicationProcessRequest;
+import dev.gethealthy.app.models.requests.ProcessRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramApplicationRequest;
 import dev.gethealthy.app.models.responses.ProgramApplicationResponse;
 import dev.gethealthy.app.models.responses.SingleProgramApplicationResponse;
@@ -48,7 +47,7 @@ public class TrainingProgramApplicationController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void processTrainingProgramApplication(@PathVariable Integer userId,
                                                   @PathVariable Integer programId,
-                                                  @RequestBody @Valid TrainingProgramApplicationProcessRequest request) {
+                                                  @RequestBody @Valid ProcessRequest request) {
         trainingProgramApplicationService.processTrainingProgramApplication(userId, programId, request);
     }
 

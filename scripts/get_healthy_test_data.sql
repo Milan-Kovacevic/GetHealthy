@@ -15,6 +15,7 @@ VALUES
 -- Test data for get_healthy.USER
 INSERT INTO get_healthy.user (UserId, FirstName, LastName, DateOfBirth, Gender, ProfilePictureFilePath)
 VALUES 
+	(1, 'Admin', 'Borivoje', '1985-05-15', 1, '/images/john_doe.png'),
   (2, 'John', 'Doe', '1985-05-15', 1, '/images/john_doe.png'),
   (3, 'Jane', 'Smith', '1990-10-20', 0, '/images/jane_smith.png'),
   (4, 'Jack', 'Sparrow', '1996-11-07', 0, '/images/jack_sparrow.png');

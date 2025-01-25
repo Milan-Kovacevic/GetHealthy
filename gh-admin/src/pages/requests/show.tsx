@@ -73,7 +73,7 @@ const RequestInfo = ({
 
   const handleProcessRegistrationRequest = (approve: boolean) => {
     mutateAsync({
-      url: `/requests/${record.id}`,
+      url: `/requests/${record.id}/process`,
       method: "post",
       values: {
         approve: approve,

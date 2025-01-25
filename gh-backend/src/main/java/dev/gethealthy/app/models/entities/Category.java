@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
@@ -21,5 +23,6 @@ public class Category implements BaseEntity<Integer> {
     @NotNull
     @Column(name = "Name", nullable = false, length = 128)
     private String name;
+
 
 }
