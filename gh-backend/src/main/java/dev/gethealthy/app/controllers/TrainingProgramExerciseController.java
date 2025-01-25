@@ -6,7 +6,6 @@ import dev.gethealthy.app.services.TrainingProgramExerciseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class TrainingProgramExerciseController  {
     @PutMapping(path = "{programId}/exercises")
     @ResponseStatus(HttpStatus.OK)
     public void updateTrainingProgramExercisePlan(@PathVariable Integer programId,
-                                                  @RequestBody @Valid TrainingProgramExercisesRequest trainingProgramExercisesRequest, Authentication auth) {
+                                                  @RequestBody @Valid TrainingProgramExercisesRequest trainingProgramExercisesRequest) {
         trainingProgramExerciseService.updateTrainingProgramExercises(programId, trainingProgramExercisesRequest);
     }
 

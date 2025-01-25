@@ -1,10 +1,9 @@
 package dev.gethealthy.app.controllers;
 
+import dev.gethealthy.app.exceptions.ForbiddenException;
 import dev.gethealthy.app.models.entities.TrainingProgram;
-import dev.gethealthy.app.models.enums.Role;
 import dev.gethealthy.app.models.requests.CreateProgramExercisesRequest;
 import dev.gethealthy.app.models.requests.CreateTrainingProgramRequest;
-import dev.gethealthy.app.models.requests.TrainingProgramExercisesRequest;
 import dev.gethealthy.app.models.requests.TrainingProgramRequest;
 import dev.gethealthy.app.models.responses.*;
 import dev.gethealthy.app.security.models.JwtUser;
@@ -16,13 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 import static dev.gethealthy.app.specifications.TrainingProgramSpecification.constructSpecification;
+import static dev.gethealthy.app.util.Utility.getJwtUser;
 
 @RestController
 @RequestMapping("${gethealthy.base-url}/training-programs")
@@ -32,15 +31,15 @@ public class TrainingProgramController {
 
     @GetMapping
     public Page<TrainingProgramResponse> getPageableTrainingPrograms(Pageable page,
-            @RequestParam(defaultValue = "") String searchWord,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir,
-            @RequestParam(required = false) List<String> categories,
-            @RequestParam(required = false, defaultValue = "5.0") double ratingUpper,
-            @RequestParam(required = false, defaultValue = "0.0") double ratingLower,
-            @RequestParam(required = false, defaultValue = "1000") long participantsUpper,
-            @RequestParam(required = false, defaultValue = "0") long participantsLower,
-            @RequestParam(required = false, defaultValue = "0") int difficulty) {
+                                                                     @RequestParam(defaultValue = "") String searchWord,
+                                                                     @RequestParam(defaultValue = "name") String sortBy,
+                                                                     @RequestParam(defaultValue = "asc") String sortDir,
+                                                                     @RequestParam(required = false) List<String> categories,
+                                                                     @RequestParam(required = false, defaultValue = "5.0") double ratingUpper,
+                                                                     @RequestParam(required = false, defaultValue = "0.0") double ratingLower,
+                                                                     @RequestParam(required = false, defaultValue = "1000") long participantsUpper,
+                                                                     @RequestParam(required = false, defaultValue = "0") long participantsLower,
+                                                                     @RequestParam(required = false, defaultValue = "0") int difficulty) {
         Specification<TrainingProgram> spec = constructSpecification(searchWord, categories, ratingUpper,
                 ratingLower, participantsUpper, participantsLower, difficulty);
 
@@ -59,10 +58,7 @@ public class TrainingProgramController {
     public void createTrainingProgram(
             @RequestPart(name = "training-program") @Valid CreateTrainingProgramRequest trainingProgramRequest,
             @RequestPart(name = "training-program-exercises") @Valid CreateProgramExercisesRequest trainingProgramExercisesRequest,
-            @RequestPart(name = "file", required = false) MultipartFile file,
-            Authentication auth) {
-        // TODO: Compare userId from auth object and request
-
+            @RequestPart(name = "file", required = false) MultipartFile file) {
         trainingProgramService.createTrainingProgram(trainingProgramRequest, trainingProgramExercisesRequest,
                 file);
     }
@@ -70,9 +66,8 @@ public class TrainingProgramController {
     @PutMapping(path = "{programId}/info", consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.OK)
     public void updateTrainingProgramGeneralInfo(@PathVariable Integer programId,
-            @RequestPart(name = "training-program") @Valid TrainingProgramRequest trainingProgramRequest,
-            @RequestPart(name = "file", required = false) MultipartFile file,
-            Authentication auth) {
+                                                 @RequestPart(name = "training-program") @Valid TrainingProgramRequest trainingProgramRequest,
+                                                 @RequestPart(name = "file", required = false) MultipartFile file) {
         trainingProgramService.updateTrainingProgramGeneralInfo(programId, trainingProgramRequest, file);
     }
 
@@ -89,9 +84,8 @@ public class TrainingProgramController {
     }
 
     @GetMapping("{programId}/info")
-    public TrainingProgramInfoResponse getTrainingProgramInfo(@PathVariable Integer programId, Authentication auth) {
-        // TODO: Include joined flag for trainee, based of if he already joined to that program or not
-        JwtUser user = (JwtUser) auth.getPrincipal();
+    public TrainingProgramInfoResponse getTrainingProgramInfo(@PathVariable Integer programId) {
+        JwtUser user = getJwtUser().orElseThrow(ForbiddenException::new);
         Integer userId = user.getId();
         return trainingProgramService.getTrainingProgramInfo(programId, userId);
     }

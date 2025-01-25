@@ -22,19 +22,6 @@ public class TraineeExercisingController {
     private final ExerciseSetFeedbackService exerciseSetFeedbackService;
     private final TrainingProgramExerciseService trainingProgramExerciseService;
 
-/*
-    @PostMapping("exercise-feedback")
-    public ExerciseFeedbackResponse exerciseFeedback(ExerciseFeedbackRequest request)
-    {
-        return exerciseFeedbackService.insert(request, ExerciseFeedbackResponse.class);
-    }
-
-    @PostMapping("exercise-set-feedback")
-    public void exerciseSetFeedback(ExerciseSetFeedbackRequest request)
-    {
-        exerciseSetFeedbackService.insert(request, Object.class);
-    }
-*/
     @PostMapping("start")
     public StartWorkoutResponse start(StartWorkoutRequest request)
     {

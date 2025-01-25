@@ -1,16 +1,17 @@
 package dev.gethealthy.app.controllers;
 
-import dev.gethealthy.app.base.CrudController;
+import dev.gethealthy.app.exceptions.ForbiddenException;
 import dev.gethealthy.app.models.entities.TrainingProgramOnSchedule;
 import dev.gethealthy.app.models.enums.Role;
 import dev.gethealthy.app.models.requests.TrainingScheduleRequest;
 import dev.gethealthy.app.models.responses.TrainingScheduleResponse;
 import dev.gethealthy.app.security.models.JwtUser;
 import dev.gethealthy.app.services.TrainingScheduleService;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static dev.gethealthy.app.util.Utility.getJwtUser;
 
 @RestController
 @RequestMapping("${gethealthy.base-url}/schedules")
@@ -22,9 +23,9 @@ public class TrainingScheduleController {
     }
 
     @GetMapping
-    public List<TrainingScheduleResponse> getSchedules(Authentication auth)
+    public List<TrainingScheduleResponse> getSchedules()
     {
-        JwtUser jwtUser = (JwtUser) auth.getPrincipal();
+        JwtUser jwtUser = getJwtUser().orElseThrow(ForbiddenException::new);
         var role = jwtUser.getRole();
 
         if (role == Role.TRAINER)
@@ -34,12 +35,12 @@ public class TrainingScheduleController {
     }
 
     @PostMapping
-    public void createSchedule(TrainingScheduleRequest request, Authentication auth) {
+    public void createSchedule(TrainingScheduleRequest request) {
         service.insert(request, TrainingProgramOnSchedule.class);
     }
 
     @DeleteMapping
-    public void deleteSchedule(Integer id, Authentication auth) {
+    public void deleteSchedule(Integer id) {
         service.delete(id);
     }
 }
