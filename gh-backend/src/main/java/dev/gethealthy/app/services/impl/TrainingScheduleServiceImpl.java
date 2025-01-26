@@ -27,7 +27,6 @@ public class TrainingScheduleServiceImpl extends CrudJpaService<TrainingProgramO
     private final TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository;
     private final TrainingProgramRepository trainingProgramRepository;
     private final TrainingScheduleRepository trainingScheduleRepository;
-    private final TrainingProgramExerciseRepository trainingProgramExerciseRepository;
 
     public TrainingScheduleServiceImpl(TrainingScheduleRepository repository,
                                        ModelMapper modelMapper,
@@ -41,7 +40,6 @@ public class TrainingScheduleServiceImpl extends CrudJpaService<TrainingProgramO
         this.trainingProgramRepository = trainingProgramRepository;
         this.trainingScheduleRepository = trainingScheduleRepository;
         this.traineeExercisingRepository = traineeExercisingRepository;
-        this.trainingProgramExerciseRepository = trainingProgramExerciseRepository;
     }
 
     @Override

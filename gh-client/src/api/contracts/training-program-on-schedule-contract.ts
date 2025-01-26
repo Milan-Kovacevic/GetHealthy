@@ -20,16 +20,9 @@ type ScheduleTrainingProgramDTO = {
   categories: CategoryDTO[];
 };
 
-export type EditTrainingProgramOnScheduleDTO = {
-  id: number;
-  dayOfWeek: number;
+export type ManageTrainingProgramOnScheduleDTO = {
+  dayOfWeek: string;
   startTime: string; // HH:mm
-  program: ManageScheduleProgramDTO;
-};
-
-export type CreateTrainingProgramOnScheduleDTO = {
-  dayOfWeek: number;
-  startTime: string;
   program: ManageScheduleProgramDTO;
 };
 

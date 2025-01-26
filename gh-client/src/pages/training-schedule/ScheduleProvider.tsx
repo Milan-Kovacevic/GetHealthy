@@ -3,13 +3,12 @@ import {
   TrainingProgramOnSchedule,
 } from "@/api/models/training-program-on-schedule";
 import {
-  createTrainingProgramOnSchedule,
-  deleteTrainingProgramOnSchedule,
+  addTrainingProgramToSchedule,
+  deleteTrainingProgramFromSchedule,
   editTrainingProgramOnSchedule,
   fetchTrainingProgamsOnSchedule,
 } from "@/api/services/training-program-on-schedule-service";
 import { ScheduleContext } from "@/pages/training-schedule/hooks/use-schedule";
-import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -45,7 +44,7 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
   }, []);
 
   const onAddProgram = async (program: ManageTrainingProgramOnSchedule) => {
-    return createTrainingProgramOnSchedule(program)
+    return addTrainingProgramToSchedule(program)
       .then((response) => {
         setPrograms((prev) => sortPrograms([...prev, response]));
         toast.success(`Successfully added training program on schedule!`);
@@ -76,7 +75,7 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
   };
 
   const onRemoveProgram = async (programId: number) => {
-    return deleteTrainingProgramOnSchedule(programId)
+    return deleteTrainingProgramFromSchedule(programId)
       .then(() => {
         setPrograms((prev) =>
           prev.filter((program) => program.id !== programId)

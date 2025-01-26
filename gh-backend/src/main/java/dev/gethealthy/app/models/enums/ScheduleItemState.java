@@ -4,7 +4,7 @@ import jdk.jfr.Timestamp;
 import lombok.Getter;
 
 @Getter
-@Timestamp
+@Timestamp // TODO: ???
 public enum ScheduleItemState {
     NOT_STARTED,
     IN_PROGRESS,

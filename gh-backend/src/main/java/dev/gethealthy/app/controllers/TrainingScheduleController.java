@@ -16,10 +16,10 @@ import static dev.gethealthy.app.util.Utility.getJwtUser;
 @RestController
 @RequestMapping("${gethealthy.base-url}/schedules")
 public class TrainingScheduleController {
-    private final TrainingScheduleService service;
+    private final TrainingScheduleService scheduleService;
 
-    public TrainingScheduleController(TrainingScheduleService crudService, TrainingScheduleService trainingScheduleService) {
-        service = crudService;
+    public TrainingScheduleController(TrainingScheduleService scheduleService) {
+        this.scheduleService = scheduleService;
     }
 
     @GetMapping
@@ -29,18 +29,18 @@ public class TrainingScheduleController {
         var role = jwtUser.getRole();
 
         if (role == Role.TRAINER)
-            return service.getScheduleForTrainer(jwtUser.getId());
+            return scheduleService.getScheduleForTrainer(jwtUser.getId());
         else
-            return service.getScheduleForTrainee(jwtUser.getId());
+            return scheduleService.getScheduleForTrainee(jwtUser.getId());
     }
 
     @PostMapping
     public void createSchedule(TrainingScheduleRequest request) {
-        service.insert(request, TrainingProgramOnSchedule.class);
+        scheduleService.insert(request, TrainingProgramOnSchedule.class);
     }
 
     @DeleteMapping
     public void deleteSchedule(Integer id) {
-        service.delete(id);
+        scheduleService.delete(id);
     }
 }
