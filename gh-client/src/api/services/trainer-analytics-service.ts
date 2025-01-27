@@ -46,6 +46,7 @@ const getTrainerDashboardAnalytics = async (
   return sendAxiosRequest<void, TrainerDashboardAnalyticsDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data as TrainerDashboardAnalytics;
   });
@@ -95,6 +96,7 @@ const generateTrainerPopularityAnalytics = async (
   >({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: body,
   }).then((response) => {
     return response.data as TrainerPopularityAnalytics;
@@ -165,6 +167,7 @@ const generateTrainerEngagementAnalytics = async (
   >({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: body,
   }).then((response) => {
     return {
@@ -194,6 +197,7 @@ const getAnalyticsProgramParticipants = async (programId: number) => {
   return sendAxiosRequest<void, ProgramParticipantDTO[]>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     // Perform neccessary mappings etc...
     return response.data as AnalyticsProgramParticipant[];

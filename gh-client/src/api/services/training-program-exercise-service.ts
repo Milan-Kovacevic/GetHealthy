@@ -17,6 +17,7 @@ const getTrainingProgramExercises = async (programId: number) => {
   return sendAxiosRequest<void, ProgramExerciseDTO[]>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => response.data as ProgramExercise[]);
 };
 
@@ -27,6 +28,7 @@ const sendExercises = async (data: AddTrainingProgramExerciseDTO[]) => {
   return sendAxiosRequest<AddTrainingProgramExerciseDTO[], void>({
     method: "POST",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data as void;
   });

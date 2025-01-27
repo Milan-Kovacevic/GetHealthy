@@ -10,6 +10,7 @@ const getAllCategories = async () => {
   return sendAxiosRequest<void, CategoryDTO[]>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     // Perform neccessary mappings etc...
     return response.data as Category[];

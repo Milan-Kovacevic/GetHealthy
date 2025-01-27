@@ -20,6 +20,7 @@ const getAllExcercises = async () => {
   return sendAxiosRequest<void, ExerciseDTO[]>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data as Exercise[];
   });
@@ -36,6 +37,7 @@ const getPageableExerciseListing = async (
   return sendAxiosRequest<void, PageableExerciseListingDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data as PageableExerciseListing;
   });
@@ -47,6 +49,7 @@ const getAllExerciseMetrics = async () => {
   return sendAxiosRequest<void, ExerciseMetricDTO[]>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data as ExerciseMetric[];
   });
@@ -63,6 +66,7 @@ const getPageableExcercises = async (
   return sendAxiosRequest<void, PageableExercisesDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data as PageableExercises;
   });

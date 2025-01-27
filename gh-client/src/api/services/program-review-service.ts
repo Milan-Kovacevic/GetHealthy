@@ -30,6 +30,7 @@ const getPageableProgramComments = async (
   return sendAxiosRequest<void, PageableProgramCommentsDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => response.data as PageableProgramComments);
 };
 
@@ -46,6 +47,7 @@ const sendTrainingProgramComment = async (
   return sendAxiosRequest<SendProgramCommentDTO, ProgramCommentDTO>({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: { content: comment.content, authorId: userId },
   }).then((response) => response.data as ProgramComment);
 };
@@ -59,6 +61,7 @@ const getTrainingProgramRating = async (userId: number, programId: number) => {
   return sendAxiosRequest<void, ProgramRatingDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => response.data as ProgramRating);
 };
 
@@ -75,6 +78,7 @@ const sendTrainingProgramRating = async (
   return sendAxiosRequest<SendProgramRatingDTO, ProgramRatingDTO>({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: { rate: rating.rate, traineeId: userId },
   }).then((response) => response.data as ProgramRating);
 };

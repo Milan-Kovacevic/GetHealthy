@@ -33,6 +33,7 @@ const getSingleTrainingProgram = async (programId: number) => {
   return sendAxiosRequest<void, SingleTrainingProgramDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return {
       ...response.data,
@@ -51,6 +52,7 @@ const getSingleTrainingProgramInfo = async (programId: number) => {
   return sendAxiosRequest<void, SingleTrainingProgramInfoDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return {
       ...response.data,
@@ -69,6 +71,7 @@ const getSingleProgramTrainer = async (programId: number) => {
   return sendAxiosRequest<void, SingleProgramTrainerDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => response.data as SingleProgramTrainer);
 };
 
@@ -79,6 +82,7 @@ const getSingleTrainingProgramDetails = (id: number) => {
   return sendAxiosRequest<void, SingleProgramDetailsDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     // Perform neccessary mappings etc...
     return response.data as SingleProgramDetails;
@@ -100,6 +104,7 @@ const getPageableTrainingProgramParticipants = async (
   return sendAxiosRequest<void, PageableProgramParticipantsDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     // Perform neccessary mappings etc...
     return response.data as PageableProgramParticipants;
@@ -120,6 +125,7 @@ const removeParticipantFromTrainingProgram = async (
   return sendAxiosRequest<void, void>({
     method: "DELETE",
     url: url,
+    requireAuth: true,
   });
 };
 
@@ -136,6 +142,7 @@ const moveParticipantToAnotherTrainingProgram = async (
   return sendAxiosRequest<MoveProgramParticipantDTO, void>({
     method: "PUT",
     url: url,
+    requireAuth: true,
     data: model as MoveProgramParticipantDTO,
   });
 };
@@ -154,6 +161,7 @@ const leaveTrainingProgram = async (
   return sendAxiosRequest<void, void>({
     method: "POST",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data;
   });

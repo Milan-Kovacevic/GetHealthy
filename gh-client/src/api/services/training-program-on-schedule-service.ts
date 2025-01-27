@@ -60,6 +60,7 @@ const fetchTrainingProgamsOnSchedule = async (): Promise<
   return sendAxiosRequest<void, TrainingProgramOnScheduleDTO[]>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data.map((item) => {
       return {
@@ -81,6 +82,7 @@ const addTrainingProgramToSchedule = async (
   >({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: {
       ...data,
       startTime: format(data.startTime, "HH:mm:ss"),
@@ -106,6 +108,7 @@ const editTrainingProgramOnSchedule = async (
   >({
     method: "PUT",
     url: url,
+    requireAuth: true,
     data: {
       ...data,
       startTime: format(data.startTime, "HH:mm:ss"),
@@ -125,6 +128,7 @@ const deleteTrainingProgramFromSchedule = async (id: number) => {
   return sendAxiosRequest<void, void>({
     method: "DELETE",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data;
   });

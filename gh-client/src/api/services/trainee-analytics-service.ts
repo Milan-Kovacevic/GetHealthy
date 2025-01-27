@@ -47,6 +47,7 @@ const generateTraineeProgressAnalytics = async (
   >({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: body,
   }).then((response) => {
     return response.data as TraineeProgressAnalytics;
@@ -87,6 +88,7 @@ const getTraineeDashboardAnalytics = async (
   return sendAxiosRequest<void, TraineeDashboardAnalyticsDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data as TraineeDashboardAnalytics;
   });

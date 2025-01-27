@@ -15,6 +15,7 @@ const downloadTrainerCertificate = async (certificateName: string) => {
     const response = await sendAxiosRequest<void, Blob>({
       url: url,
       method: "GET",
+      requireAuth: true,
       headers: {
         "Content-Type": "application/octet-stream",
       },

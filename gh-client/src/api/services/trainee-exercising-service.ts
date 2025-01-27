@@ -41,6 +41,7 @@ const getWorkoutSummary = async (
   return sendAxiosRequest<GenerateWorkoutSummaryDTO, WorkoutSummaryDTO>({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: body as GenerateWorkoutSummary,
   }).then((response) => {
     return response.data as WorkoutSummary;
@@ -65,6 +66,7 @@ const startProgramWorkout = async (
   return sendAxiosRequest<StartWorkoutRequestDTO, StartWorkoutResponseDTO>({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: body as StartWorkoutRequestDTO,
   }).then((response) => {
     return {
@@ -95,6 +97,7 @@ const skipWorkoutExercise = async (
   >({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: body as ExerciseFeedbackRequestDTO,
   }).then((response) => {
     return response.data as ExerciseFeedbackResponse;
@@ -121,6 +124,7 @@ const beginWorkoutExercise = async (
   >({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: body as ExerciseFeedbackRequestDTO,
   }).then((response) => {
     return response.data as ExerciseFeedbackResponse;
@@ -148,6 +152,7 @@ const skipWorkoutExerciseSet = async (
   >({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: body as SkipExerciseSetFeedbackRequestDTO,
   }).then((response) => {
     return response.data as ExerciseSetFeedbackResponse;
@@ -172,6 +177,7 @@ const giveExerciseSetFeedback = async (
   >({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: data as SendExerciseSetFeedbackRequestDTO,
   }).then((response) => {
     return response.data as ExerciseSetFeedbackResponse;

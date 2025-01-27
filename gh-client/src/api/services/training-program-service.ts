@@ -73,6 +73,7 @@ const getPageableTrainingProgramsForUser = async (
   return sendAxiosRequest<void, PageableTrainingProgramsDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return {
       ...response.data,
@@ -91,6 +92,7 @@ const createTrainingProgram = async (formData: FormData) => {
   return sendAxiosRequest<FormData, void>({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: formData,
   }).then((response) => {
     return response.data;
@@ -106,6 +108,7 @@ const updateTrainingProgramGeneralInfo = async (
   return sendAxiosRequest<FormData, any>({
     method: "PUT",
     url: url,
+    requireAuth: true,
     data: formData,
   }).then((response) => {
     return response.data;
@@ -124,6 +127,7 @@ const updateTrainingProgramExercisePlan = async (
   return sendAxiosRequest<any, any>({
     method: "PUT",
     url: url,
+    requireAuth: true,
     data: data,
   }).then((response) => {
     return response.data;
@@ -139,6 +143,7 @@ const removeTrainingProgram = async (programId: number) => {
   return sendAxiosRequest<any, any>({
     method: "DELETE",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return response.data;
   });
@@ -152,6 +157,7 @@ const getFeaturedTrainingPrograms = async () => {
   return sendAxiosRequest<void, FeaturedTrainingProgramDTO[]>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     // Perform neccessary mappings etc...
     return response.data.map((item) => {

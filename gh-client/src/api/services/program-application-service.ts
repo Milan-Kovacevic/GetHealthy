@@ -34,6 +34,7 @@ const getPageableTrainingProgramApplications = async (
   return sendAxiosRequest<void, PageableProgramApplicationsDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return {
       ...response.data,
@@ -68,6 +69,7 @@ const getProgramApplicationDetails = async (
   return sendAxiosRequest<void, ProgramApplicationDetailsDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     return {
       ...response.data,
@@ -89,6 +91,7 @@ const sendTrainingProgramApplication = async (
   return sendAxiosRequest<CreateTrainingProgramApplicationDTO, void>({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: request as CreateTrainingProgramApplicationDTO,
   }).then((response) => {
     return response.data;
@@ -111,6 +114,7 @@ const processTrainingProgramApplication = async (
   return sendAxiosRequest<ProcessTrainingProgramApplicationDTO, void>({
     method: "POST",
     url: url,
+    requireAuth: true,
     data: body,
   }).then((response) => {
     return response.data;

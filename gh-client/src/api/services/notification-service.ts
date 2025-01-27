@@ -68,6 +68,7 @@ const getPageableUserNotifications = async (
   return sendAxiosRequest<void, PageableNotificationsDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => {
     var value: PageableNotifications = {
       ...response.data,
@@ -93,6 +94,7 @@ const markAllUserNotificationsAsRead = (userId: number) => {
   return sendAxiosRequest<void, void>({
     method: "POST",
     url: url,
+    requireAuth: true,
   });
 };
 
@@ -103,6 +105,7 @@ const markUserNotificationAsRead = (userId: number, notificationId: number) => {
   return sendAxiosRequest<void, void>({
     method: "POST",
     url: url,
+    requireAuth: true,
   });
 };
 
@@ -113,6 +116,7 @@ const deleteUserNotification = (userId: number, notificationId: number) => {
   return sendAxiosRequest<void, void>({
     method: "DELETE",
     url: url,
+    requireAuth: true,
   });
 };
 
@@ -125,6 +129,7 @@ const getNotificationsSummary = async (
   return sendAxiosRequest<void, NotificationsSummaryDTO>({
     method: "GET",
     url: url,
+    requireAuth: true,
   }).then((response) => response.data as NotificationsSummary);
 };
 
