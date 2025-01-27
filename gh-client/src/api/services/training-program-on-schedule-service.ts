@@ -13,19 +13,19 @@ import { format } from "date-fns";
 const translateWeekDayToNumber = (weekDay: string) => {
   switch (weekDay) {
     case "MONDAY":
-      return 0;
-    case "TUESDAY":
       return 1;
-    case "WEDNESDAY":
+    case "TUESDAY":
       return 2;
-    case "THURSDAY":
+    case "WEDNESDAY":
       return 3;
-    case "FRIDAY":
+    case "THURSDAY":
       return 4;
-    case "SATURDAY":
+    case "FRIDAY":
       return 5;
-    case "SUNDAY":
+    case "SATURDAY":
       return 6;
+    case "SUNDAY":
+      return 7;
     default:
       return -1;
   }
@@ -33,19 +33,19 @@ const translateWeekDayToNumber = (weekDay: string) => {
 
 const translateNumberToWeekDay = (weekDay: number) => {
   switch (weekDay) {
-    case 0:
-      return "MONDAY";
     case 1:
-      return "TUESDAY";
+      return "MONDAY";
     case 2:
-      return "WEDNESDAY";
+      return "TUESDAY";
     case 3:
-      return "THURSDAY";
+      return "WEDNESDAY";
     case 4:
-      return "FRIDAY";
+      return "THURSDAY";
     case 5:
-      return "SATURDAY";
+      return "FRIDAY";
     case 6:
+      return "SATURDAY";
+    case 7:
       return "SUNDAY";
     default:
       return -1;

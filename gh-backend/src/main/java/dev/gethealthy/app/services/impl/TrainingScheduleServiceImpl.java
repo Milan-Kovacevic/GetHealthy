@@ -1,16 +1,26 @@
 package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.base.CrudJpaService;
+import dev.gethealthy.app.exceptions.NotFoundException;
+import dev.gethealthy.app.models.entities.TraineeExercising;
+import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.entities.TrainingProgramOnSchedule;
+import dev.gethealthy.app.models.enums.NotificationType;
 import dev.gethealthy.app.models.enums.ScheduleItemState;
 import dev.gethealthy.app.models.requests.TrainingScheduleRequest;
 import dev.gethealthy.app.models.responses.TrainingScheduleResponse;
 import dev.gethealthy.app.repositories.*;
+import dev.gethealthy.app.services.NotificationService;
 import dev.gethealthy.app.services.TraineeExercisingService;
 import dev.gethealthy.app.services.TrainingScheduleService;
+import dev.gethealthy.app.util.Utility;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
@@ -18,75 +28,113 @@ import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
-public class TrainingScheduleServiceImpl extends CrudJpaService<TrainingProgramOnSchedule, Integer> implements TrainingScheduleService {
-
+@Transactional()
+@RequiredArgsConstructor
+public class TrainingScheduleServiceImpl implements TrainingScheduleService {
     private final TraineeExercisingRepository traineeExercisingRepository;
     private final TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository;
     private final TrainingProgramRepository trainingProgramRepository;
     private final TrainingScheduleRepository trainingScheduleRepository;
-
-    public TrainingScheduleServiceImpl(TrainingScheduleRepository repository,
-                                       ModelMapper modelMapper,
-                                       TraineeExercisingRepository traineeExercisingRepository,
-                                       TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository,
-                                       TrainingProgramRepository trainingProgramRepository,
-                                       TrainingScheduleRepository trainingScheduleRepository,
-                                        TrainingProgramExerciseRepository trainingProgramExerciseRepository) {
-        super(repository, modelMapper, TrainingProgramOnSchedule.class);
-        this.traineeOnTrainingProgramRepository = traineeOnTrainingProgramRepository;
-        this.trainingProgramRepository = trainingProgramRepository;
-        this.trainingScheduleRepository = trainingScheduleRepository;
-        this.traineeExercisingRepository = traineeExercisingRepository;
-    }
+    private final ModelMapper modelMapper;
+    private final NotificationService notificationService;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public List<TrainingScheduleResponse> getScheduleForTrainer(Integer userId) {
-        var trainerPrograms = trainingProgramRepository.findAllByTrainer_Id(userId);
-        var trainerProgramSchedules = trainingScheduleRepository.findAllByProgramIdIn(trainerPrograms.stream().map(tp->tp.getId()).toList());
-        return trainerProgramSchedules.stream().map(tps -> modelMapper.map(tps, TrainingScheduleResponse.class)).toList();
+        var trainerProgramIds = trainingProgramRepository
+                .findAllByTrainer_Id(userId)
+                .stream()
+                .map(TrainingProgram::getId)
+                .toList();
+        var trainerProgramSchedules = trainingScheduleRepository.findAllByProgramIdIn(trainerProgramIds);
+        return trainerProgramSchedules
+                .stream()
+                .map(e -> modelMapper.map(e, TrainingScheduleResponse.class))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<TrainingScheduleResponse> getScheduleForTrainee(Integer userId) {
-        var traineeOnTrainingPrograms = traineeOnTrainingProgramRepository.findAllByUserId(userId);
-        var trainingProgramSchedules = trainingScheduleRepository.findAllByProgramIdIn(traineeOnTrainingPrograms.stream().map(totp-> totp.getProgram().getId()).toList());
-        var trainingProgramSchedulesResponses =  trainingProgramSchedules.stream().map(tps -> modelMapper.map(tps, TrainingScheduleResponse.class)).toList();
-        ZoneId zoneId = ZoneId.systemDefault();
-        var lastMonday = getFirstDayOfWeek(Instant.now(), Locale.FRANCE);
-        trainingProgramSchedulesResponses.forEach(tpsr -> {
-            var startDay = lastMonday.plusDays(tpsr.getDayOfWeek().getValue() - 1);
-            LocalDateTime localDateTime = LocalDateTime.of(startDay, tpsr.getStartTime());
-            var startTime = localDateTime.atZone(zoneId).toInstant();
+        var traineeJoinedPrograms = traineeOnTrainingProgramRepository
+                .findAllByUserId(userId)
+                .stream()
+                .map(e -> e.getProgram().getId())
+                .toList();
 
-            var traineeExercisingResult = traineeExercisingRepository.findByProgramIdAndUserIdAndDateTakenAfterOrderByDateTakenAsc(tpsr.getProgram().getId(), userId, startTime);
+        var traineeSchedulePrograms = trainingScheduleRepository.findAllByProgramIdIn(traineeJoinedPrograms);
+        var latestMonday = Utility.getLatestMondayLocalDate();
+        return traineeSchedulePrograms
+                .stream()
+                .map(e -> {
+                    var result = modelMapper.map(e, TrainingScheduleResponse.class);
+                    var date = latestMonday.plusDays(e.getDayOfWeek().getValue() - 1);
+                    var time = e.getStartTime();
+                    var startTime = Utility.convertLocalDateAndTimeToInstant(date, time);
 
-            if (traineeExercisingResult.isEmpty()) {
-                tpsr.setScheduleItemState(ScheduleItemState.NOT_STARTED);
-            } else {
-                var traineeExercising = traineeExercisingResult.getFirst();
-                var program = trainingProgramRepository.findById(tpsr.getProgram().getId()).orElseThrow();
-                //var exerciseSetCount = program.getTrainingProgramExercises().stream().mapToInt(tpe -> tpe.getExerciseSets().size()).sum();
-                //var exerciseSetFeedbackCount = traineeExercising.getExercisesFeedback().stream().mapToInt(ef -> ef.getExerciseSetsFeedback().size()).sum();
-                var exerciseCount = program.getTrainingProgramExercises().size();
-                var exerciseFeedbackCount = traineeExercising.getExercisesFeedback().size();
-                if (exerciseCount == exerciseFeedbackCount) {
-                    tpsr.setScheduleItemState(ScheduleItemState.FINISHED);
-                } else {
-                    tpsr.setScheduleItemState(ScheduleItemState.IN_PROGRESS);
-                }
-            }
-        });
+                    var traineeExercisingResult = traineeExercisingRepository
+                            .findByProgramIdAndUserIdAndDateTakenAfterOrderByDateTakenAsc(e.getProgram().getId(), userId, startTime);
 
-        return trainingProgramSchedulesResponses;
+                    var state = getScheduleProgramState(traineeExercisingResult);
+                    result.setScheduleItemState(state);
+                    return result;
+                })
+                .collect(Collectors.toList());
     }
 
-    public static LocalDate getFirstDayOfWeek(Instant instant, Locale locale) {
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        DayOfWeek firstDayOfWeek = WeekFields.of(locale).getFirstDayOfWeek();
-        return zonedDateTime.toLocalDate()
-                .with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
+    private ScheduleItemState getScheduleProgramState(List<TraineeExercising> traineeWorkouts) {
+        if (traineeWorkouts.isEmpty())
+            return ScheduleItemState.NOT_STARTED;
+
+        var traineeExercising = traineeWorkouts.getFirst();
+        var exerciseCount = traineeExercising.getProgram().getTrainingProgramExercises().size();
+        var exerciseFeedbackCount = traineeExercising.getExercisesFeedback().size();
+        if (exerciseCount == exerciseFeedbackCount)
+            return ScheduleItemState.FINISHED;
+        else
+            return ScheduleItemState.IN_PROGRESS;
+
+    }
+
+    @Override
+    public TrainingScheduleResponse addProgramOnSchedule(TrainingScheduleRequest request) {
+        var entity = modelMapper.map(request, TrainingProgramOnSchedule.class);
+        entity.setId(null);
+        entity = trainingScheduleRepository.saveAndFlush(entity);
+        entityManager.refresh(entity);
+
+        var trainingProgram = entity.getProgram();
+        trainingProgram.getTraineeOnTrainingProgram().forEach(trainee -> notificationService
+                .createNotification(trainee.getUser(), trainingProgram.getTrainer(), trainingProgram.getName(), NotificationType.PROGRAM_ADDED_ON_SCHEDULE));
+
+        return modelMapper.map(entity, TrainingScheduleResponse.class);
+    }
+
+    @Override
+    public TrainingScheduleResponse updateTrainingScheduleProgram(Integer id, TrainingScheduleRequest request) {
+        if (!trainingScheduleRepository.existsById(id)) {
+            throw new NotFoundException();
+        }
+        var entity = modelMapper.map(request, TrainingProgramOnSchedule.class);
+        entity.setId(id);
+        entity = trainingScheduleRepository.saveAndFlush(entity);
+        entityManager.refresh(entity);
+        return modelMapper.map(entity, TrainingScheduleResponse.class);
+    }
+
+    @Override
+    public void removeProgramFromSchedule(Integer id) {
+        var scheduleProgram = trainingScheduleRepository
+                .findById(id)
+                .orElseThrow(NotFoundException::new);
+
+        var trainingProgram = scheduleProgram.getProgram();
+        trainingProgram.getTraineeOnTrainingProgram().forEach(trainee -> notificationService
+                .createNotification(trainee.getUser(), trainingProgram.getTrainer(), trainingProgram.getName(), NotificationType.PROGRAM_REMOVED_FROM_SCHEDULE));
+
+        trainingScheduleRepository.deleteById(id);
     }
 }

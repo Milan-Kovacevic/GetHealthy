@@ -6,7 +6,10 @@ export type TrainingProgramOnScheduleDTO = {
   dayOfWeek: string;
   startTime: string; // HH:mm
   program: ScheduleTrainingProgramDTO;
+  scheduleItemState?: ScheduleItemState;
 };
+
+export type ScheduleItemState = "NOT_STARTED" | "IN_PROGRESS" | "FINISHED";
 
 type ScheduleTrainingProgramDTO = {
   id: number;

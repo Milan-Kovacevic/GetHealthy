@@ -16,10 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useSchedule } from "@/pages/training-schedule/hooks/use-schedule";
 import TrainingWorkoutDialog from "@/pages/training-workout/TrainingWorkoutDialog";
-import {
-  addMinutesToTime,
-  ScheduleTrainingStatus,
-} from "@/utils/date-time-utils";
+import { addMinutesToTime } from "@/utils/date-time-utils";
 import {
   CheckIcon,
   ExternalLinkIcon,
@@ -27,14 +24,21 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import CreateEditProgramOnScheduleModal from "./CreateEditProgramOnScheduleModal";
-import { cn } from "@/lib/utils";
+import { capitalize, cn } from "@/lib/utils";
 import { SimpleAlertDialog } from "@/pages/shared/SimpleAlertDialog";
 import AuthGuard from "@/pages/shared/AuthGuard";
 import { TRAINEE_ONLY_ROLE, TRAINER_ONLY_ROLE } from "@/utils/constants";
+import { isWithinInterval } from "date-fns";
+
+export type ScheduleTrainingStatus =
+  | "FINISHED"
+  | "NOT_STARTED"
+  | "UPCOMING"
+  | "IN_PROGRESS"
+  | "LIVE";
 
 interface TrainingProgramCardProps {
   programOnSchedule: TrainingProgramOnSchedule;
-  programStatus: ScheduleTrainingStatus;
   onViewDetails: (programId: number) => void;
   isTodaysDay: boolean;
 }
@@ -42,100 +46,129 @@ interface TrainingProgramCardProps {
 export default function TrainingProgramCard({
   programOnSchedule,
   onViewDetails,
-  programStatus,
   isTodaysDay,
 }: TrainingProgramCardProps) {
+  const getProgramStatus = (
+    programOnSchedule: TrainingProgramOnSchedule
+  ): ScheduleTrainingStatus => {
+    const now = new Date();
+    const today = now.getDay() === 0 ? 7 : now.getDay();
+
+    const programDay = programOnSchedule.dayOfWeek;
+    const dayDifference = programDay - today;
+
+    if (dayDifference > 0) return "UPCOMING";
+
+    const [startHour, startMinute] = programOnSchedule.startTime
+      .split(":")
+      .map(Number);
+
+    const programStart = new Date();
+    programStart.setHours(startHour, startMinute, 0, 0);
+
+    const programEnd = new Date(
+      programStart.getTime() +
+        programOnSchedule.program.trainingDuration * 60000
+    );
+    if (isWithinInterval(now, { start: programStart, end: programEnd }))
+      return "LIVE";
+
+    if (programEnd > now) return "UPCOMING";
+
+    return programOnSchedule.scheduleItemState ?? "UPCOMING";
+  };
+
+  const programStatus = getProgramStatus(programOnSchedule);
+
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Card
-            data-state="closed"
+    <Card
+      data-state="closed"
+      className={cn(
+        "transition-colors p-1 m-2 bg-card/80 hadow-sm select-none",
+        isTodaysDay && "bg-card",
+        programStatus == "NOT_STARTED" &&
+          "border-2 border-red-400/50 dark:border-red-700/50",
+        programStatus == "FINISHED" && "border-2 border-green-600/60",
+        (programStatus == "UPCOMING" ||
+          programStatus == "IN_PROGRESS" ||
+          programStatus == "LIVE") &&
+          "border-2 border-border/60",
+        (programStatus == "IN_PROGRESS" || programStatus == "LIVE") &&
+          "border-red-400 dark:border-red-500",
+        "hover:bg-accent/10 dark:hover:bg-accent/90 duration-300"
+      )}
+    >
+      <CardContent className="p-2 pt-1 pb-0.5 flex flex-col">
+        <div className="flex justify-between items-center gap-0.5 mb-1.5">
+          <h3
             className={cn(
-              "transition-colors p-1 bg-card/80 shadow-md select-none",
-              isTodaysDay && "bg-card",
-              programStatus == "not_completed" &&
-                "border-2 border-red-400 dark:border-red-700",
-              programStatus == "completed" && "border-2 border-green-600/60",
-              (programStatus == "upcoming" || programStatus == "live") &&
-                "border-2 border-border/60",
-              programStatus == "live" &&
-                "border-red-400/50 dark:border-red-700/50",
-              "hover:bg-accent/10 dark:hover:bg-accent/90 duration-300"
+              "font-medium text-sm tracking-tight leading-tight",
+              isTodaysDay && "font-semibold"
             )}
           >
-            <CardContent className="p-2 pt-1 pb-0.5 flex flex-col">
-              <div className="flex justify-between items-center gap-0.5 mb-1.5">
-                <h3
-                  className={cn(
-                    "font-medium text-sm tracking-tight leading-tight",
-                    isTodaysDay && "font-semibold"
-                  )}
-                >
-                  {programOnSchedule.program.name}
-                </h3>
-                <Button
-                  onClick={() => onViewDetails(programOnSchedule.program.id)}
-                  size="sm"
-                  variant="ghost"
-                  className="h-auto py-1 font-normal px-1.5 [&_svg]:h-3.5 [&_svg]:w-3.5"
-                >
-                  <ExternalLinkIcon className="w-3.5 h-3.5" />
-                </Button>
-              </div>
+            {programOnSchedule.program.name}
+          </h3>
+          <Button
+            onClick={() => onViewDetails(programOnSchedule.program.id)}
+            size="sm"
+            variant="ghost"
+            className="h-auto py-1 font-normal px-1.5 [&_svg]:h-3.5 [&_svg]:w-3.5"
+          >
+            <ExternalLinkIcon className="w-3.5 h-3.5" />
+          </Button>
+        </div>
 
-              <p className="text-xs text-muted-foreground mb-1">
-                Trainer: {programOnSchedule.program.trainerFirstName}{" "}
-                {programOnSchedule.program.trainerLastName}
-              </p>
-              <p
-                className={cn(
-                  "text-xs font-medium leading-none text-foreground/80",
-                  isTodaysDay && "font-semibold"
-                )}
-              >
-                {addMinutesToTime(
-                  programOnSchedule.startTime,
-                  programOnSchedule.program.trainingDuration
-                )}
-              </p>
-            </CardContent>
-            <CardContent className="p-2 pb-1 pt-0 flex flex-col">
-              <div className="mt-1 flex justify-between items-center">
-                <AuthGuard allowedRoles={[TRAINEE_ONLY_ROLE]}>
-                  <StatusBadge status={programStatus} />
-                </AuthGuard>
-                <AuthGuard allowedRoles={[TRAINER_ONLY_ROLE]}>
-                  <ManageProgramPopup programOnSchedule={programOnSchedule} />
-                </AuthGuard>
-              </div>
-              {programStatus === "live" && (
-                <TrainingWorkoutDialog programOnSchedule={programOnSchedule} />
-              )}
-            </CardContent>
-          </Card>
-        </TooltipTrigger>
-      </Tooltip>
-    </TooltipProvider>
+        <p className="text-xs text-muted-foreground mb-1">
+          Trainer: {programOnSchedule.program.trainerFirstName}{" "}
+          {programOnSchedule.program.trainerLastName}
+        </p>
+        <p
+          className={cn(
+            "text-xs font-medium leading-none text-foreground/80",
+            isTodaysDay && "font-semibold"
+          )}
+        >
+          {addMinutesToTime(
+            programOnSchedule.startTime,
+            programOnSchedule.program.trainingDuration
+          )}
+        </p>
+      </CardContent>
+      <CardContent className="p-2 pb-1 pt-0 flex flex-col">
+        <div className="mt-1 flex justify-between items-center">
+          <AuthGuard allowedRoles={[TRAINEE_ONLY_ROLE]}>
+            <StatusBadge status={programStatus} />
+          </AuthGuard>
+          <AuthGuard allowedRoles={[TRAINER_ONLY_ROLE]}>
+            <ManageProgramPopup programOnSchedule={programOnSchedule} />
+          </AuthGuard>
+        </div>
+        {programStatus === "LIVE" && (
+          <TrainingWorkoutDialog programOnSchedule={programOnSchedule} />
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
 const StatusBadge = ({ status }: { status: ScheduleTrainingStatus }) => {
   const statusStyles = {
-    completed:
+    FINISHED:
       "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100",
-    not_completed: "bg-red-100 text-red-800",
-    upcoming:
+    NOT_STARTED: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-100",
+    UPCOMING:
       "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100",
-    live: "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100 animate-pulse",
+    IN_PROGRESS:
+      "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100 animate-pulse",
+    LIVE: "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100 animate-pulse",
   };
 
   return (
     <span
       className={`px-2 py-0.5 mt-2 rounded-full text-xs font-semibold flex items-center ${statusStyles[status]}`}
     >
-      {status == "completed" && <CheckIcon className="h-3.5 w-3.5 mr-1" />}
-      {status.charAt(0).toUpperCase() + status.slice(1)}
+      {status == "FINISHED" && <CheckIcon className="h-3.5 w-3.5 mr-1" />}
+      {capitalize(status.replace("_", " "))}
     </span>
   );
 };

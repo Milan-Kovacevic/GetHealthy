@@ -11,7 +11,7 @@ export type TrainingProgramDTO = {
   imageFilePath?: string;
   rating?: number;
   categories: CategoryDTO[];
-  trinerId: number;
+  trainerId: number;
   trainerFirstName: string;
   trainerLastName: string;
   currentlyEnrolled: number;

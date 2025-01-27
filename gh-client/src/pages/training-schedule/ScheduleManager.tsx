@@ -1,5 +1,4 @@
 import { useSchedule } from "@/pages/training-schedule/hooks/use-schedule";
-import { getProgramStatus } from "@/utils/date-time-utils";
 import { addDays, format, startOfWeek } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -74,7 +73,6 @@ const ScheduleManager = () => {
                 <ProgramScheduleDay
                   forDay={day}
                   dayOfWeek={index + 1}
-                  getProgramStatus={getProgramStatus}
                   programs={programs.filter(
                     (program) =>
                       program.dayOfWeek ==

@@ -23,8 +23,7 @@ public class TrainingScheduleController {
     }
 
     @GetMapping
-    public List<TrainingScheduleResponse> getSchedules()
-    {
+    public List<TrainingScheduleResponse> getSchedules() {
         JwtUser jwtUser = getJwtUser().orElseThrow(ForbiddenException::new);
         var role = jwtUser.getRole();
 
@@ -35,12 +34,17 @@ public class TrainingScheduleController {
     }
 
     @PostMapping
-    public void createSchedule(TrainingScheduleRequest request) {
-        scheduleService.insert(request, TrainingProgramOnSchedule.class);
+    public TrainingScheduleResponse addProgramToSchedule(@RequestBody TrainingScheduleRequest request) {
+        return scheduleService.addProgramOnSchedule(request);
     }
 
-    @DeleteMapping
-    public void deleteSchedule(Integer id) {
-        scheduleService.delete(id);
+    @PutMapping("{id}")
+    public TrainingScheduleResponse addProgramToSchedule(@RequestBody TrainingScheduleRequest request, @PathVariable Integer id) {
+        return scheduleService.updateTrainingScheduleProgram(id, request);
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteSchedule(@PathVariable Integer id) {
+        scheduleService.removeProgramFromSchedule(id);
     }
 }

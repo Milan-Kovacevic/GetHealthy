@@ -2,22 +2,15 @@ package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.exceptions.NotFoundException;
-import dev.gethealthy.app.models.entities.ExerciseFeedback;
-import dev.gethealthy.app.models.entities.ExerciseSetFeedback;
 import dev.gethealthy.app.models.entities.TraineeExercising;
-import dev.gethealthy.app.models.requests.StartWorkoutRequest;
 import dev.gethealthy.app.models.requests.WorkoutSummaryRequest;
 import dev.gethealthy.app.models.responses.ExerciseMetricResponse;
-import dev.gethealthy.app.models.responses.StartWorkoutResponse;
 import dev.gethealthy.app.models.responses.WorkoutSummaryResponse;
 import dev.gethealthy.app.repositories.ExerciseFeedbackRepository;
-import dev.gethealthy.app.repositories.ExerciseSetFeedbackRepository;
 import dev.gethealthy.app.repositories.TraineeExercisingRepository;
 import dev.gethealthy.app.repositories.TrainingScheduleRepository;
-import dev.gethealthy.app.services.ExerciseFeedbackService;
 import dev.gethealthy.app.services.TraineeExercisingService;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

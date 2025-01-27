@@ -57,7 +57,6 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    @MessageMapping("/broadcast")
     public NotificationResponse createNotification(User user, User sender, String metadata, NotificationType notificationType) {
         Notification notification = new Notification();
 

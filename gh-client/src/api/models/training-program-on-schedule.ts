@@ -1,3 +1,4 @@
+import { ScheduleItemState } from "../contracts/training-program-on-schedule-contract";
 import { ProgramDifficulty } from "../enums/program-difficulty";
 import { Category } from "./category";
 
@@ -6,6 +7,7 @@ export type TrainingProgramOnSchedule = {
   dayOfWeek: number;
   startTime: string;
   program: ScheduleTrainingProgram;
+  scheduleItemState?: ScheduleItemState;
 };
 
 export type ScheduleTrainingProgram = {

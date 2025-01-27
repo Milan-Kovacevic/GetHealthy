@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
-import { SquareArrowOutUpRight, XIcon } from "lucide-react";
+import { DumbbellIcon, SquareArrowOutUpRight, XIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 type TrainingWorkoutDialogProps = {
@@ -34,8 +34,13 @@ export default function TrainingWorkoutDialog({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="w-full text-xs" size="sm" variant="secondary">
-          Begin workout
+        <Button
+          className="w-full text-xs mt-2 h-auto py-2 [&_svg]:h-4"
+          size="sm"
+          variant="secondary"
+        >
+          <DumbbellIcon className="-mr-1" />
+          Workout
         </Button>
       </AlertDialogTrigger>
 
