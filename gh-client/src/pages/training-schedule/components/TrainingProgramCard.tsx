@@ -143,9 +143,11 @@ export default function TrainingProgramCard({
             <ManageProgramPopup programOnSchedule={programOnSchedule} />
           </AuthGuard>
         </div>
-        {programStatus === "LIVE" && (
-          <TrainingWorkoutDialog programOnSchedule={programOnSchedule} />
-        )}
+        <AuthGuard allowedRoles={[TRAINEE_ONLY_ROLE]}>
+          {programStatus === "LIVE" && (
+            <TrainingWorkoutDialog programOnSchedule={programOnSchedule} />
+          )}
+        </AuthGuard>
       </CardContent>
     </Card>
   );
