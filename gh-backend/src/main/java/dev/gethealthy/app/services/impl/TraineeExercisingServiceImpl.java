@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,27 +41,53 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
             throw new NotFoundException();
         }
 
+        response.setId(trainingScheduleProgram.get().getId());
+
         var program = trainingScheduleProgram.get().getProgram();
+        response.setProgramExercises(program.getTrainingProgramExercises().stream().map(
+                tpe -> new WorkoutSummaryResponse.WorkoutExercise(
+                -1,
+                tpe.getExerciseSets().stream().map(esf-> modelMapper.map(esf, WorkoutSummaryResponse.WorkoutSet.class)).toList(),
+                null,
+                tpe.getExercise().getId(),
+                tpe.getExercise().getName(),
+                tpe.getExercise().getDescription(),
+                tpe.getExercise().getVideoLink(),
+                modelMapper.map(tpe.getExercise().getFirstExerciseMetric(), ExerciseMetricResponse.class),
+                tpe.getExercise().getSecondExerciseMetric() != null?  modelMapper.map(tpe.getExercise().getSecondExerciseMetric(), ExerciseMetricResponse.class) : null
+        )).collect(Collectors.toList()));
+
         var traineeExercising = traineeExercisingRepository.findByProgramIdAndUserIdOrderByDateTakenDesc(program.getId(), request.getTraineeId());
 
-        if (traineeExercising.isEmpty())
-            throw new NotFoundException();
+        if (traineeExercising.isEmpty()) {
+            return response;
+        }
 
         response.setDateTaken(traineeExercising.get(0).getDateTaken());
         response.setTraineeExercisingId(traineeExercising.get(0).getId());
 
-        var exerciseFeedback = traineeExercising.get(0).getExercisesFeedback();
-        response.setProgramExercises(exerciseFeedback.stream().map(ef -> new WorkoutSummaryResponse.WorkoutExercise(
-                ef.getId(),
-                ef.getExerciseSetsFeedback().stream().map(esf-> modelMapper.map(esf, WorkoutSummaryResponse.WorkoutSet.class)).collect(Collectors.toList()),
-                ef.getSkipped(),
-                ef.getExercise().getId(),
-                ef.getExercise().getName(),
-                ef.getExercise().getDescription(),
-                ef.getExercise().getVideoLink(),
-                modelMapper.map(ef.getExercise().getFirstExerciseMetric(), ExerciseMetricResponse.class),
-                modelMapper.map(ef.getExercise().getSecondExerciseMetric(), ExerciseMetricResponse.class)
-        )).collect(Collectors.toList()));
+        var exercisesFeedback = traineeExercising.get(0).getExercisesFeedback();
+        response.getProgramExercises().forEach(
+                e -> {
+                    var exerciseFeedbackResult = exercisesFeedback.stream().filter(ef-> Objects.equals(ef.getExercise().getId(), e.getId())).findFirst();
+                    if (exerciseFeedbackResult.isPresent()) {
+                        var exerciseFeedback = exerciseFeedbackResult.get();
+                        e.setExerciseFeedbackId(exerciseFeedback.getId());
+                        e.getExerciseSetsFeedback().forEach(esf -> {
+                            var exerciseSetFeedbackResult = exerciseFeedback.getExerciseSetsFeedback().stream().filter(sets -> Objects.equals(sets.getId(), esf.getId())).findFirst();
+                            if (exerciseSetFeedbackResult.isPresent()) {
+                                var exerciseSetFeedback = exerciseSetFeedbackResult.get();
+                                esf.setSetFeedbackId(exerciseSetFeedback.getId());
+                                esf.setFirstMetricValueFeedback(exerciseSetFeedback.getFirstMetricValueFeedback());
+                                esf.setSecondMetricValueFeedback(exerciseSetFeedback.getSecondMetricValueFeedback());
+                                esf.setSkipped(exerciseSetFeedback.getSkipped());
+                                esf.setCompleted(exerciseSetFeedback.getCompleted());
+                            }
+                        });
+                        e.setSkipped(exerciseFeedback.getSkipped());
+                    }
+                }
+        );
 
         return response;
     }
