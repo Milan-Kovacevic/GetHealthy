@@ -14,8 +14,14 @@ import { useProgramRequests } from "./hooks/use-program-requests";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { BellIcon } from "lucide-react";
+import { BellIcon, TrashIcon } from "lucide-react";
 import useAuth from "@/hooks/use-auth";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type NotificationsPopoverProps = {
   isTrainer: boolean;
@@ -52,6 +58,7 @@ export default function NotificationsPopover({
     isLoadingNotifications,
     onNotificationPageChange,
     onDeleteNotification,
+    onDeleteAllNotifications,
     onMarkNotificationAsRead,
     onMarkAllAsRead,
     pending: pendingNotifications,
@@ -61,8 +68,9 @@ export default function NotificationsPopover({
     <>
       <div className="flex items-center justify-between mb-2 mx-4 h-8">
         <NotificationTitle
-          showMarkAll={activeTab == "inbox"}
+          showActions={activeTab == "inbox"}
           disabled={unreadCount == 0}
+          onDeleteAll={onDeleteAllNotifications}
           onMarkAll={onMarkAllAsRead}
         />
       </div>
@@ -108,7 +116,8 @@ export default function NotificationsPopover({
       <div className="flex items-center justify-between mb-2 mx-4 h-8">
         <NotificationTitle
           disabled={unreadCount == 0}
-          showMarkAll={true}
+          showActions={true}
+          onDeleteAll={onDeleteAllNotifications}
           onMarkAll={onMarkAllAsRead}
         />
       </div>
@@ -167,26 +176,49 @@ export default function NotificationsPopover({
 
 const NotificationTitle = ({
   onMarkAll,
-  showMarkAll,
+  onDeleteAll,
+  showActions,
   disabled,
 }: {
   onMarkAll?: () => void;
-  showMarkAll: boolean;
+  onDeleteAll?: () => void;
+  showActions: boolean;
   disabled: boolean;
 }) => {
   return (
     <div className="flex items-center justify-between h-8 w-full">
       <h2 className="text-lg font-semibold ml-0.5">Notifications</h2>
-      {showMarkAll && (
-        <Button
-          disabled={disabled}
-          variant="ghost"
-          size="sm"
-          className="text-foreground hover:text-primary"
-          onClick={onMarkAll}
-        >
-          Mark all as read
-        </Button>
+      {showActions && (
+        <div className="flex items-center gap-px">
+          <Button
+            disabled={disabled}
+            variant="ghost"
+            size="sm"
+            className="text-foreground hover:text-primary h-auto py-1.5 px-2"
+            onClick={onMarkAll}
+          >
+            Mark all as read
+          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={onDeleteAll}
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto py-1.5 px-2 hover:text-destructive"
+                >
+                  <TrashIcon className="" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="max-w-40 text-center">
+                  Clear your inbox (delete all notifications)
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       )}
     </div>
   );

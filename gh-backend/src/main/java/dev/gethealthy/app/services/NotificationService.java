@@ -1,6 +1,5 @@
 package dev.gethealthy.app.services;
 
-import dev.gethealthy.app.base.CrudService;
 import dev.gethealthy.app.models.entities.User;
 import dev.gethealthy.app.models.enums.NotificationType;
 import dev.gethealthy.app.models.responses.NotificationResponse;
@@ -18,7 +17,7 @@ public interface NotificationService  {
 
     void deleteAllUserNotifications(Integer userId);
 
-    NotificationResponse createNotification(User user, User sender, String metadata, NotificationType notificationType);
+    void createNotification(User user, User sender, String metadata, NotificationType notificationType);
 
     void markUserNotificationAsRead(Integer userId, Integer notificationId);
 

@@ -18,12 +18,12 @@ const generateNotificationContent = (
   switch (notification.notificationType) {
     case "PROGRAM_APPLICATION_ACCEPTED":
       return {
-        title: `Program request APPROVED`,
+        title: `Program request approved`,
         description: `Your request for training program '${notification.metadata}' has been approved by ${notification.senderFirstName} ${notification.senderLastName}`,
       };
     case "PROGRAM_APPLICATION_REJECTED":
       return {
-        title: `Program request REJECTED`,
+        title: `Program request rejected`,
         description: `Your request for training program '${notification.metadata}' has been rejected by ${notification.senderFirstName} ${notification.senderLastName}`,
       };
     case "NEW_COMMENT_ON_PROGRAM":
@@ -33,13 +33,27 @@ const generateNotificationContent = (
       };
     case "PROGRAM_REMOVED_FROM_SCHEDULE":
       return {
-        title: `REMOVED program from schedule`,
+        title: `Removed program from schedule`,
         description: `${notification.senderFirstName} ${notification.senderLastName} removed '${notification.metadata}' from your schedule`,
       };
     case "PROGRAM_ADDED_ON_SCHEDULE":
       return {
-        title: `ADDED program to schedule`,
+        title: `Added program to schedule`,
         description: `${notification.senderFirstName} ${notification.senderLastName} added program '${notification.metadata}' on your schedule`,
+      };
+    case "TRAINEE_REMOVED_FROM_PROGRAM":
+      return {
+        title: `Trainer removed your from program`,
+        description: `${notification.senderFirstName} ${notification.senderLastName} removed you from program '${notification.metadata}'`,
+      };
+    case "TRAINEE_MOVED_TO_ANOTHER_PROGRAM":
+      return {
+        title: `Trainer moved you to another program`,
+        description: `${notification.senderFirstName} ${
+          notification.senderLastName
+        } moved you from program '${notification.metadata.split("$")[0]}' to '${
+          notification.metadata.split("$")[1]
+        }'`,
       };
   }
 };
@@ -120,6 +134,16 @@ const deleteUserNotification = (userId: number, notificationId: number) => {
   });
 };
 
+const deleteAllUserNotification = (userId: number) => {
+  var url = ApiEndpoints.UserNotifications.replace("{userId}", `${userId}`);
+
+  return sendAxiosRequest<void, void>({
+    method: "DELETE",
+    url: url,
+    requireAuth: true,
+  });
+};
+
 const getNotificationsSummary = async (
   userId: number
 ): Promise<NotificationsSummary> => {
@@ -138,6 +162,7 @@ export {
   markAllUserNotificationsAsRead,
   markUserNotificationAsRead,
   deleteUserNotification,
+  deleteAllUserNotification,
   getNotificationsSummary,
   parseNotificationMessage,
 };

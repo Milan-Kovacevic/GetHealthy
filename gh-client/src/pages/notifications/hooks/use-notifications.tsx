@@ -6,6 +6,7 @@ import {
   markAllUserNotificationsAsRead,
   markUserNotificationAsRead,
   parseNotificationMessage,
+  deleteAllUserNotification,
 } from "@/api/services/notification-service";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { useEffect, useState } from "react";
@@ -85,6 +86,21 @@ export function useNotifications(userId: number) {
       .finally(() => setPending(false));
   };
 
+  const onDeleteAllNotifications = async () => {
+    setPending(true);
+    deleteAllUserNotification(userId)
+      .then(() => {
+        setNotifications([]);
+        setUnreadCount(0);
+      })
+      .catch(() => {
+        toast.error("Unexpected error", {
+          description: "Unable to clear your inbox",
+        });
+      })
+      .finally(() => setPending(false));
+  };
+
   const onMarkAllAsRead = async () => {
     setPending(true);
     markAllUserNotificationsAsRead(userId)
@@ -120,5 +136,6 @@ export function useNotifications(userId: number) {
     onMarkAllAsRead,
     onMarkNotificationAsRead,
     onDeleteNotification,
+    onDeleteAllNotifications,
   };
 }

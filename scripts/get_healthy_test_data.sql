@@ -15,20 +15,20 @@ VALUES
 -- Test data for get_healthy.USER
 INSERT INTO get_healthy.user (UserId, FirstName, LastName, DateOfBirth, Gender, ProfilePictureFilePath)
 VALUES 
-  (1, 'Admin', 'Borivoje', '1985-05-15', 1, '/images/john_doe.png'),
+  (1, 'Admin', 'Borivoje', '1985-05-15', 1, NULL),
   (2, 'John', 'Doe', '1985-05-15', 1, NULL),
   (3, 'Jane', 'Smith', '1990-10-20', 0, NULL),
   (4, 'Jack', 'Sparrow', '1996-11-07', 0, NULL);
 
 -- Test data for get_healthy.REGISTRATION_REQUEST
-INSERT INTO get_healthy.registration_request (UserId, IssueDate, CertificationFilePath, Description, FirstName, LastName)
-VALUES 
-  (2, '2024-12-10 14:00:00', '/certs/trainer_cert1.pdf', 'Certified fitness trainer with 5 years of experience', 'John', 'Doe');
+-- INSERT INTO get_healthy.registration_request (UserId, IssueDate, CertificationFilePath, Description, FirstName, LastName)
+-- VALUES 
+--   (2, '2024-12-10 14:00:00', NULL, 'Certified fitness trainer with 5 years of experience', 'John', 'Doe');
 
 -- Test data for get_healthy.TRAINER
 INSERT INTO get_healthy.trainer (UserId, Biography, ContactInfo)
 VALUES 
-  (2, 'Experienced fitness trainer specializing in weightlifting and cardio.', 'john.doe@example.com');
+  (2, 'Experienced fitness trainer specializing in weightlifting and cardio.', '+387065111222');
 
 -- Test data for get_healthy.TRAINEE
 INSERT INTO get_healthy.trainee (UserId, Height, Weight, MedicalHistory)
@@ -173,7 +173,7 @@ VALUES
 -- Test data for get_healthy.TRAINING_PROGRAM_APPLICATION
 INSERT INTO get_healthy.training_program_application (UserId, ProgramId, MarkRead, SubmissionDate, Note)
 VALUES 
-  (3, 1, 0, '2024-12-15 16:00:00', 'Excited to start this program.');
+  (3, 3, 0, '2024-12-15 16:00:00', 'Excited to start this program.');
 
 -- Test data for get_healthy.COMMENT
 INSERT INTO get_healthy.comment (CommentId, Content, DatePosted, UserId, ProgramId)
@@ -203,22 +203,22 @@ VALUES
   (2, 2, 90, '30', NULL);
 
 -- Test data for get_healthy.TRAINEE_EXERCISING
-INSERT INTO get_healthy.trainee_exercising (Id, ProgramId, DateTaken, UserId)
-VALUES 
-  (1, 1, '2024-12-20 10:00:00', 3);
+-- INSERT INTO get_healthy.trainee_exercising (Id, ProgramId, DateTaken, UserId)
+-- VALUES 
+--   (1, 1, '2024-12-20 10:00:00', 3);
 
 -- Test data for get_healthy.EXERCISE_FEEDBACK
-INSERT INTO get_healthy.exercise_feedback (Id, Skipped, TraineeExercisingId, ExerciseId, ProgramExerciseId)
-VALUES 
-  (1, 0, 1, 1, 1);
+-- INSERT INTO get_healthy.exercise_feedback (Id, Skipped, TraineeExercisingId, ExerciseId, ProgramExerciseId)
+-- VALUES 
+--   (1, 0, 1, 1, 1);
 
 -- Test data for get_healthy.EXERCISE_SET_FEEDBACK
-INSERT INTO get_healthy.exercise_set_feedback (Id, ExerciseFeedbackId, Skipped, Completed, FirstMetricValueFeedback, SecondMetricValueFeedback)
-VALUES 
-  (1, 1, 0, 1, '10', NULL);
+-- INSERT INTO get_healthy.exercise_set_feedback (Id, ExerciseFeedbackId, Skipped, Completed, FirstMetricValueFeedback, SecondMetricValueFeedback)
+-- VALUES 
+--   (1, 1, 0, 1, '10', NULL);
 
 -- Test data for get_healthy.NOTIFICATION
-INSERT INTO get_healthy.notification (NotificationId, Date, MarkRead, Metadata, NotificationType, SenderId, UserId)
-VALUES
-    (1, NOW() - INTERVAL 1 DAY, FALSE, 'Beginner Full Body', 2, 3, 2),
-	(2, NOW() - INTERVAL 2 DAY, FALSE, 'Beginner Full Body', 3, 2, 3);
+-- INSERT INTO get_healthy.notification (NotificationId, Date, MarkRead, Metadata, NotificationType, SenderId, UserId)
+-- VALUES
+--     (1, NOW() - INTERVAL 1 DAY, FALSE, 'Beginner Full Body', 2, 3, 2),
+-- 	(2, NOW() - INTERVAL 2 DAY, FALSE, 'Beginner Full Body', 3, 2, 3);
