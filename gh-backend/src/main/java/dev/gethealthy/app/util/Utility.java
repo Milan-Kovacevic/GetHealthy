@@ -19,12 +19,20 @@ public final class Utility {
         return new java.util.Date(System.currentTimeMillis());
     }
 
+    public static LocalDate getCurrentLocalDate() {
+        return  LocalDate.now();
+    }
+
     public static java.time.LocalDate getLatestMondayLocalDate() {
         Instant now = Instant.now();
         ZoneId zone = ZoneId.systemDefault();
         LocalDate date = now.atZone(zone).toLocalDate();
         // Find the last Monday relative to the given date
         return date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+    }
+
+    public static LocalDate getDateFromInstant(Instant instant) {
+        return instant.atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     public static Instant convertLocalDateAndTimeToInstant(LocalDate date, LocalTime time){
