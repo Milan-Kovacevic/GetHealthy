@@ -44,7 +44,11 @@ const getWorkoutSummary = async (
     requireAuth: true,
     data: body as GenerateWorkoutSummary,
   }).then((response) => {
-    return response.data as WorkoutSummary;
+    return {
+      ...response.data,
+      workoutId: response.data.traineeExercisingId,
+      dateTaken: response.data.dateTaken,
+    } as WorkoutSummary;
   });
 
   // return Promise.resolve<WorkoutSummary>({
