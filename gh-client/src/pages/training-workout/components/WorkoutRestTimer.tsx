@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
 import FeedbackSurvey from "./FeedbackSurvey";
 import workoutAvatarRest from "@/assets/workout-avatar-rest.gif";
 import { GoToSummaryButton } from "./ProgramWorkoutSummary";
 import { cn } from "@/lib/utils";
 import useProgramWorkout from "../hooks/use-program-workout";
-import { Loader2Icon } from "lucide-react";
 import LoadingActionButton from "./LoadingActionButton";
-import { SendExerciseSetFeedbackRequest } from "@/api/models/trainee-exercising";
 
 type WorkoutRestTimerProps = {};
 

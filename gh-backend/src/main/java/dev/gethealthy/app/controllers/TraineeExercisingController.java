@@ -19,10 +19,9 @@ public class TraineeExercisingController {
     private final TraineeExercisingService traineeExercisingService;
     private final ExerciseSetFeedbackService exerciseSetFeedbackService;
     private final TrainingProgramExerciseService trainingProgramExerciseService;
-    private final TrainingScheduleService trainingScheduleService;
 
     @PostMapping("start")
-    public StartWorkoutResponse start(StartWorkoutRequest request)
+    public StartWorkoutResponse start(@RequestBody StartWorkoutRequest request)
     {
         return traineeExercisingService.start(request);
     }

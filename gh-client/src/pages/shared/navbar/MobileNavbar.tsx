@@ -1,4 +1,4 @@
-import { NavbarMenuItem } from "./Navbar";
+import { NavbarMenuItem, NavbarSubMenuItem } from "./Navbar";
 import { AuthUser } from "@/api/models/authentication";
 import AppBanner from "../AppBanner";
 import { Link } from "react-router-dom";
@@ -20,6 +20,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useState } from "react";
 
 type MobileNavbarProps = {
   navbarMenuItems: NavbarMenuItem[];
@@ -31,11 +32,13 @@ type MobileNavbarProps = {
 
 export default function MobileNavbar(props: MobileNavbarProps) {
   const { navbarMenuItems, isTrainer, authUser, onLogout, pending } = props;
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="block lg:hidden px-4">
       <div className="flex items-center justify-between">
         <AppBanner />
-        <Sheet>
+        <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant={"outline"} size={"icon"}>
               <MenuIcon className="size-4" />
@@ -53,8 +56,9 @@ export default function MobileNavbar(props: MobileNavbarProps) {
                   return (
                     <Link
                       key={"mobile-nav-bar_" + index}
-                      className={cn("font-semibold")}
+                      className={cn("font-medium")}
                       to={item.link}
+                      onClick={() => setOpen(false)}
                     >
                       {item.title}
                     </Link>
@@ -68,12 +72,13 @@ export default function MobileNavbar(props: MobileNavbarProps) {
                       className="w-full flex flex-col gap-4"
                     >
                       <AccordionItem value="products" className="border-b-0">
-                        <AccordionTrigger className="py-0 font-semibold hover:no-underline">
+                        <AccordionTrigger className="py-0 font-medium hover:no-underline">
                           {item.title}
                         </AccordionTrigger>
                         <AccordionContent className="mt-2 space-y-1">
-                          {item.submenu.map((item, idx) => (
+                          {item.submenu.map((item: NavbarSubMenuItem, idx) => (
                             <Link
+                              onClick={() => setOpen(false)}
                               key={"mobile-nav-bar_" + index + "_" + idx}
                               className={cn(
                                 "flex select-none gap-4 rounded-md p-3 leading-none outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
@@ -82,7 +87,7 @@ export default function MobileNavbar(props: MobileNavbarProps) {
                             >
                               {item.icon}
                               <div>
-                                <div className="text-sm font-semibold">
+                                <div className="text-sm font-medium">
                                   {item.title}
                                 </div>
                                 <p className="text-sm leading-snug text-muted-foreground">

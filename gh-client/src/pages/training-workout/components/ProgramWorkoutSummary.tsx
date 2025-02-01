@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { capitalize, cn } from "@/lib/utils";
 import { ScheduleTrainingProgram } from "@/api/models/training-program-on-schedule";
-import { addMinutesToTime } from "@/utils/date-time-utils";
+import { addMinutesToDate, addMinutesToTime } from "@/utils/date-time-utils";
 import {
   Tooltip,
   TooltipContent,
@@ -154,7 +154,7 @@ export default function ProgramWorkoutSummary(
         min (
         <span className="text-xs font-semibold tracking-tight">
           {workout.dateTaken
-            ? addMinutesToTime(
+            ? addMinutesToDate(
                 workout.dateTaken,
                 scheduleProgram.trainingDuration
               )
