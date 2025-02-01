@@ -4,7 +4,6 @@ import dev.gethealthy.app.models.entities.*;
 import dev.gethealthy.app.models.requests.ProgressAnalyticsRequest;
 import dev.gethealthy.app.models.responses.TraineeDashboardAnalyticsResponse;
 import dev.gethealthy.app.models.responses.TraineeProgressAnalyticsResponse;
-import dev.gethealthy.app.models.responses.TrainerPopularityAnalyticsResponse;
 import dev.gethealthy.app.repositories.TraineeExercisingRepository;
 import dev.gethealthy.app.repositories.TraineeOnTrainingProgramRepository;
 import dev.gethealthy.app.repositories.TraineeRepository;
@@ -32,7 +31,7 @@ public class TraineeAnalyticsServiceImpl implements TraineeAnalyticsService {
         TraineeDashboardAnalyticsResponse response = new TraineeDashboardAnalyticsResponse();
 
         var allTraineePrograms = traineeOnTrainingProgramRepository.findAllByUserId(userId).stream().map(TraineeOnTrainingProgram::getProgram).toList();
-        var traineeExercising = traineeExercisingRepository.findAllByUserId(userId).stream().toList();
+        var traineeExercising = traineeExercisingRepository.findAllByTraineeId(userId).stream().toList();
         var interactedPrograms = traineeExercising.stream().map(TraineeExercising::getProgram).toList();
         List<TraineeDashboardAnalyticsResponse.TotalJoinedProgramsData> totalJoined = new ArrayList<>();
         long interacted = allTraineePrograms
@@ -94,7 +93,7 @@ public class TraineeAnalyticsServiceImpl implements TraineeAnalyticsService {
         TraineeProgressAnalyticsResponse response = new TraineeProgressAnalyticsResponse();
         response.setData(new ArrayList<>());
 
-        var traineeExercisings = traineeExercisingRepository.findAllByUserIdAndDateTakenBetweenOrderByDateTaken(userId, request.getFrom(), request.getTo());
+        var traineeExercisings = traineeExercisingRepository.findAllByTraineeIdAndDateTakenBetweenOrderByDateTaken(userId, request.getFrom(), request.getTo());
         response.setData(
                 traineeExercisings
                 .stream()

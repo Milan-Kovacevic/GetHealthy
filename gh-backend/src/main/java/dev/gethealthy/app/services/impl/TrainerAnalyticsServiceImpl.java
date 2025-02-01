@@ -1,12 +1,10 @@
 package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.models.entities.ProgramRating;
-import dev.gethealthy.app.models.entities.TraineeExercising;
 import dev.gethealthy.app.models.entities.TrainingProgram;
 import dev.gethealthy.app.models.enums.TrainingProgramDifficulty;
 import dev.gethealthy.app.models.requests.EngagementAnalyticsRequest;
 import dev.gethealthy.app.models.requests.PopularityAnalyticsRequest;
-import dev.gethealthy.app.models.responses.TraineeDashboardAnalyticsResponse;
 import dev.gethealthy.app.models.responses.TrainerDashboardAnalyticsResponse;
 import dev.gethealthy.app.models.responses.TrainerEngagementAnalyticsResponse;
 import dev.gethealthy.app.models.responses.TrainerPopularityAnalyticsResponse;
@@ -122,7 +120,7 @@ public class TrainerAnalyticsServiceImpl implements TrainerAnalyticsService {
 
         var traineeExercising = request.getTraineeId() == null?
                 traineeExercisingRepository.findAllByProgramId(request.getProgramId())
-                : traineeExercisingRepository.findAllByProgramIdAndUserId(request.getProgramId(), request.getTraineeId());
+                : traineeExercisingRepository.findAllByProgramIdAndTraineeId(request.getProgramId(), request.getTraineeId());
 
         for (Instant current = request.getFrom(); current.isBefore(request.getTo()) || current.equals(request.getTo()); current = current.plus(Duration.ofDays(1))) {
             Instant finalCurrent = current;

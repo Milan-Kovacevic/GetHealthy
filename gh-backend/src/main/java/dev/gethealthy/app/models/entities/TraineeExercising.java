@@ -31,7 +31,7 @@ public class TraineeExercising implements BaseEntity<Integer> {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "UserId", nullable = false)
-    private Trainee user;
+    private Trainee trainee;
 
     @OneToMany(mappedBy = "traineeExercising")
     private List<ExerciseFeedback> exercisesFeedback;

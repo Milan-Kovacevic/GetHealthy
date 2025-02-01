@@ -1,6 +1,5 @@
 package dev.gethealthy.app.services.impl;
 
-import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.TraineeExercising;
 import dev.gethealthy.app.models.entities.TrainingProgram;
@@ -11,7 +10,6 @@ import dev.gethealthy.app.models.requests.TrainingScheduleRequest;
 import dev.gethealthy.app.models.responses.TrainingScheduleResponse;
 import dev.gethealthy.app.repositories.*;
 import dev.gethealthy.app.services.NotificationService;
-import dev.gethealthy.app.services.TraineeExercisingService;
 import dev.gethealthy.app.services.TrainingScheduleService;
 import dev.gethealthy.app.util.Utility;
 import jakarta.persistence.EntityManager;
@@ -19,15 +17,9 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.*;
-import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.WeekFields;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,7 +68,7 @@ public class TrainingScheduleServiceImpl implements TrainingScheduleService {
                     var startTime = Utility.convertLocalDateAndTimeToInstant(date, time);
 
                     var traineeExercisingResult = traineeExercisingRepository
-                            .findByProgramIdAndUserIdAndDateTakenAfterOrderByDateTakenAsc(e.getProgram().getId(), userId, startTime);
+                            .findByProgramIdAndTraineeIdAndDateTakenAfterOrderByDateTakenAsc(e.getProgram().getId(), userId, startTime);
 
                     var state = getScheduleProgramState(traineeExercisingResult);
                     result.setScheduleItemState(state);
