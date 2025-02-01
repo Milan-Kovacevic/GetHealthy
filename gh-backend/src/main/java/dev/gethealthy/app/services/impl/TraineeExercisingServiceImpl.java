@@ -3,8 +3,10 @@ package dev.gethealthy.app.services.impl;
 import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.TraineeExercising;
+import dev.gethealthy.app.models.requests.StartWorkoutRequest;
 import dev.gethealthy.app.models.requests.WorkoutSummaryRequest;
 import dev.gethealthy.app.models.responses.ExerciseMetricResponse;
+import dev.gethealthy.app.models.responses.StartWorkoutResponse;
 import dev.gethealthy.app.models.responses.WorkoutSummaryResponse;
 import dev.gethealthy.app.repositories.ExerciseFeedbackRepository;
 import dev.gethealthy.app.repositories.TraineeExercisingRepository;
@@ -30,6 +32,15 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
         this.traineeExercisingRepository = repository;
         this.trainingScheduleRepository = trainingScheduleRepository;
         this.exerciseFeedbackRepository = exerciseFeedbackRepository;
+    }
+
+    @Override
+    public StartWorkoutResponse start(StartWorkoutRequest request) {
+        StartWorkoutResponse response = new StartWorkoutResponse();
+        request.setProgramScheduleId(trainingScheduleRepository.findById(request.getProgramScheduleId()).get().getProgram().getId());
+        var traineeExercising = insert(request, TraineeExercising.class);
+        response.setTraineeExercisingId(traineeExercising.getId());
+        return response;
     }
 
     @Override
@@ -60,7 +71,7 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
                 .collect(Collectors.toList());
         response.setProgramExercises(programExercises);
 
-        var traineeExercising = traineeExercisingRepository.findByProgramIdAndUserIdOrderByDateTakenDesc(program.getId(), request.getTraineeId());
+        var traineeExercising = traineeExercisingRepository.findByProgramIdAndTraineeIdOrderByDateTakenDesc(program.getId(), request.getTraineeId());
 
         if (traineeExercising.isEmpty()) {
             return response;

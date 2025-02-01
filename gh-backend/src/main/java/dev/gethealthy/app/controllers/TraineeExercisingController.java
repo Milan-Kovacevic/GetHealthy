@@ -1,15 +1,13 @@
 package dev.gethealthy.app.controllers;
 
+import dev.gethealthy.app.models.entities.TraineeExercising;
 import dev.gethealthy.app.models.entities.TrainingProgramExercise;
 import dev.gethealthy.app.models.requests.*;
 import dev.gethealthy.app.models.responses.ExerciseFeedbackResponse;
 import dev.gethealthy.app.models.responses.ExerciseSetFeedbackResponse;
 import dev.gethealthy.app.models.responses.StartWorkoutResponse;
 import dev.gethealthy.app.models.responses.WorkoutSummaryResponse;
-import dev.gethealthy.app.services.ExerciseFeedbackService;
-import dev.gethealthy.app.services.ExerciseSetFeedbackService;
-import dev.gethealthy.app.services.TraineeExercisingService;
-import dev.gethealthy.app.services.TrainingProgramExerciseService;
+import dev.gethealthy.app.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,11 +19,12 @@ public class TraineeExercisingController {
     private final TraineeExercisingService traineeExercisingService;
     private final ExerciseSetFeedbackService exerciseSetFeedbackService;
     private final TrainingProgramExerciseService trainingProgramExerciseService;
+    private final TrainingScheduleService trainingScheduleService;
 
     @PostMapping("start")
     public StartWorkoutResponse start(StartWorkoutRequest request)
     {
-        return traineeExercisingService.insert(request, StartWorkoutResponse.class);
+        return traineeExercisingService.start(request);
     }
 
     @PostMapping("summary")
