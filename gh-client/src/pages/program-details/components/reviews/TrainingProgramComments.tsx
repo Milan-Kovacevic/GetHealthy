@@ -3,6 +3,7 @@ import { ProgramComment } from "@/api/models/program-review";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { pictureUrl } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { Loader2Icon } from "lucide-react";
 
@@ -36,7 +37,7 @@ const TrainingProgramComments = (props: TrainingProgramCommentsProps) => {
               >
                 <Avatar className="h-14 w-14">
                   <AvatarImage
-                    src={comment.authorProfilePictureFilePath}
+                    src={pictureUrl(comment.authorProfilePictureFilePath)}
                     alt={""}
                   />
                   <AvatarFallback>

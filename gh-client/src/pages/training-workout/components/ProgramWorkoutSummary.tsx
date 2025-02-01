@@ -135,6 +135,13 @@ export default function ProgramWorkoutSummary(
                 </Card>
               </li>
             ))}
+            {workout.programExercises.length == 0 && (
+              <div className="my-1">
+                <p className="text-muted-foreground text-sm italic">
+                  There are no exercises added on this program
+                </p>
+              </div>
+            )}
           </ul>
           <ScrollBar orientation="vertical" />
         </ScrollArea>

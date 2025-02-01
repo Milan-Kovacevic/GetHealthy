@@ -36,26 +36,29 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
     public WorkoutSummaryResponse getWorkoutSummary(WorkoutSummaryRequest request) {
         WorkoutSummaryResponse response = new WorkoutSummaryResponse();
 
-        var trainingScheduleProgram = trainingScheduleRepository.findById(request.getProgramScheduleId());
-        if (trainingScheduleProgram.isEmpty()) {
-            throw new NotFoundException();
-        }
+        var trainingScheduleProgram = trainingScheduleRepository
+                .findById(request.getProgramScheduleId())
+                .orElseThrow(NotFoundException::new);
 
-        response.setId(trainingScheduleProgram.get().getId());
-
-        var program = trainingScheduleProgram.get().getProgram();
-        response.setProgramExercises(program.getTrainingProgramExercises().stream().map(
-                tpe -> new WorkoutSummaryResponse.WorkoutExercise(
-                -1,
-                tpe.getExerciseSets().stream().map(esf-> modelMapper.map(esf, WorkoutSummaryResponse.WorkoutSet.class)).toList(),
-                null,
-                tpe.getExercise().getId(),
-                tpe.getExercise().getName(),
-                tpe.getExercise().getDescription(),
-                tpe.getExercise().getVideoLink(),
-                modelMapper.map(tpe.getExercise().getFirstExerciseMetric(), ExerciseMetricResponse.class),
-                tpe.getExercise().getSecondExerciseMetric() != null?  modelMapper.map(tpe.getExercise().getSecondExerciseMetric(), ExerciseMetricResponse.class) : null
-        )).collect(Collectors.toList()));
+        response.setId(trainingScheduleProgram.getId());
+        var program = trainingScheduleProgram.getProgram();
+        var programExercises = program
+                .getTrainingProgramExercises()
+                .stream()
+                .map(
+                        tpe -> new WorkoutSummaryResponse.WorkoutExercise(
+                                null,
+                                tpe.getExerciseSets().stream().map(esf -> modelMapper.map(esf, WorkoutSummaryResponse.WorkoutSet.class)).toList(),
+                                null,
+                                tpe.getExercise().getId(),
+                                tpe.getExercise().getName(),
+                                tpe.getExercise().getDescription(),
+                                tpe.getExercise().getVideoLink(),
+                                modelMapper.map(tpe.getExercise().getFirstExerciseMetric(), ExerciseMetricResponse.class),
+                                tpe.getExercise().getSecondExerciseMetric() != null ? modelMapper.map(tpe.getExercise().getSecondExerciseMetric(), ExerciseMetricResponse.class) : null
+                        ))
+                .collect(Collectors.toList());
+        response.setProgramExercises(programExercises);
 
         var traineeExercising = traineeExercisingRepository.findByProgramIdAndUserIdOrderByDateTakenDesc(program.getId(), request.getTraineeId());
 
@@ -69,7 +72,7 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
         var exercisesFeedback = traineeExercising.get(0).getExercisesFeedback();
         response.getProgramExercises().forEach(
                 e -> {
-                    var exerciseFeedbackResult = exercisesFeedback.stream().filter(ef-> Objects.equals(ef.getExercise().getId(), e.getId())).findFirst();
+                    var exerciseFeedbackResult = exercisesFeedback.stream().filter(ef -> Objects.equals(ef.getExercise().getId(), e.getId())).findFirst();
                     if (exerciseFeedbackResult.isPresent()) {
                         var exerciseFeedback = exerciseFeedbackResult.get();
                         e.setExerciseFeedbackId(exerciseFeedback.getId());

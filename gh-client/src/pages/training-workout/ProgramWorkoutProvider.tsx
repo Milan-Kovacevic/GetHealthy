@@ -17,13 +17,13 @@ type ProgramWorkoutProviderProps = {
   workout: WorkoutSummary;
   onWorkoutFinished: () => void;
   children: React.ReactNode;
+  userId: number;
 };
 
 export default function ProgramWorkoutProvider(
   props: ProgramWorkoutProviderProps
 ) {
-  const userId = 2;
-  const { children, workout, onWorkoutFinished } = props;
+  const { children, workout, userId, onWorkoutFinished } = props;
   const [workoutSummary, setWorkoutSummary] = useState<WorkoutSummary>(workout);
   const [formState, setFormState] = useState<FormState>("summary");
   const [pendingWorkout, setPendingWorkout] = useState(false);
@@ -62,11 +62,13 @@ export default function ProgramWorkoutProvider(
 
     setCurrentExerciseIndex(lastExerciseIndex);
     setCurrentSetIndex(
-      Math.min(
-        latestDoneSetIndex == -1 ? 0 : latestDoneSetIndex + 1,
-        workout.programExercises[currentExerciseIndex].exerciseSetsFeedback
-          .length
-      )
+      workout.programExercises.length > 0
+        ? Math.min(
+            latestDoneSetIndex == -1 ? 0 : latestDoneSetIndex + 1,
+            workout.programExercises[currentExerciseIndex].exerciseSetsFeedback
+              .length
+          )
+        : 0
     );
     setWorkoutFinished(
       workout.programExercises.every((exercise) => {

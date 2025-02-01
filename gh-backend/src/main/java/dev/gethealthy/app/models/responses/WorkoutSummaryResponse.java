@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkoutSummaryResponse {
-    private int id;
-    private int traineeExercisingId;
+    private Integer id;
+    private Integer traineeExercisingId;
     private Instant dateTaken;
     private List<WorkoutExercise> programExercises;
 
@@ -24,7 +24,7 @@ public class WorkoutSummaryResponse {
     @NoArgsConstructor
     public static class WorkoutSet extends ExerciseSetResponse
     {
-        private int setFeedbackId;
+        private Integer setFeedbackId;
         private String firstMetricValueFeedback;
         private String secondMetricValueFeedback;
         private Boolean skipped;
@@ -38,7 +38,7 @@ public class WorkoutSummaryResponse {
     @Data
     public static class WorkoutExercise
     {
-        private int exerciseFeedbackId;
+        private Integer exerciseFeedbackId;
         private List<WorkoutSet> exerciseSetsFeedback;
         private Boolean skipped;
         protected Integer id;

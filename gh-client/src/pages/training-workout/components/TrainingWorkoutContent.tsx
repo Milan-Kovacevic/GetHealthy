@@ -6,6 +6,7 @@ import { WorkoutSummary } from "@/api/models/trainee-exercising";
 import { getWorkoutSummary } from "@/api/services/trainee-exercising-service";
 import { toast } from "sonner";
 import ProgramWorkoutProvider from "../ProgramWorkoutProvider";
+import useAuth from "@/hooks/use-auth";
 
 type TrainingWorkoutContentProps = {
   scheduleProgram: TrainingProgramOnSchedule;
@@ -15,20 +16,22 @@ type TrainingWorkoutContentProps = {
 export default function TrainingWorkoutContent(
   props: TrainingWorkoutContentProps
 ) {
+  const { getUserId } = useAuth();
+  var userId = getUserId();
+  if (!userId) return;
+
   const { scheduleProgram, onWorkoutFinished } = props;
   const [loadingWorkout, setLoadingWorkout] = useState(true);
   const [workout, setWorkout] = useState<WorkoutSummary>();
 
-  // TODO: Hardcoded
-  const userId = 2;
   const programId = scheduleProgram.id;
   useEffect(() => {
     setLoadingWorkout(true);
-    getWorkoutSummary(userId, programId)
+    getWorkoutSummary(2, programId)
       .then((value) => {
         setWorkout({ ...value });
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error("Unable to load program workout, please try again later.");
       })
       .finally(() => {
@@ -41,6 +44,7 @@ export default function TrainingWorkoutContent(
       {loadingWorkout && <WorkoutContentLoader />}
       {!loadingWorkout && workout && (
         <ProgramWorkoutProvider
+          userId={userId}
           workout={workout}
           onWorkoutFinished={onWorkoutFinished}
         >

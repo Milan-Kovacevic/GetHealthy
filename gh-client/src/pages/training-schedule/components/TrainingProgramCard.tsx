@@ -9,11 +9,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { useSchedule } from "@/pages/training-schedule/hooks/use-schedule";
 import TrainingWorkoutDialog from "@/pages/training-workout/TrainingWorkoutDialog";
 import { addMinutesToTime } from "@/utils/date-time-utils";
@@ -28,7 +23,7 @@ import { capitalize, cn } from "@/lib/utils";
 import { SimpleAlertDialog } from "@/pages/shared/SimpleAlertDialog";
 import AuthGuard from "@/pages/shared/AuthGuard";
 import { TRAINEE_ONLY_ROLE, TRAINER_ONLY_ROLE } from "@/utils/constants";
-import { isWithinInterval } from "date-fns";
+import { isWithinInterval, startOfWeek } from "date-fns";
 
 export type ScheduleTrainingStatus =
   | "FINISHED"
@@ -51,11 +46,13 @@ export default function TrainingProgramCard({
   const getProgramStatus = (
     programOnSchedule: TrainingProgramOnSchedule
   ): ScheduleTrainingStatus => {
-    const now = new Date();
-    const today = now.getDay() === 0 ? 7 : now.getDay();
+    if (!programOnSchedule.scheduleItemState) return "UPCOMING";
 
     const programDay = programOnSchedule.dayOfWeek;
-    const dayDifference = programDay - today;
+    const currentDate = new Date();
+    const currentDayIndex =
+      currentDate.getDay() === 0 ? 7 : currentDate.getDay();
+    const dayDifference = programDay - currentDayIndex;
 
     if (dayDifference > 0) return "UPCOMING";
 
@@ -63,19 +60,24 @@ export default function TrainingProgramCard({
       .split(":")
       .map(Number);
 
-    const programStart = new Date();
+    const programStart = new Date(currentDate);
+    programStart.setDate(currentDate.getDate() + dayDifference);
     programStart.setHours(startHour, startMinute, 0, 0);
-
     const programEnd = new Date(
       programStart.getTime() +
         programOnSchedule.program.trainingDuration * 60000
     );
-    if (isWithinInterval(now, { start: programStart, end: programEnd }))
+
+    if (programOnSchedule.scheduleItemState != "NOT_STARTED")
+      return programOnSchedule.scheduleItemState;
+
+    if (isWithinInterval(currentDate, { start: programStart, end: programEnd }))
       return "LIVE";
 
-    if (programEnd > now) return "UPCOMING";
+    console.log(programEnd, currentDate);
+    if (programEnd > currentDate) return "UPCOMING";
 
-    return programOnSchedule.scheduleItemState ?? "UPCOMING";
+    return programOnSchedule.scheduleItemState;
   };
 
   const programStatus = getProgramStatus(programOnSchedule);
