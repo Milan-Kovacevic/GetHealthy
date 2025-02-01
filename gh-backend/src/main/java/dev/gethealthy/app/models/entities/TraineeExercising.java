@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 import java.util.List;
@@ -32,6 +34,11 @@ public class TraineeExercising implements BaseEntity<Integer> {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "UserId", nullable = false)
     private Trainee trainee;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ProgramScheduleId")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private TrainingProgramOnSchedule programSchedule;
 
     @OneToMany(mappedBy = "traineeExercising")
     private List<ExerciseFeedback> exercisesFeedback;

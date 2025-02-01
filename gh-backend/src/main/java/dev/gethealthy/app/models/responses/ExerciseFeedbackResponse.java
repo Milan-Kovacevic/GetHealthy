@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class ExerciseFeedbackResponse {
-    private Integer id;
+    private Integer exerciseFeedbackId;
 }

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,11 +77,11 @@ public class TrainingScheduleServiceImpl implements TrainingScheduleService {
                 .collect(Collectors.toList());
     }
 
-    private ScheduleItemState getScheduleProgramState(List<TraineeExercising> traineeWorkouts) {
-        if (traineeWorkouts.isEmpty())
+    private ScheduleItemState getScheduleProgramState(List<TraineeExercising> traineeExercisingOpt) {
+        if (traineeExercisingOpt.isEmpty())
             return ScheduleItemState.NOT_STARTED;
 
-        var traineeExercising = traineeWorkouts.get(0);
+        var traineeExercising = traineeExercisingOpt.getFirst(); // Take the latest workout
         var exerciseCount = traineeExercising.getProgram().getTrainingProgramExercises().size();
         var exerciseFeedbackCount = traineeExercising.getExercisesFeedback().size();
         if (exerciseCount == exerciseFeedbackCount)

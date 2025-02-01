@@ -1,6 +1,7 @@
 package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.base.CrudJpaService;
+import dev.gethealthy.app.exceptions.BadRequestException;
 import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.TraineeExercising;
 import dev.gethealthy.app.models.requests.StartWorkoutRequest;
@@ -13,6 +14,9 @@ import dev.gethealthy.app.repositories.TraineeExercisingRepository;
 import dev.gethealthy.app.repositories.TraineeRepository;
 import dev.gethealthy.app.repositories.TrainingScheduleRepository;
 import dev.gethealthy.app.services.TraineeExercisingService;
+import dev.gethealthy.app.util.Utility;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -23,7 +27,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercising, Integer> implements TraineeExercisingService {
-
     private final TraineeExercisingRepository traineeExercisingRepository;
     private final TrainingScheduleRepository trainingScheduleRepository;
     private final ExerciseFeedbackRepository exerciseFeedbackRepository;
@@ -48,6 +51,27 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
         var result = insert(traineeExercising, TraineeExercising.class);
         response.setTraineeExercisingId(result.getId());
 
+        var trainingSchedule = trainingScheduleRepository
+                .findById(request.getProgramScheduleId())
+                .orElseThrow(NotFoundException::new);
+
+        // Obtain all the trainee workouts for a given program on schedule (based on programScheduleId)
+        var traineeWorkouts = traineeExercisingRepository.findByScheduleProgramIdSortedByDateTakenDesc(trainingSchedule.getId());
+        if (!traineeWorkouts.isEmpty()) {
+            var latestWorkoutForAScheduleProgram = traineeWorkouts.getFirst();
+            if (Utility.getDateFromInstant(latestWorkoutForAScheduleProgram.getDateTaken()).equals(Utility.getCurrentLocalDate()))
+                throw new BadRequestException(); // Trainee had already started workout
+        }
+
+        var entity = modelMapper.map(request, TraineeExercising.class);
+        entity.setProgram(trainingSchedule.getProgram());
+        entity.setId(null);
+        entity = traineeExercisingRepository.saveAndFlush(entity);
+        entityManager.refresh(entity);
+
+        StartWorkoutResponse response = new StartWorkoutResponse();
+        response.setTraineeExercisingId(entity.getId());
+        response.setDateTaken(entity.getDateTaken());
         return response;
     }
 
