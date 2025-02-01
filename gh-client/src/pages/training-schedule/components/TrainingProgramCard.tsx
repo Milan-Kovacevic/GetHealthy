@@ -16,6 +16,7 @@ import {
   CheckIcon,
   ExternalLinkIcon,
   MoreHorizontalIcon,
+  PencilIcon,
   Trash2Icon,
 } from "lucide-react";
 import CreateEditProgramOnScheduleModal from "./CreateEditProgramOnScheduleModal";
@@ -23,7 +24,7 @@ import { capitalize, cn } from "@/lib/utils";
 import { SimpleAlertDialog } from "@/pages/shared/SimpleAlertDialog";
 import AuthGuard from "@/pages/shared/AuthGuard";
 import { TRAINEE_ONLY_ROLE, TRAINER_ONLY_ROLE } from "@/utils/constants";
-import { isWithinInterval, startOfWeek } from "date-fns";
+import { isWithinInterval } from "date-fns";
 
 export type ScheduleTrainingStatus =
   | "FINISHED"
@@ -74,12 +75,12 @@ export default function TrainingProgramCard({
     if (isWithinInterval(currentDate, { start: programStart, end: programEnd }))
       return "LIVE";
 
-    console.log(programEnd, currentDate);
     if (programEnd > currentDate) return "UPCOMING";
 
     return programOnSchedule.scheduleItemState;
   };
 
+  const noStatus = programOnSchedule.scheduleItemState == undefined;
   const programStatus = getProgramStatus(programOnSchedule);
 
   return (
@@ -97,7 +98,8 @@ export default function TrainingProgramCard({
           "border-2 border-border/60",
         (programStatus == "IN_PROGRESS" || programStatus == "LIVE") &&
           "border-red-400 dark:border-red-500",
-        "hover:bg-accent/10 dark:hover:bg-accent/90 duration-300"
+        "hover:bg-accent/10 dark:hover:bg-accent/90 duration-300",
+        noStatus && "border-foreground/50"
       )}
     >
       <CardContent className="p-2 pt-1 pb-0.5 flex flex-col">
@@ -146,7 +148,7 @@ export default function TrainingProgramCard({
           </AuthGuard>
         </div>
         <AuthGuard allowedRoles={[TRAINEE_ONLY_ROLE]}>
-          {programStatus === "LIVE" && (
+          {(programStatus === "LIVE" || programStatus == "IN_PROGRESS") && (
             <TrainingWorkoutDialog programOnSchedule={programOnSchedule} />
           )}
         </AuthGuard>
@@ -203,12 +205,21 @@ const ManageProgramPopup = ({
           <span className="sr-only">Open menu</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-32 p-0">
+      <PopoverContent className="w-32 p-1">
         <CreateEditProgramOnScheduleModal
           isEdit={true}
           programOnSchedule={programOnSchedule}
           onSubmitModal={handleEditProgramOnSchedule}
-        />
+        >
+          <Button
+            className="w-full justify-start h-auto px-2 py-2 text-xs font-normal [&_svg]:h-3.5 [&_svg]:w-3.5"
+            size="sm"
+            variant="ghost"
+          >
+            <PencilIcon className="mr-0 h-3.5 w-3.5" />
+            Edit
+          </Button>
+        </CreateEditProgramOnScheduleModal>
         <SimpleAlertDialog
           onConfirm={() => onRemoveProgram(programOnSchedule.id)}
           title="Are you sure?"
@@ -219,7 +230,7 @@ const ManageProgramPopup = ({
           <Button
             variant="ghost"
             size="sm"
-            className="w-full justify-start rounded-none px-4 py-2 text-xs font-normal text-destructive hover:text-destructive"
+            className="w-full justify-start h-auto px-2 py-2 text-xs font-normal [&_svg]:h-3.5 [&_svg]:w-3.5 text-destructive hover:text-destructive dark:text-red-700"
           >
             <Trash2Icon className="mr-0 h-3.5 w-3.5" />
             Remove

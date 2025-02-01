@@ -37,7 +37,13 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
     @Override
     public StartWorkoutResponse start(StartWorkoutRequest request) {
         StartWorkoutResponse response = new StartWorkoutResponse();
-        request.setProgramScheduleId(trainingScheduleRepository.findById(request.getProgramScheduleId()).get().getProgram().getId());
+        var programId = trainingScheduleRepository
+                .findById(request.getProgramScheduleId())
+                .orElseThrow(NotFoundException::new)
+                .getProgram()
+                .getId();
+
+        request.setProgramScheduleId(programId);
         var traineeExercising = insert(request, TraineeExercising.class);
         response.setTraineeExercisingId(traineeExercising.getId());
         return response;

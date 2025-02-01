@@ -8,10 +8,34 @@ export const addMinutesToTime = (
   }
 
   if (typeof startTime == "string") {
+    console.log(startTime, typeof startTime == "string");
+    const date = new Date(startTime);
+
+    console.log(date);
     const [startHour, startMinute] = startTime.split(":").map(Number);
     programStart.setHours(startHour, startMinute, 0, 0);
   }
 
+  const programEnd = new Date(programStart.getTime() + duration * 60000);
+
+  const formatTime = (date: Date) => {
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const startTimeFormatted = formatTime(programStart);
+  const endTimeFormatted = formatTime(programEnd);
+
+  const timeRange = `${startTimeFormatted} - ${endTimeFormatted}`;
+  return timeRange;
+};
+
+export const addMinutesToDate = (
+  startDate: string,
+  duration: number
+): string => {
+  var programStart: Date = new Date(startDate);
   const programEnd = new Date(programStart.getTime() + duration * 60000);
 
   const formatTime = (date: Date) => {
