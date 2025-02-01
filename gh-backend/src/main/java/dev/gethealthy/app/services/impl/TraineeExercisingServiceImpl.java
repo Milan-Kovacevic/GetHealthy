@@ -91,7 +91,7 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
                 .collect(Collectors.toList());
         response.setProgramExercises(programExercises);
 
-        var traineeExercising = traineeExercisingRepository.findByProgramIdAndTraineeIdOrderByDateTakenDesc(program.getId(), request.getTraineeId());
+        var traineeExercising = traineeExercisingRepository.findByScheduleProgramIdSortedByDateTakenDesc(trainingScheduleProgram.getId());
 
         if (traineeExercising.isEmpty()) {
             return response;
