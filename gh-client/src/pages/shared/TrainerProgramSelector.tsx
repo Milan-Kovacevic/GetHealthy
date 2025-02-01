@@ -28,12 +28,13 @@ type TrainerProgramSelectorProps = {
   text: string;
   className?: string;
   selectedValue?: TrainerProgram; // Controlled vs Uncontrolled component...
+  modal?: boolean;
 };
 
 export default function TrainerProgramSelector(
   props: TrainerProgramSelectorProps
 ) {
-  const { onProgramSelected, text, className, selectedValue } = props;
+  const { onProgramSelected, text, className, selectedValue, modal } = props;
   const [open, setOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<
     TrainerProgram | undefined
@@ -66,7 +67,7 @@ export default function TrainerProgramSelector(
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover modal={modal} open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"

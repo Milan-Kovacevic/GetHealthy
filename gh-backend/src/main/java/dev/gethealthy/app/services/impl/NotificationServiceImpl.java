@@ -1,6 +1,5 @@
 package dev.gethealthy.app.services.impl;
 
-import dev.gethealthy.app.base.CrudJpaService;
 import dev.gethealthy.app.exceptions.NotFoundException;
 import dev.gethealthy.app.models.entities.Notification;
 import dev.gethealthy.app.models.entities.User;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
@@ -57,7 +55,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public NotificationResponse createNotification(User user, User sender, String metadata, NotificationType notificationType) {
+    public void createNotification(User user, User sender, String metadata, NotificationType notificationType) {
         Notification notification = new Notification();
 
         notification.setId(null);
@@ -69,11 +67,9 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setMarkRead(false);
 
         notificationRepository.saveAndFlush(notification);
-
         var payload =  modelMapper.map(notification, NotificationResponse.class);
         messagingTemplate.convertAndSend("/topic/notifications/"  + user.getId(), payload);
 
-        return payload;
     }
 
     @Override

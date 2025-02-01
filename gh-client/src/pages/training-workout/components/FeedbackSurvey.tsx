@@ -56,7 +56,7 @@ export default function FeedbackSurvey({
           (value) =>
             !value.completedAsPlanned ||
             !!value.firstMetricValueFeedback ||
-            !!value.firstMetricValueFeedback,
+            !!value.secondMetricValueFeedback,
           {
             message: "Values are required",
             path: [
@@ -66,10 +66,22 @@ export default function FeedbackSurvey({
             ],
           }
         )
-    : z.object({
-        completedAsPlanned: z.boolean().default(true),
-        firstMetricValueFeedback: z.string().min(0),
-      });
+    : z
+        .object({
+          completedAsPlanned: z.boolean().default(true),
+          firstMetricValueFeedback: z
+            .number({ invalid_type_error: "First feedback value is required" })
+            .positive()
+            .optional(),
+        })
+        .refine(
+          (value) =>
+            !value.completedAsPlanned ||
+            !!value.firstMetricValueFeedback || {
+              message: "Values are required",
+              path: ["firstMetricValueFeedback", "completedAsPlanned"],
+            }
+        );
 
   const form = useForm<any>({
     resolver: zodResolver(formSchema),

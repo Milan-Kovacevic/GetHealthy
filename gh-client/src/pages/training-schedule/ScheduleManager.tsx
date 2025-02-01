@@ -1,6 +1,6 @@
 import { useSchedule } from "@/pages/training-schedule/hooks/use-schedule";
 import { addDays, format, startOfWeek } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CircleBackgroundBlob } from "../shared/BackgroundBlobs";
@@ -8,6 +8,7 @@ import CreateEditProgramOnScheduleModal from "./components/CreateEditProgramOnSc
 import ProgramScheduleDay from "./components/ProgramScheduleDay";
 import AuthGuard from "../shared/AuthGuard";
 import { TRAINER_ONLY_ROLE } from "@/utils/constants";
+import { Button } from "@/components/ui/button";
 
 const ScheduleManager = () => {
   const { programs, onAddProgram } = useSchedule();
@@ -60,9 +61,16 @@ const ScheduleManager = () => {
             </div>
             <AuthGuard allowedRoles={[TRAINER_ONLY_ROLE]}>
               <div className="md:flex-none flex-1 mb-2 md:self-end ">
-                <CreateEditProgramOnScheduleModal
-                  onSubmitModal={onAddProgram}
-                />
+                <CreateEditProgramOnScheduleModal onSubmitModal={onAddProgram}>
+                  <Button
+                    size="sm"
+                    variant={"secondary"}
+                    className="self-center w-full"
+                  >
+                    <PlusIcon className="" />
+                    Add program
+                  </Button>
+                </CreateEditProgramOnScheduleModal>
               </div>
             </AuthGuard>
           </div>
