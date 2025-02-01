@@ -35,19 +35,21 @@ public class TraineeExercisingController {
     @PostMapping("{traineeExercisingId}/exercises/skip")
     public ExerciseFeedbackResponse skipExercise(@PathVariable int traineeExercisingId, @RequestBody ExerciseFeedbackRequest request)
     {
-        var res = exerciseFeedbackService.findById(request.getProgramExerciseId(), ExerciseFeedbackRequest.class);
-        res.setSkipped(true);
-        return exerciseFeedbackService.update(request.getProgramExerciseId(), res, ExerciseFeedbackResponse.class);
+        var programExercise = trainingProgramExerciseService.findById(request.getProgramExerciseId(), TrainingProgramExercise.class);
+        request.setTraineeExercisingId(traineeExercisingId);
+        request.setExerciseId(programExercise.getExercise().getId());
+        request.setSkipped(true);
+        return exerciseFeedbackService.addExerciseFeedback(request);
     }
 
     @PostMapping("{traineeExercisingId}/exercises/begin")
     public ExerciseFeedbackResponse beginExercise(@PathVariable int traineeExercisingId, @RequestBody ExerciseFeedbackRequest request)
     {
-        var res = trainingProgramExerciseService.findById(request.getProgramExerciseId(), TrainingProgramExercise.class);
+        var programExercise = trainingProgramExerciseService.findById(request.getProgramExerciseId(), TrainingProgramExercise.class);
         request.setTraineeExercisingId(traineeExercisingId);
-        request.setExerciseId(res.getExercise().getId());
+        request.setExerciseId(programExercise.getExercise().getId());
         request.setSkipped(false);
-        return exerciseFeedbackService.insert(request, ExerciseFeedbackResponse.class);
+        return exerciseFeedbackService.addExerciseFeedback(request);
     }
 
     @PostMapping("{traineeExercisingId}/exercises/{exerciseFeedbackId}/sets/skip")

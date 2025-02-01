@@ -20,6 +20,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,30 +59,23 @@ public class TrainingScheduleServiceImpl implements TrainingScheduleService {
                 .toList();
 
         var traineeSchedulePrograms = trainingScheduleRepository.findAllByProgramIdIn(traineeJoinedPrograms);
-        var latestMonday = Utility.getLatestMondayLocalDate();
         return traineeSchedulePrograms
                 .stream()
                 .map(e -> {
                     var result = modelMapper.map(e, TrainingScheduleResponse.class);
-                    var date = latestMonday.plusDays(e.getDayOfWeek().getValue() - 1);
-                    var time = e.getStartTime();
-                    var startTime = Utility.convertLocalDateAndTimeToInstant(date, time);
-
-                    var traineeExercisingResult = traineeExercisingRepository
-                            .findByProgramIdAndTraineeIdAndDateTakenAfterOrderByDateTakenAsc(e.getProgram().getId(), userId, startTime);
-
-                    var state = getScheduleProgramState(traineeExercisingResult);
+                    var traineeWorkouts = traineeExercisingRepository.findByScheduleProgramIdSortedByDateTakenDesc(e.getId());
+                    var state = getScheduleProgramState(traineeWorkouts);
                     result.setScheduleItemState(state);
                     return result;
                 })
                 .collect(Collectors.toList());
     }
 
-    private ScheduleItemState getScheduleProgramState(List<TraineeExercising> traineeWorkouts) {
-        if (traineeWorkouts.isEmpty())
+    private ScheduleItemState getScheduleProgramState(List<TraineeExercising> traineeExercisingOpt) {
+        if (traineeExercisingOpt.isEmpty())
             return ScheduleItemState.NOT_STARTED;
 
-        var traineeExercising = traineeWorkouts.get(0);
+        var traineeExercising = traineeExercisingOpt.getFirst(); // Take the latest workout
         var exerciseCount = traineeExercising.getProgram().getTrainingProgramExercises().size();
         var exerciseFeedbackCount = traineeExercising.getExercisesFeedback().size();
         if (exerciseCount == exerciseFeedbackCount)
