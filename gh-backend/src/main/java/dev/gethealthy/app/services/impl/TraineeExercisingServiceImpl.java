@@ -10,6 +10,7 @@ import dev.gethealthy.app.models.responses.StartWorkoutResponse;
 import dev.gethealthy.app.models.responses.WorkoutSummaryResponse;
 import dev.gethealthy.app.repositories.ExerciseFeedbackRepository;
 import dev.gethealthy.app.repositories.TraineeExercisingRepository;
+import dev.gethealthy.app.repositories.TraineeRepository;
 import dev.gethealthy.app.repositories.TrainingScheduleRepository;
 import dev.gethealthy.app.services.TraineeExercisingService;
 import jakarta.transaction.Transactional;
@@ -26,20 +27,25 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
     private final TraineeExercisingRepository traineeExercisingRepository;
     private final TrainingScheduleRepository trainingScheduleRepository;
     private final ExerciseFeedbackRepository exerciseFeedbackRepository;
+    private final TraineeRepository traineeRepository;
 
-    public TraineeExercisingServiceImpl(TraineeExercisingRepository repository, ModelMapper modelMapper, TraineeExercisingRepository traineeExercisingRepository, TrainingScheduleRepository trainingScheduleRepository, ExerciseFeedbackRepository exerciseFeedbackRepository) {
+    public TraineeExercisingServiceImpl(TraineeExercisingRepository repository, ModelMapper modelMapper, TraineeExercisingRepository traineeExercisingRepository, TrainingScheduleRepository trainingScheduleRepository, ExerciseFeedbackRepository exerciseFeedbackRepository, TraineeRepository traineeRepository) {
         super(repository, modelMapper, TraineeExercising.class);
         this.traineeExercisingRepository = repository;
         this.trainingScheduleRepository = trainingScheduleRepository;
         this.exerciseFeedbackRepository = exerciseFeedbackRepository;
+        this.traineeRepository = traineeRepository;
     }
 
     @Override
     public StartWorkoutResponse start(StartWorkoutRequest request) {
         StartWorkoutResponse response = new StartWorkoutResponse();
-        request.setProgramScheduleId(trainingScheduleRepository.findById(request.getProgramScheduleId()).get().getProgram().getId());
-        var traineeExercising = insert(request, TraineeExercising.class);
-        response.setTraineeExercisingId(traineeExercising.getId());
+        var traineeExercising = new TraineeExercising();
+        traineeExercising.setTrainee(traineeRepository.getTraineeById(request.getTraineeId()));
+        traineeExercising.setProgram(trainingScheduleRepository.findById(request.getProgramScheduleId()).get().getProgram());
+        traineeExercising.setTrainingProgramOnSchedule(trainingScheduleRepository.findById(request.getProgramScheduleId()).get());
+        var result = insert(traineeExercising, TraineeExercising.class);
+        response.setTraineeExercisingId(result.getId());
         return response;
     }
 

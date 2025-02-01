@@ -10,6 +10,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,4 +36,7 @@ public class TrainingProgramOnSchedule implements BaseEntity<Integer> {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "ProgramId", nullable = false)
     private TrainingProgram program;
+
+    @OneToMany(mappedBy = "trainingProgramOnSchedule")
+    private List<TraineeExercising> traineeExercisings;
 }

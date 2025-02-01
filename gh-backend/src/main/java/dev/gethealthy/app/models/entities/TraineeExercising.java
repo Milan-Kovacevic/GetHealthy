@@ -36,4 +36,7 @@ public class TraineeExercising implements BaseEntity<Integer> {
     @OneToMany(mappedBy = "traineeExercising")
     private List<ExerciseFeedback> exercisesFeedback;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TrainingProgramOnScheduleId")
+    private TrainingProgramOnSchedule trainingProgramOnSchedule;
 }

@@ -20,6 +20,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,17 +59,15 @@ public class TrainingScheduleServiceImpl implements TrainingScheduleService {
                 .toList();
 
         var traineeSchedulePrograms = trainingScheduleRepository.findAllByProgramIdIn(traineeJoinedPrograms);
-        var latestMonday = Utility.getLatestMondayLocalDate();
         return traineeSchedulePrograms
                 .stream()
-                .map(e -> {
-                    var result = modelMapper.map(e, TrainingScheduleResponse.class);
-                    var date = latestMonday.plusDays(e.getDayOfWeek().getValue() - 1);
-                    var time = e.getStartTime();
-                    var startTime = Utility.convertLocalDateAndTimeToInstant(date, time);
+                .map(tpe -> {
+                    var result = modelMapper.map(tpe, TrainingScheduleResponse.class);
 
-                    var traineeExercisingResult = traineeExercisingRepository
-                            .findByProgramIdAndTraineeIdAndDateTakenAfterOrderByDateTakenAsc(e.getProgram().getId(), userId, startTime);
+                    var traineeExercisingResult = tpe.getTraineeExercisings().stream().filter(te ->
+                            Objects.equals(te.getTrainee().getId(), userId)
+                             && Objects.equals(te.getTrainingProgramOnSchedule().getId(), tpe.getId()))
+                            .toList();
 
                     var state = getScheduleProgramState(traineeExercisingResult);
                     result.setScheduleItemState(state);
