@@ -279,6 +279,8 @@ export default function ProgramWorkoutProvider(
   };
 
   const handleFeedbackSubmit = (data: SendExerciseSetFeedbackRequest) => {
+    console.log(data, workoutSummary);
+
     if (
       !workoutSummary.workoutId ||
       !workoutSummary.programExercises[currentExerciseIndex].exerciseFeedbackId

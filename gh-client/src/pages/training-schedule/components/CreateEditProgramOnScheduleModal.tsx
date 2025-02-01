@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { TrainerProgram } from "@/api/models/training-program";
 import {
   ManageTrainingProgramOnSchedule,
@@ -79,12 +79,14 @@ export type CreateEditProgramOnScheduleModalProps = {
   onSubmitModal: (
     programOnSchedule: ManageTrainingProgramOnSchedule
   ) => Promise<void>;
+  children: ReactNode;
 };
 
 export const CreateEditProgramOnScheduleModal = ({
   isEdit = false,
   programOnSchedule,
   onSubmitModal,
+  children,
 }: CreateEditProgramOnScheduleModalProps) => {
   const defaultText = "Select training program ...";
   const [open, setOpen] = useState(false);
@@ -160,27 +162,7 @@ export const CreateEditProgramOnScheduleModal = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOnOpenChangeModal}>
-      <DialogTrigger asChild>
-        {!isEdit ? (
-          <Button
-            size="sm"
-            variant={"secondary"}
-            className="self-center w-full"
-          >
-            <PlusIcon className="text-primary" />
-            Add program
-          </Button>
-        ) : (
-          <Button
-            className="w-full justify-start rounded-none px-4 py-2 text-xs font-normal"
-            size="sm"
-            variant="ghost"
-          >
-            <PencilIcon className="mr-0 h-3.5 w-3.5" />
-            Edit
-          </Button>
-        )}
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <DialogHeader>
@@ -201,6 +183,7 @@ export const CreateEditProgramOnScheduleModal = ({
                     <FormControl>
                       <div className="flex flex-col gap-4">
                         <TrainerProgramSelector
+                          modal={true}
                           onProgramSelected={changeProgram}
                           text={text}
                           selectedValue={trainerProgram}
