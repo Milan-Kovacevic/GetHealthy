@@ -27,7 +27,7 @@ export default function TrainingWorkoutContent(
   const programId = scheduleProgram.id;
   useEffect(() => {
     setLoadingWorkout(true);
-    getWorkoutSummary(2, programId)
+    getWorkoutSummary(userId!, programId)
       .then((value) => {
         setWorkout({ ...value });
       })
