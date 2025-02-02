@@ -29,12 +29,15 @@ public interface TraineeExercisingRepository extends JpaRepository<TraineeExerci
 
     List<TraineeExercising> findByProgramIdAndTraineeIdAndDateTakenAfterOrderByDateTakenAsc(Integer programId, Integer traineeId, Instant dateTaken);
 
+    @Query("SELECT te FROM TraineeExercising te " +
+            "JOIN te.programSchedule pos " +
+            "WHERE pos.id = :scheduleProgramId ORDER BY te.dateTaken DESC"
+    )
+    List<TraineeExercising> findByScheduleProgramIdSortedByDateTakenDesc(@Param("scheduleProgramId") Integer scheduleProgramId);
 
     @Query("SELECT te FROM TraineeExercising te " +
             "JOIN te.programSchedule pos " +
             "WHERE pos.id = :scheduleProgramId ORDER BY te.dateTaken DESC"
-            )
-    List<TraineeExercising> findByScheduleProgramIdSortedByDateTakenDesc(
-            @Param("scheduleProgramId") Integer scheduleProgramId
-    );
+    )
+    List<TraineeExercising> findByScheduleProgramId(@Param("scheduleProgramId") Integer scheduleProgramId);
 }

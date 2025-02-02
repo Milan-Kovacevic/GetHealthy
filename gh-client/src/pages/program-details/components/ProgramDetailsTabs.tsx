@@ -52,11 +52,11 @@ export default function ProgramDetailsTabs({
             </Link>
           ) : (
             <AuthGuard
+              key={`link-${index}`}
               allowedRoles={item.guard.allowedRoles}
               preCheck={item.guard.allowAccess}
             >
               <Link
-                key={`link-${index}`}
                 to={item.path}
                 className={cn(
                   "py-3 px-6 font-medium border-b z-10",

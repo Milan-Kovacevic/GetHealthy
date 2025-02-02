@@ -18,7 +18,6 @@ public class TraineeExercisingController {
     private final ExerciseFeedbackService exerciseFeedbackService;
     private final TraineeExercisingService traineeExercisingService;
     private final ExerciseSetFeedbackService exerciseSetFeedbackService;
-    private final TrainingProgramExerciseService trainingProgramExerciseService;
 
     @PostMapping("start")
     public StartWorkoutResponse start(@RequestBody StartWorkoutRequest request)
@@ -35,21 +34,13 @@ public class TraineeExercisingController {
     @PostMapping("{traineeExercisingId}/exercises/skip")
     public ExerciseFeedbackResponse skipExercise(@PathVariable int traineeExercisingId, @RequestBody ExerciseFeedbackRequest request)
     {
-        var programExercise = trainingProgramExerciseService.findById(request.getProgramExerciseId(), TrainingProgramExercise.class);
-        request.setTraineeExercisingId(traineeExercisingId);
-        request.setExerciseId(programExercise.getExercise().getId());
-        request.setSkipped(true);
-        return exerciseFeedbackService.addExerciseFeedback(request);
+        return exerciseFeedbackService.skipExercise(traineeExercisingId, request);
     }
 
     @PostMapping("{traineeExercisingId}/exercises/begin")
     public ExerciseFeedbackResponse beginExercise(@PathVariable int traineeExercisingId, @RequestBody ExerciseFeedbackRequest request)
     {
-        var programExercise = trainingProgramExerciseService.findById(request.getProgramExerciseId(), TrainingProgramExercise.class);
-        request.setTraineeExercisingId(traineeExercisingId);
-        request.setExerciseId(programExercise.getExercise().getId());
-        request.setSkipped(false);
-        return exerciseFeedbackService.addExerciseFeedback(request);
+        return exerciseFeedbackService.addExerciseFeedback(traineeExercisingId, request);
     }
 
     @PostMapping("{traineeExercisingId}/exercises/{exerciseFeedbackId}/sets/skip")
@@ -57,13 +48,7 @@ public class TraineeExercisingController {
                                                        @PathVariable int exerciseFeedbackId,
                                                        @RequestBody SkipExerciseSetFeedbackRequest request)
     {
-        return exerciseSetFeedbackService.insert(new ExerciseSetFeedbackRequest(
-                exerciseFeedbackId,
-                true,
-                false,
-                "",
-                ""
-        ), ExerciseSetFeedbackResponse.class);
+        return exerciseSetFeedbackService.skipExerciseSet(traineeExercisingId, exerciseFeedbackId, request);
     }
 
     @PostMapping("{traineeExercisingId}/exercises/{exerciseFeedbackId}/sets")
@@ -71,12 +56,6 @@ public class TraineeExercisingController {
                                                        @PathVariable int exerciseFeedbackId,
                                                        @RequestBody ExerciseSetFeedbackRequest request)
     {
-        return exerciseSetFeedbackService.insert(new ExerciseSetFeedbackRequest(
-                exerciseFeedbackId,
-                false,
-                request.getCompleted(),
-                request.getFirstMetricValueFeedback(),
-                request.getSecondMetricValueFeedback()
-        ), ExerciseSetFeedbackResponse.class);
+        return exerciseSetFeedbackService.addExerciseSetFeedback(traineeExercisingId, exerciseFeedbackId, request);
     }
 }

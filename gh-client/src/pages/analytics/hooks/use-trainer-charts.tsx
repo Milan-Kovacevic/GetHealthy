@@ -14,6 +14,7 @@ import {
 } from "@/api/services/trainer-analytics-service";
 import { DateRange } from "react-day-picker";
 import { toast } from "sonner";
+import useAuth from "@/hooks/use-auth";
 
 export type PopularityChartState = {
   loading: boolean;
@@ -30,7 +31,9 @@ export type EngagementChartFilter = {
 };
 
 export default function useTrainerCharts() {
-  const userId = 2;
+  const { getUserId } = useAuth();
+  const userId = getUserId();
+
   const [lastSelectedProgram, setLastSelectedProgram] =
     useState<AnalyticsProgram>();
   const [lastSelectedPeriod, setLastSelectedPeriod] = useState<DateRange>();

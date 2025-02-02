@@ -24,10 +24,12 @@ import { Separator } from "@/components/ui/separator";
 
 type TrainingWorkoutDialogProps = {
   programOnSchedule: TrainingProgramOnSchedule;
+  onFinish: () => void;
 };
 
 export default function TrainingWorkoutDialog({
   programOnSchedule,
+  onFinish,
 }: TrainingWorkoutDialogProps) {
   const [open, setOpen] = useState(false);
 
@@ -93,7 +95,10 @@ export default function TrainingWorkoutDialog({
 
         <TrainingWorkoutContent
           scheduleProgram={programOnSchedule}
-          onWorkoutFinished={() => setOpen(false)}
+          onWorkoutFinished={() => {
+            onFinish();
+            setOpen(false);
+          }}
         />
       </AlertDialogContent>
     </AlertDialog>

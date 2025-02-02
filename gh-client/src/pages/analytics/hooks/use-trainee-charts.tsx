@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { ExerciseListingItem } from "@/api/models/exercise";
 import { generateTraineeProgressAnalytics } from "@/api/services/trainee-analytics-service";
+import useAuth from "@/hooks/use-auth";
 
 export type ProgressChartState = {
   selectedExercise?: ExerciseListingItem;
@@ -10,7 +11,8 @@ export type ProgressChartState = {
 } & TraineeProgressAnalytics;
 
 export default function useTraineeCharts(selectedPeriod?: DateRange) {
-  const userId = 2;
+  const { getUserId } = useAuth();
+  const userId = getUserId();
 
   const [progressChartState, setProgressChartState] =
     useState<ProgressChartState>({

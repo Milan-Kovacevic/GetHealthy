@@ -9,6 +9,7 @@ import {
   TrainingProgramOnSchedule,
 } from "../models/training-program-on-schedule";
 import { format } from "date-fns";
+import { delay } from "@/lib/utils";
 
 const translateWeekDayToNumber = (weekDay: string) => {
   switch (weekDay) {
@@ -57,6 +58,7 @@ const fetchTrainingProgamsOnSchedule = async (): Promise<
 > => {
   var url = `${ApiEndpoints.TrainingProgramOnSchedule}`;
 
+  await delay(500);
   return sendAxiosRequest<void, TrainingProgramOnScheduleDTO[]>({
     method: "GET",
     url: url,

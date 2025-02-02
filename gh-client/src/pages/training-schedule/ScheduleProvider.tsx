@@ -19,6 +19,7 @@ type ScheduleProviderProps = {
 export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
   const [programs, setPrograms] = useState<TrainingProgramOnSchedule[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [loadingSchedule, setLoadingSchedule] = useState(true);
 
   const sortPrograms = (programs: TrainingProgramOnSchedule[]) => {
     return programs.sort((a, b) => {
@@ -33,10 +34,13 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
   useEffect(() => {
     const fetchAndSortPrograms = async () => {
       try {
+        setLoadingSchedule(true);
         const fetchedPrograms = await fetchTrainingProgamsOnSchedule();
         setPrograms(sortPrograms(fetchedPrograms));
       } catch (error) {
-        console.error("Error fetching training programs!", error);
+        toast.error("Error occured while trying to load your schedule");
+      } finally {
+        setLoadingSchedule(false);
       }
     };
 
@@ -94,6 +98,7 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
 
   const value = {
     programs,
+    loadingSchedule,
     currentDate,
     onAddProgram,
     onEditProgram,

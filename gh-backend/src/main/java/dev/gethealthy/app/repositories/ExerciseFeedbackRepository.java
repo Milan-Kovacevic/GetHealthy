@@ -9,5 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ExerciseFeedbackRepository extends JpaRepository<ExerciseFeedback, Integer> {
-    Optional<ExerciseFeedback> findByTraineeExercisingIdAndProgramExerciseId(Integer id, Integer id1);
+    boolean existsByTraineeExercising_IdAndProgramExercise_Id(Integer traineeExercisingId, Integer programExerciseId);
+
 }

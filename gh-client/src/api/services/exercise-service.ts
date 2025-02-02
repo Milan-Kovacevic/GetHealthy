@@ -33,7 +33,7 @@ const getPageableExerciseListing = async (
 ) => {
   var url = ApiEndpoints.Exercises;
   url += `/brief?query=${query}&page=${page}&size=${pageSize}`;
-  await delay(1500);
+  await delay(500);
   return sendAxiosRequest<void, PageableExerciseListingDTO>({
     method: "GET",
     url: url,
@@ -45,7 +45,7 @@ const getPageableExerciseListing = async (
 
 const getAllExerciseMetrics = async () => {
   const url = ApiEndpoints.Metrics;
-  await delay(2500);
+  await delay(700);
   return sendAxiosRequest<void, ExerciseMetricDTO[]>({
     method: "GET",
     url: url,
@@ -62,7 +62,7 @@ const getPageableExcercises = async (
 ) => {
   var url = ApiEndpoints.Exercises;
   url += `/filter?query=${query}&page=${page}&size=${pageSize}`;
-  await delay(2000);
+  await delay(500);
   return sendAxiosRequest<void, PageableExercisesDTO>({
     method: "GET",
     url: url,

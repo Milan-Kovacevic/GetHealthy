@@ -1,4 +1,4 @@
-import { AnalyticsProgramParticipant } from "@/api/models/trainer-analytics";
+import { AnalyticsProgramParticipant } from "@/api/models/analytics";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { format, formatDate, formatDistanceToNow } from "date-fns";
-import { ChevronsDownIcon, ChevronsUpDownIcon, XIcon } from "lucide-react";
+import { format, formatDistanceToNow } from "date-fns";
+import { ChevronsUpDownIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type TraineeAnalyticsSelectorProps = {
@@ -111,8 +111,12 @@ export default function TraineeAnalyticsSelector(
                               •
                             </span>
                             <span className="lowercase text-muted-foreground text-xs ml-1">
-                              {participant.gender} |{" "}
-                              {format(participant.dateOfBirth!, "dd.MM.yyyy")}
+                              {participant.gender}{" "}
+                              {participant.dateOfBirth &&
+                                `| ${format(
+                                  participant.dateOfBirth!,
+                                  "dd.MM.yyyy"
+                                )}`}
                             </span>
                           </div>
 

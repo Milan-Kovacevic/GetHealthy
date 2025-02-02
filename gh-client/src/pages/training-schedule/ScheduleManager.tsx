@@ -9,9 +9,11 @@ import ProgramScheduleDay from "./components/ProgramScheduleDay";
 import AuthGuard from "../shared/AuthGuard";
 import { TRAINER_ONLY_ROLE } from "@/utils/constants";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 const ScheduleManager = () => {
-  const { programs, onAddProgram } = useSchedule();
+  const { programs, onAddProgram, loadingSchedule } = useSchedule();
   const [currentDate, setCurrentDate] = useState(new Date());
   const navigate = useNavigate();
 
@@ -59,23 +61,27 @@ const ScheduleManager = () => {
                 </p>
               </div>
             </div>
-            <AuthGuard allowedRoles={[TRAINER_ONLY_ROLE]}>
-              <div className="md:flex-none flex-1 mb-2 md:self-end ">
-                <CreateEditProgramOnScheduleModal onSubmitModal={onAddProgram}>
-                  <Button
-                    size="sm"
-                    variant={"secondary"}
-                    className="self-center w-full"
+            {!loadingSchedule && (
+              <AuthGuard allowedRoles={[TRAINER_ONLY_ROLE]}>
+                <div className="md:flex-none flex-1 mb-2 md:self-end ">
+                  <CreateEditProgramOnScheduleModal
+                    onSubmitModal={onAddProgram}
                   >
-                    <PlusIcon className="" />
-                    Add program
-                  </Button>
-                </CreateEditProgramOnScheduleModal>
-              </div>
-            </AuthGuard>
+                    <Button
+                      size="sm"
+                      variant={"secondary"}
+                      className="self-center w-full"
+                    >
+                      <PlusIcon className="" />
+                      Add program
+                    </Button>
+                  </CreateEditProgramOnScheduleModal>
+                </div>
+              </AuthGuard>
+            )}
           </div>
 
-          <div className="flex-1 flex bg-background">
+          <div className="flex-1 flex bg-background rounded-xl">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 flex-1">
               {weekDays.map((day, index) => (
                 <ProgramScheduleDay
@@ -88,6 +94,7 @@ const ScheduleManager = () => {
                   )}
                   key={day.toISOString()}
                   onViewDetails={handleViewProgramDetails}
+                  loading={loadingSchedule}
                 />
               ))}
             </div>

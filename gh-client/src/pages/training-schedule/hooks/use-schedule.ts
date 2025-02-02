@@ -6,6 +6,7 @@ import { createContext, useContext } from "react";
 
 type ScheduleContextState = {
   programs: TrainingProgramOnSchedule[];
+  loadingSchedule: boolean;
   currentDate: Date;
   onAddProgram: (program: ManageTrainingProgramOnSchedule) => Promise<void>;
   onEditProgram: (
