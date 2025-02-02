@@ -44,10 +44,20 @@ public final class Utility {
         return dateTime.atZone(zone).toInstant();
     }
 
+    public static dev.gethealthy.app.models.enums.DayOfWeek getTodaysDayOfWeek(){
+        LocalDate today = LocalDate.now();
+
+        // Get the day of the week
+        DayOfWeek dayOfWeek = today.getDayOfWeek();
+
+        return dev.gethealthy.app.models.enums.DayOfWeek.ofDay(dayOfWeek.getValue());
+    }
+
     public static Optional<JwtUser> getJwtUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null)
             return Optional.empty();
+        if(!(auth.getPrincipal() instanceof JwtUser)) return Optional.empty();
         return Optional.of((JwtUser) auth.getPrincipal());
     }
 }

@@ -111,14 +111,14 @@ export default function TrainingProgramInfo() {
           </div>
 
           <div className="pb-4">
-            <p className="mt-1 text-muted-foreground text-sm">
+            <div className="mt-1 text-muted-foreground text-sm">
               <div className="flex items-center">
                 <UsersIcon className="w-3.5 h-3.5 mr-1" />
                 <span>
                   {programInfo.currentlyEnrolled ?? "No "} participants
                 </span>
               </div>
-            </p>
+            </div>
             <div className="mt-3 mb-5 flex items-center flex-wrap gap-2">
               {programInfo.categories?.length > 0 ? (
                 programInfo.categories.map((item) => (

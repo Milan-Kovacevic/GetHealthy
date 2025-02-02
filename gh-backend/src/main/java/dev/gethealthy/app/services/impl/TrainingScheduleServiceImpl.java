@@ -63,7 +63,7 @@ public class TrainingScheduleServiceImpl implements TrainingScheduleService {
                 .stream()
                 .map(e -> {
                     var result = modelMapper.map(e, TrainingScheduleResponse.class);
-                    var traineeWorkouts = traineeExercisingRepository.findByScheduleProgramIdSortedByDateTakenDesc(e.getId());
+                    var traineeWorkouts = traineeExercisingRepository.findByScheduleProgramId(e.getId());
                     var state = getScheduleProgramState(traineeWorkouts);
                     result.setScheduleItemState(state);
                     return result;
@@ -71,18 +71,19 @@ public class TrainingScheduleServiceImpl implements TrainingScheduleService {
                 .collect(Collectors.toList());
     }
 
-    private ScheduleItemState getScheduleProgramState(List<TraineeExercising> traineeExercisingOpt) {
-        if (traineeExercisingOpt.isEmpty())
+    private ScheduleItemState getScheduleProgramState(List<TraineeExercising> traineeWorkouts) {
+        if (traineeWorkouts.isEmpty())
             return ScheduleItemState.NOT_STARTED;
 
-        var traineeExercising = traineeExercisingOpt.getFirst(); // Take the latest workout
+
+        var traineeExercising = traineeWorkouts.get(0); // Take the latest workout
         var exerciseCount = traineeExercising.getProgram().getTrainingProgramExercises().size();
         var exerciseFeedbackCount = traineeExercising.getExercisesFeedback().size();
         if (exerciseCount == exerciseFeedbackCount)
             return ScheduleItemState.FINISHED;
-        else
+        else if(traineeExercising.getProgramSchedule().getDayOfWeek() == Utility.getTodaysDayOfWeek())
             return ScheduleItemState.IN_PROGRESS;
-
+        else return ScheduleItemState.NOT_STARTED;
     }
 
     @Override

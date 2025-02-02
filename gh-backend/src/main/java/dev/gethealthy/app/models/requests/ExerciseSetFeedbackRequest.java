@@ -8,8 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExerciseSetFeedbackRequest {
-    private Integer exerciseFeedbackId;
-    private Boolean skipped;
+    private Integer exerciseSetId;
     private Boolean completed;
     private String firstMetricValueFeedback;
     private String secondMetricValueFeedback;

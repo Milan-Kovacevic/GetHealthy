@@ -1,6 +1,6 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import AnalyticsLineChart from "../../shared/AnalyticsLineChart";
-import { AnalyticsPopularityData } from "@/api/models/trainer-analytics";
+import { AnalyticsPopularityData } from "@/api/models/analytics";
 import { LockIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 

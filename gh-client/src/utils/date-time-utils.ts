@@ -8,10 +8,6 @@ export const addMinutesToTime = (
   }
 
   if (typeof startTime == "string") {
-    console.log(startTime, typeof startTime == "string");
-    const date = new Date(startTime);
-
-    console.log(date);
     const [startHour, startMinute] = startTime.split(":").map(Number);
     programStart.setHours(startHour, startMinute, 0, 0);
   }

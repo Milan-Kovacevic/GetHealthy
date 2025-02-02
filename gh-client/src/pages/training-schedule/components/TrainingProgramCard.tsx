@@ -25,6 +25,7 @@ import { SimpleAlertDialog } from "@/pages/shared/SimpleAlertDialog";
 import AuthGuard from "@/pages/shared/AuthGuard";
 import { TRAINEE_ONLY_ROLE, TRAINER_ONLY_ROLE } from "@/utils/constants";
 import { isWithinInterval } from "date-fns";
+import { useState } from "react";
 
 export type ScheduleTrainingStatus =
   | "FINISHED"
@@ -81,7 +82,9 @@ export default function TrainingProgramCard({
   };
 
   const noStatus = programOnSchedule.scheduleItemState == undefined;
-  const programStatus = getProgramStatus(programOnSchedule);
+  const [programStatus, setProgramStatus] = useState(
+    getProgramStatus(programOnSchedule)
+  );
 
   return (
     <Card
@@ -149,7 +152,10 @@ export default function TrainingProgramCard({
         </div>
         <AuthGuard allowedRoles={[TRAINEE_ONLY_ROLE]}>
           {(programStatus === "LIVE" || programStatus == "IN_PROGRESS") && (
-            <TrainingWorkoutDialog programOnSchedule={programOnSchedule} />
+            <TrainingWorkoutDialog
+              onFinish={() => setProgramStatus("FINISHED")}
+              programOnSchedule={programOnSchedule}
+            />
           )}
         </AuthGuard>
       </CardContent>

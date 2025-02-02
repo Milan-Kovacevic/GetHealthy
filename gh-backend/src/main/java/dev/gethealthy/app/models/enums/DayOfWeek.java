@@ -28,6 +28,15 @@ public enum DayOfWeek {
         throw new IllegalArgumentException("Unknown DayOfWeek value: " + value);
     }
 
+    public static DayOfWeek ofDay(int day) {
+        for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
+            if (dayOfWeek.getValue() == day) {
+                return dayOfWeek;
+            }
+        }
+        throw new IllegalArgumentException("Unknown DayOfWeek value: " + day);
+    }
+
     @Override
     public String toString() {
         return name();

@@ -8,7 +8,7 @@ type UserAuthState = {
   login: (data: LoginFormSchema) => Promise<AuthUser>;
   logout: () => Promise<void>;
   isLoggedIn: () => boolean;
-  getUserId: () => number | null;
+  getUserId: () => number;
   getUserRole: () => UserRole | null;
   isTrainer: () => boolean;
 };

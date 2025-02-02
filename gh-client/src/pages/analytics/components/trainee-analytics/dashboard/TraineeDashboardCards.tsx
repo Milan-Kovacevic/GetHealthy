@@ -7,14 +7,16 @@ import { getTraineeDashboardAnalytics } from "@/api/services/trainee-analytics-s
 import TotalJoinedProgramsChart from "./TotalJoinedProgramsChart";
 import { TopThreeSkippedExercisesChart } from "./TopThreeSkippedExercisesChart";
 import { TopThreeFavoriteExercisesChart } from "./TopThreeFavoriteExercisesChart";
+import useAuth from "@/hooks/use-auth";
 
 type DashboardChartState = {
   loading: boolean;
 } & TraineeDashboardAnalytics;
 
 export default function TraineeDashboardCards() {
-  // TODO: Hardcoded now
-  const userId = 2;
+  const { getUserId } = useAuth();
+  const userId = getUserId();
+
   const [dashboardChartState, setDashboardChartState] =
     useState<DashboardChartState>({
       topFavoriteExercises: [],

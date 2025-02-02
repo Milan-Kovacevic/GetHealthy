@@ -6,7 +6,7 @@ import dev.gethealthy.app.models.responses.TraineeDashboardAnalyticsResponse;
 import dev.gethealthy.app.models.responses.TraineeProgressAnalyticsResponse;
 
 public interface TraineeAnalyticsService {
-    public TraineeDashboardAnalyticsResponse getGeneralAnalytics(int userId);
+    TraineeDashboardAnalyticsResponse getGeneralAnalytics(int userId);
 
-    public TraineeProgressAnalyticsResponse getEngagementAnalytics(int userId, ProgressAnalyticsRequest request);
+    TraineeProgressAnalyticsResponse getEngagementAnalytics(int userId, ProgressAnalyticsRequest request);
 }
