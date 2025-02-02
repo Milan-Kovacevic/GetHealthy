@@ -75,7 +75,7 @@ public class TrainingScheduleServiceImpl implements TrainingScheduleService {
         if (traineeExercisingOpt.isEmpty())
             return ScheduleItemState.NOT_STARTED;
 
-        var traineeExercising = traineeExercisingOpt.getFirst(); // Take the latest workout
+        var traineeExercising = traineeExercisingOpt.get(0); // Take the latest workout
         var exerciseCount = traineeExercising.getProgram().getTrainingProgramExercises().size();
         var exerciseFeedbackCount = traineeExercising.getExercisesFeedback().size();
         if (exerciseCount == exerciseFeedbackCount)

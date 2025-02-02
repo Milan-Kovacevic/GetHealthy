@@ -46,7 +46,7 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
         // Obtain all the trainee workouts for a given program on schedule (based on programScheduleId)
         var traineeWorkouts = traineeExercisingRepository.findByScheduleProgramIdSortedByDateTakenDesc(trainingSchedule.getId());
         if (!traineeWorkouts.isEmpty()) {
-            var latestWorkoutForAScheduleProgram = traineeWorkouts.getFirst();
+            var latestWorkoutForAScheduleProgram = traineeWorkouts.get(0);
             if (Utility.getDateFromInstant(latestWorkoutForAScheduleProgram.getDateTaken()).equals(Utility.getCurrentLocalDate()))
                 throw new BadRequestException(); // Trainee had already started workout
         }
