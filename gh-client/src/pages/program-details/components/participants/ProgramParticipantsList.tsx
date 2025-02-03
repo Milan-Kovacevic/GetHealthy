@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/pagination";
 import { SearchBar } from "@/components/primitives/SearchBar";
 import { toast } from "sonner";
+import useAuth from "@/hooks/use-auth";
+import NoListItemsAnimation from "@/pages/shared/NoListItemsAnimation";
 
 type ProgramParticipantsListProps = {
   programId: number;
@@ -27,7 +29,9 @@ type ProgramParticipantsListProps = {
 export default function ProgramParticipantsList(
   props: ProgramParticipantsListProps
 ) {
-  const userId = 2; // TODO: Hardcoded for now...
+  const { getUserId } = useAuth();
+  const userId = getUserId();
+
   const { programId } = props;
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedParticipant, setSelectedParticipant] =
@@ -103,77 +107,81 @@ export default function ProgramParticipantsList(
   return (
     <div className="container mx-auto w-full">
       <div className="flex xl:flex-row flex-col-reverse justify-between w-full md:gap-8 gap-4 md:pb-4">
-        <div className="p-1 w-full max-w-3xl xl:max-w-4xl">
+        <div className="p-1 w-full">
           <div className="mb-4 max-w-xl">
             <SearchBar
               setQuery={setSearchQuery}
               onSearch={handleSearchParticipants}
               query={searchQuery}
               className="max-w-none"
-              disabled={isLoadingParticipants || participants.length == 0}
+              disabled={isLoadingParticipants}
             />
           </div>
-          {!isLoadingParticipants ? (
-            <div className="space-y-3">
-              {participants.map((participant) => (
-                <ProgramParticipantItem
-                  participant={participant}
-                  key={participant.id}
-                  onRemove={handleRemoveProgramParticipant}
-                  onMove={onMoveProgramParticipantClicked}
-                />
-              ))}
-            </div>
-          ) : (
-            <ParticipantsListSkeletonLoader />
-          )}
+          <div className="max-w-3xl xl:max-w-4xl">
+            {!isLoadingParticipants ? (
+              <div className="space-y-3">
+                {participants.map((participant) => (
+                  <ProgramParticipantItem
+                    participant={participant}
+                    key={participant.id}
+                    onRemove={handleRemoveProgramParticipant}
+                    onMove={onMoveProgramParticipantClicked}
+                  />
+                ))}
+              </div>
+            ) : (
+              <ParticipantsListSkeletonLoader />
+            )}
+
+            {!isLoadingParticipants && participants.length > 0 && (
+              <Pagination className="mt-6">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={() =>
+                        setParticipantsPage((prev) => Math.max(prev - 1, 0))
+                      }
+                      className={
+                        isFirstPage ? "pointer-events-none opacity-50" : ""
+                      }
+                    />
+                  </PaginationItem>
+                  {[...Array(totalParticipantPages)].map((_, index) => (
+                    <PaginationItem key={index}>
+                      <PaginationLink
+                        href="#"
+                        onClick={() => setParticipantsPage(index)}
+                        isActive={participantsPage === index}
+                      >
+                        {index + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={() =>
+                        setParticipantsPage((prev) =>
+                          Math.min(prev + 1, totalParticipantPages)
+                        )
+                      }
+                      className={
+                        isLastPage ? "pointer-events-none opacity-50" : ""
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
+          </div>
 
           {!isLoadingParticipants && participants.length == 0 && (
-            <p className="py-4 px-0 text-start text-sm text-muted-foreground italic">
-              There is no participants on this training program.
-            </p>
-          )}
-
-          {!isLoadingParticipants && participants.length > 0 && (
-            <Pagination className="mt-6">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={() =>
-                      setParticipantsPage((prev) => Math.max(prev - 1, 0))
-                    }
-                    className={
-                      isFirstPage ? "pointer-events-none opacity-50" : ""
-                    }
-                  />
-                </PaginationItem>
-                {[...Array(totalParticipantPages)].map((_, index) => (
-                  <PaginationItem key={index}>
-                    <PaginationLink
-                      href="#"
-                      onClick={() => setParticipantsPage(index)}
-                      isActive={participantsPage === index}
-                    >
-                      {index + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={() =>
-                      setParticipantsPage((prev) =>
-                        Math.min(prev + 1, totalParticipantPages)
-                      )
-                    }
-                    className={
-                      isLastPage ? "pointer-events-none opacity-50" : ""
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <NoListItemsAnimation
+              title="There are no participants to show"
+              description="Parhaps you should adjust the search criteria..."
+              className="self-start"
+            />
           )}
         </div>
 
