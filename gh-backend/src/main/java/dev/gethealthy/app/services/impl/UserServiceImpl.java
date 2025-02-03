@@ -26,8 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,51 +34,6 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final StorageAccessService storageAccessService;
     private final TraineeOnTrainingProgramRepository traineeOnTrainingProgramRepository;
-
-    // @Override
-    // public SingleUserResponse getUser(Integer userId) {
-    // User user =
-    // userRepository.findById(userId).orElseThrow(NotFoundException::new);
-    // UserAccount userAccount = user.getUserAccount();
-    // if (userAccount.getRole().equals(Role.TRAINEE) && user instanceof Trainee) {
-    // return modelMapper.map(user, TraineeResponse.class);
-    // } else if (userAccount.getRole().equals(Role.TRAINER) && user instanceof
-    // Trainer) {
-    // return modelMapper.map(user, TrainerResponse.class);
-    // } else {
-    // throw new ForbiddenException();
-    // }
-    // }
-
-    // @Override
-    // public UserInfoResponse getUserInfo(Integer userId) {
-    // User user =
-    // userRepository.findById(userId).orElseThrow(NotFoundException::new);
-    // UserAccount userAccount = user.getUserAccount();
-    // if (userAccount.getRole().equals(Role.TRAINEE) && user instanceof Trainee) {
-    // return modelMapper.map(user, TraineeInfoResponse.class);
-    // } else if (userAccount.getRole().equals(Role.TRAINER) && user instanceof
-    // Trainer) {
-    // return modelMapper.map(user, TrainerInfoResponse.class);
-    // } else {
-    // throw new ForbiddenException();
-    // }
-    // }
-
-    // private <T> T getUserData(Integer userId, Class<T> responseType) {
-    // User user =
-    // userRepository.findById(userId).orElseThrow(NotFoundException::new);
-    // UserAccount userAccount = user.getUserAccount();
-
-    // if (userAccount.getRole().equals(Role.TRAINEE) && user instanceof Trainee) {
-    // return modelMapper.map(user, responseType);
-    // } else if (userAccount.getRole().equals(Role.TRAINER) && user instanceof
-    // Trainer) {
-    // return modelMapper.map(user, responseType);
-    // } else {
-    // throw new ForbiddenException();
-    // }
-    // }
 
     private <T> T getUserData(Integer userId, Class<T> responseType) {
         User user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
@@ -105,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserDetailsResponse> getAllUsers(Pageable page) {
-        return userRepository.findAll(page).map(this::convertToUserDetailsResponse);
+        return userRepository.findAllUsers(Role.TRAINER, Role.TRAINEE, page).map(this::convertToUserDetailsResponse);
     }
 
     @Override

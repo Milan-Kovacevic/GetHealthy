@@ -15,22 +15,28 @@ import org.springframework.web.bind.annotation.*;
 public class UserAccountController {
     private final UserAccountService userAccountService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("{userId}")
     public UserAccountResponse getUserAccount(@PathVariable(name = "userId") Integer userId) {
         return userAccountService.getUserAccount(userId);
     }
 
-    @PostMapping("/{userId}/change-password")
+    @PostMapping("{userId}/change-password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changePassword(@PathVariable(name = "userId") Integer userId,
-            @RequestBody @Valid PasswordChangeRequest request) {
+                               @RequestBody @Valid PasswordChangeRequest request) {
         userAccountService.changePassword(userId, request);
     }
 
-    @PostMapping("/{userId}/change-email")
+    @PostMapping("{userId}/change-email")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeEmail(@PathVariable(name = "userId") Integer userId,
-            @RequestBody @Valid EmailChangeRequest request) {
+                            @RequestBody @Valid EmailChangeRequest request) {
         userAccountService.changeEmail(userId, request);
+    }
+
+    @PostMapping("{userId}/suspend")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void suspendUserAccount(@PathVariable(name = "userId") Integer userId) {
+        userAccountService.suspendAccount(userId);
     }
 }

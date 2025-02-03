@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserAccountServiceImpl implements UserAccountService {
-
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
@@ -59,6 +58,13 @@ public class UserAccountServiceImpl implements UserAccountService {
             throw new BadRequestException("Invalid password!");
 
         userAccount.setEmail(request.getEmail());
+        userAccountRepository.saveAndFlush(userAccount);
+    }
+
+    @Override
+    public void suspendAccount(Integer userId) {
+        var userAccount = userAccountRepository.findById(userId).orElseThrow(NotFoundException::new);
+        userAccount.setEnabled(!userAccount.getEnabled());
         userAccountRepository.saveAndFlush(userAccount);
     }
 

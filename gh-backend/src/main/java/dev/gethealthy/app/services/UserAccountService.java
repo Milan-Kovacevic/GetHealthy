@@ -13,4 +13,6 @@ public interface UserAccountService {
     void changePassword(Integer userId, PasswordChangeRequest request);
 
     void changeEmail(Integer userId, EmailChangeRequest request);
+
+    void suspendAccount(Integer userId);
 }

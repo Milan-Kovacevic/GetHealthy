@@ -1,10 +1,25 @@
 import { PageActions, PageTitle } from "@/components/page";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { capitalize } from "@/lib/utils";
-import { useNavigation, useShow } from "@refinedev/core";
+import { API_BASE_URL, API_PREFIX } from "@/lib";
+import { capitalize, cn } from "@/lib/utils";
+import { useCustomMutation, useNavigation, useShow } from "@refinedev/core";
+import { CircleAlertIcon, Loader2Icon } from "lucide-react";
+import { useState } from "react";
 
 export const UserShow = () => {
   const { goBack } = useNavigation();
@@ -38,7 +53,7 @@ export const UserShow = () => {
       )}
       {record && (
         <div className="flex lg:flex-row flex-col gap-6 w-full">
-          <Card className="basis-1/2 max-w-2xl shadow-md">
+          <Card className="max-w-2xl w-full shadow-md">
             <CardContent className="space-y-8 py-5 px-6">
               <UserAccountInfo record={record} />
             </CardContent>
@@ -50,57 +65,134 @@ export const UserShow = () => {
 };
 
 const UserAccountInfo = ({ record }: { record: IUserDetailsResponse }) => {
-  const fullName = `${record.firstName} ${record.lastName}`;
-  const initials = `${record.firstName[0]}${record.lastName[0]}`;
+  const [userAccount, setUserAccount] = useState(record);
+  const fullName = `${userAccount.firstName} ${userAccount.lastName}`;
+  const initials = `${userAccount.firstName[0]}${userAccount.lastName[0]}`;
 
   return (
     <div className="flex flex-col">
       <div className="flex items-start space-x-6">
         <Avatar className="h-28 w-28">
-          <AvatarImage src={record.profilePictureFilePath} alt={fullName} />
+          <AvatarImage
+            src={userAccount.profilePictureFilePath}
+            alt={fullName}
+          />
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
-        <div className="flex-1 space-y-2">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold">{fullName}</h2>
-            <p className="text-sm text-muted-foreground">@{record.username}</p>
+        <div className="flex-1 flex md:flex-row flex-col gap-3 justify-between">
+          <div className="flex-1 space-y-2">
+            <div className="space-y-1">
+              <h2 className="text-xl font-semibold">{fullName}</h2>
+              <p className="text-sm text-muted-foreground">
+                @{userAccount.username}
+              </p>
+            </div>
+            {userAccount.enabled ? (
+              <Badge className="font-normal" variant="outline">
+                Enabled
+              </Badge>
+            ) : (
+              <Badge className="font-normal" variant="destructive">
+                Disabled
+              </Badge>
+            )}
           </div>
-          {record.enabled ? (
-            <Badge className="font-normal" variant="outline">
-              Enabled
-            </Badge>
-          ) : (
-            <Badge className="font-normal" variant="destructive">
-              Disabled
-            </Badge>
-          )}
+          <SuspendAccountButton
+            record={userAccount}
+            onAccountSuspended={(value) =>
+              setUserAccount((prev) => {
+                return { ...prev, enabled: value };
+              })
+            }
+          />
         </div>
       </div>
       <div className="space-y-1 pt-5 px-2 pb-2">
-        <RecordItem label="Email:" value={`${record.email}`} />
-        <RecordItem label="Role:" value={capitalize(`${record.role}`)} />
+        <RecordItem label="Email:" value={`${userAccount.email}`} />
+        <RecordItem label="Role:" value={capitalize(`${userAccount.role}`)} />
 
         <RecordItem
           label="Created:"
-          value={new Date(record.createdAt).toLocaleDateString()}
+          value={new Date(userAccount.createdAt).toLocaleDateString()}
         />
-        {record.lastAccessed && (
+        {userAccount.lastAccessed && (
           <RecordItem
             label="Last Accessed:"
-            value={new Date(record.lastAccessed).toLocaleDateString()}
+            value={new Date(userAccount.lastAccessed).toLocaleDateString()}
           />
         )}
 
-        {record.dateOfBirth && (
+        {userAccount.dateOfBirth && (
           <RecordItem
             label="Date of Birth:"
-            value={new Date(record.dateOfBirth).toLocaleDateString()}
+            value={new Date(userAccount.dateOfBirth).toLocaleDateString()}
           />
         )}
 
-        <RecordItem label="Gender:" value={capitalize(`${record.gender}`)} />
+        <RecordItem
+          label="Gender:"
+          value={capitalize(`${userAccount.gender}`)}
+        />
       </div>
     </div>
+  );
+};
+
+const SuspendAccountButton = ({
+  record,
+  onAccountSuspended,
+}: {
+  record: IUserDetailsResponse;
+  onAccountSuspended: (value: boolean) => void;
+}) => {
+  const { isLoading, mutateAsync } = useCustomMutation();
+  const [open, setOpen] = useState(false);
+
+  const handleSuspendUserAccount = () => {
+    mutateAsync({
+      url: `accounts/${record.id}/suspend`,
+      method: "post",
+      values: {},
+    }).then(() => {
+      onAccountSuspended(!record.enabled);
+      setOpen(false);
+    });
+  };
+
+  return (
+    <AlertDialog open={isLoading || open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <Button
+          variant="secondary"
+          disabled={isLoading}
+          className={cn(record.enabled && "text-destructive")}
+        >
+          <CircleAlertIcon className="md:block hidden" />
+          {record.enabled ? "Suspend account" : "Activate account"}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action will{" "}
+            {record.enabled ? "suspend selected" : "activate back suspended"}{" "}
+            user account, are you sure you want to proceed?
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isLoading}>No</AlertDialogCancel>
+          <AlertDialogAction
+            disabled={isLoading}
+            className="bg-destructive/95 hover:bg-destructive h-auto py-2 font-normal text-destructive-foreground"
+            onClick={handleSuspendUserAccount}
+          >
+            {isLoading && <Loader2Icon className="animate-spin" />}
+            Yes
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

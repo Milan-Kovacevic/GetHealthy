@@ -123,7 +123,8 @@ export const dataProvider = (
     },
 
     custom: async ({ url, method, filters, sorters, payload, query }) => {
-      let requestUrl = `${url}?`;
+      let requestUrl = `${API_PREFIX}/${url}?`;
+      console.log(requestUrl);
 
       const sortQuery = generateSort(sorters);
       if (sortQuery) {
@@ -144,15 +145,15 @@ export const dataProvider = (
       let axiosResponse;
       switch (method) {
         case "get":
-          axiosResponse = await httpClient[method](url);
+          axiosResponse = await httpClient[method](requestUrl);
           break;
         case "put":
         case "post":
         case "patch":
-          axiosResponse = await httpClient[method](url, payload);
+          axiosResponse = await httpClient[method](requestUrl, payload);
           break;
         case "delete":
-          axiosResponse = await httpClient.delete(url, {
+          axiosResponse = await httpClient.delete(requestUrl, {
             data: payload,
           });
           break;

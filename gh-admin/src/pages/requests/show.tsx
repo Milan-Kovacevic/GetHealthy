@@ -1,17 +1,14 @@
 import { PageActions, PageTitle } from "@/components/page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  useCustom,
   useCustomMutation,
   useDataProvider,
   useNavigation,
   useShow,
 } from "@refinedev/core";
 import { CheckIcon, DownloadIcon, Loader2Icon, XIcon } from "lucide-react";
-import { API_PREFIX } from "@/lib";
 import { useState } from "react";
 
 export const RequestShow = () => {
@@ -48,7 +45,7 @@ export const RequestShow = () => {
         <div className="flex lg:flex-row flex-col gap-6 w-full">
           <Card className="w-full max-w-2xl shadow-md">
             <CardContent className="space-y-8 py-5 px-6">
-              <RequestInfo record={record} />
+              <RequestInfo record={record} goBack={goBack} />
             </CardContent>
           </Card>
         </div>
@@ -59,25 +56,28 @@ export const RequestShow = () => {
 
 const RequestInfo = ({
   record,
+  goBack,
 }: {
   record: IRegistrationRequestDetailsResponse;
+  goBack: () => void;
 }) => {
   const dataProvider = useDataProvider();
   const defaultDataProvider = dataProvider();
   const [loadingQualification, setLoadingQualification] = useState(false);
 
-  const { isLoading, mutateAsync } =
-    useCustomMutation<IRegistrationRequestProcessRequest>();
+  const { isLoading, mutateAsync } = useCustomMutation();
 
   const fullName = `${record.firstName} ${record.lastName}`;
 
   const handleProcessRegistrationRequest = (approve: boolean) => {
     mutateAsync({
-      url: `/requests/${record.id}/process`,
+      url: `requests/${record.id}/process`,
       method: "post",
       values: {
         approve: approve,
       },
+    }).then(() => {
+      goBack();
     });
   };
 
@@ -85,7 +85,7 @@ const RequestInfo = ({
     setLoadingQualification(true);
     defaultDataProvider
       .custom?.<any>({
-        url: `${API_PREFIX}/storage/documents/${record.certificationFilePath}`,
+        url: `storage/documents/${record.certificationFilePath}`,
         method: "get",
       })
       .then((qualification) => {

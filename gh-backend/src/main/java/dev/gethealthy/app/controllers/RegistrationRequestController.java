@@ -21,13 +21,13 @@ public class RegistrationRequestController {
         return registrationRequestService.getRequests(page);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public RegistrationRequestResponse getRequest(@PathVariable Integer id)
     {
         return registrationRequestService.getRequest(id);
     }
 
-    @PostMapping("/{id}/process")
+    @PostMapping("{id}/process")
     public void processRequest(@PathVariable(name="id") Integer id, @RequestBody @Valid ProcessRequest processRequest)
     {
         registrationRequestService.processRequest(id, processRequest);

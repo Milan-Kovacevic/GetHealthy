@@ -11,8 +11,3 @@ interface IRegistrationRequestDetailsResponse
   email: string;
   certificationFilePath: string;
 }
-
-interface IRegistrationRequestProcessRequest {
-  id: number;
-  approve: boolean;
-}

@@ -34,14 +34,14 @@ public class RegistrationRequestServiceImpl implements RegistrationRequestServic
 
     @Override
     public void processRequest(Integer id, ProcessRequest request) {
-        var registrationRequest = registrationRequestRepository.findById(id).orElse(null);
-        if (registrationRequest == null) {
-            throw new NotFoundException();
-        }
-        var userAccount = userAccountRepository.findById(id).orElse(null);
-        if (userAccount == null) {
-            throw new NotFoundException();
-        }
+        var registrationRequest = registrationRequestRepository
+                .findById(id)
+                .orElseThrow(NotFoundException::new);
+
+        var userAccount = userAccountRepository
+                .findById(id)
+                .orElseThrow(NotFoundException::new);
+
         userAccount.setEnabled(request.getApprove());
         registrationRequestRepository.delete(registrationRequest);
         userAccountRepository.save(userAccount);
