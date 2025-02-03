@@ -89,7 +89,7 @@ export const Menu = () => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarGroupLabel>Other</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenuItem>
@@ -106,7 +106,7 @@ export const Menu = () => {
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </SidebarContent>
       <SidebarFooter>
         <Button

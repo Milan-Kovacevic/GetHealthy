@@ -26,7 +26,6 @@ export const endpointResources: ResourceProps[] = [
       icon: <UserIcon />,
       label: "Users",
       parent: "users-root",
-      dataProviderName: "mock",
     },
   },
   {
@@ -38,7 +37,6 @@ export const endpointResources: ResourceProps[] = [
       icon: <BookUserIcon />,
       label: "Registration requests",
       parent: "users-root",
-      dataProviderName: "mock",
     },
   },
 
