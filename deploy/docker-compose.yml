@@ -1,0 +1,69 @@
+services:
+  # MySQL Database
+  gethealthy.mysql:
+    image: mysql:8.0
+    container_name: gethealthy.mysql
+    environment:
+      MYSQL_DATABASE: get_healthy
+      MYSQL_USER: gethealthy
+      MYSQL_PASSWORD: gethealthy
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql:/docker-entrypoint-initdb.d
+    env_file: 
+      - ./mysql/.env
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "${MYSQL_ROOT_USERNAME}", "--password=${MYSQL_ROOT_PASSWORD}"]
+      timeout: 10s
+      retries: 5
+      
+  # Spring Boot Backend
+  gethealthy.backend:
+    build:
+      context: ../gh-backend
+      dockerfile: Dockerfile
+    container_name: gethealthy.backend
+    ports:
+      - "8200:8200"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://gethealthy.mysql:3306/get_healthy
+      SPRING_DATASOURCE_USERNAME: gethealthy
+      SPRING_DATASOURCE_PASSWORD: gethealthy
+    depends_on:
+      gethealthy.mysql:
+        condition: service_healthy
+
+  # React Admin App
+  gethealthy.admin:
+    build:
+      context: ../gh-admin
+      dockerfile: Dockerfile
+    container_name: gethealthy.admin
+    ports:
+      - "4000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ../gh-admin/src:/app/src
+    depends_on:
+      - gethealthy.backend
+
+  # React Client App
+  gethealthy.client:
+    build:
+      context: ../gh-client
+      dockerfile: Dockerfile
+    container_name: gethealthy.client
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ../gh-admin/src:/app/src
+    depends_on:
+      - gethealthy.backend
+
+volumes:
+  mysql-data:

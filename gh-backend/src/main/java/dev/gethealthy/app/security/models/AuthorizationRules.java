@@ -1,4 +1,4 @@
-package dev.gethealthy.app.configs;
+package dev.gethealthy.app.security.models;
 
 import lombok.Data;
 

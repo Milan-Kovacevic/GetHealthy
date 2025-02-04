@@ -1,4 +1,4 @@
-package dev.gethealthy.app.services;
+package dev.gethealthy.app.security.services;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 

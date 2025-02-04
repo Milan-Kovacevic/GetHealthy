@@ -1,9 +1,9 @@
-package dev.gethealthy.app.services.impl;
+package dev.gethealthy.app.security.services;
 
 import dev.gethealthy.app.exceptions.UnauthorizedException;
 import dev.gethealthy.app.repositories.UserAccountRepository;
 import dev.gethealthy.app.security.models.JwtUser;
-import dev.gethealthy.app.services.JwtUserDetailsService;
+import dev.gethealthy.app.security.services.JwtUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

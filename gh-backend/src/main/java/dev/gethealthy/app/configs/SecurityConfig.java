@@ -1,7 +1,10 @@
 package dev.gethealthy.app.configs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.gethealthy.app.services.JwtUserDetailsService;
+import dev.gethealthy.app.security.AuthorizationFilter;
+import dev.gethealthy.app.security.models.AuthorizationRules;
+import dev.gethealthy.app.security.models.Rule;
+import dev.gethealthy.app.security.services.JwtUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -26,16 +29,14 @@ import java.io.IOException;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-public class SecurityConfiguration {
-
-    private final CorsConfigurationBean configurationBean;
-
+public class SecurityConfig {
+    private final CorsConfig corsConfig;
     private final AuthorizationFilter authorizationFilter;
     private final JwtUserDetailsService jwtUserDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.cors(cors -> cors.configurationSource(configurationBean.corsConfigurationSource()))
+        return httpSecurity.cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //                .authorizeHttpRequests(this::createRules)

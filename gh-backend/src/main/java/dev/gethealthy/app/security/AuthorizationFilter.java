@@ -1,4 +1,4 @@
-package dev.gethealthy.app.configs;
+package dev.gethealthy.app.security;
 
 import dev.gethealthy.app.models.enums.Role;
 import dev.gethealthy.app.security.models.JwtUser;
