@@ -1,6 +1,6 @@
-FROM refinedev/node:18 AS base
+FROM refinedev/node:18
 
-FROM base as deps
+WORKDIR /app
 
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
 
@@ -11,28 +11,16 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-FROM base as builder
-
 ENV NODE_ENV production
 
-COPY --from=deps /app/refine/node_modules ./node_modules
+RUN npm i -g serve
 
 COPY . .
 
 RUN npm run build
 
-FROM base as runner
-
-ENV NODE_ENV production
-
-RUN npm install -g serve
-
-COPY --from=builder /app/refine/dist ./
-
-USER refine
-
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Serve the app
-CMD ["serve", "-s", "build", "-l", "3000"]
+CMD [ "serve", "-s", "dist" ]

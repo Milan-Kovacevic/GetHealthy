@@ -12,7 +12,7 @@ public class ProgramParticipantDetailsResponse {
     private String firstName;
     private String lastName;
     private Gender gender;
-    private Instant dateOfBirth;
+    private LocalDate dateOfBirth;
     private String profilePictureFilePath;
     private Double height;
     private Double weight;

@@ -38,7 +38,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
-        String token = authorizationHeader.replace(authorizationHeaderPrefix, "");
+        String token = authorizationHeader.replace(authorizationHeaderPrefix, "").trim();
         try {
             Claims claims = Jwts.parser()
                     .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(authorizationSecret)))

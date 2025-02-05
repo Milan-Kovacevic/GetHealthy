@@ -11,7 +11,7 @@ import lombok.Data;
 public class SingleUserResponse {
     private String firstName;
     private String lastName;
-    private Instant dateOfBirth;
+    private LocalDate dateOfBirth;
     private Gender gender;
     private String profilePictureFilePath;
     private UserAccountResponse userAccount;

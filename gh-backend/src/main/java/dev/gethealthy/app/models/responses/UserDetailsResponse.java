@@ -5,6 +5,7 @@ import dev.gethealthy.app.models.enums.Role;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -20,7 +21,7 @@ public class UserDetailsResponse {
     private Role role;
     private String email;
     private Gender gender;
-    private Instant dateOfBirth;
+    private LocalDate dateOfBirth;
     private String username;
     private String profilePictureFilePath;
     private Instant lastAccessed;

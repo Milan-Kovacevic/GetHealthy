@@ -4,6 +4,7 @@ services:
     image: mysql:8.0
     container_name: gethealthy.mysql
     environment:
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: get_healthy
       MYSQL_USER: gethealthy
       MYSQL_PASSWORD: gethealthy
@@ -11,11 +12,8 @@ services:
       - '3307:3306'
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./mysql:/docker-entrypoint-initdb.d
-    env_file: 
-      - ./mysql/.env
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "${MYSQL_ROOT_USERNAME}", "--password=${MYSQL_ROOT_PASSWORD}"]
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "--password=root"]
       timeout: 10s
       retries: 5
       
@@ -31,6 +29,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://gethealthy.mysql:3306/get_healthy
       SPRING_DATASOURCE_USERNAME: gethealthy
       SPRING_DATASOURCE_PASSWORD: gethealthy
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
     depends_on:
       gethealthy.mysql:
         condition: service_healthy

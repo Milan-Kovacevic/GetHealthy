@@ -12,6 +12,6 @@ public class ProgramParticipantResponse {
     private String firstName;
     private String lastName;
     private Gender gender;
-    private Instant dateOfBirth;
+    private LocalDate dateOfBirth;
     private Instant joinDate;
 }

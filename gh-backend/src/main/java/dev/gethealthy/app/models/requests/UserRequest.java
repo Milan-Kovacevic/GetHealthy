@@ -1,9 +1,9 @@
 package dev.gethealthy.app.models.requests;
 
-import java.time.LocalDate;
-
 import dev.gethealthy.app.models.enums.Gender;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 public class UserRequest {

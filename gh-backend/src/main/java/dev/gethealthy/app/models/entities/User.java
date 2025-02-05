@@ -40,7 +40,7 @@ public class User implements BaseEntity<Integer> {
 
     @NotNull
     @Column(name = "DateOfBirth")
-    private Instant dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)
