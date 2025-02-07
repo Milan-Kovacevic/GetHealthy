@@ -1,4 +1,12 @@
-import { Area, AreaChart, CartesianGrid, LabelList, XAxis } from "recharts";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  LabelList,
+  XAxis,
+} from "recharts";
 
 import {
   ChartConfig,
@@ -29,7 +37,7 @@ export function TopThreeInteractedProgramsChart({
       config={chartConfig}
       className="mx-auto md:max-w-none max-w-sm w-full h-[140px]"
     >
-      <AreaChart
+      <BarChart
         accessibilityLayer
         data={chartData}
         margin={{
@@ -42,12 +50,11 @@ export function TopThreeInteractedProgramsChart({
         <XAxis dataKey="program" tickLine={false} axisLine={false} />
 
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <Area
+        <Bar
           dataKey="value"
-          type="step"
+          radius={6}
           fill="var(--color-value)"
           fillOpacity={0.4}
-          stroke="var(--color-value)"
         >
           <LabelList
             position="top"
@@ -55,8 +62,8 @@ export function TopThreeInteractedProgramsChart({
             className="fill-foreground"
             fontSize={12}
           />
-        </Area>
-      </AreaChart>
+        </Bar>
+      </BarChart>
     </ChartContainer>
   );
 }

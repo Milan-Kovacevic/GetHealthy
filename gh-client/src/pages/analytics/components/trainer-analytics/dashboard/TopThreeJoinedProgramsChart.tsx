@@ -1,4 +1,12 @@
-import { LineChart, CartesianGrid, LabelList, Line, XAxis } from "recharts";
+import {
+  LineChart,
+  CartesianGrid,
+  LabelList,
+  Line,
+  XAxis,
+  BarChart,
+  Bar,
+} from "recharts";
 
 import {
   ChartConfig,
@@ -29,7 +37,7 @@ export function TopThreeJoinedProgramsChart({
       config={chartConfig}
       className="mx-auto max-w-[280px] w-full h-[140px]"
     >
-      <LineChart
+      <BarChart
         accessibilityLayer
         data={chartData}
         margin={{
@@ -42,15 +50,15 @@ export function TopThreeJoinedProgramsChart({
         <XAxis dataKey="program" tickLine={false} axisLine={false} />
 
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <Line dataKey="value" fill="var(--color-value)" radius={8} type="step">
+        <Bar dataKey="value" fill="var(--color-value)" radius={6}>
           <LabelList
             position="top"
             offset={12}
             className="fill-foreground"
             fontSize={12}
           />
-        </Line>
-      </LineChart>
+        </Bar>
+      </BarChart>
     </ChartContainer>
   );
 }

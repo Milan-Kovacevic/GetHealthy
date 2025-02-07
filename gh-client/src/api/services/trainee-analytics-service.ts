@@ -22,7 +22,7 @@ const mockProgressData = [
   { date: "2025-01-06", firstMetric: 86, secondMetric: 34 },
   { date: "2025-01-07", firstMetric: 40, secondMetric: 27 },
   { date: "2025-01-08", firstMetric: 100, secondMetric: 70 },
-  { date: "2025-01-09", firstMetric: 65, secondMetric: 72 },
+  { date: "2025-01-09", firstMetric: 140, secondMetric: 72 },
   { date: "2025-01-10", firstMetric: 57, secondMetric: 31 },
 ];
 

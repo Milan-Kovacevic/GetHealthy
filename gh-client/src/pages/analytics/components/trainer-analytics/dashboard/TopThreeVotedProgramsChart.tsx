@@ -33,14 +33,14 @@ export function TopThreeVotedProgramsChart({
         accessibilityLayer
         data={chartData}
         margin={{
-          top: 5,
+          top: 10,
         }}
       >
         <CartesianGrid vertical={false} />
         <XAxis dataKey="program" tickLine={false} axisLine={false} />
 
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <Bar dataKey="value" fill="var(--color-value)" radius={8}>
+        <Bar dataKey="value" fill="var(--color-value)" radius={6}>
           <LabelList
             position="top"
             offset={12}

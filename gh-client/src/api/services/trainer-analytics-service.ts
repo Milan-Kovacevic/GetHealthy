@@ -42,7 +42,7 @@ const getTrainerDashboardAnalytics = async (
 ): Promise<TrainerDashboardAnalytics> => {
   var url = ApiEndpoints.TrainerAnalytics.replace("{userId}", `${userId}`);
   url += "/general";
-  await delay(1500);
+  await delay(500);
   return sendAxiosRequest<void, TrainerDashboardAnalyticsDTO>({
     method: "GET",
     url: url,
@@ -50,8 +50,6 @@ const getTrainerDashboardAnalytics = async (
   }).then((response) => {
     return response.data as TrainerDashboardAnalytics;
   });
-  //
-
   // return {
   //   topInteracted: topInteractedMock,
   //   topJoined: topJoinedMock,
@@ -89,7 +87,7 @@ const generateTrainerPopularityAnalytics = async (
     to: to.toISOString(),
     programId: programId,
   };
-  await delay(1500);
+  await delay(500);
   return sendAxiosRequest<
     PopularityAnalyticsRequestDTO,
     TrainerPopularityAnalyticsDTO
@@ -160,7 +158,7 @@ const generateTrainerEngagementAnalytics = async (
     exerciseId: exerciseId,
     traineeId: participantId,
   };
-  await delay(1500);
+  await delay(500);
   return sendAxiosRequest<
     EngagementAnalyticsRequestDTO,
     TrainerEngagementAnalyticsDTO

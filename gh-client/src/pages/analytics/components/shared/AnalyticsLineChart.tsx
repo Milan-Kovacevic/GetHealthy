@@ -113,7 +113,7 @@ export default function AnalyticsLineChart(props: AnalyticsLineChartProps) {
                 stroke={`var(--color-${y.dataKey})`}
                 strokeWidth={2}
                 fillOpacity={0.6}
-                type="step"
+                type="monotone"
               />
             </LineChart>
           </ChartContainer>

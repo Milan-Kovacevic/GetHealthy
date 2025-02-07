@@ -48,7 +48,7 @@ export function TopThreeSkippedExercisesChart({
         <XAxis dataKey="exercise" tickLine={false} axisLine={false} />
 
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <Bar dataKey="value" fill="var(--color-value)" radius={8}>
+        <Bar dataKey="value" fill="var(--color-value)" radius={6}>
           <LabelList
             position="top"
             offset={12}

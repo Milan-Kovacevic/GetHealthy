@@ -75,7 +75,6 @@ export default function ExerciseProgressChart(
               angle: -90,
               position: "insideLeft",
             }}
-            domain={[0, 100]}
             className="sm:block hidden w-0"
           />
         )}

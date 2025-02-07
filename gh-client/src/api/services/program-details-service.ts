@@ -29,7 +29,7 @@ const getSingleTrainingProgram = async (programId: number) => {
     "{programId}",
     `${programId}`
   );
-  await delay(2000);
+  await delay(500);
   return sendAxiosRequest<void, SingleTrainingProgramDTO>({
     method: "GET",
     url: url,
@@ -48,7 +48,7 @@ const getSingleTrainingProgramInfo = async (programId: number) => {
     `${programId}`
   );
   url += "/info";
-  await delay(2000);
+  await delay(500);
   return sendAxiosRequest<void, SingleTrainingProgramInfoDTO>({
     method: "GET",
     url: url,
@@ -67,7 +67,7 @@ const getSingleProgramTrainer = async (programId: number) => {
     `${programId}`
   );
   url += `/trainer-info`;
-  await delay(2000);
+  await delay(500);
   return sendAxiosRequest<void, SingleProgramTrainerDTO>({
     method: "GET",
     url: url,
@@ -75,10 +75,11 @@ const getSingleProgramTrainer = async (programId: number) => {
   }).then((response) => response.data as SingleProgramTrainer);
 };
 
-const getSingleTrainingProgramDetails = (id: number) => {
+const getSingleTrainingProgramDetails = async (id: number) => {
   var url = ApiEndpoints.SingleTrainingProgram.replace("{programId}", `${id}`);
   url += "/details";
 
+  await delay(500);
   return sendAxiosRequest<void, SingleProgramDetailsDTO>({
     method: "GET",
     url: url,
@@ -100,7 +101,7 @@ const getPageableTrainingProgramParticipants = async (
     `${programId}`
   );
   url += `?filter=${filter}&page=${page}&size=${pageSize}`;
-  await delay(2000);
+  await delay(500);
   return sendAxiosRequest<void, PageableProgramParticipantsDTO>({
     method: "GET",
     url: url,
@@ -121,7 +122,7 @@ const removeParticipantFromTrainingProgram = async (
   );
   url += `/${traineeId}`;
 
-  await delay(2000);
+  await delay(500);
   return sendAxiosRequest<void, void>({
     method: "DELETE",
     url: url,
@@ -138,7 +139,7 @@ const moveParticipantToAnotherTrainingProgram = async (
   );
   url += `/${model.traineeId}/move`;
 
-  await delay(2000);
+  await delay(500);
   return sendAxiosRequest<MoveProgramParticipantDTO, void>({
     method: "PUT",
     url: url,
@@ -157,7 +158,7 @@ const leaveTrainingProgram = async (
   ).replace("{programId}", `${programId}`);
   url += "/leave";
 
-  await delay(1500);
+  await delay(500);
   return sendAxiosRequest<void, void>({
     method: "POST",
     url: url,

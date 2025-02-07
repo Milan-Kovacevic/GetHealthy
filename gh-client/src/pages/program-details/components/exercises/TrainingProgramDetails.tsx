@@ -16,15 +16,13 @@ export default function TrainingProgramDetails() {
     if (!programId) return;
 
     setLoading(true);
-    setTimeout(() => {
-      getSingleTrainingProgramDetails(parseInt(programId))
-        .then((response) => {
-          setProgramDetails(response);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }, 3000);
+    getSingleTrainingProgramDetails(parseInt(programId))
+      .then((response) => {
+        setProgramDetails(response);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   if (!loading && !programDetails) {
