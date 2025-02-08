@@ -3,7 +3,7 @@ package dev.gethealthy.app.controllers;
 import dev.gethealthy.app.exceptions.BadRequestException;
 import dev.gethealthy.app.models.enums.Role;
 import dev.gethealthy.app.models.requests.LoginRequest;
-import dev.gethealthy.app.models.requests.RegistrationRequest;
+import dev.gethealthy.app.models.requests.UserRegistrationRequest;
 import dev.gethealthy.app.models.requests.TokensRequest;
 import dev.gethealthy.app.models.responses.LoginResponse;
 import dev.gethealthy.app.models.responses.TokensResponse;
@@ -23,7 +23,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(path="register")
-    public void register(@RequestPart(name = "data") @Valid RegistrationRequest registrationRequest,
+    public void register(@RequestPart(name = "data") @Valid UserRegistrationRequest registrationRequest,
                          @RequestPart(name = "qualification", required = false) MultipartFile file) throws IOException {
         if (registrationRequest.getRole() == Role.TRAINER && file==null)
             throw new BadRequestException();

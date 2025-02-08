@@ -6,6 +6,7 @@ import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable, TableActions, TableHeading } from "@/components/table";
 import { formatDistanceToNow } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export const RequestList: React.FC<IResourceComponentsProps> = () => {
   const columns = React.useMemo<ColumnDef<IRegistrationRequestResponse>[]>(
@@ -42,9 +43,15 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
         accessorKey: "description",
         header: "Note",
         cell: ({ getValue }) => {
+          var value = getValue() as string;
           return (
-            <span className="text-foreground/75 line-clamp-2 max-w-sm w-full leading-tight text-[13px]">
-              {getValue() as string}
+            <span
+              className={cn(
+                "text-foreground/75 line-clamp-2 max-w-sm w-full leading-tight text-[13px]",
+                !value && "italic"
+              )}
+            >
+              {value ? value : "Not present..."}
             </span>
           );
         },

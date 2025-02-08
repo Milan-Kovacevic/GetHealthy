@@ -1,4 +1,5 @@
 import { dataProvider } from "@/providers/data";
+import { fetchDataProvider } from "@/providers/data/fetchCustomProvider";
 import { mockProvider } from "@/providers/data/mockProvider";
 import { DataProviders, ResourceProps } from "@refinedev/core";
 import {
@@ -93,4 +94,5 @@ export const dataProviders: DataProviders = {
   default: dataProvider(),
   filtered: dataProvider("filter"),
   mock: mockProvider(),
+  fetch: fetchDataProvider(),
 };

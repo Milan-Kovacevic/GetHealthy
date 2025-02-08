@@ -10,8 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-@Getter
-@Setter
+@Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "trainer")
@@ -23,10 +22,4 @@ public class Trainer extends User implements BaseEntity<Integer> {
     @Size(max = 32)
     @Column(name = "ContactInfo", length = 32)
     private String contactInfo;
-
-//    @MapsId
-//    @OneToOne(fetch = FetchType.LAZY, optional = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JoinColumn(name = "UserId", nullable = false)
-//    private Qualification qualification;
 }

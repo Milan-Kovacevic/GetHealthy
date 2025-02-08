@@ -5,13 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 
 @Data
 @Getter
 @Setter
-public class RegistrationRequest {
+public class UserRegistrationRequest {
     @NotBlank
     private String username;
 
@@ -25,8 +24,8 @@ public class RegistrationRequest {
     private Role role;
 
     @NotBlank
-    private String FirstName;
+    private String firstName;
 
     @NotBlank
-    private String LastName;
+    private String lastName;
 }
