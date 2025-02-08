@@ -8,6 +8,7 @@ import {
   useNavigation,
   useShow,
 } from "@refinedev/core";
+import { format } from "date-fns";
 import { CheckIcon, DownloadIcon, Loader2Icon, XIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -62,7 +63,8 @@ const RequestInfo = ({
   goBack: () => void;
 }) => {
   const dataProvider = useDataProvider();
-  const defaultDataProvider = dataProvider();
+  const customDataProvider = dataProvider("fetch");
+
   const [loadingQualification, setLoadingQualification] = useState(false);
 
   const { isLoading, mutateAsync } = useCustomMutation();
@@ -83,12 +85,12 @@ const RequestInfo = ({
 
   const handleDownloadQualification = () => {
     setLoadingQualification(true);
-    defaultDataProvider
+    customDataProvider
       .custom?.<any>({
         url: `storage/documents/${record.certificationFilePath}`,
         method: "get",
       })
-      .then((qualification) => {
+      .then((response) => {
         const fileExtension = record.certificationFilePath.split(".").pop();
         const fileName =
           record.firstName +
@@ -97,11 +99,7 @@ const RequestInfo = ({
           "_Qualification." +
           fileExtension;
 
-        const blob = new Blob([...qualification.data], {
-          type: "application/octet-stream",
-        });
-
-        let url = URL.createObjectURL(blob);
+        let url = URL.createObjectURL(response.data);
         let a = document.createElement("a");
         a.href = url;
         a.download = fileName;
@@ -117,7 +115,7 @@ const RequestInfo = ({
     <div className="flex flex-col">
       <div className="flex items-start justify-between space-x-3">
         <div className="flex flex-row gap-2 items-center">
-          <p className="text-foreground text-lg mt-1 leading-none font-normal">
+          <p className="text-foreground text-base leading-none font-normal">
             From:
           </p>
           <h2 className="text-xl font-semibold">{fullName}</h2>
@@ -140,28 +138,26 @@ const RequestInfo = ({
         </div>
       </div>
       <div className="space-y-1 pt-3 pb-2">
-        <div className="flex flex-row gap-2 items-center">
-          <p className="text-foreground text-sm leading-none font-semibold">
-            {"Email: "}
-          </p>
-          <p className="text-sm text-foreground/95">{record.email}</p>
-        </div>
-        <div className="flex flex-row gap-2 items-center">
-          <p className="text-foreground text-sm leading-none font-semibold">
-            {"Issued: "}
-          </p>
-          <p className="text-sm text-foreground/95 font-medium">
-            {new Date(record.issueDate).toLocaleDateString()}
-          </p>
-        </div>
+        <RecordItem label="Email: " value={record.email} />
+
+        <RecordItem
+          label="Issued: "
+          value={format(record.issueDate, "dd.MM.yyyy, HH:mm:ss")}
+        />
 
         <div className="flex flex-col gap-1.5 pt-2">
           <p className="text-foreground text-sm leading-none font-semibold">
             {"Registration note: "}
           </p>
-          <p className="text-[13px] tracking-tight text-muted-foreground">
-            {record.description}
-          </p>
+          {record.description ? (
+            <p className="text-[13px] tracking-tight text-muted-foreground">
+              {record.description}
+            </p>
+          ) : (
+            <p className="text-sm tracking-tight text-muted-foreground italic">
+              There is no registration note...
+            </p>
+          )}
         </div>
       </div>
 

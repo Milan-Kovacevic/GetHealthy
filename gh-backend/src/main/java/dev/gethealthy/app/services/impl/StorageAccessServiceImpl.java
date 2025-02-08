@@ -36,6 +36,7 @@ public class StorageAccessServiceImpl implements StorageAccessService {
     private void postConstruct() {
         Path rootPath = Paths.get(storagePath, storageName).normalize().toAbsolutePath();
         File rootFolder = rootPath.toFile();
+        System.out.println("Root storage path: " + rootFolder.getPath());
         if (!rootFolder.exists()) {
             try {
                 Files.createDirectories(rootPath);

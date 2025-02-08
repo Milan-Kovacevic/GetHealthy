@@ -107,7 +107,7 @@ public class TraineeAnalyticsServiceImpl implements TraineeAnalyticsService {
                 .map(esf -> new TraineeProgressAnalyticsResponse.TraineeProgressData(
                        esf.getExerciseFeedback().getTraineeExercising().getDateTaken(),
                         Double.parseDouble(esf.getFirstMetricValueFeedback()),
-                        Double.parseDouble(esf.getSecondMetricValueFeedback())))
+                        esf.getSecondMetricValueFeedback()==null?0.00:Double.parseDouble(esf.getSecondMetricValueFeedback())))
                 .toList()
         );
 

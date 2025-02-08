@@ -2,9 +2,8 @@ import { SingleProgramTrainer } from "@/api/models/program-details";
 import { getSingleProgramTrainer } from "@/api/services/program-details-service";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Download, UserIcon } from "lucide-react";
+import { Download, Loader2Icon, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import noImage from "@/assets/no-image.jpg";
 import { useParams } from "react-router-dom";
 import TrainerInfoLoader from "./TrainerInfoLoader";
 import { format } from "date-fns";
@@ -15,6 +14,7 @@ import { toast } from "sonner";
 export default function ProgramTrainerInfo() {
   const params = useParams();
   const [loading, setLoading] = useState(false);
+  const [pending, setPending] = useState(false);
   const [trainer, setTrainer] = useState<SingleProgramTrainer>();
 
   useEffect(() => {
@@ -45,8 +45,28 @@ export default function ProgramTrainerInfo() {
   }
 
   const handleDownload = async () => {
-    if (trainer?.certificateFilePath) {
-      await downloadTrainerCertificate(trainer.certificateFilePath);
+    if (trainer && trainer.certificateFilePath != undefined) {
+      setPending(true);
+      downloadTrainerCertificate(trainer.certificateFilePath)
+        .then((href) => {
+          const link = document.createElement("a");
+          link.href = href;
+          link.download = trainer.certificateFilePath!;
+          document.body.appendChild(link);
+          link.click();
+
+          document.body.removeChild(link);
+          URL.revokeObjectURL(link.href);
+          toast.success("Certificate downloaded successfully.");
+        })
+        .catch(() => {
+          toast.error(
+            "Failed to download certificate. Please try again later."
+          );
+        })
+        .finally(() => {
+          setPending(false);
+        });
     } else {
       toast.error("No certificate available for download.");
     }
@@ -60,12 +80,14 @@ export default function ProgramTrainerInfo() {
           <div className="relative p-4 pt-0">
             <Button
               onClick={handleDownload}
+              disabled={pending}
               variant="secondary"
               className="absolute top-10 right-4"
               aria-label="Download qualification"
             >
               <div className="flex items-center gap-1.5">
-                <Download className="h-4 w-4" />
+                {pending ? <Loader2Icon /> : <Download className="h-4 w-4" />}
+
                 <p className="sm:block hidden">Download qualification</p>
               </div>
             </Button>
@@ -107,7 +129,6 @@ export default function ProgramTrainerInfo() {
                   <span className="mx-3 w-0.5 h-4 bg-muted-foreground" />
                   {trainer.gender ? (
                     <p className="text-sm font-normal text-foreground/80">
-                      {/* {capitalize<string>(trainer.gender)} */}
                       {capitalize(trainer.gender)}
                     </p>
                   ) : (
@@ -133,7 +154,7 @@ export default function ProgramTrainerInfo() {
               </div>
             </div>
             <div className="mt-4 max-w-screen-lg">
-              <p className="text-[15px] text-muted-foreground text-justify text-pretty">
+              <p className="text-[15px] text-foreground/70 leading-snug text-justify text-pretty">
                 {trainer.biography}
               </p>
             </div>

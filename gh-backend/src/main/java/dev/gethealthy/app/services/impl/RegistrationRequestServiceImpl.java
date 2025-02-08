@@ -1,13 +1,15 @@
 package dev.gethealthy.app.services.impl;
 
 import dev.gethealthy.app.exceptions.NotFoundException;
+import dev.gethealthy.app.models.entities.Qualification;
+import dev.gethealthy.app.models.entities.Trainer;
 import dev.gethealthy.app.models.requests.ProcessRequest;
 import dev.gethealthy.app.models.responses.RegistrationRequestResponse;
 import dev.gethealthy.app.models.responses.UserAccountResponse;
-import dev.gethealthy.app.repositories.RegistrationRequestRepository;
-import dev.gethealthy.app.repositories.UserAccountRepository;
-import dev.gethealthy.app.repositories.UserRepository;
+import dev.gethealthy.app.repositories.*;
 import dev.gethealthy.app.services.RegistrationRequestService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,15 +27,21 @@ public class RegistrationRequestServiceImpl implements RegistrationRequestServic
 
     private final RegistrationRequestRepository registrationRequestRepository;
     private final UserAccountRepository userAccountRepository;
+    private final QualificationRepository qualificationRepository;
+    private final TrainerRepository trainerRepository;
     private final ModelMapper modelMapper;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public Page<RegistrationRequestResponse> getRequests(Pageable page)
+    public Page<RegistrationRequestResponse> getAllRegistrationRequests(Pageable page)
     {
-        return registrationRequestRepository.findAll(page).map(registrationRequest -> modelMapper.map(registrationRequest, RegistrationRequestResponse.class));
+        return registrationRequestRepository
+                .findAll(page)
+                .map(e -> modelMapper.map(e, RegistrationRequestResponse.class));
     }
 
     @Override
-    public void processRequest(Integer id, ProcessRequest request) {
+    public void processRegistrationRequest(Integer id, ProcessRequest request) {
         var registrationRequest = registrationRequestRepository
                 .findById(id)
                 .orElseThrow(NotFoundException::new);
@@ -43,16 +51,32 @@ public class RegistrationRequestServiceImpl implements RegistrationRequestServic
                 .orElseThrow(NotFoundException::new);
 
         userAccount.setEnabled(request.getApprove());
+        var savedUserAccount = userAccountRepository.save(userAccount);
+        if(request.getApprove()){
+            var trainer = modelMapper.map(registrationRequest, Trainer.class);
+            trainer.setId(null);
+            trainer.setUserAccount(savedUserAccount);
+            trainer = trainerRepository.save(trainer);
+
+            var qualification = new Qualification();
+            qualification.setTrainer(trainer);
+            qualification.setCertificationFilePath(registrationRequest.getCertificationFilePath());
+            qualification.setId(null);
+            qualificationRepository.saveAndFlush(qualification);
+        }
+
         registrationRequestRepository.delete(registrationRequest);
-        userAccountRepository.save(userAccount);
     }
 
     @Override
-    public RegistrationRequestResponse getRequest(Integer id) {
-        var registrationRequest = registrationRequestRepository.findById(id).orElse(null);
-        if (registrationRequest == null) {
-            throw new NotFoundException();
-        }
-        return modelMapper.map(registrationRequest, RegistrationRequestResponse.class);
+    public RegistrationRequestResponse getRegistrationRequest(Integer id) {
+        var registrationRequest = registrationRequestRepository
+                .findById(id)
+                .orElseThrow(NotFoundException::new);
+
+        var response = modelMapper.map(registrationRequest, RegistrationRequestResponse.class);
+        modelMapper.map(registrationRequest.getUserAccount(), response);
+
+        return response;
     }
 }

@@ -11,7 +11,7 @@ export default function TrainerInfoLoader() {
 
           <Skeleton className="w-52 h-14 mt-3" />
 
-          <Skeleton className="md:w-48 w-10 h-10 mt-3 absolute -top-2 right-4" />
+          <Skeleton className="md:w-52 w-10 h-10 mt-3 absolute top-3 right-4" />
         </div>
       </div>
 

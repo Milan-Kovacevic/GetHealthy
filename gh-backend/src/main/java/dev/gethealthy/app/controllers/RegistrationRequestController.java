@@ -16,20 +16,20 @@ public class RegistrationRequestController {
     private final RegistrationRequestService registrationRequestService;
 
     @GetMapping
-    public Page<RegistrationRequestResponse> getRequests(Pageable page)
+    public Page<RegistrationRequestResponse> getAllRegistrationRequests(Pageable page)
     {
-        return registrationRequestService.getRequests(page);
+        return registrationRequestService.getAllRegistrationRequests(page);
     }
 
     @GetMapping("{id}")
-    public RegistrationRequestResponse getRequest(@PathVariable Integer id)
+    public RegistrationRequestResponse getRegistrationRequest(@PathVariable Integer id)
     {
-        return registrationRequestService.getRequest(id);
+        return registrationRequestService.getRegistrationRequest(id);
     }
 
     @PostMapping("{id}/process")
     public void processRequest(@PathVariable(name="id") Integer id, @RequestBody @Valid ProcessRequest processRequest)
     {
-        registrationRequestService.processRequest(id, processRequest);
+        registrationRequestService.processRegistrationRequest(id, processRequest);
     }
 }

@@ -5,7 +5,7 @@ import dev.gethealthy.app.models.entities.*;
 import dev.gethealthy.app.models.enums.Role;
 import dev.gethealthy.app.models.enums.StorageType;
 import dev.gethealthy.app.models.requests.LoginRequest;
-import dev.gethealthy.app.models.requests.RegistrationRequest;
+import dev.gethealthy.app.models.requests.UserRegistrationRequest;
 import dev.gethealthy.app.models.responses.AuthUserResponse;
 import dev.gethealthy.app.models.responses.LoginResponse;
 import dev.gethealthy.app.models.responses.TokensResponse;
@@ -13,9 +13,12 @@ import dev.gethealthy.app.repositories.*;
 import dev.gethealthy.app.security.models.JwtUser;
 import dev.gethealthy.app.services.AuthService;
 import dev.gethealthy.app.services.StorageAccessService;
+import dev.gethealthy.app.util.Utility;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -41,9 +44,8 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final StorageAccessService storageAccessService;
-    private final TrainerRepository trainerRepository;
     private final TraineeRepository traineeRepository;
-    private final QualificationRepository qualificationRepository;
+    private final RegistrationRequestRepository registrationRequestRepository;
 
     @Value("${authorization.token.expiration-time}")
     private String tokenExpirationTime;
@@ -84,32 +86,25 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean logout() {
-        // invalidate JWT
-        return false;
-    }
-
-    @Override
-    public void register(RegistrationRequest registrationRequest, MultipartFile file) throws IOException {
+    public void register(UserRegistrationRequest registrationRequest, MultipartFile file) throws IOException {
         var isTrainer = registrationRequest.getRole() == Role.TRAINER;
         var enabled = !isTrainer;
         var userAccount = modelMapper.map(registrationRequest, UserAccount.class);
         userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
         userAccount.setEnabled(enabled);
-        userAccount.setCreatedAt(Instant.now());
+        userAccount.setCreatedAt(Utility.getInstantCurrentDate());
         var createdUserAccount = userAccountRepository.save(userAccount);
 
         if (isTrainer) {
-            var user = modelMapper.map(registrationRequest, User.class);
-            user.setUserAccount(createdUserAccount);
             var qualificationPath = storageAccessService.saveToFile(file.getOriginalFilename(), file.getBytes(),
                     StorageType.DOCUMENT);
-            var qualification = new Qualification();
-            qualification.setCertificationFilePath(qualificationPath);
-            var trainer = modelMapper.map(user, Trainer.class);
-            trainerRepository.save(trainer);
-            qualification.setTrainer(trainer);
-            qualificationRepository.save(qualification);
+            var request = modelMapper.map(registrationRequest, RegistrationRequest.class);
+            request.setIssueDate(Utility.getInstantCurrentDate());
+            request.setCertificationFilePath(qualificationPath);
+            request.setUserAccount(createdUserAccount);
+            request.setId(null);
+
+            registrationRequestRepository.save(request);
         } else {
             var trainee = modelMapper.map(registrationRequest, Trainee.class);
             trainee.setUserAccount(createdUserAccount);
