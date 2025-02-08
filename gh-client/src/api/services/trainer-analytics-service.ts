@@ -48,7 +48,12 @@ const getTrainerDashboardAnalytics = async (
     url: url,
     requireAuth: true,
   }).then((response) => {
-    return response.data as TrainerDashboardAnalytics;
+    return {
+      ...response.data,
+      topVoted: response.data.topVoted.map((point) => {
+        return { ...point, value: Number(point.value.toFixed(2)) };
+      }),
+    } as TrainerDashboardAnalytics;
   });
   // return {
   //   topInteracted: topInteractedMock,

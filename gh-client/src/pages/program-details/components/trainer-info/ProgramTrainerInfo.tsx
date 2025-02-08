@@ -107,7 +107,6 @@ export default function ProgramTrainerInfo() {
                   <span className="mx-3 w-0.5 h-4 bg-muted-foreground" />
                   {trainer.gender ? (
                     <p className="text-sm font-normal text-foreground/80">
-                      {/* {capitalize<string>(trainer.gender)} */}
                       {capitalize(trainer.gender)}
                     </p>
                   ) : (
@@ -133,7 +132,7 @@ export default function ProgramTrainerInfo() {
               </div>
             </div>
             <div className="mt-4 max-w-screen-lg">
-              <p className="text-[15px] text-muted-foreground text-justify text-pretty">
+              <p className="text-[15px] text-foreground/75 text-justify text-pretty">
                 {trainer.biography}
               </p>
             </div>
