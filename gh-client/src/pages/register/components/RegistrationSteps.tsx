@@ -39,7 +39,7 @@ const Step = ({ isActive, isCompleted, title, number, isLast }: StepProps) => {
     <div className="flex flex-1 flex-col items-center justify-center relative">
       <div
         className={cn(
-          `flex h-8 w-8 items-center justify-center rounded-full border-2 z-10 bg-background`,
+          `flex h-8 w-8 items-center justify-center rounded-full border-2 z-10 bg-card`,
           isActive
             ? "border-primary text-primary"
             : isCompleted
@@ -55,7 +55,7 @@ const Step = ({ isActive, isCompleted, title, number, isLast }: StepProps) => {
       </div>
       <span
         className={cn(
-          `ml-2 max-w-32 text-center text-sm font-medium truncate z-10 bg-background relative`,
+          `ml-2 max-w-32 text-center text-sm font-medium truncate z-10 relative`,
           isActive ? "text-foreground" : "text-muted-foreground"
         )}
       >
