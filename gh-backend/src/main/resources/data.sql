@@ -4,7 +4,7 @@ VALUES
 (2,'slavkop','$2a$10$uoiH.79xLOtIXI8kceg0b.bPfg5XRfq4U5eNYZ3C1Bn3m5LqyMq6i','slavko.popovic@gmail.com',1, 1,'2024-11-11 12:57:24',NULL),
 (3,'anjam','$2a$10$IUHWplripOBnL6Xb7T93x./6wCJM8sAe7szn4V6FsftX3/RKWg2ai','anja.mirkovic@hotmail.com',1, 2,'2024-11-12 12:59:01',NULL),
 (4,'danijels','$2a$10$tYCYgVyfgMVMaKSTwGAecOlOhwLoAj9RQwpOxslE31TP46nKIcA.W','danijel.stojanovic@yahoo.com',1, 2,'2024-11-25 13:05:33',NULL),
-(5,'nikolam','$2a$10$Zil7pr.UGndxeTc4jQFjR.fugrPXQ10CCPO/fcs7duhWeRYAB73eq','nikola.mitrovic@gmail.com',0, 2,'2024-11-29 13:08:50',NULL),
+(5,'nikolam','$2a$10$Zil7pr.UGndxeTc4jQFjR.fugrPXQ10CCPO/fcs7duhWeRYAB73eq','nikola.mitrovic@gmail.com',1, 2,'2024-11-29 13:08:50',NULL),
 (6,'stankos','$2a$10$SRTuS/wbjmH0w8puhu1p3eOZnOqUJO6aH5Db2M1G7MTRW1SO2V9Te','stanko.soldat@gmail.com',1, 1,'2024-12-01 13:09:54',NULL),
 (7,'dejanb','$2a$10$6wjc0WkcGQgFchYGuVqYC.59WOoo0qMq58Qa0YHwkH/pA7L8tozjK','dejan.babic@yahoo.com',1, 1,'2024-12-07 13:10:44',NULL),
 (8,'jelenav','$2a$10$TkaiiDS.9T9mHm0GFICCvOhrdheRoK6UT6Fhl7e0bJQ3WKGcwnMuS','jelena.vaskovic@yahoo.com',1, 1,'2024-12-08 13:11:37',NULL),

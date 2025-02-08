@@ -23,8 +23,6 @@ public interface TrainingProgramRepository extends JpaRepository<TrainingProgram
     Page<TrainingProgram> findAllByTrainer_Id(Integer trainerId, Pageable page);
 
     List<TrainingProgram> findAllByTrainer_Id(Integer trainerId);
-
+    
     List<TrainingProgram> findTop5ByOrderByCreatedAtDesc();
-
-    boolean existsByIdAndTrainer_Id(Integer programId, Integer trainerId);
 }

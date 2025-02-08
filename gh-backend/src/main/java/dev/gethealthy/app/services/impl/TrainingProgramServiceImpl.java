@@ -47,7 +47,7 @@ public class TrainingProgramServiceImpl
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
         var dbResponse = trainingProgramRepository.findAll(spec, pageableWithSort);
 
-        var result = dbResponse.map(e -> {
+        return dbResponse.map(e -> {
             TrainingProgramResponse response = modelMapper.map(e, TrainingProgramResponse.class);
 
             response.setCurrentlyEnrolled(
@@ -58,8 +58,6 @@ public class TrainingProgramServiceImpl
 
             return response;
         });
-
-        return result;
     }
 
     public void deleteTrainingProgram(Integer id) {
