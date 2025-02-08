@@ -18,11 +18,11 @@ public class DatabaseSeeder {
 
     @PostConstruct
     public void init() {
-//        if (userRepository.count() > 0)
-//            return;
-//
-//        Resource resource = new ClassPathResource("data.sql");
-//        ResourceDatabasePopulator seeder = new ResourceDatabasePopulator(resource);
-//        seeder.execute(dataSource);
+        if (userRepository.count() > 0)
+            return;
+
+        Resource resource = new ClassPathResource("data.sql");
+        ResourceDatabasePopulator seeder = new ResourceDatabasePopulator(resource);
+        seeder.execute(dataSource);
     }
 }
