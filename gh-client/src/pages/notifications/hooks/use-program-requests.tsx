@@ -9,13 +9,16 @@ import {
   parseProgramRequestMessage,
   processTrainingProgramApplication,
 } from "@/api/services/program-application-service";
+import useAuth from "@/hooks/use-auth";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { useState } from "react";
 import { IMessage, useSubscription } from "react-stomp-hooks";
 import { toast } from "sonner";
 
 export function useProgramRequests() {
-  const userId = 2;
+  const { getUserId } = useAuth();
+  const userId = getUserId();
+
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [selectedRequest, setSelectedRequest] =
     useState<ProgramRequestDetails>();

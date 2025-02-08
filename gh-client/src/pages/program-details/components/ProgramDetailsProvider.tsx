@@ -22,8 +22,6 @@ export default function ProgramDetailsProvider({
   const auth = useAuth();
   const userId = auth.getUserId();
 
-  if (!userId) return;
-
   const [program, setProgram] = useState<SingleTrainingProgramInfo>();
   const [loading, setLoading] = useState(true);
   const [pending, setPending] = useState(false);
@@ -57,6 +55,7 @@ export default function ProgramDetailsProvider({
         toast.info("Application submitted!", {
           description: `Your request to join program '${program.name}' has been submitted. Check your inbox for status update.`,
         });
+        if (program) setProgram({ ...program, status: "PENDING" });
       })
       .catch((e) => {
         toast.error("Unexpected error", {
@@ -81,6 +80,7 @@ export default function ProgramDetailsProvider({
         toast.error("Unexpected error", {
           description: "Unable to leave program. Please, try again later.",
         });
+        if (program) setProgram({ ...program, status: "NOT_JOINED" });
       })
       .finally(() => {
         setPending(false);
