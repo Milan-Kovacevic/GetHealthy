@@ -1,6 +1,7 @@
 package dev.gethealthy.app.controllers;
 
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +36,7 @@ public class StorageAccessController {
             throw new NotFoundException();
         return ResponseEntity
                 .ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition")
                 .body(resource);

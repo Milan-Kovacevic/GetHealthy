@@ -11,7 +11,7 @@ function TrainingProgramsLoader() {
 }
 
 const ProgramCardSkeleton = () => {
-  return <Skeleton className="w-full max-w-xl min-h-80" />;
+  return <Skeleton className="w-full max-w-xl min-h-[400px]" />;
 };
 
 const FeaturedProgramCardSkeleton = () => {

@@ -8,7 +8,6 @@ import {
   Pagination,
 } from "@refinedev/core";
 import { AxiosInstance } from "axios";
-import { stringify } from "querystring";
 
 type MethodTypes = "get" | "delete" | "head" | "options";
 type MethodTypesWithBody = "post" | "put" | "patch";

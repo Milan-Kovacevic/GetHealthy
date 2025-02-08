@@ -3,7 +3,7 @@ interface IRegistrationRequestResponse {
   issueDate: string;
   firstName: string;
   lastName: string;
-  description: string;
+  description?: string;
 }
 
 interface IRegistrationRequestDetailsResponse
