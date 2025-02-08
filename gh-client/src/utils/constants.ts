@@ -25,7 +25,8 @@ export const ACCOUNT_TYPES = [
 ] as const;
 
 export const WS_BASE_PATH = environments().baseApiPath + "/ws";
-const API_PREFIX = environments().apiResourcePrefix;
+export const API_BASE_PATH = environments().baseApiPath;
+export const API_PREFIX = environments().apiResourcePrefix;
 export const ApiEndpoints = {
   Authentication: `${API_PREFIX}/auth`,
   UserNotifications: `${API_PREFIX}/users/{userId}/notifications`,
@@ -49,4 +50,5 @@ export const ApiEndpoints = {
   TraineeExercising: `${API_PREFIX}/workouts`,
   TrainerAnalytics: `${API_PREFIX}/users/{userId}/trainer-analytics`,
   TraineeAnalytics: `${API_PREFIX}/users/{userId}/trainee-analytics`,
+  DocumentsStorage: `${API_PREFIX}/storage/documents`,
 };

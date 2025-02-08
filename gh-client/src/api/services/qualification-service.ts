@@ -1,43 +1,14 @@
-import { certificateUrl } from "@/lib/utils";
-import { toast } from "sonner";
-import { sendAxiosRequest } from "./base-service";
-import environments from "@/environments/config";
+import { API_BASE_PATH, ApiEndpoints } from "@/utils/constants";
 
 const downloadTrainerCertificate = async (certificateName: string) => {
   if (!certificateName) {
-    console.error("Certificate name is required!");
-    toast.error("Certificate name is required.");
-    return;
+    throw new Error("Certificate name is required!");
   }
 
-  const url = certificateUrl(certificateName);
-  try {
-    const response = await sendAxiosRequest<void, Blob>({
-      url: url,
-      method: "GET",
-      requireAuth: true,
-      headers: {
-        "Content-Type": "application/octet-stream",
-      },
-    });
-
-    const blob = new Blob([response.data], {
-      type: response.headers["content-type"],
-    });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = certificateName;
-    document.body.appendChild(link);
-    link.click();
-
-    document.body.removeChild(link);
-    URL.revokeObjectURL(link.href);
-    toast.success("Certificate downloaded successfully.");
-  } catch (error) {
-    console.error("Error downloading certificate:", error);
-    toast.error("Failed to download certificate. Please try again later.");
-  }
+  const url = `${API_BASE_PATH}${ApiEndpoints.DocumentsStorage}/${certificateName}`;
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
 };
 
 export default downloadTrainerCertificate;
