@@ -66,8 +66,7 @@ export default function CurrentExerciseView(props: CurrentExerciseViewProps) {
 
       <div className="flex flex-col gap-1.5 mt-3">
         <iframe
-          src="https://www.youtube.com/embed/tgbNymZ7vqY"
-          // src={exercise.videoLink}
+          src={exercise.videoLink}
           className="aspect-video sm:h-[260px] rounded-xl border-2"
         ></iframe>
         <div className="ml-0.5 space-y-0.5">

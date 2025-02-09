@@ -84,7 +84,7 @@ VALUES
     
 INSERT INTO get_healthy.exercise (ExerciseId, Name, Description, VideoLink, FirstExerciseMetricId, SecondExerciseMetricId)
 VALUES 
-  (1, 'Push-Up', 'A basic push-up exercise for upper body strength.', 'https://example.com/pushup', 1, NULL),
+  (1, 'Push-Up', 'A basic push-up exercise for upper body strength.', 'https://www.youtube.com/embed/KEFQyLkDYtI?si=9GpIzH7SfVQV8FYQ', 1, NULL),
   (2, 'Plank', 'Core strengthening plank exercise.', 'https://example.com/plank', 2, NULL),
   (3, 'Running', 'A cardiovascular exercise for endurance and stamina.', 'https://example.com/running', 3, 2),
   (4, 'Deadlift', 'A weightlifting exercise to build strength in the lower body.', 'https://example.com/deadlift', 1, 4),
@@ -92,14 +92,14 @@ VALUES
   (6, 'Burpees', 'A full-body exercise that increases strength and endurance.', 'https://example.com/burpees', 1, 2),
   (7, 'Jump Rope', 'A cardio exercise that improves coordination and burns calories.', 'https://example.com/jumprope', 1, 2),
   (8, 'Squats', 'A lower-body exercise to build leg and glute strength.', 'https://example.com/squats', 1, 4),
-  (9, 'Bench Press', 'An upper-body strength exercise for chest muscles.', 'https://example.com/benchpress', 1, 4),
+  (9, 'Bench Press', 'An upper-body strength exercise for chest muscles.', 'https://www.youtube.com/embed/tuwHzzPdaGc', 1, 4),
   (10, 'Yoga', 'A flexibility and balance exercise.', 'https://example.com/yoga', 2, 6),
-  (11, 'Pull-Ups', 'An upper-body strength exercise focusing on the back and arms.', 'https://example.com/pullups', 1, NULL),
+  (11, 'Pull-Ups', 'An upper-body strength exercise focusing on the back and arms.', 'https://www.youtube.com/embed/poyr8KenUfc?rel=0', 1, NULL),
   (12, 'Leg Press', 'A lower-body exercise to strengthen legs using a machine.', 'https://example.com/legpress', 1, 4),
   (13, 'Bicep Curl', 'An arm exercise to strengthen biceps.', 'https://example.com/bicepcurl', 1, 4),
-  (14, 'Tricep Dips', 'An exercise to strengthen triceps.', 'https://example.com/tricepdips', 1, 4),
+  (14, 'Tricep Dips', 'An exercise to strengthen triceps.', 'https://www.youtube.com/embed/ZQnPQG5d67E?rel=0', 1, 4),
   (15, 'Lunges', 'A lower-body exercise for improving balance and leg strength.', 'https://example.com/lunges', 1, 4),
-  (16, 'Shoulder Press', 'An upper-body exercise to strengthen shoulders.', 'https://example.com/shoulderpress', 1, 4),
+  (16, 'Shoulder Press', 'An upper-body exercise to strengthen shoulders.', 'https://www.youtube.com/embed/FRxZ6wr5bpA?rel=0', 1, 4),
   (17, 'Lat Pulldown', 'An exercise to strengthen the back muscles.', 'https://example.com/latpulldown', 1, 4),
   (18, 'Chest Fly', 'An upper-body exercise to target chest muscles.', 'https://example.com/chestfly', 1, 4),
   (19, 'Leg Curl', 'A lower-body exercise to strengthen hamstrings.', 'https://example.com/legcurl', 1, 4),

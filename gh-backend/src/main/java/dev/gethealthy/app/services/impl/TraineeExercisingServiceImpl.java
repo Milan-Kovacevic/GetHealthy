@@ -81,7 +81,7 @@ public class TraineeExercisingServiceImpl extends CrudJpaService<TraineeExercisi
                                 null,
                                 tpe.getExerciseSets().stream().map(esf -> modelMapper.map(esf, WorkoutSummaryResponse.WorkoutSet.class)).toList(),
                                 null,
-                                tpe.getExercise().getId(),
+                                tpe.getId(),
                                 tpe.getExercise().getName(),
                                 tpe.getExercise().getDescription(),
                                 tpe.getExercise().getVideoLink(),
