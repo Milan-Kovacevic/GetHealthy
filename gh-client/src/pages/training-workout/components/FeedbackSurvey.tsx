@@ -154,8 +154,9 @@ export default function FeedbackSurvey({
                       <div className="space-y-1 leading-none">
                         <FormLabel className="font-normal cursor-pointer">
                           I have completed {completedSet.firstMetricValue}{" "}
-                          {firstMetric.unit} at {completedSet.secondMetricValue}{" "}
-                          {secondMetric?.unit}
+                          {firstMetric.unit}
+                          {secondMetric &&
+                            ` at ${completedSet.secondMetricValue} ${secondMetric.unit}`}
                         </FormLabel>
                       </div>
                     </FormItem>
