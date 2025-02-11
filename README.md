@@ -53,24 +53,21 @@ For more details on configuring the deployment, check the `docker-compose.yml` f
 
 - **Client application**
 
-![Programs1](https://github.com/user-attachments/assets/3d68b207-1bbc-498b-bc0d-6ab5814c6b32)
-![Programs2](https://github.com/user-attachments/assets/f0da0435-0827-4144-bc22-e163c53360a2)
-![Exercises2](https://github.com/user-attachments/assets/bf2a659d-1903-406a-b640-adee8f1c0ffa)
-![Exercises1](https://github.com/user-attachments/assets/6a2ff1f0-8070-437e-b3aa-890449d8b087)
-![Schedule](https://github.com/user-attachments/assets/01475307-fd31-4928-97d1-a3a92ea1bc3b)
-![Registration](https://github.com/user-attachments/assets/17d63b18-96bf-4123-8d08-086ef7ef2c41)
-![Workout](https://github.com/user-attachments/assets/8fdce0be-32dc-4202-b7fc-14be33472b18)
-![Analytics](https://github.com/user-attachments/assets/54cf20b1-b728-496e-a4d6-5832963377cd)
-![Profile](https://github.com/user-attachments/assets/d19cbe32-3760-48de-8c6f-cf44465abe59)
-![ProgramDetails1](https://github.com/user-attachments/assets/84e6a8f4-dfc2-4388-bd08-24485b4ed239)
-![ProgramDetails2](https://github.com/user-attachments/assets/75559d8e-75ce-4439-8b0c-fbc682d1729c)
+![Programs](https://github.com/user-attachments/assets/52fd7665-0b96-4664-a3cc-15f18c748de6)
+![Schedule](https://github.com/user-attachments/assets/0ae835ab-676c-4544-b162-ccef8e5b816b)
+![Exercises](https://github.com/user-attachments/assets/56f36ec3-4c3f-436e-9023-fa3ec5435f21)
+![Analytics](https://github.com/user-attachments/assets/512c0a3c-c7a9-476a-97b1-959c285a419a)
+![Profile](https://github.com/user-attachments/assets/0805daea-3e04-4837-a9a0-d956538ecb94)
+![ProgramDetails1](https://github.com/user-attachments/assets/3fb14ba5-234c-4c19-ad09-eb6a1edac141)
+![ProgramDetails2](https://github.com/user-attachments/assets/fd1d108a-3997-409c-adc7-4d4487e946f0)
 
 - **Admin application**
+  
+![Admin1](https://github.com/user-attachments/assets/69334cb1-433c-4ea5-b45f-3ab53660076b)
+![Admin2](https://github.com/user-attachments/assets/2f7cb8be-676c-4aa8-baf6-8305ef193c3d)
+![Admin3](https://github.com/user-attachments/assets/cb75e600-b4a4-4d29-8686-e6e544479b26)
+![Admin4](https://github.com/user-attachments/assets/ae23074f-a05e-419d-9d61-e0fd4cd839b8)
 
-![Admin1](https://github.com/user-attachments/assets/ce12782b-647e-4212-803f-04ba3c06e44e)
-![Admin2](https://github.com/user-attachments/assets/bd11d29d-481c-4122-88d3-a2ca29ef1480)
-![Admin3](https://github.com/user-attachments/assets/599ea98a-f448-4f1b-accb-0570c96ba73b)
-![Admin4](https://github.com/user-attachments/assets/8c49c380-9394-469b-8d9a-a665d94a1cc4)
 
 
 
